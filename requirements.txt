@@ -1,0 +1,9 @@
+pyrogram
+TgCrypto
+pyromod
+motor
+dnspython
+psutil
+pykeyboard
+aiohttp
+aiofiles

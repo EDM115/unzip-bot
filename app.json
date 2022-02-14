@@ -1,0 +1,52 @@
+{
+    "name": "Unzipper Bot",
+    "description": "A Telegram Bot to Extract Various Types Of Archives",
+    "logo": "https://telegra.ph/file/dab7c08182e6d9e03bcef.jpg",
+    "keywords": [
+        "7z",
+        "Telegram Bot",
+        "unzipper bot"
+    ],
+    "website": "https://t.me/EDM115bots",
+    "repository": "https://github.com/EDM115/unzip-bot",
+    "success_url": "https://t.me/EDM115bots",
+    "env": {
+        "APP_ID": {
+            "description": "Your APP_ID from my.telegram.org",
+            "required": true
+        },
+        "API_HASH": {
+            "description": "Your API_HASH from my.telegram.org",
+            "required": true
+        },
+        "BOT_OWNER": {
+            "description": "Telegram Id of your account",
+            "required": true
+        },
+        "BOT_TOKEN": {
+            "description": "Your Bot Token From @BotFather",
+            "required": true
+        },
+        "MONGODB_URL": {
+            "description": "Your MongoDB url, Get it from https://www.mongodb.com/",
+            "required": true
+        },
+        "LOGS_CHANNEL": {
+            "description": "Make a private channel and forward a message from that channel to @ChannelidHEXbot and Get this",
+            "required": true
+        }
+    },
+    "addons": [],
+    "buildpacks": [
+        {
+            "url": "heroku/python"
+        }
+    ],
+    "formation": {
+        "worker": {
+            "quantity": 1,
+            "size": "free"
+        }
+    },
+    "stack": "container"
+}
