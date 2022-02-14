@@ -42,7 +42,7 @@ Deploying is easy 🤫! You can deploy this bot in Heroku or in a VPS ♥️! **
 
 #### With Heroku
 
-<a href="https://www.heroku.com/deploy?template=https://github.com/Itz-fork/Unzipper-Bot/tree/arch">
+<a href="https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/master">
   <img src="https://www.herokucdn.com/deploy/button.svg">
 </a>
 
@@ -51,7 +51,7 @@ Deploying is easy 🤫! You can deploy this bot in Heroku or in a VPS ♥️! **
 #### Self-Hosting
 
 ```bash
-git clone -b arch https://github.com/Itz-fork/Unzipper-Bot.git
+git clone -b arch https://github.com/EDM115/unzip-bot.git
 cd Unzipper-Bot
 pip3 install -r requirements.txt
 
@@ -67,14 +67,14 @@ bash start.sh
 
 ---
 
-**DONE 🥳, Enjoy The Bot! Be sure to Follow Me on [Github](https://github.com/Itz-fork) and Star 🌟 this repo to Show some support 😍!**
+**DONE 🥳, Enjoy The Bot! Be sure to Follow Me on [Github](https://github.com/EDM115) and Star 🌟 this repo to Show some support 😍!**
 
 </br>
 
 
 ## Found a bug 🐞?
 
-If you found a bug in this bot please open an [issue](https://github.com/Itz-fork/Unzipper-Bot/issues) or report it at the [Support Group](#support).
+If you found a bug in this bot please open an [issue](https://github.com/EDM115/unzip-bot/issues) or report it at the [Support Group](#support).
 
 </br>
 
@@ -94,7 +94,7 @@ If you found a bug in this bot please open an [issue](https://github.com/Itz-for
 ## License & Copyright 👮
 
 ```
-Copyright (c) 2021 Itz-fork
+Copyright (c) 2022 EDM115
 
 This Unzipper-Bot repository is licensed under GPLv3 License (https://github.com/Itz-fork/Unzipper-Bot/blob/master/LICENSE)
 Copying or Modifying Any Part of the code without permission is strictly prohibited
