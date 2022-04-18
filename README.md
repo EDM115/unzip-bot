@@ -4,6 +4,7 @@
   A Telegram bot to extract various types of archives
 </p>
 
+<img align="center" src="https://telegra.ph/file/426207477776ffa00519f.png"/>
 </br></br>
 
 
