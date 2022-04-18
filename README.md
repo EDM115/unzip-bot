@@ -16,9 +16,23 @@
 - Broadcast messages to users
 - Ban / Unban users from using your bot
 - Send logs in a private channel/group
-
 And some other features 🔥 Dive into the code to find them 🤭
-
+  
+## Bugs to fix and additional features 💀  
+  
+- [ ] The ETA isn't accurate
+- [ ] Download speed stays constant, depending of what we have at begining. If the download started at 3 Mb/s, it will stay like that through all the process and can't evolve
+- [ ] Unzipping normally a password protected archive makes crash the bot 😭
+- [ ] Reply markup error
+- [ ] Adding file name in description while uploading
+- [ ] Adding a `/db` command that returns a list of all users + banned ones
+- [ ] Looks like some "blank" users are added to the db, including a banned one
+- [ ] Add a translation (start a CrowdIn dude)
+- [ ] Some profile links doesn't work
+- [ ] Get informations with smth like `/user {id}`, that returns his state (banned or not) + lastly uploaded files (5 last with link to channel/group message) + how many files he sent + size of all of them. The user could also get those infos with a `/me` command
+- [ ] Add a `/dbdive` that returns an url where we can visualize the db online
+- [ ] Add status of extraction in logs (uploaded, started, extracted, failed (+ error), what is the password, …)
+- [ ] Add more things to `/stats` like average speed, …
 
 ## Config vars 📖
 
