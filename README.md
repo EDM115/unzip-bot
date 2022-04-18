@@ -33,7 +33,18 @@ And some other features 🔥 Dive into the code to find them 🤭
 - [ ] Add a `/dbdive` that returns an url where we can visualize the db online
 - [ ] Add status of extraction in logs (uploaded, started, extracted, failed (+ error), what is the password, …)
 - [ ] Add more things to `/stats` like average speed, …
-
+- [ ] Add cancel process button and an emergency `/redbutton` one
+- [ ] Add an emergency `/restart` command that can be run **even** if the bot hanged up
+- [ ] Add permathumb support `/addthumb` `/delthumb`
+- [ ] Auto use `/clean` when a task failed
+- [ ] Keep the archives 5 hours in server just in case someone resend the same (no download twice)
+  
+## Properties 👋  
+- [x] Can run only one extract/user at a time
+- [x] Download speed : 2-12 Mb/s, can be even more if you're lucky
+- [x] Upload speed : 5-20 Mb/s, unexpectedly
+- [x] Fast to answer and process tasks
+  
 ## Config vars 📖
 
 - `APP_ID` - Your APP ID. Get it from [my.telegram.org](my.telegram.org)
