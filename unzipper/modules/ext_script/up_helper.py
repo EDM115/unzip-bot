@@ -21,12 +21,12 @@ async def run_shell_cmds(command):
 async def send_file(unzip_bot, c_id, doc_f, query, full_path):
     try:
         cum = await get_upload_mode(c_id)
-        # Checks if url file size is bigger than 2GB (Telegram limit)
+        # Checks if url file size is bigger than 2 Gb (Telegram limit)
         u_file_size = os.stat(doc_f).st_size
         if Config.TG_MAX_SIZE < int(u_file_size):
             return await unzip_bot.send_message(
                 chat_id=c_id,
-                text="`File Size is too large to send in telegram 😥!` \n\n**Sorry, but I can't do anything about this as it's a telegram limitation 😔!**"
+                text="`File size is too large to send in telegram 😥` \n\n**Sorry, but I can't do anything about this as it's Telegram limitation 😔**"
             )
         if cum == "video":
             vid_duration = await run_shell_cmds(f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}")
@@ -34,7 +34,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
             if os.path.exists(thmb_pth):
                 os.remove(thmb_pth)
             thumb = await run_shell_cmds(f"ffmpeg -i {doc_f} -ss 00:00:01.000 -vframes 1 {thmb_pth}")
-            await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption="**Extracted by @unzip_edm115bot**", duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=str(thumb))
+            await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption="`{os.path.basename(doc_f)}` \n\n **Extracted by @unzip_edm115bot**", duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=str(thumb))
         else:
             await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption="**Extracted by @unzip_edm115bot**")
         os.remove(doc_f)
@@ -42,7 +42,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
         asyncio.sleep(f.x)
         return send_file(c_id, doc_f)
     except FileNotFoundError:
-        await query.answer("Sorry! I can't find that file", show_alert=True)
+        await query.answer("Sorry! I can't find that file 💀", show_alert=True)
     except BaseException:
         shutil.rmtree(full_path)
 
