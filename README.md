@@ -1,50 +1,50 @@
-<h1 align="center">》 Unzipper Bot 《</h1>
+<h1 align="center">Unarchiver Bot</h1>
 
 <p align="center">
-  A Telegram Bot to Extract Various Types Of Archives
+  A Telegram bot to extract various types of archives
 </p>
 
 </br></br>
 
 
-## Features
+## Features 👀
 
-- Extract various types of archives like `rar`, `zip`, `tar`, `7z`, `tar.xz` etc.
-- Password support for extracting
+- Extract various types of archives like `rar`, `zip`, `tar`, `7z`, `tar.xz`, …
+- Supports password protected archives
 - Extract archives from direct links
-- Broadcast Messages to users
+- Broadcast messages to users
 - Ban / Unban users from using your bot
-- Send logs in a private channel
+- Send logs in a private channel/group
 
-And Some other features 🔥!
+And some other features 🔥 Dive into the code to find them 🤭
 
 
-## Configs 📖
+## Config vars 📖
 
 - `APP_ID` - Your APP ID. Get it from [my.telegram.org](my.telegram.org)
 - `API_HASH` - Your API_HASH. Get it from [my.telegram.org](my.telegram.org)
 - `BOT_OWNER` - Your Telegram Account ID. Get it from [@MissRose_bot](https://t.me/MissRose_bot) (Start the bot and send <samp>/info</samp> command).
 - `BOT_TOKEN` - Bot Token of Your Telegram Bot. Get it from [@BotFather](https://t.me/BotFather)
-- `MONGODB_URL` - Your MongoDB url, Tutorial [here](https://www.youtube.com/watch?v=0aYrJTfYBHU)
-- `LOGS_CHANNEL` - Make a private channel and forward a message from that channel to [@ChannelidHEXbot](https://t.me/ChannelidHEXbot) to Get this. (Make sure to add Your bot to the channel as an admin)
+- `MONGODB_URL` - Your MongoDB URL, Tutorial [here](https://www.youtube.com/watch?v=0aYrJTfYBHU)
+- `LOGS_CHANNEL` - Make a private channel and get its ID (search on Google if you don't know how to do). Using a group works as well, just add [`Rose`](https://t.me/MissRose_bot?groupstart=startbot), then send `/id` (In both cases, make sure to add your bot to the channel/group as an admin !)
 
 </br>
 
 
-## Deploy 👀
+## Deploy 🚧
 
-Deploying is easy 🤫! You can deploy this bot in Heroku or in a VPS ♥️! **Star 🌟 Fork 🍴 and Deploy**
+Deploying is easy 🥰 You can deploy this bot in Heroku or in a VPS ♥️  
+**Star 🌟 Fork 🍴 and Deploy 📤**
 
-> Note ⚠️
-> This branch is using arch linux.
-> 
-> But Why 🤔? Cuz arch's p7zip package is the only maintained version of [original p7zip](http://p7zip.sourceforge.net/) package with some additional features
+> ⚠️ Note :
+> We are using arch linux
+> But why 🤔 Because arch's p7zip package is the only maintained version of [original p7zip](http://p7zip.sourceforge.net/) package with some additional features !
 
 #### With Heroku
 
 <a href="https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/master">
   <img src="https://www.herokucdn.com/deploy/button.svg">
-</a>
+</a> (if you're in a fork, make sure to replace the template URL with your repo’s one)
 
 ---
 
@@ -67,26 +67,15 @@ bash start.sh
 
 ---
 
-**DONE 🥳, Enjoy The Bot! Be sure to Follow Me on [Github](https://github.com/EDM115) and Star 🌟 this repo to Show some support 😍!**
+**DONE 🥳 enjoy the bot ! Be sure to follow me on [Github](https://github.com/EDM115) and Star 🌟 this repo to show some support 🥺**
 
 </br>
 
 
-## Found a bug 🐞?
+## Found a bug 🐞
 
-If you found a bug in this bot please open an [issue](https://github.com/EDM115/unzip-bot/issues) or report it at the [Support Group](#support).
-
-</br>
-
-
-## Support 💙
-
-<a href="https://t.me/NexaBotsUpdates">
-  <img src="https://img.shields.io/badge/Updates_Channel-0a0a0a?style=for-the-badge&logo=telegram&logoColor=white">
-</a>
-<a href="https://t.me/Nexa_bots">
-  <img src="https://img.shields.io/badge/Support_Group-0a0a0a?style=for-the-badge&logo=telegram&logoColor=white">
-</a>
+If you found a bug in this bot please open an [issue](https://github.com/EDM115/unzip-bot/issues) or report it at [me](https://t.me/EDM115)  
+Same if you have any feature request ☺️
 
 </br>
 
@@ -96,6 +85,8 @@ If you found a bug in this bot please open an [issue](https://github.com/EDM115/
 ```
 Copyright (c) 2022 EDM115
 
-This Unzipper-Bot repository is licensed under GPLv3 License (https://github.com/Itz-fork/Unzipper-Bot/blob/master/LICENSE)
+This Unzipper-Bot repository is licensed under GPLv3 License (https://github.com/EDM115/unzip-bot/blob/master/LICENSE)
 Copying or Modifying Any Part of the code without permission is strictly prohibited
 ```
+
+• Inspired by Itz-fork/Nexa’s work, but with additional features and bug fixes. This is a maintained repo of the [original](https://github.com/Itz-fork/Unzipper-Bot)
