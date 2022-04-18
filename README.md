@@ -18,7 +18,7 @@
 - Send logs in a private channel/group
 And some other features 🔥 Dive into the code to find them 🤭
   
-## Bugs to fix and additional features 💀  
+## Bugs to fix and additional features to add 💀  
   
 - [ ] The ETA isn't accurate
 - [ ] Download speed stays constant, depending of what we have at begining. If the download started at 3 Mb/s, it will stay like that through all the process and can't evolve
@@ -52,7 +52,7 @@ And some other features 🔥 Dive into the code to find them 🤭
 - `BOT_OWNER` - Your Telegram Account ID. Get it from [@MissRose_bot](https://t.me/MissRose_bot) (Start the bot and send <samp>/info</samp> command).
 - `BOT_TOKEN` - Bot Token of Your Telegram Bot. Get it from [@BotFather](https://t.me/BotFather)
 - `MONGODB_URL` - Your MongoDB URL, Tutorial [here](https://www.youtube.com/watch?v=0aYrJTfYBHU)
-- `LOGS_CHANNEL` - Make a private channel and get its ID (search on Google if you don't know how to do). Using a group works as well, just add [`Rose`](https://t.me/MissRose_bot?groupstart=startbot), then send `/id` (In both cases, make sure to add your bot to the channel/group as an admin !)
+- `LOGS_CHANNEL` - Make a private channel and get its ID (search on Google if you don't know how to do). Using a group works as well, just add [`Rose`](https://t.me/MissRose_bot?startgroup=startbot), then send `/id` (In both cases, make sure to add your bot to the channel/group as an admin !)
 
 </br>
 
@@ -106,7 +106,7 @@ Same if you have any feature request ☺️
 </br>
 
 
-## License & Copyright 👮
+## License & Copyright 👮‍♀️
 
 ```
 Copyright (c) 2022 EDM115
