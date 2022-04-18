@@ -38,6 +38,7 @@ And some other features 🔥 Dive into the code to find them 🤭
 - [ ] Add permathumb support `/addthumb` `/delthumb`
 - [ ] Auto use `/clean` when a task failed
 - [ ] Keep the archives 5 hours in server just in case someone resend the same (no download twice)
+- [ ] Add a `/cleanall` for forcing the server reset and freeing space
   
 ## Properties 👋  
 - [x] Can run only one extract per user at a time
