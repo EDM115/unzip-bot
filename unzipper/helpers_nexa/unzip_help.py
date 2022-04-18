@@ -17,16 +17,14 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
         elapsed_time = round(diff) * 1000
         time_to_completion = round((total - current) / speed) * 1000
         estimated_total_time = elapsed_time + time_to_completion
-
         elapsed_time = TimeFormatter(milliseconds=elapsed_time)
         estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
-
-        progress = "[{0}{1}] \n**Process**: {2}%\n".format(
+        progress = "[{0}{1}] \n**Processing…**: {2}%\n".format(
             ''.join(["⬢" for i in range(math.floor(percentage / 5))]),
             ''.join(["⬡" for i in range(20 - math.floor(percentage / 5))]),
             round(percentage, 2))
 
-        tmp = progress + "{0} of {1}\n**Speed:** {2}/s\n**ETA:** {3}\n".format(
+        tmp = progress + "{0} of {1}\n**Speed :** {2}/s\n**ETA :** {3}\n".format(
             humanbytes(current),
             humanbytes(total),
             humanbytes(speed),
@@ -68,15 +66,15 @@ def check_logs():
         if Config.LOGS_CHANNEL:
             c_info = client.get_chat(chat_id=Config.LOGS_CHANNEL)
             if c_info.type != "channel":
-                print("TF? Chat is not a channel")
+                print("A chat is not a channel 😐")
                 return
             elif c_info.username is not None:
-                print("TF? Chat is not private")
+                print("A chat is not private 😐")
                 return
             else:
-                client.send_message(chat_id=Config.LOGS_CHANNEL, text="`Unzipper-Bot has Successfully Started!` \n\n**Powered by @EDM115bots**")
+                client.send_message(chat_id=Config.LOGS_CHANNEL, text="`unzip-bot has successfully started !` \n\n**Powered by @EDM115bots**")
         else:
-            print("No Log Channel ID is Given! Imma leaving Now!")
+            print("No Log channel ID is given !")
             exit()
     except:
-        print("Error Happend while checking Log Channel! Make sure you're not dumb enough to provide a wrong Log Channel ID!")
+        print("Error happened while checking Log channel! Make sure you're not dumb enough to provide a wrong Log channel ID !")
