@@ -34,17 +34,13 @@ https_url_regex = ("((http|https)://)(www.)?" +
                    "._\\+~#?&//=]*)")
 
 # Function to check user status (is banned or not)
-
-
 @Client.on_message(filters.private)
 async def _(_, message: Message):
     await check_user(message)
 
-
 @Client.on_message(filters.private & filters.command("start"))
 async def start_bot(_, message: Message):
     await message.reply_text(text=Messages.START_TEXT.format(message.from_user.mention), reply_markup=Buttons.START_BUTTON, disable_web_page_preview=True)
-
 
 @Client.on_message(filters.private & filters.command("clean"))
 async def clean_ma_files(_, message: Message):
@@ -53,17 +49,17 @@ async def clean_ma_files(_, message: Message):
 
 @Client.on_message(filters.incoming & filters.private & filters.regex(https_url_regex) | filters.document)
 async def extract_dis_archive(_, message: Message):
-    unzip_msg = await message.reply("`Processing ⚙️...`", reply_to_message_id=message.message_id)
+    unzip_msg = await message.reply("`Processing… ⏳`", reply_to_message_id=message.message_id)
     user_id = message.from_user.id
     download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
     if os.path.isdir(download_path):
-        return await unzip_msg.edit("`Already one process is going on, Don't spam you idiot 😒` \n\nWanna Clear You Files from my server? Then just send **/clean** command!")
+        return await unzip_msg.edit("`Already one process is running, don't spam 😐` \n\nWanna clear your files from my server ? Then just send **/clean** command")
     if message.text and (re.match(https_url_regex, message.text)):
-        await unzip_msg.edit("**What do you want?**", reply_markup=Buttons.CHOOSE_E_U__BTNS)
+        await unzip_msg.edit("**What do you want ?**", reply_markup=Buttons.CHOOSE_E_U__BTNS)
     elif message.document:
-        await unzip_msg.edit("**What do you want?**", reply_markup=Buttons.CHOOSE_E_F__BTNS)
+        await unzip_msg.edit("**What do you want ?**", reply_markup=Buttons.CHOOSE_E_F__BTNS)
     else:
-        await unzip_msg.edit("`Hold up! What Should I Extract 😳?`")
+        await unzip_msg.edit("`Hold up ! What should I extract there ? 😳`")
 
 
 # Database Commands
@@ -75,7 +71,7 @@ async def set_up_mode_for_user(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("stats") & filters.user(Config.BOT_OWNER))
 async def send_stats(_, message: Message):
-    stats_msg = await message.reply("`Processing ⚙️...`")
+    stats_msg = await message.reply("`Processing… ⏳`")
     total, used, free = shutil.disk_usage(".")
     total = humanbytes(total)
     used = humanbytes(used)
@@ -86,22 +82,22 @@ async def send_stats(_, message: Message):
     total_users = await count_users()
     total_banned_users = await count_banned_users()
     await stats_msg.edit(f"""
-**💫 Current Bot Stats 💫**
+**💫 Current bot stats 💫**
 
-**👥 Users:** 
- ↳**Users in Database:** `{total_users}`
- ↳**Total Banned Users:** `{total_banned_users}`
-
-
-**💾 Disk Usage,**
- ↳**Total Disk Space:** `{total}`
- ↳**Used:** `{used}({disk_usage}%)`
- ↳**Free:** `{free}`
+**👥 Users :** 
+ ↳**Users in database :** `{total_users}`
+ ↳**Total banned users :** `{total_banned_users}`
 
 
-**🎛 Hardware Usage,**
- ↳**CPU Usage:** `{cpu_usage}%`
- ↳**RAM Usage:** `{ram_usage}%`"""
+**💾 Disk usage :**
+ ↳**Total Disk Space :** `{total}`
+ ↳**Used :** `{used}({disk_usage}%)`
+ ↳**Free :** `{free}`
+
+
+**🎛 Hardware usage :**
+ ↳**CPU usage :** `{cpu_usage}%`
+ ↳**RAM usage :** `{ram_usage}%`"""
                          )
 
 
@@ -118,13 +114,13 @@ async def _do_broadcast(message, user):
 
 @Client.on_message(filters.private & filters.command("broadcast") & filters.user(Config.BOT_OWNER))
 async def broadcast_dis(_, message: Message):
-    bc_msg = await message.reply("`Processing ⚙️...`")
+    bc_msg = await message.reply("`Processing… ⏳`")
     r_msg = message.reply_to_message
     if not r_msg:
-        return await bc_msg.edit("`Reply to a message to broadcast!`")
+        return await bc_msg.edit("`Reply to a message to broadcast 📡`")
     users_list = await get_users_list()
     # trying to broadcast
-    await bc_msg.edit("`Broadcasting has started, This may take while 🥱!`")
+    await bc_msg.edit("`Broadcasting has started, this may take while 😪`")
     success_no = 0
     failed_no = 0
     total_users = await count_users()
@@ -135,31 +131,31 @@ async def broadcast_dis(_, message: Message):
         else:
             failed_no += 1
     await bc_msg.edit(f"""
-**Broadcast Completed ✅!**
+**Broadcast completed ✅**
 
-**Total Users:** `{total_users}`
-**Successful Responses:** `{success_no}`
-**Failed Responses:** `{failed_no}`
+**Total Users :** `{total_users}`
+**Successful Responses :** `{success_no}`
+**Failed Responses :** `{failed_no}`
     """)
 
 
 @Client.on_message(filters.private & filters.command("ban") & filters.user(Config.BOT_OWNER))
 async def ban_user(_, message: Message):
-    ban_msg = await message.reply("`Processing ⚙️...`")
+    ban_msg = await message.reply("`Processing… ⏳`")
     try:
         user_id = message.text.split(None, 1)[1]
     except:
-        return await ban_msg.edit("`Give a user id to ban!`")
+        return await ban_msg.edit("`Give a user id to ban 😈`")
     await add_banned_user(user_id)
-    await ban_msg.edit(f"**Successfully Banned That User ✅** \n\n**User ID:** `{user_id}`")
+    await ban_msg.edit(f"**Successfully banned that user ✅** \n\n**User ID :** `{user_id}`")
 
 
 @Client.on_message(filters.private & filters.command("unban") & filters.user(Config.BOT_OWNER))
 async def unban_user(_, message: Message):
-    unban_msg = await message.reply("`Processing ⚙️...`")
+    unban_msg = await message.reply("`Processing… ⏳`")
     try:
         user_id = message.text.split(None, 1)[1]
     except:
-        return await unban_msg.edit("`Give a user id to unban!`")
+        return await unban_msg.edit("`Give a user id to unban 😇`")
     await del_banned_user(user_id)
-    await unban_msg.edit(f"**Successfully Unbanned That User ✅** \n\n**User ID:** `{user_id}`")
+    await unban_msg.edit(f"**Successfully unbanned that user ✅** \n\n**User ID :** `{user_id}`")
