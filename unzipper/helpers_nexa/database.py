@@ -77,12 +77,12 @@ async def count_banned_users():
 async def get_banned_users_list():
     return [banned_users_list async for banned_users_list in b_user_db.find({})]
 
-# Gonna Cry?
+# Gonna cry ?
 async def check_user(message):
     # Checking if user is banned
     is_banned = await is_user_in_bdb(message.from_user.id)
     if is_banned:
-        await message.reply("**Sorry You're Banned!** \n\nReport this at @EDM115 if you think this is a mistake")
+        await message.reply("**Sorry you're banned 💀** \n\nReport this at @EDM115 if you think this is a mistake")
         await message.stop_propagation()
         return
     # Chacking if user already in db
@@ -91,7 +91,7 @@ async def check_user(message):
         await add_user(message.from_user.id)
         await Client.send_message(
             chat_id=Config.LOGS_CHANNEL,
-            text=f"**#NEW_USER** 🎙 \n\n**User Profile:** `{message.from_user.mention}` \n**User ID:** `{message.from_user.id}` \n**Profile Url:** [Click here](tg://user?id={message.from_user.id})",
+            text=f"**#NEW_USER** 🎙 \n\n**User profile:** `{message.from_user.mention}` \n**User ID:** `{message.from_user.id}` \n**Profile URL:** [tg://user?id={message.from_user_id}](tg://user?id={message.from_user.id})",
             disable_web_page_preview=False
         )
     await message.continue_propagation()
