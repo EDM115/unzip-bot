@@ -5,9 +5,10 @@
 
 version: 2
 updates:
-  - package-ecosystem: "" # See documentation for possible values
+  - package-ecosystem: "pip" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
     assignees:
       - "EDM115"
+    open-pull-requests-limit: 15
