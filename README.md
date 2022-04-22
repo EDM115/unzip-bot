@@ -56,11 +56,16 @@
 
 Copy-paste those to BotFather when he asks you for them  
 ```
-
+clean - Remove your archives from my servers 🚮♻️
+mode - Upload things as Doc 📄 or Video 📹
+start - Alive check 😪 Also useful after updates 🥰 (alias : /setmode)
 ```  
 Admin only commands (better to not include them)  
 ```
-
+stats - Get detailed stats about users and server
+broadcast - Reply with this to a message to send it at every user
+ban - {id of user}
+unban - {id of user}
 ```
 
 </br>
