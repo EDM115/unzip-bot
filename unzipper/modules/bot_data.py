@@ -72,18 +72,18 @@ I can extract archives like zip, rar, tar, …
     HELP_TXT = """
 **How to extract? 🤔**
 
-`1. Send the file or link that you want to extract.`
-`2. Click on extract button (If you sent a link use "🔗 URL extract" button. If it's a file just use "🗂️ File extract" button).`
+**1.** Send the file or link that you want to extract
+**2.** Click on extract button (If you sent a link use "🔗 URL extract" button. If it's a file just use "🗂️ File extract" button)
 
 **How to change upload mode? 🤔**
- `Send` **/mode** `command to the bot. You can change upload mode from there.`
+Send **/mode** command to the bot. You can change upload mode from there
 
 **Note:**
-    **1.** `If your archive is password protected select` **🗂️ Extract a password protected archive 🔐** `mode. Bot isn't a god to know your file's password, so if this happens just send that password !`
+    **1.** If your archive is password protected select `🗂️ Extract a password protected archive 🔐` mode. Bot isn’t a god to know your file’s password, so if this happens just send that password !
     
-    **2.** `Please don't send corrupted files! If you sent a one by mistake just send` **/clean** `command`
+    **2.** Please don’t send corrupted files ! If you sent a one by mistake just send **/clean** command
     
-    **3.** `If your archive have +95 files in it then bot can't show all of extracted files to select from. So in that case if you can't see your file in the buttons just click on` "Upload all 📤" `button. It'll send all extracted files to you !`
+    **3.** If your archive have +95 files in it then bot can’t show all of extracted files to select from. So in that case if you can’t see your file in the buttons just click on `Upload all 📤` button. It’ll send all extracted files to you !
     """
 
     ABOUT_TXT = """
@@ -110,14 +110,14 @@ I can extract archives like zip, rar, tar, …
 **Successfully downloaded ✅**
 
 **Download time :** `{}`
-**Status :** `Trying to extract the archive… Please wait`
+**Status :** Trying to extract the archive… Please wait
     """
 
     EXT_OK_TXT = """
 **Extraction successfull ✅**
 
 **Extraction time :** `{}`
-**Status :** `Trying to upload… Please wait`
+**Status :** Trying to upload… Please wait
     """
 
     EXT_FAILED_TXT = """
@@ -125,18 +125,19 @@ I can extract archives like zip, rar, tar, …
 
 **What to do ?**
 
- - `Please make sure archive isn't corrupted`
- - `Please make sure that you selected the right mode!`
- - `Also check if you sent the right password (it's case sensitive)`
- - `Maybe your archive format isn't supported yet 😔`
+ - Please make sure archive isn’t corrupted
+ - Please make sure that you selected the right mode!
+ - Also check if you sent the right password (it's case sensitive)
+ - Maybe your archive format isn’t supported yet 😔
+ - If you sent splitted archives (.001, .part1, .00001, …), then I can’t extract them 🙂
 
-**IN ALL CASES**, please send /clean, else you couldn't send any other task 🙂
+**IN ALL CASES**, please send /clean, else you couldn’t send any other task 🙂
 
 **Please report this at @EDM115 if you think this is a serious error**
     """
 
     ERROR_TXT = """
-**Error Happend 😕**
+**Error Happened 😕**
 
 **ERROR:** `{}`
 
@@ -146,7 +147,7 @@ I can extract archives like zip, rar, tar, …
     CANCELLED_TXT = """
 **{} ✅**
 
-`Now all of your files have been deleted from my server 😌`
+Now all of your files have been deleted from my server 😌
     """
 
     CLEAN_TXT = """
@@ -156,7 +157,7 @@ I can extract archives like zip, rar, tar, …
     """
 
     SELECT_UPLOAD_MODE_TXT = """
-`Please select the upload mode by clicking on below buttons 👇`
+Please select the upload mode by clicking on below buttons 👇
 
 **Current upload mode is :** `{}`
 """
