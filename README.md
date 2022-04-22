@@ -5,6 +5,11 @@
 <img align="center" src="https://telegra.ph/file/426207477776ffa00519f.png"/>
 </br></br>
 
+## Demo 🥰
+
+[@unzip_edm115bot](https://t.me/unzip_edm115bot)  
+⚠️ From 00h to 08h GMT+1, the [beta]() version is running. Try it at your own risks…  
+  
 ## Features 👀
 
 - Extract various types of archives like `rar`, `zip`, `tar`, `7z`, `tar.xz`, …
