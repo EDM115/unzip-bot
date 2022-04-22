@@ -34,9 +34,9 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
             if os.path.exists(thmb_pth):
                 os.remove(thmb_pth)
             thumb = await run_shell_cmds(f"ffmpeg -i {doc_f} -ss 00:00:01.000 -vframes 1 {thmb_pth}")
-            await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption="`os.path.basename(doc_f)`\n\n**Extracted by @unzip_edm115bot**", duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=str(thumb))
+            await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption="**Extracted by @unzip_edm115bot**", duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=str(thumb))
         else:
-            await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption="`os.path.basename(doc_f)`\n\n**Extracted by @unzip_edm115bot**")
+            await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption="**Extracted by @unzip_edm115bot**")
         os.remove(doc_f)
     except FloodWait as f:
         asyncio.sleep(f.x)
