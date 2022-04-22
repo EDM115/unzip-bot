@@ -8,17 +8,10 @@
 ## Demo 🥰
 
 [@unzip_edm115bot](https://t.me/unzip_edm115bot)  
-⚠️ From 00h to 08h GMT+1, the [beta]() version is running. Try it at your own risks…  
+⚠️ From 00h to 08h GMT+1, this beta version is running. Try it at your own risks…  
   
-## Features 👀
-
-- Extract various types of archives like `rar`, `zip`, `tar`, `7z`, `tar.xz`, …
-- Supports password protected archives
-- Extract archives from direct links
-- Broadcast messages to users
-- Ban / Unban users from using your bot
-- Send logs in a private channel/group
-- And some other features 🔥 Dive into the code to find them 🤭
+# **THIS IS BETA BRANCH, DON'T BE MAD AT ME IF IT'S BUGGY 😞**
+  
   
 ## Bugs to fix and additional features to add 💀  
   
@@ -42,87 +35,9 @@
 - [ ] Keep the archives 5 hours in server just in case someone resend the same (no download twice)
 - [ ] Add a `/cleanall` for forcing the server reset and freeing space
   
-## Properties 👋  
-- [x] Can run only one extract per user at a time
-- [x] Download speed : 2-12 Mb/s, can be even more if you're lucky
-- [x] Upload speed : 5-20 Mb/s, unexpectedly
-- [x] Fast to answer and process tasks
+<a href="https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/beta"><img src="https://www.herokucdn.com/deploy/button.svg"></a>  
   
-## Config vars 📖
-
-- `APP_ID` - Your APP ID. Get it from [my.telegram.org](my.telegram.org)
-- `API_HASH` - Your API_HASH. Get it from [my.telegram.org](my.telegram.org)
-- `BOT_OWNER` - Your Telegram Account ID. Get it from [@MissRose_bot](https://t.me/MissRose_bot) (Start the bot and send <samp>/info</samp> command).
-- `BOT_TOKEN` - Bot Token of Your Telegram Bot. Get it from [@BotFather](https://t.me/BotFather)
-- `MONGODB_URL` - Your MongoDB URL, Tutorial [here](https://www.youtube.com/watch?v=0aYrJTfYBHU)
-- `LOGS_CHANNEL` - Make a private channel and get its ID (search on Google if you don't know how to do). Using a group works as well, just add [`Rose`](https://t.me/MissRose_bot?startgroup=startbot), then send `/id` (In both cases, make sure to add your bot to the channel/group as an admin !)
-
-## Commands ✍️
-
-Copy-paste those to BotFather when he asks you for them  
-```
-clean - Remove your archives from my servers 🚮♻️
-mode - Upload things as Doc 📄 or Video 📹 (alias : /setmode)
-start - Alive check 😪 Also useful after updates 🥰
-```  
-Admin only commands (better to not include them)  
-```
-stats - Get detailed stats about users and server
-broadcast - Reply with this to a message to send it at every user
-ban - {id of user}
-unban - {id of user}
-```
-
-</br>
-
-## Deploy 🚧
-
-Deploying is easy 🥰 You can deploy this bot in Heroku or in a VPS ♥️  
-**Star 🌟 Fork 🍴 and Deploy 📤**
-
-> ⚠️ Note :
-> We are using arch linux
-> But why 🤔 Because arch’s p7zip package is the only maintained version of [original p7zip](http://p7zip.sourceforge.net/) package with some additional features !
-
-#### The lazy way
-
-<a href="https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/master"><img src="https://www.herokucdn.com/deploy/button.svg"></a>  
-(if you're in a fork, make sure to replace the template URL with your repo’s one)
-
----
-
-#### The legacy way
-
-```bash
-git clone -b arch https://github.com/EDM115/unzip-bot.git
-cd unzip-bot
-pip3 install -r requirements.txt
-# Arch linux only ↓
-sudo pacman -S p7zip
-# Edit config.py with your own values
-bash start.sh
-```
-
----
-
-**DONE 🥳 enjoy the bot ! Be sure to follow me on [Github](https://github.com/EDM115) and Star 🌟 this repo to show some support 🥺**
-
-</br>
-
 ## Found a bug 🐞
 
-If you found a bug in this bot please open an [issue](https://github.com/EDM115/unzip-bot/issues) or report it at [me](https://t.me/EDM115)  
+If you found a bug in this beta version please open an [issue](https://github.com/EDM115/unzip-bot/issues) or report it at [me](https://t.me/EDM115)  
 Same if you have any feature request ☺️
-
-</br>
-
-## License & Copyright 👮‍♀️
-
-```
-Copyright (c) 2022 EDM115
-
-This Unarchiver Bot repository is licensed under MIT License (https://github.com/EDM115/unzip-bot/blob/master/LICENSE)
-Enjoy copying and modifying, but always mention me
-```
-
-• Inspired by Itz-fork/Nexa’s work, but with additional features and bug fixes. This is a maintained repo of the [original](https://github.com/Itz-fork/Unzipper-Bot)
