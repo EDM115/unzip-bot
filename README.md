@@ -1,12 +1,9 @@
 <h1 align="center">Unarchiver Bot</h1>
 
-<p align="center">
-  A Telegram bot to extract various types of archives
-</p>
+<p align="center">A Telegram bot to extract various types of archives</p>
 
 <img align="center" src="https://telegra.ph/file/426207477776ffa00519f.png"/>
 </br></br>
-
 
 ## Features 👀
 
@@ -16,7 +13,7 @@
 - Broadcast messages to users
 - Ban / Unban users from using your bot
 - Send logs in a private channel/group
-And some other features 🔥 Dive into the code to find them 🤭
+- And some other features 🔥 Dive into the code to find them 🤭
   
 ## Bugs to fix and additional features to add 💀  
   
@@ -55,8 +52,18 @@ And some other features 🔥 Dive into the code to find them 🤭
 - `MONGODB_URL` - Your MongoDB URL, Tutorial [here](https://www.youtube.com/watch?v=0aYrJTfYBHU)
 - `LOGS_CHANNEL` - Make a private channel and get its ID (search on Google if you don't know how to do). Using a group works as well, just add [`Rose`](https://t.me/MissRose_bot?startgroup=startbot), then send `/id` (In both cases, make sure to add your bot to the channel/group as an admin !)
 
-</br>
+## Commands ✍️
 
+Copy-paste those to BotFather when he asks you for them  
+```
+
+```  
+Admin only commands (better to not include them)  
+```
+
+```
+
+</br>
 
 ## Deploy 🚧
 
@@ -65,30 +72,24 @@ Deploying is easy 🥰 You can deploy this bot in Heroku or in a VPS ♥️
 
 > ⚠️ Note :
 > We are using arch linux
-> But why 🤔 Because arch's p7zip package is the only maintained version of [original p7zip](http://p7zip.sourceforge.net/) package with some additional features !
+> But why 🤔 Because arch’s p7zip package is the only maintained version of [original p7zip](http://p7zip.sourceforge.net/) package with some additional features !
 
-#### With Heroku
+#### The lazy way
 
-<a href="https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/master">
-  <img src="https://www.herokucdn.com/deploy/button.svg">
-</a> (if you're in a fork, make sure to replace the template URL with your repo’s one)
+<a href="https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/master"><img src="https://www.herokucdn.com/deploy/button.svg"></a>  
+(if you're in a fork, make sure to replace the template URL with your repo’s one)
 
 ---
 
-#### Self-Hosting
+#### The legacy way
 
 ```bash
 git clone -b arch https://github.com/EDM115/unzip-bot.git
-cd Unzipper-Bot
+cd unzip-bot
 pip3 install -r requirements.txt
-
-# Arch linux only
+# Arch linux only ↓
 sudo pacman -S p7zip
-```
-
-<h4 align="center">Edit config.py with your own values</h4>
-
-```bash
+# Edit config.py with your own values
 bash start.sh
 ```
 
@@ -98,7 +99,6 @@ bash start.sh
 
 </br>
 
-
 ## Found a bug 🐞
 
 If you found a bug in this bot please open an [issue](https://github.com/EDM115/unzip-bot/issues) or report it at [me](https://t.me/EDM115)  
@@ -106,14 +106,13 @@ Same if you have any feature request ☺️
 
 </br>
 
-
 ## License & Copyright 👮‍♀️
 
 ```
 Copyright (c) 2022 EDM115
 
-This Unzipper-Bot repository is licensed under GPLv3 License (https://github.com/EDM115/unzip-bot/blob/master/LICENSE)
-Copying or Modifying Any Part of the code without permission is strictly prohibited
+This Unarchiver Bot repository is licensed under MIT License (https://github.com/EDM115/unzip-bot/blob/master/LICENSE)
+Enjoy copying and modifying, but always mention me
 ```
 
 • Inspired by Itz-fork/Nexa’s work, but with additional features and bug fixes. This is a maintained repo of the [original](https://github.com/Itz-fork/Unzipper-Bot)
