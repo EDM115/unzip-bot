@@ -9,6 +9,7 @@
 
 [@unzip_edm115bot](https://t.me/unzip_edm115bot)  
 ⚠️ From 00h to 08h GMT+1, the [beta](https://github.com/EDM115/unzip-bot/tree/beta) version is running. Try it at your own risks…  
+[![Automatic deploy of beta branch](https://github.com/EDM115/unzip-bot/actions/workflows/beta-auto-deploy.yml/badge.svg?branch=beta)](https://github.com/EDM115/unzip-bot/actions/workflows/beta-auto-deploy.yml)  
   
 ## Features 👀
 
