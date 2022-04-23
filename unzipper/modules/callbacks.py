@@ -76,11 +76,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.LOG_TXT.format(user_id, url, u_file_size))
                         s_time = time()
                         archive = f"{download_path}/archive_from_{user_id}{os.path.splitext(url)[1]}"
-                        await answer_query(query, f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\n`This may take a while, go grab a coffee ☕️`", unzip_client=unzip_bot)
+                        await answer_query(query, f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️", unzip_client=unzip_bot)
                         await download(url, archive)
                         e_time = time()
                     else:
-                        return await query.message.edit("**Sorry, I can't download that URL 😭**")
+                        return await query.message.edit("**Sorry, I can't download that URL 😭 Try to @transload it**")
             
             elif splitted_data[1] == "tg_file":
                 if r_message.document is None:
@@ -106,6 +106,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 ext_s_time = time()
                 extractor = await extr_files(path=ext_files_dir, archive_path=archive, password=password.text)
                 ext_e_time = time()
+                await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text="Password is :\n\n`password.text`)
             else:
                 ext_s_time = time()
                 extractor = await extr_files(path=ext_files_dir, archive_path=archive)
