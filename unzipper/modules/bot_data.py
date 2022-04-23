@@ -62,7 +62,8 @@ class Buttons:
 
 class Messages:
     START_TEXT = """
-Hi **{}** 👋, I'm **Unarchiver Bot** 🥰!
+Hi **{}** 👋, I'm **Unarchiver Bot** 🥰
+**This is BETA version !** May be a lot buggy. Better waiting for the stable version at daytime… 🙂
 
 I can extract archives like zip, rar, tar, …
 
@@ -70,13 +71,13 @@ I can extract archives like zip, rar, tar, …
     """
 
     HELP_TXT = """
-**How to extract? 🤔**
+**• How to extract 🤔**
 
-**1.** Send the file or link that you want to extract
-**2.** Click on extract button (If you sent a link use "🔗 URL extract" button. If it's a file just use "🗂️ File extract" button)
+  **1)** Send the file or link that you want to extract
+  **2)** Click on extract button (If you sent a link use `🔗 URL extract` button. If it's a file just use `🗂️ File extract` button)
 
-**How to change upload mode? 🤔**
-Send **/mode** command to the bot. You can change upload mode from there
+**• How to change upload mode 🤔**
+  Send **/mode** command to the bot. You can change upload mode from there
 
 **Note:**
     **1.** If your archive is password protected select `🗂️ Extract a password protected archive 🔐` mode. Bot isn’t a god to know your file’s password, so if this happens just send that password !
@@ -84,14 +85,18 @@ Send **/mode** command to the bot. You can change upload mode from there
     **2.** Please don’t send corrupted files ! If you sent a one by mistake just send **/clean** command
     
     **3.** If your archive have +95 files in it then bot can’t show all of extracted files to select from. So in that case if you can’t see your file in the buttons just click on `Upload all 📤` button. It’ll send all extracted files to you !
+
+**• I wanna have help 🥺**
+
+PM me at **@EDM115**, I'm always here and open for anything 😘
     """
 
     ABOUT_TXT = """
-**About Unarchiver Bot,**
+**About Unarchiver Bot [BETA]**
 
 • **Language :** [Python](https://www.python.org/)
 • **Framework :** [Pyrogram](https://docs.pyrogram.org/)
-• **Source Code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot)
+• **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot/tree/beta)
 • **Developer :** [EDM115](https://github.com/EDM115)
 
 
@@ -125,13 +130,13 @@ Send **/mode** command to the bot. You can change upload mode from there
 
 **What to do ?**
 
- - Please make sure archive isn’t corrupted
- - Please make sure that you selected the right mode!
- - Also check if you sent the right password (it's case sensitive)
- - Maybe your archive format isn’t supported yet 😔
- - If you sent splitted archives (.001, .part1, .00001, …), then I can’t extract them 🙂
+ • Please make sure archive isn’t corrupted
+ • Please make sure that you selected the right mode!
+ • Also check if you sent the right password (it's case sensitive)
+ • Maybe your archive format isn’t supported yet 😔
+ • If you sent splitted archives (.001, .part1, .00001, …), then I can’t extract them 🙂
 
-**IN ALL CASES**, please send /clean, else you couldn’t send any other task 🙂
+**IN ALL CASES**, please send **/clean**, else you couldn’t send any other task 🙂🔫
 
 **Please report this at @EDM115 if you think this is a serious error**
     """
