@@ -24,6 +24,7 @@
   
 - [ ] The ETA isn't accurate
 - [x] ~~Download speed stays constant, depending of what we have at begining. If the download started at 3 Mb/s, it will stay like that through all the process and can't evolve~~ **Seems to have been fixed**
+- [ ] While this 👆 is okay, I notice some times where bot is very slow (10-40s to process buttons, DL speed around 200 kB/s…
 - [ ] Unzipping normally a password protected archive makes crash the bot 😭
 - [ ] [Reply markup error](https://github.com/EDM115/unzip-bot/issues/2)
 - [ ] Adding file name in description while uploading
