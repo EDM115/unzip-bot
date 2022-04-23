@@ -101,9 +101,9 @@ async def send_stats(_, message: Message):
                          )
 
 # Attempt to not make that available for non owner
-@Client.on_message(filters.private & filters.command("stats") & filters.user(!=Config.BOT_OWNER))
-async def send_stats(_, message: Message):
-    await message.reply("You are not owner 🧐 Stop that")
+#@Client.on_message(filters.private & filters.command("stats") & filters.user(!=Config.BOT_OWNER))
+#async def send_stats(_, message: Message):
+#    await message.reply("You are not owner 🧐 Stop that")
 
 
 async def _do_broadcast(message, user):
