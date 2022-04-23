@@ -11,6 +11,7 @@
 ⚠️ From 00h to 08h GMT+1, this beta version is running. Try it at your own risks…  
   
 # **THIS IS BETA BRANCH, DON'T BE MAD AT ME IF IT'S BUGGY 😞**
+[![Automatic deploy of beta branch](https://github.com/EDM115/unzip-bot/actions/workflows/beta-auto-deploy.yml/badge.svg?branch=beta)](https://github.com/EDM115/unzip-bot/actions/workflows/beta-auto-deploy.yml)  
   
   
 ## Bugs to fix and additional features to add 💀  
