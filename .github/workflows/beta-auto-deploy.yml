@@ -1,10 +1,10 @@
-name: Manual deploy of beta branch
+name: Deploy of beta branch
 
 on:
-  workflow_dispatch
   push:
     branches:
       - beta
+  workflow_dispatch:
 # Uncomment the previous lines to enable the automatic deploy
 
 jobs:
