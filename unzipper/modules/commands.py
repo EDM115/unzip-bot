@@ -53,13 +53,13 @@ async def extract_dis_archive(_, message: Message):
     user_id = message.from_user.id
     download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
     if os.path.isdir(download_path):
-        return await unzip_msg.edit("`Already one process is running, don't spam 😐` \n\nWanna clear your files from my server ? Then just send **/clean** command")
+        return await unzip_msg.edit("Already one process is running, don't spam 😐\n\nWanna clear your files from my server ? Then just send **/clean** command")
     if message.text and (re.match(https_url_regex, message.text)):
-        await unzip_msg.edit("**What do you want ?**", reply_markup=Buttons.CHOOSE_E_U__BTNS)
+        await unzip_msg.edit("**What do you want 🤔**", reply_markup=Buttons.CHOOSE_E_U__BTNS)
     elif message.document:
-        await unzip_msg.edit("**What do you want ?**", reply_markup=Buttons.CHOOSE_E_F__BTNS)
+        await unzip_msg.edit("**What do you want 🤔**", reply_markup=Buttons.CHOOSE_E_F__BTNS)
     else:
-        await unzip_msg.edit("`Hold up ! What should I extract there ? 😳`")
+        await unzip_msg.edit("Hold up ! What should I extract there 😳")
 
 
 # Database Commands
@@ -82,23 +82,28 @@ async def send_stats(_, message: Message):
     total_users = await count_users()
     total_banned_users = await count_banned_users()
     await stats_msg.edit(f"""
-**💫 Current bot stats 💫**
+**💫 Current bot stats 💫 [BETA]**
 
 **👥 Users :** 
- ↳**Users in database :** `{total_users}`
- ↳**Total banned users :** `{total_banned_users}`
+ ↳ **Users in database :** `{total_users}`
+ ↳ **Total banned users :** `{total_banned_users}`
 
 
 **💾 Disk usage :**
- ↳**Total Disk Space :** `{total}`
- ↳**Used :** `{used}({disk_usage}%)`
- ↳**Free :** `{free}`
+ ↳ **Total Disk Space :** `{total}`
+ ↳ **Used :** `{used}({disk_usage}%)`
+ ↳ **Free :** `{free}`
 
 
 **🎛 Hardware usage :**
- ↳**CPU usage :** `{cpu_usage}%`
- ↳**RAM usage :** `{ram_usage}%`"""
+ ↳ **CPU usage :** `{cpu_usage}%`
+ ↳ **RAM usage :** `{ram_usage}%`"""
                          )
+
+# Attempt to not make that available for non owner
+@Client.on_message(filters.private & filters.command("stats") & filters.user(!=Config.BOT_OWNER))
+async def send_stats(_, message: Message):
+    await message.reply("You are not owner 🧐 Stop that")
 
 
 async def _do_broadcast(message, user):
