@@ -19,7 +19,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
         estimated_total_time = elapsed_time + time_to_completion
         elapsed_time = TimeFormatter(milliseconds=elapsed_time)
         estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
-        progress = "[{0}{1}] \n**Processing…** : {2}%\n".format(
+        progress = "[{0}{1}] \n**Processing…** : `{2}%`\n".format(
             ''.join(["⬢" for i in range(math.floor(percentage / 5))]),
             ''.join(["⬡" for i in range(20 - math.floor(percentage / 5))]),
             round(percentage, 2))
@@ -66,15 +66,15 @@ def check_logs():
         if Config.LOGS_CHANNEL:
             c_info = client.get_chat(chat_id=Config.LOGS_CHANNEL)
             if c_info.type != "channel":
-                print("A chat is not a channel 😐")
+                print("A chat is **not** a channel 😐")
                 return
             elif c_info.username is not None:
-                print("A chat is not private 😐")
+                print("A chat is **not** private 😐")
                 return
             else:
-                client.send_message(chat_id=Config.LOGS_CHANNEL, text="`unzip-bot has successfully started !` \n\n**Powered by @EDM115bots**")
+                client.send_message(chat_id=Config.LOGS_CHANNEL, text="`unzip-bot has successfully started !` \n\n**Powered by @EDM115bots ❤️**")
         else:
             print("No Log channel ID is given !")
             exit()
     except:
-        print("Error happened while checking Log channel! Make sure you're not dumb enough to provide a wrong Log channel ID !")
+        print("Error happened while checking Log channel 💀 Make sure you're not dumb enough to provide a wrong Log channel ID 🧐")
