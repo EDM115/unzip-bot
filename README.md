@@ -35,6 +35,7 @@
 - [ ] Auto use `/clean` when a task failed
 - [ ] Keep the archives 5 hours in server just in case someone resend the same (no download twice)
 - [ ] Add a `/cleanall` for forcing the server reset and freeing space
+- [ ] Add group support. You add bot to group as admin, then reply to any file with `/extract`. Then you choose where goes the files (group or PM), and drop here do the instructions (pass or no, what to upload, …)
   
 <a href="https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/beta"><img src="https://www.herokucdn.com/deploy/button.svg"></a>  
   
