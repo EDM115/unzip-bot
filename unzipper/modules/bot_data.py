@@ -80,15 +80,15 @@ I can extract archives like zip, rar, tar, …
   Send **/mode** command to the bot. You can change upload mode from there
 
 **Note:**
-    **1.** If your archive is password protected select `🗂️ Extract a password protected archive 🔐` mode. Bot isn’t a god to know your file’s password, so if this happens just send that password !
-    
-    **2.** Please don’t send corrupted files ! If you sent a one by mistake just send **/clean** command
-    
-    **3.** If your archive have +95 files in it then bot can’t show all of extracted files to select from. So in that case if you can’t see your file in the buttons just click on `Upload all 📤` button. It’ll send all extracted files to you !
+  **1.** If your archive is password protected select `🗂️ Extract a password protected archive 🔐` mode. Bot isn’t a god to know your file’s password, so if this happens just send that password !
+  
+  **2.** Please don’t send corrupted files ! If you sent a one by mistake just send **/clean** command
+  
+  **3.** If your archive have +95 files in it then bot can’t show all of extracted files to select from. So in that case if you can’t see your file in the buttons just click on `Upload all 📤` button. It’ll send all extracted files to you !
 
 **• I wanna have help 🥺**
 
-PM me at **@EDM115**, I'm always here and open for anything 😘
+  PM me at **@EDM115**, I'm always here and open for anything 😘
     """
 
     ABOUT_TXT = """
@@ -109,6 +109,12 @@ PM me at **@EDM115**, I'm always here and open for anything 😘
 **User ID :** `{}`
 **File Name :** `{}`
 **File Size :** `{}`
+    """
+
+    PASS_TXT = """
+**Password of above archive is 🔑**
+
+`{}`
     """
 
     AFTER_OK_DL_TXT = """
