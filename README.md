@@ -8,7 +8,7 @@
 ## Demo 🥰
 
 [@unzip_edm115bot](https://t.me/unzip_edm115bot)  
-⚠️ From 00h to 08h GMT+1, the [beta](https://github.com/EDM115/unzip-bot/tree/beta) version is running. Try it at your own risks…  
+⚠️ From 00h to 08h UTC+1, the [beta](https://github.com/EDM115/unzip-bot/tree/beta) version is running. Try it at your own risks…  
   
 ## Features 👀
 
