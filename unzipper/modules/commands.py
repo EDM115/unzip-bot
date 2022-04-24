@@ -164,3 +164,26 @@ async def unban_user(_, message: Message):
         return await unban_msg.edit("`Give a user id to unban 😇`")
     await del_banned_user(user_id)
     await unban_msg.edit(f"**Successfully unbanned that user ✅** \n\n**User ID :** `{user_id}`")
+
+@Client.on_message(filters.private & filters.command("me"))
+async def me_stats(_, message: Message):
+    me_msg = await message.reply("This is a WIP command that would allow you to get more stats about your utilisation of me 🤓")
+
+@Client.on_message(filters.private & filters.command("user") & filters.user(Config.BOT_OWNER))
+async def info_user(_, message: Message):
+    info_user_msg = await message.reply(f"`Processing… ⏳`")
+    try:
+        user_id = message.text.split(None, 1)[1]
+    except:
+        return await info_user_msg.edit("`Give a user id 🙂`")
+    await info_user_msg.edit(f"**User ID :** `{user_id}`…\n\nWIP")
+
+@Client.on_message(filters.private & filters.command("db") & filters.user(Config.BOT_OWNER))
+async def db_info(_, message: Message):
+    users_list = await get_users_list()
+    db_msg = await message.reply(f"🚧 There you go :\n\n`{users_list}`")
+
+@Client.on_message(filters.private & filters.command("dbdive") & filters.user(Config.BOT_OWNER))
+async def db_dive(_, message: Message):
+    dburl = await Config.MONGODB_URL
+    db_dive_msg = await message.reply(f"🚧 Go on [MongoDB.com](https://mongodb.com/cloud/atlas/register), u stupid 😐\n\n`{dburl}`")
