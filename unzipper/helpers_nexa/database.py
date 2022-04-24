@@ -112,4 +112,4 @@ async def get_upload_mode(user_id):
     if umode:
         return umode["mode"]
     else:
-        return "video"
+        return "doc"
