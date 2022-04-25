@@ -14,10 +14,9 @@ from .bot_data import Buttons, Messages, ERROR_MSGS
 from .ext_script.ext_helper import extr_files, get_files, make_keyboard
 from .ext_script.up_helper import send_file, answer_query
 from .commands import https_url_regex
-from unzipper.helpers_nexa.unzip_help import progress_for_pyrogram, TimeFormatter, humanbytes
-from unzipper.helpers_nexa.database import set_upload_mode
+from unzipper.helpers.unzip_help import progress_for_pyrogram, TimeFormatter, humanbytes
+from unzipper.helpers.database import set_upload_mode
 from config import Config
-
 
 # Function to download files from direct link using aiohttp
 async def download(url, path):
@@ -26,7 +25,6 @@ async def download(url, path):
             async with openfile(path, mode="wb") as file:
                 async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
                     await file.write(chunk)
-
 
 # Callbacks
 @Client.on_callback_query()
@@ -171,7 +169,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             return await query.message.edit("`I've already sent you those files 🙂`")
         i_e_buttons = await make_keyboard(paths=rpaths, user_id=query.from_user.id, chat_id=query.message.chat.id)
         await query.message.edit("Select files to upload 👇", reply_markup=i_e_buttons)
-    
     
     elif query.data.startswith("ext_a"):
         spl_data = query.data.split("|")
