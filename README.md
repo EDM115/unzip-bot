@@ -1,10 +1,11 @@
-<h1 align="center">Unarchiver Bot</h1>
+<div align="center">
 
-<p align="center">A Telegram bot to extract various types of archives</p>
-
-<img align="center" src="https://telegra.ph/file/426207477776ffa00519f.png"/>
-</br></br>
-
+# Unarchiver Bot
+## A Telegram bot to extract various types of archives
+![Unzip logo](https://telegra.ph/file/426207477776ffa00519f.png)
+</div>
+  
+  
 ## Demo 🥰
 
 [@unzip_edm115bot](https://t.me/unzip_edm115bot)  
@@ -37,7 +38,7 @@
 - [ ] Add a `/cleanall` for forcing the server reset and freeing space
 - [ ] Add group support. You add bot to group as admin, then reply to any file with `/extract`. Then you choose where goes the files (group or PM), and drop here do the instructions (pass or no, what to upload, …)
   
-<a href="https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/beta"><img src="https://www.herokucdn.com/deploy/button.svg"></a>  
+[![Deploy me 🥺](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/beta)  
   
 ## Found a bug 🐞
 
