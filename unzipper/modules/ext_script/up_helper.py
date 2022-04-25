@@ -7,7 +7,7 @@ import asyncio
 import subprocess
 
 from pyrogram.errors import FloodWait
-from unzipper.helpers_nexa.database import get_upload_mode
+from unzipper.helpers.database import get_upload_mode
 from config import Config
 
 
@@ -48,11 +48,9 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
     except BaseException:
         shutil.rmtree(full_path)
 
-
 # Function to remove basic markdown characters from a string
 async def rm_mark_chars(text: str):
     return re.sub("[*`_]", "", text)
-
 
 # Function to answer queries
 async def answer_query(query, message_text: str, answer_only: bool = False, unzip_client = None):
