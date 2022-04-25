@@ -15,7 +15,7 @@
 [![Manual deploy of beta branch](https://github.com/EDM115/unzip-bot/actions/workflows/beta-auto-deploy.yml/badge.svg?branch=beta)](https://github.com/EDM115/unzip-bot/actions/workflows/beta-auto-deploy.yml)  
   
   
-## Bugs to fix and additional features to add 💀  
+## Bugs to fix and features to add 💀  
   
 - [ ] The ETA isn't accurate
 - [x] ~~Download speed stays constant, depending of what we have at begining. If the download started at 3 Mb/s, it will stay like that through all the process and can't evolve~~ **Seems to have been fixed**
