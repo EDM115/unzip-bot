@@ -4,7 +4,7 @@ import os
 
 from pyrogram import idle
 from . import unzipperbot
-from .helpers_nexa.unzip_help import check_logs
+from .helpers.unzip_help import check_logs
 from config import Config
 
 if __name__ == "__main__" :
