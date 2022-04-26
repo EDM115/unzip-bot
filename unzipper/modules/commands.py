@@ -161,6 +161,8 @@ async def unban_user(_, message: Message):
 @Client.on_message(filters.private & filters.command("me"))
 async def me_stats(_, message: Message):
     me_msg = await message.reply("This is a WIP command that would allow you to get more stats about your utilisation of me 🤓")
+    me_info = await unzip_bot.ask(chat_id=query.message.chat.id ,text="Send anything :")
+    await unzip_bot.send_message(chat_id=query.message.chat.id, text=me_info)
 
 @Client.on_message(filters.private & filters.command("user") & filters.user(Config.BOT_OWNER))
 async def info_user(_, message: Message):
