@@ -104,7 +104,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 ext_s_time = time()
                 extractor = await extr_files(path=ext_files_dir, archive_path=archive, password=password.text)
                 ext_e_time = time()
-                await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.PASS_TXT.format(password))
+                await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.PASS_TXT.format(password.text))
             else:
                 ext_s_time = time()
                 extractor = await extr_files(path=ext_files_dir, archive_path=archive)
