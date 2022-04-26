@@ -1,7 +1,6 @@
 pyrogram<2.0.0
 TgCrypto
 pyromod
-motor
 dnspython
 psutil
 pykeyboard
