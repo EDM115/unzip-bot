@@ -7,7 +7,6 @@ import asyncio
 import subprocess
 
 from pyrogram.errors import FloodWait
-from unzipper.helpers.database import get_upload_mode
 from config import Config
 from unzipper.helpers.bot_data import Messages
 
@@ -20,7 +19,6 @@ async def run_shell_cmds(command):
 # Send file to a user
 async def send_file(unzip_bot, c_id, doc_f, query, full_path):
     try:
-        cum = await get_upload_mode(c_id)
         # Checks if url file size is bigger than 2 Gb (Telegram limit)
         u_file_size = os.stat(doc_f).st_size
         if Config.TG_MAX_SIZE < int(u_file_size):
@@ -28,17 +26,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
                 chat_id=c_id,
                 text="`File size is too large to send in telegram 😥` \n\n**Sorry, but I can't do anything about this as it's Telegram limitation 😔**"
             )
-        if cum == "video":
-            vid_duration = await run_shell_cmds(f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}")
-            thmb_pth = f"Dump/thumbnail_{os.path.basename(doc_f)}.jpg"
-            if os.path.exists(thmb_pth):
-                os.remove(thmb_pth)
-            thumb = await run_shell_cmds(f"ffmpeg -i {doc_f} -ss 00:00:01.000 -vframes 1 {thmb_pth}")
-            fname = os.path.basename(doc_f)
-            await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption=Messages.EXT_CAPTION.format(fname), duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=str(thumb))
-        else:
-            fname = os.path.basename(doc_f)
-            await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption=Messages.EXT_CAPTION.format(fname))
+        fname = os.path.basename(doc_f)
+        await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption=Messages.EXT_CAPTION.format(fname))
         os.remove(doc_f)
     except FloodWait as f:
         asyncio.sleep(f.x)
