@@ -8,8 +8,8 @@ import subprocess
 
 from pyrogram.errors import FloodWait
 from unzipper.helpers.database import get_upload_mode
+from unzipper.modules.bot_data import Messages
 from config import Config
-from unzipper.helpers.bot_data import Messages
 
 # To get video duration and thumbnail
 async def run_shell_cmds(command):
