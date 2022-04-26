@@ -9,7 +9,8 @@ import subprocess
 from pyrogram.errors import FloodWait
 from unzipper.helpers.database import get_upload_mode
 from config import Config
-
+from unzipper.helpers
+.bot_data import Messages
 
 # To get video duration and thumbnail
 async def run_shell_cmds(command):
@@ -35,10 +36,10 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
                 os.remove(thmb_pth)
             thumb = await run_shell_cmds(f"ffmpeg -i {doc_f} -ss 00:00:01.000 -vframes 1 {thmb_pth}")
             fname = os.path.basename(doc_f)
-            await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption="`{fname}`\n\n**Extracted by @unzip_edm115bot**", duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=str(thumb))
+            await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption=Messages.EXT_CAPTION.format(fname), duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=str(thumb))
         else:
             fname = os.path.basename(doc_f)
-            await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption="`{fname}`\n\n**Extracted by @unzip_edm115bot**")
+            await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption=Messages.EXT_CAPTION.format(fname))
         os.remove(doc_f)
     except FloodWait as f:
         asyncio.sleep(f.x)
