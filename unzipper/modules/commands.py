@@ -11,17 +11,6 @@ from pyrogram.types import Message
 from pyrogram.errors import FloodWait
 
 from .bot_data import Buttons, Messages
-from unzipper.helpers.database import (
-    check_user,
-    del_user,
-    count_users,
-    get_users_list,
-    # Banned Users db
-    add_banned_user,
-    del_banned_user,
-    count_banned_users,
-    get_upload_mode
-)
 from unzipper.helpers.unzip_help import humanbytes
 from config import Config
 
@@ -60,125 +49,8 @@ async def extract_dis_archive(_, message: Message):
     else:
         await unzip_msg.edit("Hold up ! What should I extract there 😳")
 
-# Database Commands
-@Client.on_message(filters.private & filters.command(["mode", "setmode"]))
-async def set_up_mode_for_user(_, message: Message):
-    upload_mode = await get_upload_mode(message.from_user.id)
-    await message.reply(Messages.SELECT_UPLOAD_MODE_TXT.format(upload_mode), reply_markup=Buttons.SET_UPLOAD_MODE_BUTTONS)
-
-@Client.on_message(filters.private & filters.command("stats") & filters.user(Config.BOT_OWNER))
-async def send_stats(_, message: Message):
-    stats_msg = await message.reply("`Processing… ⏳`")
-    total, used, free = shutil.disk_usage(".")
-    total = humanbytes(total)
-    used = humanbytes(used)
-    free = humanbytes(free)
-    cpu_usage = psutil.cpu_percent()
-    ram_usage = psutil.virtual_memory().percent
-    disk_usage = psutil.disk_usage('/').percent
-    total_users = await count_users()
-    total_banned_users = await count_banned_users()
-    await stats_msg.edit(f"""
-**💫 Current bot stats 💫 [BETA]**
-
-**👥 Users :** 
- ↳ **Users in database :** `{total_users}`
- ↳ **Total banned users :** `{total_banned_users}`
-
-
-**💾 Disk usage :**
- ↳ **Total Disk Space :** `{total}`
- ↳ **Used :** `{used}({disk_usage}%)`
- ↳ **Free :** `{free}`
-
-
-**🎛 Hardware usage :**
- ↳ **CPU usage :** `{cpu_usage}%`
- ↳ **RAM usage :** `{ram_usage}%`"""
-                         )
-    
-# Attempt to not make that available for non owner
-#@Client.on_message(filters.private & filters.command("stats") & filters.user(!=Config.BOT_OWNER))
-#async def send_stats(_, message: Message):
-#    await message.reply("You are not owner 🧐 Stop that")
-
-async def _do_broadcast(message, user):
-    try:
-        await message.copy(chat_id=int(user))
-        return 200
-    except FloodWait as e:
-        asyncio.sleep(e.x)
-        return _do_broadcast(message, user)
-    except Exception:
-        await del_user(user)
-
-@Client.on_message(filters.private & filters.command("broadcast") & filters.user(Config.BOT_OWNER))
-async def broadcast_dis(_, message: Message):
-    bc_msg = await message.reply("`Processing… ⏳`")
-    r_msg = message.reply_to_message
-    if not r_msg:
-        return await bc_msg.edit("`Reply to a message to broadcast 📡`")
-    users_list = await get_users_list()
-    # trying to broadcast
-    await bc_msg.edit("`Broadcasting has started, this may take while 😪`")
-    success_no = 0
-    failed_no = 0
-    total_users = await count_users()
-    for user in users_list:
-        b_cast = await _do_broadcast(message=r_msg, user=user["user_id"])
-        if b_cast == 200:
-            success_no += 1
-        else:
-            failed_no += 1
-    await bc_msg.edit(f"""
-**Broadcast completed ✅**
-
-**Total Users :** `{total_users}`
-**Successful Responses :** `{success_no}`
-**Failed Responses :** `{failed_no}`
-    """)
-
-@Client.on_message(filters.private & filters.command("ban") & filters.user(Config.BOT_OWNER))
-async def ban_user(_, message: Message):
-    ban_msg = await message.reply("`Processing… ⏳`")
-    try:
-        user_id = message.text.split(None, 1)[1]
-    except:
-        return await ban_msg.edit("`Give a user id to ban 😈`")
-    await add_banned_user(user_id)
-    await ban_msg.edit(f"**Successfully banned that user ✅** \n\n**User ID :** `{user_id}`")
-
-@Client.on_message(filters.private & filters.command("unban") & filters.user(Config.BOT_OWNER))
-async def unban_user(_, message: Message):
-    unban_msg = await message.reply("`Processing… ⏳`")
-    try:
-        user_id = message.text.split(None, 1)[1]
-    except:
-        return await unban_msg.edit("`Give a user id to unban 😇`")
-    await del_banned_user(user_id)
-    await unban_msg.edit(f"**Successfully unbanned that user ✅** \n\n**User ID :** `{user_id}`")
-
 @Client.on_message(filters.private & filters.command("me"))
 async def me_stats(_, message: Message):
     me_msg = await message.reply("This is a WIP command that would allow you to get more stats about your utilisation of me 🤓")
     me_info = await unzip_bot.ask(chat_id=query.message.chat.id ,text="Send anything :")
     await unzip_bot.send_message(chat_id=query.message.chat.id, text=me_info)
-
-@Client.on_message(filters.private & filters.command("user") & filters.user(Config.BOT_OWNER))
-async def info_user(_, message: Message):
-    info_user_msg = await message.reply(f"`Processing… ⏳`")
-    try:
-        user_id = message.text.split(None, 1)[1]
-    except:
-        return await info_user_msg.edit("`Give a user id 🙂`")
-    await info_user_msg.edit(f"**User ID :** `{user_id}`…\n\nWIP")
-
-@Client.on_message(filters.private & filters.command("db") & filters.user(Config.BOT_OWNER))
-async def db_info(_, message: Message):
-    users_list = await get_users_list()
-    db_msg = await message.reply(f"🚧 There you go :\n\n`{users_list}`")
-
-@Client.on_message(filters.private & filters.command("dbdive") & filters.user(Config.BOT_OWNER))
-async def db_dive(_, message: Message):
-    dburl = await Config.MONGODB_URL
-    db_dive_msg = await message.reply(f"🚧 Go on [MongoDB.com](https://mongodb.com/cloud/atlas/register), u stupid 😐\n\n`{dburl}`")
