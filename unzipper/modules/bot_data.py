@@ -50,20 +50,10 @@ class Buttons:
             ]
         ])
 
-    SET_UPLOAD_MODE_BUTTONS = InlineKeyboardMarkup([
-            [
-                InlineKeyboardButton("As document 📁", callback_data="set_mode|doc")
-            ],
-            [
-                InlineKeyboardButton("As video 📹", callback_data="set_mode|video")
-            ]
-        ])
-
-
 class Messages:
     START_TEXT = """
 Hi **{}** 👋, I'm **Unarchiver Bot** 🥰
-**This is BETA version !** May be a lot buggy. Better waiting for the stable version at daytime… 🙂
+`This is Personal Use Only version !`
 
 I can extract archives like zip, rar, tar, …
 
@@ -75,9 +65,6 @@ I can extract archives like zip, rar, tar, …
 
   **1)** Send the file or link that you want to extract
   **2)** Click on extract button (If you sent a link use `🔗 URL extract` button. If it's a file just use `🗂️ File extract` button)
-
-**• How to change upload mode 🤔**
-  Send **/mode** command to the bot. You can change upload mode from there
 
 **Note:**
   **1.** If your archive is password protected select `🗂️ Extract a password protected archive 🔐` mode. Bot isn’t a god to know your file’s password, so if this happens just send that password !
@@ -92,29 +79,15 @@ I can extract archives like zip, rar, tar, …
     """
 
     ABOUT_TXT = """
-**About Unarchiver Bot [BETA]**
+**About Unarchiver Bot [PERSONAL USE ONLY]**
 
 • **Language :** [Python](https://www.python.org/)
 • **Framework :** [Pyrogram](https://docs.pyrogram.org/)
-• **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot/tree/beta)
+• **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot/tree/personal_only)
 • **Developer :** [EDM115](https://github.com/EDM115)
 
 
 **Made with ❤️ by @EDM115bots**
-    """
-
-    LOG_TXT = """
-**Extract Log 📝**
-
-**User ID :** `{}`
-**File Name :** `{}`
-**File Size :** `{}`
-    """
-
-    PASS_TXT = """
-**Password of above archive is 🔑**
-
-`{}`
     """
 
     AFTER_OK_DL_TXT = """
@@ -172,16 +145,6 @@ Now all of your files have been deleted from my server 😌
 
 **Note : This action cannot be undone !**
     """
-
-    SELECT_UPLOAD_MODE_TXT = """
-Please select the upload mode by clicking on below buttons 👇
-
-**Current upload mode is :** `{}`
-"""
-    CHANGED_UPLOAD_MODE_TXT = """
-**Successfully changed upload mode to** `{}` **✅**
-"""
-
 
 # List of error messages from p7zip
 ERROR_MSGS = [
