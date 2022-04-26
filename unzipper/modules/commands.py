@@ -180,5 +180,5 @@ async def db_info(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("dbdive") & filters.user(Config.BOT_OWNER))
 async def db_dive(_, message: Message):
-    dburl = await Config.MONGODB_URL
+    dburl = Config.MONGODB_URL
     db_dive_msg = await message.reply(f"🚧 Go on [MongoDB.com](https://mongodb.com/cloud/atlas/register), u stupid 😐\n\n`{dburl}`")
