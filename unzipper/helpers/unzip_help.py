@@ -59,22 +59,3 @@ def TimeFormatter(milliseconds: int) -> str:
         ((str(seconds) + "s, ") if seconds else "") + \
         ((str(milliseconds) + "ms, ") if milliseconds else "")
     return tmp[:-2]
-
-# Checking log channel
-def check_logs():
-    try:
-        if Config.LOGS_CHANNEL:
-            c_info = client.get_chat(chat_id=Config.LOGS_CHANNEL)
-            if c_info.type != "channel":
-                print("A chat is **not** a channel 😐")
-                return
-            elif c_info.username is not None:
-                print("A chat is **not** private 😐")
-                return
-            else:
-                client.send_message(chat_id=Config.LOGS_CHANNEL, text="`unzip-bot has successfully started !` \n\n**Powered by @EDM115bots ❤️**")
-        else:
-            print("No Log channel ID is given !")
-            exit()
-    except:
-        print("Error happened while checking Log channel 💀 Make sure you're not dumb enough to provide a wrong Log channel ID 🧐")
