@@ -134,7 +134,7 @@ I can extract archives like zip, rar, tar, …
     EXT_CAPTION = """
 `{}`
 
-Successfully uploaded by @unzip_edm115bot 🥰
+Successfully extracted by @unzip_edm115bot 🥰
     """
 
     EXT_FAILED_TXT = """
