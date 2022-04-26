@@ -131,6 +131,12 @@ I can extract archives like zip, rar, tar, …
 **Status :** Trying to upload… Please wait
     """
 
+    EXT_CAPTION = """
+`{}`
+
+Successfully uploaded by @unzip_edm115bot 🥰
+    """
+
     EXT_FAILED_TXT = """
 **Extraction Failed 😕**
 
