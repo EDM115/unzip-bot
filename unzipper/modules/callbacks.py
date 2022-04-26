@@ -15,7 +15,6 @@ from .ext_script.ext_helper import extr_files, get_files, make_keyboard
 from .ext_script.up_helper import send_file, answer_query
 from .commands import https_url_regex
 from unzipper.helpers.unzip_help import progress_for_pyrogram, TimeFormatter, humanbytes
-from unzipper.helpers.database import set_upload_mode
 from config import Config
 
 # Function to download files from direct link using aiohttp
@@ -38,12 +37,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     elif query.data == "aboutcallback":
         await query.edit_message_text(text=Messages.ABOUT_TXT, reply_markup=Buttons.ME_GOIN_HOME, disable_web_page_preview=True)
     
-    elif query.data.startswith("set_mode"):
-        user_id = query.from_user.id
-        mode = query.data.split("|")[1]
-        await set_upload_mode(user_id, mode)
-        await answer_query(query, Messages.CHANGED_UPLOAD_MODE_TXT.format(mode))
-
     elif query.data.startswith("extract_file"):
         user_id = query.from_user.id
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
@@ -70,8 +63,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     if unzip_resp.status == 200:
                         # Makes download dir
                         os.makedirs(download_path)
-                        # Send logs
-                        await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.LOG_TXT.format(user_id, url, u_file_size))
                         s_time = time()
                         archive = f"{download_path}/archive_from_{user_id}{os.path.splitext(url)[1]}"
                         await answer_query(query, f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️", unzip_client=unzip_bot)
@@ -85,9 +76,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     return await query.message.edit("`Give me an archive to extract 😐`")
                 # Makes download dir
                 os.makedirs(download_path)
-                # Send Logs
-                log_msg = await r_message.forward(chat_id=Config.LOGS_CHANNEL)
-                await log_msg.reply(Messages.LOG_TXT.format(user_id, r_message.document.file_name, humanbytes(r_message.document.file_size)))
                 s_time = time()
                 archive = await r_message.download(
                     file_name=f"{download_path}/archive_from_{user_id}{os.path.splitext(r_message.document.file_name)[1]}",
@@ -104,7 +92,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 ext_s_time = time()
                 extractor = await extr_files(path=ext_files_dir, archive_path=archive, password=password.text)
                 ext_e_time = time()
-                await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.PASS_TXT.format(password.text))
             else:
                 ext_s_time = time()
                 extractor = await extr_files(path=ext_files_dir, archive_path=archive)
