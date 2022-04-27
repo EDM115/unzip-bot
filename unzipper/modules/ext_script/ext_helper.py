@@ -2,9 +2,16 @@
 
 import subprocess
 import os
+import re
+import shutil
 
+from time import time
+from aiohttp import ClientSession
+from aiofiles import open as openfile
+from pyrogram import Client
+from pyrogram.types import CallbackQuery, InlineKeyboardButton
 from pykeyboard import InlineKeyboard
-from pyrogram.types import InlineKeyboardButton
+from config import Config
 
 ## Run commands in shell
 async def __run_cmds_unzipper(command):
@@ -17,7 +24,12 @@ async def _extract_with_7z_helper(path, archive_path, password=None):
     if password:
         command = f"7z x -o{path} -p{password} {archive_path} -y"
     else:
-        command = f"7z x -o{path} {archive_path} -y"
+        command = f"7z t {archive_path} -pIAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA -y"
+        if "Everything is Ok" in ext_out:
+            command = f"7z x -o{path} {archive_path} -y"
+        else:
+            await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text="That archive is password protected 😡")
+            await unzip_bot.send_message(chat_id=query.message.chat.id, text="That archive is password protected 😡 Don't fool me !")
     return await __run_cmds_unzipper(command)
 
 ##Extract with zstd (for .zst files)
