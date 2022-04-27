@@ -15,7 +15,7 @@ from config import Config
 
 ## Run commands in shell
 async def __run_cmds_unzipper(command):
-    ext_cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, check=True, universal_newlines=True)
+    ext_cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, universal_newlines=True)
     ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8")
     return ext_out
 
@@ -25,7 +25,7 @@ async def _extract_with_7z_helper(path, archive_path, password=None):
         command = f"7z x -o{path} -p{password} {archive_path} -y"
     else:
         command = f"7z t {archive_path} -pIAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA -y"
-        ext_cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, check=True, universal_newlines=True)
+        ext_cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, universal_newlines=True)
         ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8")
         if "Everything is Ok" in ext_out:
             command = f"7z x -o{path} {archive_path} -y"
