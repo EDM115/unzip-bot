@@ -20,4 +20,5 @@ Less functionalities, but :
 ## Found a bug 🐞
 
 If you found a bug in this beta version please open an [issue](https://github.com/EDM115/unzip-bot/issues) or report it at [me](https://t.me/EDM115)  
+I didn't tested it, so it may crash 😅 but I'm nearly sure it's okay  
 Same if you have any feature request ☺️
