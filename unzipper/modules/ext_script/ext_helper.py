@@ -26,7 +26,7 @@ async def _extract_with_7z_helper(path, archive_path, password=None):
     else:
         command = f"7z t {archive_path} -pIAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA -y"
         ext_cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, universal_newlines=True)
-        ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8")
+        ext_out = ext_cmd.stdout.read()[:-1]
         if "Everything is Ok" in ext_out:
             command = f"7z x -o{path} {archive_path} -y"
         else:
