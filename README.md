@@ -39,6 +39,7 @@
 - [ ] Add group support. You add bot to group as admin, then reply to any file with `/extract`. Then you choose where goes the files (group or PM), and drop here do the instructions (pass or no, what to upload, …)
   
 [![Deploy me 🥺](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/beta)  
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/ENIia-?referralCode=EDM115)  
   
 ## Found a bug 🐞
 
