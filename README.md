@@ -24,8 +24,8 @@
 - And some other features 🔥 Dive into the code to find them 🤭
   
 ## Simple version 😌
-I made a special version if you only want to create use it personally. Works smoother but with less features.  
-[**Try it here**](https://github.com/EDM115/unzip-bot/tree/personal_only)
+I made a special version if you only want to use it personally. Works smoother but with less features.  
+[**👉 Try it here 👈**](https://github.com/EDM115/unzip-bot/tree/personal_only)
 
 ## Bugs to fix and features to add 💀  
 [**Check the beta branch to find them. They normally also are on the master one**](https://github.com/EDM115/unzip-bot/blob/beta/README.md#bugs-to-fix-and-features-to-add-)  
