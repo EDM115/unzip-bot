@@ -35,6 +35,48 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
         except:
             pass
 
+# Workaround :
+"""
+def exponential_moving_average(data, samples=0, smoothing=0.02):
+    '''
+    data: an array of all values.
+    samples: how many previous data samples are avraged. Set to 0 to average all data points.
+    smoothing: a value between 0-1, 1 being a linear average (no falloff).
+    '''
+
+    if len(data) == 1:
+        return data[0]
+
+    if samples == 0 or samples > len(data):
+        samples = len(data)
+
+    average = sum(data[-samples:]) / samples
+    last_speed = data[-1]
+    return (smoothing * last_speed) + ((1 - smoothing) * average)
+
+input_data = [4.5, 8.21, 8.7, 5.8, 3.8, 2.7, 2.5, 7.1, 9.3, 2.1, 3.1, 9.7, 5.1, 6.1, 9.1, 5.0, 1.6, 6.7, 5.5, 3.2] # this would be a constant stream of download speeds as you go, pre-defined here for illustration
+
+data = []
+ema_data = []
+
+for sample in input_data:
+    data.append(sample)
+    average_value = exponential_moving_average(data)
+    ema_data.append(average_value)
+
+# print it out for visualization
+for i in range(len(data)):
+    print("REAL: ", data[i])
+    print("EMA:  ", ema_data[i])
+    print("--")
+"""
+"""
+averageSpeed = SMOOTHING_FACTOR * lastSpeed + (1-SMOOTHING_FACTOR) * averageSpeed;
+
+SMOOTHING_FACTOR is a number between 0 and 1. The higher this number, the faster older samples are discarded. As you can see in the formula, when SMOOTHING_FACTOR is 1 you are simply using the value of your last observation. When SMOOTHING_FACTOR is 0 averageSpeed never changes. So, you want something in between, and usually a low value to get decent smoothing. I've found that 0.005 provides a pretty good smoothing value for an average download speed.
+lastSpeed is the last measured download speed. You can get this value by running a timer every second or so to calculate how many bytes have downloaded since the last time you ran it.
+averageSpeed is, obviously, the number that you want to use to calculate your estimated time remaining. Initialize this to the first lastSpeed measurement you get.
+"""
 
 def humanbytes(size):
     if not size:
