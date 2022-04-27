@@ -17,17 +17,15 @@
 - Broadcast messages to users
 - Ban / Unban users from using your bot
 - Send logs in a private channel/group
+- Can run only one extract per user at a time
+- Download speed : 2-12 Mb/s, can be even more if you're lucky
+- Upload speed : 5-20 Mb/s, unexpectedly
+- Fast to answer and process tasks
 - And some other features 🔥 Dive into the code to find them 🤭
   
-## Bugs to fix and additional features to add 💀  
+## Bugs to fix and features to add 💀  
 [**Check the beta branch to find them. They normally also are on the master one**](https://github.com/EDM115/unzip-bot/blob/beta/README.md#bugs-to-fix-and-features-to-add-)  
 Those are things that are fixed/added regarding to [`original repo`](https://github.com/EDM115/unzip-bot#license--copyright-%EF%B8%8F)
-  
-## Properties 👋  
-- [x] Can run only one extract per user at a time
-- [x] Download speed : 2-12 Mb/s, can be even more if you're lucky
-- [x] Upload speed : 5-20 Mb/s, unexpectedly
-- [x] Fast to answer and process tasks
   
 ## Config vars 📖
 - `APP_ID` - Your APP ID. Get it from [my.telegram.org](my.telegram.org)
@@ -52,7 +50,6 @@ ban - {id of user}
 unban - {id of user}
 ```
   
-  
 ## Deploy 🚧
 Deploying is easy 🥰 You can deploy this bot in Heroku or in a VPS ♥️  
 **Star 🌟 Fork 🍴 and Deploy 📤**
@@ -60,7 +57,7 @@ Deploying is easy 🥰 You can deploy this bot in Heroku or in a VPS ♥️
 > ⚠️ Note :
 > We are using arch linux. But why 🤔
 > 
-> Because arch’s p7zip package is the only maintained version of [original p7zip](http://p7zip.sourceforge.net/) package with some additional features !
+> Because arch’s p7zip package is the only maintained version of the [original p7zip](http://p7zip.sourceforge.net/) package with some additional features !
 ---
 #### The lazy way 
 [![Deploy me 🥺](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/master)  
@@ -84,7 +81,6 @@ bash start.sh
 ## Found a bug 🐞
 If you found a bug in this bot please open an [issue](https://github.com/EDM115/unzip-bot/issues) or report it at [me](https://t.me/EDM115)  
 Same if you have any feature request ☺️
-  
   
 ## License & Copyright 👮‍♀️
 ```
