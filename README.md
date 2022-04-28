@@ -36,7 +36,7 @@ Those are things that are fixed/added regarding to [`original repo`](https://git
 - `API_HASH` - Your API_HASH. Get it from [my.telegram.org](my.telegram.org)
 - `BOT_OWNER` - Your Telegram Account ID. Get it from [@MissRose_bot](https://t.me/MissRose_bot) (Start the bot and send <samp>/info</samp> command).
 - `BOT_TOKEN` - Bot Token of Your Telegram Bot. Get it from [@BotFather](https://t.me/BotFather)
-- `MONGODB_URL` - Your MongoDB URL, Tutorial [here](https://www.youtube.com/watch?v=0aYrJTfYBHU)
+- `MONGODB_URL` - Your MongoDB URL ([**tutorial here**](./CreateMongoDB.md))
 - `LOGS_CHANNEL` - Make a private channel and get its ID (search on Google if you don't know how to do). Using a group works as well, just add [`Rose`](https://t.me/MissRose_bot?startgroup=startbot), then send `/id` (In both cases, make sure to add your bot to the channel/group as an admin !)
 
 ## Commands ✍️
