@@ -98,18 +98,23 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await answer_query(query, "Can't find details 💀 Please contact @EDM115 if it's an error", answer_only=True, unzip_client=unzip_bot)
             
             await answer_query(query, Messages.AFTER_OK_DL_TXT.format(TimeFormatter(round(e_time-s_time) * 1000)), unzip_client=unzip_bot)
-
+            
+            # Attempt to fetch password protected archives
+            global protected
+            protected = False
             if splitted_data[2] == "with_pass":
                 password = await unzip_bot.ask(chat_id=query.message.chat.id ,text="**Please send me the password 🔑**")
                 ext_s_time = time()
-                extractor = await extr_files(path=ext_files_dir, archive_path=archive, password=password.text)
+                extractor = await extr_files(path=ext_files_dir, archive_path=archive, password=password.text, protected)
                 ext_e_time = time()
                 await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.PASS_TXT.format(password.text))
             else:
                 ext_s_time = time()
-                extractor = await extr_files(path=ext_files_dir, archive_path=archive)
+                extractor = await extr_files(path=ext_files_dir, archive_path=archive, protected)
                 ext_e_time = time()
             # Checks if there is an error happened while extracting the archive
+            if protected == True:
+                return await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text="That archive is password protected 😡"), await unzip_bot.send_message(chat_id=query.message.chat.id, text="That archive is password protected 😡 Don't fool me !")
             if any(err in extractor for err in ERROR_MSGS):
                 try:
                     return await query.message.edit(Messages.EXT_FAILED_TXT)
