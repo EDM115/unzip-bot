@@ -14,13 +14,13 @@ from pykeyboard import InlineKeyboard
 from config import Config
 
 ## Run commands in shell
-async def __run_cmds_unzipper(command):
+async def __run_cmds_unzipper(command, protected):
     ext_cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8")
-    return ext_out
+    return ext_out, protected
 
 ## Extract with 7z
-async def _extract_with_7z_helper(path, archive_path, password=None):
+async def _extract_with_7z_helper(path, archive_path, password=None, protected):
     if password:
         command = f"7z x -o{path} -p{password} {archive_path} -y"
     else:
@@ -30,10 +30,9 @@ async def _extract_with_7z_helper(path, archive_path, password=None):
         if "Everything is Ok" in ext_out:
             command = f"7z x -o{path} {archive_path} -y"
         else:
-            await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text="That archive is password protected 😡")
-            await unzip_bot.send_message(chat_id=query.message.chat.id, text="That archive is password protected 😡 Don't fool me !")
-            command = f"exit"
-    return await __run_cmds_unzipper(command)
+            command = f"echo 'This archive is password protected'"
+            protected = True
+    return await __run_cmds_unzipper(command, protected)
 
 ##Extract with zstd (for .zst files)
 async def _extract_with_zstd(path, archive_path):
@@ -41,14 +40,14 @@ async def _extract_with_zstd(path, archive_path):
     return await __run_cmds_unzipper(command)
 
 # Main function to extract files
-async def extr_files(path, archive_path, password=None):
+async def extr_files(path, archive_path, password=None, protected):
     file_path = os.path.splitext(archive_path)[1]
     if file_path == ".zst":
         os.mkdir(path)
         ex = await _extract_with_zstd(path, archive_path)
         return ex
     else:
-        ex = await _extract_with_7z_helper(path, archive_path, password)
+        ex = await _extract_with_7z_helper(path, archive_path, password, protected)
         return ex
 
 # Get files in directory as a list
