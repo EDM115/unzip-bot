@@ -105,12 +105,12 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             if splitted_data[2] == "with_pass":
                 password = await unzip_bot.ask(chat_id=query.message.chat.id ,text="**Please send me the password 🔑**")
                 ext_s_time = time()
-                extractor = await extr_files(path=ext_files_dir, archive_path=archive, password=password.text, protected)
+                extractor = await extr_files(protected, path=ext_files_dir, archive_path=archive, password=password.text)
                 ext_e_time = time()
                 await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.PASS_TXT.format(password.text))
             else:
                 ext_s_time = time()
-                extractor = await extr_files(path=ext_files_dir, archive_path=archive, protected)
+                extractor = await extr_files(protected, path=ext_files_dir, archive_path=archive)
                 ext_e_time = time()
             # Checks if there is an error happened while extracting the archive
             if protected == True:
