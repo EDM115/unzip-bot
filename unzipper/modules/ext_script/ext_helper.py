@@ -13,7 +13,7 @@ async def __run_cmds_unzipper(command, protected):
     return ext_out, protected
 
 ## Extract with 7z
-async def _extract_with_7z_helper(path, archive_path, password=None, protected):
+async def _extract_with_7z_helper(protected, path, archive_path, password=None):
     if password:
         command = f"7z x -o{path} -p{password} {archive_path} -y"
     else:
@@ -33,14 +33,14 @@ async def _extract_with_zstd(path, archive_path):
     return await __run_cmds_unzipper(command)
 
 # Main function to extract files
-async def extr_files(path, archive_path, password=None, protected):
+async def extr_files(protected, path, archive_path, password=None):
     file_path = os.path.splitext(archive_path)[1]
     if file_path == ".zst":
         os.mkdir(path)
         ex = await _extract_with_zstd(path, archive_path)
         return ex
     else:
-        ex = await _extract_with_7z_helper(path, archive_path, password, protected)
+        ex = await _extract_with_7z_helper(protected, path, archive_path, password)
         return ex
 
 # Get files in directory as a list
