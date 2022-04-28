@@ -2,16 +2,9 @@
 
 import subprocess
 import os
-import re
-import shutil
 
-from time import time
-from aiohttp import ClientSession
-from aiofiles import open as openfile
-from pyrogram import Client
-from pyrogram.types import CallbackQuery, InlineKeyboardButton
 from pykeyboard import InlineKeyboard
-from config import Config
+from pyrogram.types import InlineKeyboardButton
 
 ## Run commands in shell
 async def __run_cmds_unzipper(command, protected):
