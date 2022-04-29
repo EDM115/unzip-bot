@@ -49,14 +49,15 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
         shutil.rmtree(full_path)
 
 async def send_url_logs(unzip_bot, c_id, doc_f):
-    u_file_size = os.stat(doc_f).st_size
-    if Config.TG_MAX_SIZE < int(u_file_size):
-        return await unzip_bot.send_message(
-            chat_id=c_id,
-            text="`File size is too large to send in telegram 😥` \n\n**Sorry, but I can't do anything about this as it's Telegram limitation 😔**"
-        )
-    fname = os.path.basename(doc_f)
-    await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption=Messages.EXT_CAPTION.format(fname))
+    try:
+        u_file_size = os.stat(doc_f).st_size
+        if Config.TG_MAX_SIZE < int(u_file_size):
+            return await unzip_bot.send_message(
+                chat_id=c_id,
+                text="`File size is too large to send in telegram 😥` \n\n**Sorry, but I can't do anything about this as it's Telegram limitation 😔**"
+            )
+        fname = os.path.basename(doc_f)
+        await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption=Messages.EXT_CAPTION.format(fname))
     except FloodWait as f:
         asyncio.sleep(f.x)
         return send_file(c_id, doc_f)
