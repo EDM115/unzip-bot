@@ -48,7 +48,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
     except BaseException:
         shutil.rmtree(full_path)
 
-async def send_url_logs(unzip_bot, c_id, doc_f, full_path):
+async def send_url_logs(unzip_bot, c_id, doc_f):
     u_file_size = os.stat(doc_f).st_size
     if Config.TG_MAX_SIZE < int(u_file_size):
         return await unzip_bot.send_message(
