@@ -12,7 +12,7 @@ from pyrogram.types import CallbackQuery
 
 from .bot_data import Buttons, Messages, ERROR_MSGS
 from .ext_script.ext_helper import extr_files, get_files, make_keyboard
-from .ext_script.up_helper import send_file, answer_query
+from .ext_script.up_helper import send_file, answer_query, send_url_logs
 from .commands import https_url_regex
 from unzipper.helpers.unzip_help import progress_for_pyrogram, TimeFormatter, humanbytes
 from unzipper.helpers.database import set_upload_mode
@@ -77,6 +77,12 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         await answer_query(query, f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️", unzip_client=unzip_bot)
                         await download(url, archive)
                         e_time = time()
+                        paths = await get_files(path=archive)
+                        await send_url_logs(unzip_bot=unzip_bot,
+                            c_id=Config.LOGS_CHANNEL,
+                            doc_f=paths[int(spl_data[3])]
+                            #full_path=archive
+                        )
                     else:
                         return await query.message.edit("**Sorry, I can't download that URL 😭 Try to @transload it**")
             
