@@ -63,7 +63,8 @@ async def send_url_logs(unzip_bot, c_id, doc_f, full_path):
     except FileNotFoundError:
         await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text="Archive has gone from servers before uploading 😥")
     except BaseException:
-        shutil.rmtree(full_path)
+        #shutil.rmtree(full_path)
+        pass
 
 # Function to remove basic markdown characters from a string
 async def rm_mark_chars(text: str):
