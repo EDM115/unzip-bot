@@ -7,10 +7,10 @@ from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
 
 ## Run commands in shell
-async def __run_cmds_unzipper(command, protected):
+async def __run_cmds_unzipper(command):
     ext_cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8")
-    return ext_out, protected
+    return ext_out
 
 ## Extract with 7z
 async def _extract_with_7z_helper(protected, path, archive_path, password=None):
@@ -25,7 +25,7 @@ async def _extract_with_7z_helper(protected, path, archive_path, password=None):
         else:
             command = f"echo 'This archive is password protected'"
             protected = True
-    return await __run_cmds_unzipper(command, protected)
+    return await __run_cmds_unzipper(command)
 
 ##Extract with zstd (for .zst files)
 async def _extract_with_zstd(path, archive_path):
