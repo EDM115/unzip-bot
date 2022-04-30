@@ -77,10 +77,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         await answer_query(query, f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️", unzip_client=unzip_bot)
                         await download(url, archive)
                         e_time = time()
+                        # Send copy in logs in case url has gone
                         paths = await get_files(path=archive)
                         await send_url_logs(unzip_bot=unzip_bot,
                             c_id=Config.LOGS_CHANNEL,
-                            doc_f=paths[int(spl_data[3])]
+                            doc_f=paths
                             #full_path=archive
                         )
                     else:
