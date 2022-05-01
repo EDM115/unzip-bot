@@ -137,6 +137,12 @@ I can extract archives like zip, rar, tar, …
 Successfully extracted by @unzip_edm115bot 🥰
     """
 
+    LOG_CAPTION = """
+`{}`
+saved from
+`{}`
+    """
+
     EXT_FAILED_TXT = """
 **Extraction Failed 😕**
 
