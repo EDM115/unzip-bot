@@ -74,9 +74,14 @@ async def send_stats(_, message: Message):
     total = humanbytes(total)
     used = humanbytes(used)
     free = humanbytes(free)
-    cpu_usage = psutil.cpu_percent()
+    sent = humanbytes(psutil.net_io_counters().bytes_sent)
+    recv = humanbytes(psutil.net_io_counters().bytes_recv)
+    speed = psutil.net_if_stats().speed
+    ip = psutil.net_connections().raddr
+    cpu_usage = psutil.cpu_percent(interval=0.1)
     ram_usage = psutil.virtual_memory().percent
     disk_usage = psutil.disk_usage('/').percent
+    uptime = TimeFormatter(int(psutil.cpu_times().system)*1000)
     total_users = await count_users()
     total_banned_users = await count_banned_users()
     await stats_msg.edit(f"""
@@ -93,9 +98,17 @@ async def send_stats(_, message: Message):
  ↳ **Free :** `{free}`
 
 
+**🌐 Network usage :**
+ ↳ **Uploaded :** : `{sent}`
+ ↳ **Downloaded :** `{recv}`
+ ↳ **Speed :** `{speed} MiB`
+ ↳ **IP :** `{ip}`
+
+
 **🎛 Hardware usage :**
  ↳ **CPU usage :** `{cpu_usage}%`
- ↳ **RAM usage :** `{ram_usage}%`"""
+ ↳ **RAM usage :** `{ram_usage}%`
+ ↳ **Uptime :** `{uptime}`"""
                          )
     
 # Attempt to not make that available for non owner
@@ -161,8 +174,7 @@ async def unban_user(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("me"))
 async def me_stats(_, message: Message):
-    me_msg = await message.reply("This is a WIP command that would allow you to get more stats about your utilisation of me 🤓")
-    me_info = await message.ask(chat_id=query.message.chat.id ,text="Send anything :")
+    me_info = await message.ask(chat_id=query.message.chat.id, text="This is a WIP command that would allow you to get more stats about your utilisation of me 🤓\n\nSend anything :")
     await message.send_message(chat_id=query.message.chat.id, text=me_info)
 
 @Client.on_message(filters.private & filters.command("user") & filters.user(Config.BOT_OWNER))
@@ -183,3 +195,24 @@ async def db_info(_, message: Message):
 async def db_dive(_, message: Message):
     dburl = Config.MONGODB_URL
     db_dive_msg = await message.reply(f"🚧 Go on [MongoDB.com](https://mongodb.com/cloud/atlas/register), u stupid 😐\n\n`{dburl}`")
+    
+@Client.on_message(filters.private & filters.command("redbutton") & filters.user(Config.BOT_OWNER))
+async def red_alert(_, message: Message):
+    await message.reply(f"WIP")
+
+@Client.on_message(filters.private & filters.command("restart") & filters.user(Config.BOT_OWNER))
+async def stop_everything(_, message: Message):
+    await message.reply(f"WIP")
+
+@Client.on_message(filters.private & filters.command("addthumb"))
+async def thumb_add(_, message: Message):
+    await message.reply(f"WIP")
+
+@Client.on_message(filters.private & filters.command("delthumb"))
+async def thumb_del(_, message: Message):
+    await message.reply(f"WIP")
+
+@Client.on_message(filters.private & filters.command("cleanall") & filters.user(Config.BOT_OWNER))
+async def del_everything(_, message: Message):
+    await message.reply(f"WIP")
+
