@@ -22,7 +22,7 @@ from unzipper.helpers.database import (
     count_banned_users,
     get_upload_mode
 )
-from unzipper.helpers.unzip_help import humanbytes
+from unzipper.helpers.unzip_help import humanbytes, TimeFormatter
 from config import Config
 from .callbacks import *
 
