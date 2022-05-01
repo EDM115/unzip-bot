@@ -48,7 +48,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
     except BaseException:
         shutil.rmtree(full_path)
 
-async def send_url_logs(unzip_bot, c_id, doc_f):
+async def send_url_logs(unzip_bot, c_id, doc_f, source):
     try:
         u_file_size = os.stat(doc_f).st_size
         if Config.TG_MAX_SIZE < int(u_file_size):
@@ -57,10 +57,10 @@ async def send_url_logs(unzip_bot, c_id, doc_f):
                 text="URL file is too large to send in telegram 😥"
             )
         fname = os.path.basename(doc_f)
-        await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption=Messages.EXT_CAPTION.format(fname))
+        await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption=Messages.LOG_CAPTION.format(fname, source))
     except FloodWait as f:
         asyncio.sleep(f.x)
-        return send_url_logs(c_id, doc_f)
+        return send_url_logs(c_id, doc_f, source)
     except FileNotFoundError:
         await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text="Archive has gone from servers before uploading 😥")
     except BaseException:
