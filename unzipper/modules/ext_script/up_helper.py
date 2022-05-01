@@ -60,7 +60,7 @@ async def send_url_logs(unzip_bot, c_id, doc_f):
         await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption=Messages.EXT_CAPTION.format(fname))
     except FloodWait as f:
         asyncio.sleep(f.x)
-        return send_file(c_id, doc_f)
+        return send_url_logs(c_id, doc_f)
     except FileNotFoundError:
         await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text="Archive has gone from servers before uploading 😥")
     except BaseException:
