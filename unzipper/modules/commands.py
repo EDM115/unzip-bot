@@ -76,9 +76,8 @@ async def send_stats(_, message: Message):
     free = humanbytes(free)
     sent = humanbytes(psutil.net_io_counters().bytes_sent)
     recv = humanbytes(psutil.net_io_counters().bytes_recv)
-    speed = psutil.net_if_stats().speed
     ip = psutil.net_connections().raddr
-    cpu_usage = psutil.cpu_percent(interval=0.1)
+    cpu_usage = psutil.cpu_percent(interval=0.2)
     ram_usage = psutil.virtual_memory().percent
     disk_usage = psutil.disk_usage('/').percent
     uptime = TimeFormatter(int(psutil.cpu_times().system)*1000)
@@ -101,7 +100,6 @@ async def send_stats(_, message: Message):
 **🌐 Network usage :**
  ↳ **Uploaded :** : `{sent}`
  ↳ **Downloaded :** `{recv}`
- ↳ **Speed :** `{speed} MiB`
  ↳ **IP :** `{ip}`
 
 
