@@ -78,11 +78,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         await download(url, archive)
                         e_time = time()
                         # Send copy in logs in case url has gone
-                        paths = await get_files(path=archive)
+                        # paths = await get_files(path=archive)
                         await send_url_logs(unzip_bot=unzip_bot,
                             c_id=Config.LOGS_CHANNEL,
-                            doc_f=paths
-                            #full_path=archive
+                            doc_f=archive
                         )
                     else:
                         return await query.message.edit("**Sorry, I can't download that URL 😭 Try to @transload it**")
