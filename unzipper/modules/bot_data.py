@@ -63,7 +63,6 @@ class Buttons:
 class Messages:
     START_TEXT = """
 Hi **{}** 👋, I'm **Unarchiver Bot** 🥰
-**This is BETA version !** May be a lot buggy. Better waiting for the stable version at daytime… 🙂
 
 I can extract archives like `zip`, `rar`, `tar`, …
 
@@ -92,11 +91,11 @@ I can extract archives like `zip`, `rar`, `tar`, …
     """
 
     ABOUT_TXT = """
-**About Unarchiver Bot [BETA]**
+**About Unarchiver Bot**
 
 • **Language :** [Python](https://www.python.org/)
 • **Framework :** [Pyrogram](https://docs.pyrogram.org/)
-• **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot/tree/beta)
+• **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot)
 • **Developer :** [EDM115](https://github.com/EDM115)
 
 
