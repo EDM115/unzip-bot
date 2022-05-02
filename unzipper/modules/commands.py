@@ -47,6 +47,14 @@ async def start_bot(_, message: Message):
 async def clean_ma_files(_, message: Message):
     await message.reply_text(text=Messages.CLEAN_TXT, reply_markup=Buttons.CLN_BTNS)
 
+@Client.on_message(filters.private & filters.command("help"))
+async def start_bot(_, message: Message):
+    await message.reply_text(text=Messages.HELP_TXT, reply_markup=Buttons.START_BUTTON)
+
+@Client.on_message(filters.private & filters.command("about"))
+async def start_bot(_, message: Message):
+    await message.reply_text(text=Messages.ABOUT_TXT, reply_markup=Buttons.START_BUTTON, disable_web_page_preview=True)
+
 @Client.on_message(filters.incoming & filters.private & filters.regex(https_url_regex) | filters.document)
 async def extract_dis_archive(_, message: Message):
     unzip_msg = await message.reply("`Processing… ⏳`", reply_to_message_id=message.message_id)
@@ -92,12 +100,12 @@ async def send_stats(_, message: Message):
 
 **💾 Disk usage :**
  ↳ **Total Disk Space :** `{total}`
- ↳ **Used :** `{used}({disk_usage}%)`
+ ↳ **Used :** `{used} - {disk_usage}%`
  ↳ **Free :** `{free}`
 
 
 **🌐 Network usage :**
- ↳ **Uploaded :** : `{sent}`
+ ↳ **Uploaded :** `{sent}`
  ↳ **Downloaded :** `{recv}`
 
 
@@ -127,10 +135,10 @@ async def broadcast_dis(_, message: Message):
     bc_msg = await message.reply("`Processing… ⏳`")
     r_msg = message.reply_to_message
     if not r_msg:
-        return await bc_msg.edit("`Reply to a message to broadcast 📡`")
+        return await bc_msg.edit("Reply to a message to broadcast 📡")
     users_list = await get_users_list()
     # trying to broadcast
-    await bc_msg.edit("`Broadcasting has started, this may take while 😪`")
+    await bc_msg.edit("Broadcasting has started, this may take while 😪")
     success_no = 0
     failed_no = 0
     total_users = await count_users()
@@ -143,9 +151,9 @@ async def broadcast_dis(_, message: Message):
     await bc_msg.edit(f"""
 **Broadcast completed ✅**
 
-**Total Users :** `{total_users}`
-**Successful Responses :** `{success_no}`
-**Failed Responses :** `{failed_no}`
+**Total users :** `{total_users}`
+**Successful responses :** `{success_no}`
+**Failed responses :** `{failed_no}`
     """)
 
 @Client.on_message(filters.private & filters.command("ban") & filters.user(Config.BOT_OWNER))
@@ -154,7 +162,7 @@ async def ban_user(_, message: Message):
     try:
         user_id = message.text.split(None, 1)[1]
     except:
-        return await ban_msg.edit("`Give a user id to ban 😈`")
+        return await ban_msg.edit("Give a user id to ban 😈")
     await add_banned_user(user_id)
     await ban_msg.edit(f"**Successfully banned that user ✅** \n\n**User ID :** `{user_id}`")
 
@@ -164,14 +172,14 @@ async def unban_user(_, message: Message):
     try:
         user_id = message.text.split(None, 1)[1]
     except:
-        return await unban_msg.edit("`Give a user id to unban 😇`")
+        return await unban_msg.edit("Give a user id to unban 😇")
     await del_banned_user(user_id)
     await unban_msg.edit(f"**Successfully unbanned that user ✅** \n\n**User ID :** `{user_id}`")
 
 @Client.on_message(filters.private & filters.command("me"))
 async def me_stats(_, message: Message):
     me_info = await message.ask(chat_id=query.message.chat.id, text="This is a WIP command that would allow you to get more stats about your utilisation of me 🤓\n\nSend anything :")
-    await message.send_message(chat_id=query.message.chat.id, text=me_info)
+    await Client.send_message(chat_id=query.message.chat.id, text=f"`{me_info}`")
 
 @Client.on_message(filters.private & filters.command("user") & filters.user(Config.BOT_OWNER))
 async def info_user(_, message: Message):
