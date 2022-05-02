@@ -48,11 +48,11 @@ async def clean_ma_files(_, message: Message):
     await message.reply_text(text=Messages.CLEAN_TXT, reply_markup=Buttons.CLN_BTNS)
 
 @Client.on_message(filters.private & filters.command("help"))
-async def start_bot(_, message: Message):
+async def help_meh(_, message: Message):
     await message.reply_text(text=Messages.HELP_TXT, reply_markup=Buttons.ME_GOIN_HOME)
 
 @Client.on_message(filters.private & filters.command("about"))
-async def start_bot(_, message: Message):
+async def about_meee(_, message: Message):
     await message.reply_text(text=Messages.ABOUT_TXT, reply_markup=Buttons.ME_GOIN_HOME, disable_web_page_preview=True)
 
 @Client.on_message(filters.incoming & filters.private & filters.regex(https_url_regex) | filters.document)
