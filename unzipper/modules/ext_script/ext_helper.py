@@ -13,11 +13,18 @@ async def __run_cmds_unzipper(command):
     return ext_out
 
 ## Extract with 7z
-async def _extract_with_7z_helper(path, archive_path, password=None):
+async def _extract_with_7z_helper(protected, path, archive_path, password=None):
     if password:
         command = f"7z x -o{path} -p{password} {archive_path} -y"
     else:
-        command = f"7z x -o{path} {archive_path} -y"
+        command = f"7z t {archive_path} -pIAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA -y"
+        ext_cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8")
+        if "Everything is Ok" in ext_out:
+            command = f"7z x -o{path} {archive_path} -y"
+        else:
+            command = f"echo 'This archive is password protected'"
+            protected = True
     return await __run_cmds_unzipper(command)
 
 ##Extract with zstd (for .zst files)
@@ -26,14 +33,14 @@ async def _extract_with_zstd(path, archive_path):
     return await __run_cmds_unzipper(command)
 
 # Main function to extract files
-async def extr_files(path, archive_path, password=None):
+async def extr_files(protected, path, archive_path, password=None):
     file_path = os.path.splitext(archive_path)[1]
     if file_path == ".zst":
         os.mkdir(path)
         ex = await _extract_with_zstd(path, archive_path)
         return ex
     else:
-        ex = await _extract_with_7z_helper(path, archive_path, password)
+        ex = await _extract_with_7z_helper(protected, path, archive_path, password)
         return ex
 
 # Get files in directory as a list
