@@ -1,9 +1,9 @@
 pyrogram<2.0.0
-TgCrypto
-pyromod
-motor
-dnspython
-psutil
-pykeyboard
-aiohttp
-aiofiles
+TgCrypto==1.2.3
+pyromod==1.5
+motor==3.0.0
+dnspython==2.2.1
+psutil==5.9.0
+pykeyboard==0.1.5
+aiohttp==3.8.1
+aiofiles==0.8.0
