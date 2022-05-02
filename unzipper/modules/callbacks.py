@@ -129,17 +129,17 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     except:
                         pass
                     return await unzip_bot.send_message(chat_id=query.message.chat.id, text=Messages.EXT_FAILED_TXT)
-            
-            await answer_query(query, Messages.EXT_OK_TXT.format(TimeFormatter(round(ext_e_time-ext_s_time) * 1000)), unzip_client=unzip_bot)
-            
-            # Upload extracted files
+            # Check if user were dumb 😐
             paths = await get_files(path=ext_files_dir)
             if not paths:
                 await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text="That archive is password protected 😡")
                 await unzip_bot.send_message(chat_id=query.message.chat.id, text="That archive is password protected 😡 **Don't fool me !**")
                 global fooled
                 fooled = True
+                await answer_query(query, Messages.EXT_FAILED_TXT, unzip_client=unzip_bot)
             else:
+                # Upload extracted files
+                await answer_query(query, Messages.EXT_OK_TXT.format(TimeFormatter(round(ext_e_time-ext_s_time) * 1000)), unzip_client=unzip_bot)
                 i_e_buttons = await make_keyboard(paths=paths, user_id=user_id, chat_id=query.message.chat.id)
                 try:
                     await query.message.edit("Select files to upload 👇", reply_markup=i_e_buttons)
@@ -213,9 +213,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     elif query.data == "cancel_dis":
         try:
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{query.from_user.id}")
-            await query.message.edit(Messages.CANCELLED_TXT.format("Process cancelled ❌"))
+            await query.message.edit(Messages.CANCELLED_TXT.format("❌ Process cancelled"))
         except:
             return await query.answer("There is nothing to remove 💀", show_alert=True)
     
     elif query.data == "nobully":
-        await query.message.edit("**Ok, I won't delete those files 😇**")
+        await query.message.edit("**Cancelled successfully ✅**")
