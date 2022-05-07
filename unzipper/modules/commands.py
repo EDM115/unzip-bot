@@ -28,7 +28,7 @@ from unzipper.helpers.database import (
 from unzipper.helpers.unzip_help import humanbytes, TimeFormatter
 from config import Config
 from .callbacks import *
-
+from unzipper import LOGGER
 
 # Regex for http/https urls
 https_url_regex = ("((http|https)://)(www.)?" +
@@ -241,9 +241,9 @@ async def send_logs(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("restart") & filters.user(Config.BOT_OWNER))
 async def restart(client, message):
-    shutil.rmtree(DOWNLOAD_DIRECTORY)
-    LOGGER.info("Deleted DOWNLOAD_DIRECTORY successfully")
+    shutil.rmtree(DOWNLOAD_LOCATION)
+    LOGGER.info("Deleted DOWNLOAD_LOCATION successfully")
     restarttime = TimeFormatter(time())
     await message.reply_text(f"**ℹ️ Bot restarted successfully at `{restarttime}`**", quote=True)
     LOGGER.info(f"{message.from_user.id} : Restarting…")
-    execl(executable, executable, "-m", "bot")
+    execl(executable, executable, "-m", "unzipper")
