@@ -225,7 +225,7 @@ async def send_logs(_, message: Message):
     with open('log.txt', 'rb') as doc_f:
         try:
             await Client.send_document(
-                message.chat.id,
+                chat_id=message.chat.id,
                 document=doc_f,
                 file_name=doc_f.name,
                 reply_to_message_id=message.message_id
@@ -238,9 +238,9 @@ async def send_logs(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("restart") & filters.user(Config.BOT_OWNER))
 async def restart(client, message):
-    shutil.rmtree(DOWNLOAD_LOCATION)
-    LOGGER.info("Deleted DOWNLOAD_LOCATION successfully")
+    shutil.rmtree(Config.DOWNLOAD_LOCATION)
+    LOGGER.info("Deleted {Config.DOWNLOAD_LOCATION} folder successfully")
     restarttime = TimeFormatter(time())
-    await message.reply_text(f"**ℹ️ Bot restarted successfully at `{restarttime}`**", quote=True)
+    await message.reply_text(f"**ℹ️ Bot restarted successfully at **`{restarttime}`", quote=True)
     LOGGER.info(f"{message.from_user.id} : Restarting…")
     execl(executable, executable, "-m", "unzipper")
