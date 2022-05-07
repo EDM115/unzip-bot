@@ -233,7 +233,7 @@ async def send_logs(_, message: Message):
                 file_name=doc_f.name,
                 reply_to_message_id=message.message_id
             )
-        LOGGER.info(f"Log file sent to {message.from_user.id}")
+            LOGGER.info(f"Log file sent to {message.from_user.id}")
         except FloodWait as e:
             sleep(e.x)
         except RPCError as e:
