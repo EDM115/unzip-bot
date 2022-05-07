@@ -5,10 +5,13 @@ import asyncio
 import re
 import shutil
 import psutil
+from os import execl
+from time import sleep, time
+from sys import executable
 
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from pyrogram.errors import FloodWait
+from pyrogram.errors import FloodWait, RPCError
 
 from .bot_data import Buttons, Messages
 from unzipper.helpers.database import (
@@ -112,7 +115,7 @@ async def send_stats(_, message: Message):
 **🎛 Hardware usage :**
  ↳ **CPU usage :** `{cpu_usage}%`
  ↳ **RAM usage :** `{ram_usage}%`
- ↳ **Uptime :** `{uptime}`"""
+ ↳ **Uptime :** `{uptime}` (might be wrong)"""
                          )
     
 # Attempt to not make that available for non owner
@@ -220,3 +223,27 @@ async def thumb_del(_, message: Message):
 async def del_everything(_, message: Message):
     await message.reply(f"WIP")
 
+@Client.on_message(filters.private & filters.command("logs") & filters.user(Config.BOT_OWNER))
+async def send_logs(_, message: Message):
+    with open('log.txt', 'rb') as doc_f:
+        try:
+            await unzip_bot.send_document(
+                message.chat.id,
+                document=doc_f,
+                file_name=doc_f.name,
+                reply_to_message_id=message.message_id
+            )
+        LOGGER.info(f"Log file sent to {message.from_user.id}")
+        except FloodWait as e:
+            sleep(e.x)
+        except RPCError as e:
+            message.reply_text(e, quote=True)
+
+@Client.on_message(filters.private & filters.command("restart") & filters.user(Config.BOT_OWNER))
+async def restart(client, message):
+    shutil.rmtree(DOWNLOAD_DIRECTORY)
+    LOGGER.info("Deleted DOWNLOAD_DIRECTORY successfully")
+    restarttime = TimeFormatter(time())
+    await message.reply_text(f"**ℹ️ Bot restarted successfully at `{restarttime}`**", quote=True)
+    LOGGER.info(f"{message.from_user.id} : Restarting…")
+    execl(executable, executable, "-m", "bot")
