@@ -2,6 +2,7 @@
 
 from pyrogram import Client
 from pyromod import listen
+import logging
 
 from config import Config
 
@@ -14,3 +15,11 @@ unzipperbot = Client(
         plugins=plugins,
         sleep_threshold=10
     )
+
+logging.basicConfig(
+    level=logging.INFO,
+    handlers=[logging.FileHandler('log.txt'), logging.StreamHandler()],
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+LOGGER = logging.getLogger(__name__)
+logging.getLogger("pyrogram").setLevel(logging.WARNING)
