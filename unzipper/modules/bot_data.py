@@ -138,10 +138,19 @@ Successfully extracted by @unzip_edm115bot 🥰
     """
 
     LOG_CAPTION = """
-File  `{}`
+**The file : ** `{}`
 
 have been saved from
-`{}`  URL
+
+`{}` ** URL**
+    """
+
+    START_TXT = """
+ℹ️ The bot have successfully started at `{}` 💪
+    """
+
+    STOP_TXT = """
+ℹ️ The bot goes to sleep at `{}` 😴
     """
 
     EXT_FAILED_TXT = """
