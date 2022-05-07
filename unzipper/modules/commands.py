@@ -91,7 +91,7 @@ async def send_stats(_, message: Message):
     ram_usage = psutil.virtual_memory().percent
     disk_usage = psutil.disk_usage('/').percent
     # uptime = TimeFormatter(int(psutil.cpu_times().system)*1000)
-    uptime = psutil.cpu_times().system
+    uptime = TimeFormatter(int(psutil.cpu_times().system))
     total_users = await count_users()
     total_banned_users = await count_banned_users()
     await stats_msg.edit(f"""
