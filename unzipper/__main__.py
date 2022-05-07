@@ -2,6 +2,7 @@
 
 import os
 import logging
+from time import time
 
 from pyrogram import idle
 from . import unzipperbot
@@ -19,9 +20,13 @@ if __name__ == "__main__" :
     if not os.path.isdir(Config.DOWNLOAD_LOCATION):
         os.makedirs(Config.DOWNLOAD_LOCATION)
     unzipperbot.start()
+    starttime = time()
+    await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.START_TXT.format(starttime))
     print("Checking Log channel…")
     check_logs()
     LOGGER.info("Starting bot…")
     print("Bot is running now ! Join @EDM115bots")
     idle()
+    stoptime = time()
+    await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime))
     LOGGER.info("Bot stopped 😪")
