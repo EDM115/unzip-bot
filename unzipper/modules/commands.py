@@ -90,7 +90,8 @@ async def send_stats(_, message: Message):
     cpu_usage = psutil.cpu_percent(interval=0.2)
     ram_usage = psutil.virtual_memory().percent
     disk_usage = psutil.disk_usage('/').percent
-    uptime = TimeFormatter(int(psutil.cpu_times().system)*1000)
+    # uptime = TimeFormatter(int(psutil.cpu_times().system)*1000)
+    uptime = psutil.cpu_times().system
     total_users = await count_users()
     total_banned_users = await count_banned_users()
     await stats_msg.edit(f"""
@@ -207,10 +208,6 @@ async def db_dive(_, message: Message):
 async def red_alert(_, message: Message):
     await message.reply(f"WIP")
 
-@Client.on_message(filters.private & filters.command("restart") & filters.user(Config.BOT_OWNER))
-async def stop_everything(_, message: Message):
-    await message.reply(f"WIP")
-
 @Client.on_message(filters.private & filters.command("addthumb"))
 async def thumb_add(_, message: Message):
     await message.reply(f"WIP")
@@ -227,7 +224,7 @@ async def del_everything(_, message: Message):
 async def send_logs(_, message: Message):
     with open('log.txt', 'rb') as doc_f:
         try:
-            await unzip_bot.send_document(
+            await Client.send_document(
                 message.chat.id,
                 document=doc_f,
                 file_name=doc_f.name,
