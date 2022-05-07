@@ -226,10 +226,10 @@ async def send_logs(_, message: Message):
         try:
             await Client.send_document(
                 self,
-                self.chat_id=message.chat.id,
-                self.document=doc_f,
-                self.file_name=doc_f.name,
-                self.reply_to_message_id=message.message_id
+                chat_id=message.chat.id,
+                document=doc_f,
+                file_name=doc_f.name,
+                reply_to_message_id=message.message_id
             )
             LOGGER.info(f"Log file sent to {message.from_user.id}")
         except FloodWait as e:
