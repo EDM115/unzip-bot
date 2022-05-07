@@ -8,6 +8,7 @@ from pyrogram import idle
 from . import unzipperbot
 from .helpers.unzip_help import check_logs, TimeFormatter
 from config import Config
+from .modules.bot_data import Messages
 
 logging.basicConfig(
     level=logging.DEBUG,
