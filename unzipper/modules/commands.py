@@ -6,8 +6,9 @@ import re
 import shutil
 import psutil
 from os import execl
-from time import sleep, time
+from time import sleep, time, gmtime
 from sys import executable
+
 
 from pyrogram import Client, filters
 from pyrogram.types import Message
@@ -240,7 +241,7 @@ async def send_logs(_, message: Message):
 async def restart(client, message):
     shutil.rmtree(Config.DOWNLOAD_LOCATION)
     LOGGER.info("Deleted {Config.DOWNLOAD_LOCATION} folder successfully")
-    restarttime = TimeFormatter(time())
+    restarttime = TimeFormatter(time.gmtime())
     await message.reply_text(f"**ℹ️ Bot restarted successfully at **`{restarttime}`", quote=True)
     LOGGER.info(f"{message.from_user.id} : Restarting…")
     execl(executable, executable, "-m", "unzipper")
