@@ -89,11 +89,18 @@ async def check_user(message):
     is_in_db = await is_user_in_db(message.from_user.id)
     if not is_in_db:
         await add_user(message.from_user.id)
-        await Client.send_message(
-            chat_id=Config.LOGS_CHANNEL,
-            text=f"**#NEW_USER** 🎙 \n\n**User profile:** `{message.from_user.mention}` \n**User ID:** `{message.from_user.id}` \n**Profile URL:** [tg://user?id={message.from_user_id}](tg://user?id={message.from_user.id})",
-            disable_web_page_preview=False
-        )
+        try:
+            await Client.send_message(
+                chat_id=Config.LOGS_CHANNEL,
+                text=f"**#NEW_USER** 🎙 \n\n**User profile:** `{message.from_user.mention}` \n**User ID:** `{message.from_user.id}` \n**Profile URL:** [tg://user?id={message.from_user_id}](tg://user?id={message.from_user.id})",
+                disable_web_page_preview=False
+            )
+        except AttributeError:
+            await Client.send_message(
+                chat_id=Config.LOGS_CHANNEL,
+                text=f"**#NEW_USER** 🎙 \n\n**User profile:** `{message.from_user.mention}` \n**User ID:** `[AttributeError] Can't get it` \n**Profile URL:** Can't get it",
+                disable_web_page_preview=False
+            )
     await message.continue_propagation()
 
 
