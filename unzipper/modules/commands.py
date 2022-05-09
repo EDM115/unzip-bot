@@ -14,6 +14,7 @@ from pyrogram.types import Message, CallbackQuery
 from pyrogram.errors import FloodWait, RPCError
 
 from .bot_data import Buttons, Messages
+"""
 from unzipper.helpers.database import (
     check_user,
     del_user,
@@ -25,6 +26,8 @@ from unzipper.helpers.database import (
     count_banned_users,
     get_upload_mode
 )
+"""
+import unzipper.helpers.database
 from unzipper.helpers.unzip_help import humanbytes, TimeFormatter
 from config import Config
 from unzipper import LOGGER
@@ -89,7 +92,7 @@ async def send_stats(_, message: Message):
     cpu_usage = psutil.cpu_percent(interval=0.2)
     ram_usage = psutil.virtual_memory().percent
     disk_usage = psutil.disk_usage('/').percent
-    uptime = TimeFormatter(int(psutil.cpu_times().system)/100)
+    uptime = TimeFormatter(int(psutil.cpu_times().user)*1000)
     total_users = await count_users()
     total_banned_users = await count_banned_users()
     await stats_msg.edit(f"""
@@ -189,9 +192,10 @@ async def info_user(_, message: Message):
     info_user_msg = await message.reply(f"`Processing… ⏳`")
     try:
         user_id = message.text.split(None, 1)[1]
+        up_count = get_uploaded(user_id)
     except:
         return await info_user_msg.edit("`Give a user id 🙂`")
-    await info_user_msg.edit(f"**User ID :** `{user_id}`…\n\nWIP")
+    await info_user_msg.edit(f"**User ID :** `{user_id}`\n`{up_count}` files uploaded\n…\n\nWIP")
 
 @Client.on_message(filters.private & filters.command("db") & filters.user(Config.BOT_OWNER))
 async def db_info(_, message: Message):
