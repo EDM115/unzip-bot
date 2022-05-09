@@ -136,7 +136,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             # Check if user were dumb 😐
             paths = await get_files(path=ext_files_dir)
             if not paths:
-                await await log_msg.reply("That archive is password protected 😡")
+                await log_msg.reply("That archive is password protected 😡")
                 await unzip_bot.send_message(chat_id=query.message.chat.id, text="That archive is password protected 😡 **Don't fool me !**")
                 global fooled
                 fooled = True
