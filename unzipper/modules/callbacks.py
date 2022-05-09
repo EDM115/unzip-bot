@@ -147,8 +147,17 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 try:
                     await query.message.edit("Select files to upload 👇", reply_markup=i_e_buttons)
                 except:
-                    await unzip_bot.send_message(chat_id=query.message.chat.id, text="Select files to upload 👇", reply_markup=i_e_buttons)
-                    await query.message.delete()
+                    try:
+                        await unzip_bot.send_message(chat_id=query.message.chat.id, text="Select files to upload 👇", reply_markup=i_e_buttons)
+                        await query.message.delete()
+                    except REPLY_MARKUP_TOO_LONG:
+                        empty_buttons = await make_keyboard_empty(user_id=user_id, chat_id=query.message.chat.id)
+                        try:
+                            await query.message.edit("Select files to upload 👇", reply_markup=empty_buttons)
+                        except:
+                            await unzip_bot.send_message(chat_id=query.message.chat.id, text="Select files to upload 👇", reply_markup=empty_buttons)
+                            await query.message.delete()
+                        err400 = True
             
         except Exception as e:
             try:
@@ -165,7 +174,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         spl_data = query.data.split("|")
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
         paths = await get_files(path=file_path)
-        # Next level logic lmao
+        # Next level logic
         if not paths:
             if os.path.isdir(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}"):
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
@@ -180,18 +189,19 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}"
                     )
 
-        # Refreshing Inline keyboard
-        await query.message.edit("Refreshing… ⏳")
-        rpaths = await get_files(path=file_path)
-        # There are no files let's die
-        if not rpaths:
-            try:
-                shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
-            except:
-                pass
-            return await query.message.edit("I've already sent you those files 🙂")
-        i_e_buttons = await make_keyboard(paths=rpaths, user_id=query.from_user.id, chat_id=query.message.chat.id)
-        await query.message.edit("Select files to upload 👇", reply_markup=i_e_buttons)
+        if not err400:
+            # Refreshing Inline keyboard
+            await query.message.edit("Refreshing… ⏳")
+            rpaths = await get_files(path=file_path)
+            # There are no files let's die
+            if not rpaths:
+                try:
+                    shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
+                except:
+                    pass
+                return await query.message.edit("I've already sent you those files 🙂")
+            i_e_buttons = await make_keyboard(paths=rpaths, user_id=query.from_user.id, chat_id=query.message.chat.id)
+            await query.message.edit("Select files to upload 👇", reply_markup=i_e_buttons)
     
     elif query.data.startswith("ext_a"):
         spl_data = query.data.split("|")
