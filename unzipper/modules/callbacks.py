@@ -14,8 +14,8 @@ from .bot_data import Buttons, Messages, ERROR_MSGS
 from .ext_script.ext_helper import extr_files, get_files, make_keyboard
 from .ext_script.up_helper import send_file, answer_query, send_url_logs
 from .commands import https_url_regex
-from unzipper.helpers.unzip_help import progress_for_pyrogram, TimeFormatter, humanbytes
-from unzipper.helpers.database import set_upload_mode
+from unzipper.helpers.unzip_help import progress_for_pyrogram, TimeFormatter, humanbytes, timeformat_sec
+from unzipper.helpers.database import set_upload_mode, update_uploaded
 from config import Config
 
 # Function to download files from direct link using aiohttp
@@ -58,13 +58,13 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 if not re.match(https_url_regex, url):
                     return await query.message.edit("That's not a valid url 💀")
                 s = ClientSession()
-                async with s as ses:
+                async with s as session:
                     # Get the file size
-                    unzip_head = await ses.head(url)
+                    unzip_head = await session.head(url)
                     f_size = unzip_head.headers.get('content-length')
                     u_file_size = f_size if f_size else "undefined"
                     # Checks if file is an archive using content-type header
-                    unzip_resp = await ses.get(url, timeout=None)
+                    unzip_resp = await session.get(url, timeout=None)
                     if "application/" not in unzip_resp.headers.get('content-type'):
                         return await query.message.edit("That's not an archive 💀")
                     if unzip_resp.status == 200:
@@ -93,6 +93,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 # Makes download dir
                 os.makedirs(download_path)
                 # Send Logs
+                global log_msg
                 log_msg = await r_message.forward(chat_id=Config.LOGS_CHANNEL)
                 await log_msg.reply(Messages.LOG_TXT.format(user_id, r_message.document.file_name, humanbytes(r_message.document.file_size)))
                 s_time = time()
@@ -114,7 +115,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 ext_s_time = time()
                 extractor = await extr_files(protected, path=ext_files_dir, archive_path=archive, password=password.text)
                 ext_e_time = time()
-                await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.PASS_TXT.format(password.text))
+                await log_msg.reply(Messages.PASS_TXT.format(password.text))
             else:
                 ext_s_time = time()
                 extractor = await extr_files(protected, path=ext_files_dir, archive_path=archive)
@@ -122,17 +123,19 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             # Checks if there is an error happened while extracting the archive
             if any(err in extractor for err in ERROR_MSGS):
                 try:
+                    await log_msg.reply(Messages.EXT_FAILED_TXT)
                     return await query.message.edit(Messages.EXT_FAILED_TXT)
                 except:
                     try:
                         await query.message.delete()
                     except:
                         pass
+                    await log_msg.reply(Messages.EXT_FAILED_TXT)
                     return await unzip_bot.send_message(chat_id=query.message.chat.id, text=Messages.EXT_FAILED_TXT)
             # Check if user were dumb 😐
             paths = await get_files(path=ext_files_dir)
             if not paths:
-                await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text="That archive is password protected 😡")
+                await await log_msg.reply("That archive is password protected 😡")
                 await unzip_bot.send_message(chat_id=query.message.chat.id, text="That archive is password protected 😡 **Don't fool me !**")
                 global fooled
                 fooled = True
@@ -150,11 +153,14 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         except Exception as e:
             try:
                 await query.message.edit(Messages.ERROR_TXT.format(e))
+                await log_msg.reply(Messages.ERROR_TXT.format(e))
                 shutil.rmtree(download_path)
                 await s.close()
-            except Exception as er:
-                print(er)
-
+            except Exception as err:
+                print(err)
+                log_msg.reply(err)
+    
+    sent_files = 0
     elif query.data.startswith("ext_f"):
         spl_data = query.data.split("|")
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
@@ -166,6 +172,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             return await query.message.edit("I've already sent you those files 🙂")
         
         await query.answer("Sending that file to you… Please wait")
+        sent_files += 1
         await send_file(unzip_bot=unzip_bot,
                         c_id=spl_data[2],
                         doc_f=paths[int(spl_data[3])],
@@ -198,17 +205,22 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             return await query.message.edit("I've already sent you those files 🙂")
         await query.answer("Trying to send all files to you… Please wait")
         for file in paths:
+            sent_files += 1
             await send_file(unzip_bot=unzip_bot,
                             c_id=spl_data[2],
                             doc_f=file,
                             query=query,
                             full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}"
                         )
+
         await query.message.edit("**Successfully uploaded ✅** \n\n **Join @EDM115bots ❤️**")
+        log_msg.reply(Messages.HOW_MANY_UPLOADED.format(sent_files))
+        update_uploaded(user_id, upload_count=sent_files)
         try:
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
         except Exception as e:
             await query.message.edit(Messages.ERROR_TXT.format(e))
+            await log_msg.reply(Messages.ERROR_TXT.format(e))
     
     elif query.data == "cancel_dis":
         try:
