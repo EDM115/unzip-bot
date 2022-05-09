@@ -6,7 +6,7 @@ import re
 import shutil
 import psutil
 from os import execl
-from time import sleep, time, gmtime
+import time
 from sys import executable
 
 
@@ -91,7 +91,7 @@ async def send_stats(_, message: Message):
     cpu_usage = psutil.cpu_percent(interval=0.2)
     ram_usage = psutil.virtual_memory().percent
     disk_usage = psutil.disk_usage('/').percent
-    uptime = TimeFormatter(int(psutil.cpu_times().system)*100)
+    uptime = TimeFormatter(int(psutil.cpu_times().system)/100)
     total_users = await count_users()
     total_banned_users = await count_banned_users()
     await stats_msg.edit(f"""
@@ -224,8 +224,7 @@ async def del_everything(_, message: Message):
 async def send_logs(_, message: Message):
     with open('log.txt', 'rb') as doc_f:
         try:
-            await Client.send_document(
-                self,
+            await _.send_document(
                 chat_id=message.chat.id,
                 document=doc_f,
                 file_name=doc_f.name,
@@ -241,7 +240,7 @@ async def send_logs(_, message: Message):
 async def restart(client, message):
     shutil.rmtree(Config.DOWNLOAD_LOCATION)
     LOGGER.info("Deleted {Config.DOWNLOAD_LOCATION} folder successfully")
-    restarttime = TimeFormatter(time.gmtime())
+    restarttime = time.strftime("%Y/%m/%d - %H:%M:%S")
     await message.reply_text(f"**ℹ️ Bot restarted successfully at **`{restarttime}`", quote=True)
     LOGGER.info(f"{message.from_user.id} : Restarting…")
     execl(executable, executable, "-m", "unzipper")
