@@ -183,6 +183,10 @@ have been saved from
 Now all of your files have been deleted from my server 😌
     """
 
+    HOW_MANY_UPLOADED = """
+`{}` files were extracted from that archive
+    """
+
     CLEAN_TXT = """
 **Are sure want to delete your files from my server 🤔**
 
