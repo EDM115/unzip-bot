@@ -14,7 +14,6 @@ from pyrogram.types import Message, CallbackQuery
 from pyrogram.errors import FloodWait, RPCError
 
 from .bot_data import Buttons, Messages
-"""
 from unzipper.helpers.database import (
     check_user,
     del_user,
@@ -26,8 +25,6 @@ from unzipper.helpers.database import (
     count_banned_users,
     get_upload_mode
 )
-"""
-import unzipper.helpers.database
 from unzipper.helpers.unzip_help import humanbytes, TimeFormatter
 from config import Config
 from unzipper import LOGGER
