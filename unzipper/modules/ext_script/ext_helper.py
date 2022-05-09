@@ -70,6 +70,17 @@ async def make_keyboard(paths, user_id, chat_id):
     i_kbd.add(*data)
     return i_kbd
 
+async def make_keyboard_empty(user_id, chat_id):
+    i_kbd = InlineKeyboard(row_width=1)
+    data = []
+    data.append(
+        InlineKeyboardButton(f"Upload all 📤", f"ext_a|{user_id}|{chat_id}")
+    )
+    data.append(
+        InlineKeyboardButton("❌ Cancel", "cancel_dis")
+    )
+    i_kbd.add(*data)
+    return i_kbd
 
 ### --- Saved for later --- ###
 # async def make_keyboard(paths, user_id, chat_id):
