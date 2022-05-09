@@ -79,7 +79,7 @@ async def check_user(message):
     # Checking if user is banned
     is_banned = await is_user_in_bdb(message.from_user.id)
     if is_banned:
-        await message.reply("**Sorry you're banned 💀** \n\nReport this at @EDM115 if you think this is a mistake, I can unban you
+        await message.reply("**Sorry you're banned 💀** \n\nReport this at @EDM115 if you think this is a mistake, I can unban you")
         await message.stop_propagation()
         return
     # Cheking if user already in db
