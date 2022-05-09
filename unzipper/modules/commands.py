@@ -9,9 +9,8 @@ from os import execl
 import time
 from sys import executable
 
-
 from pyrogram import Client, filters
-from pyrogram.types import Message
+from pyrogram.types import Message, CallbackQuery
 from pyrogram.errors import FloodWait, RPCError
 
 from .bot_data import Buttons, Messages
@@ -28,7 +27,6 @@ from unzipper.helpers.database import (
 )
 from unzipper.helpers.unzip_help import humanbytes, TimeFormatter
 from config import Config
-from .callbacks import *
 from unzipper import LOGGER
 
 # Regex for http/https urls
@@ -183,6 +181,7 @@ async def unban_user(_, message: Message):
 @Client.on_message(filters.private & filters.command("me"))
 async def me_stats(_, message: Message):
     me_info = await message.ask(chat_id=query.message.chat.id, text="This is a WIP command that would allow you to get more stats about your utilisation of me 🤓\n\nSend anything :")
+    #r_message = query.message.reply_to_message
     await Client.send_message(chat_id=query.message.chat.id, text=f"`{me_info}`")
 
 @Client.on_message(filters.private & filters.command("user") & filters.user(Config.BOT_OWNER))
