@@ -19,8 +19,8 @@
   
 - [ ] The ETA isn't accurate
 - [ ] [Reply markup error](https://github.com/EDM115/unzip-bot/issues/2)
-- [ ] Adding a `/db` command that returns a list of all users + banned ones
-- [ ] Add a translation (start a CrowdIn dude)
+- [x] Adding a `/db` command that returns a list of all users + banned ones **WILL BE IMPROVED**
+- [ ] Add a translation (start a CrowdIn dude) [![Crowdin](https://badges.crowdin.net/unzip-bot-edm115/localized.svg)](https://crowdin.com/project/unzip-bot-edm115)
 - [ ] ~~Some profile links doesn't work~~ **Private ones. But maybe I can force it…**
 - [ ] Get informations with smth like `/user {id}`, that returns his state (banned or not) + lastly uploaded files (5 last with link to channel/group message) + how many files he sent + size of all of them. The user could also get those infos with a `/me` command
 - [x] Add a `/dbdive` that returns an url where we can visualize the db online **CAN BE IMPROVED**
@@ -40,9 +40,9 @@
 - [x] *Unzipping normally a password protected archive makes crash the bot 😭* Fixed here : [1](https://github.com/EDM115/unzip-bot/commit/41adcb26d11fa0df2425e7aa1654c88d5a4b2151), [2](https://github.com/EDM115/unzip-bot/commit/e933acdf3b61ee1cc92a194cb53c491537405c8f), [3](https://github.com/EDM115/unzip-bot/commit/db59780a14cbde2da53e739f62462719a3c95cd4), [4](https://github.com/EDM115/unzip-bot/commit/9ed2bb8621f8fb874912d8d7b103af83075c0202), [5](https://github.com/EDM115/unzip-bot/commit/5d6004aaae3a494b2e2a83b9c980cb3c4b94c731)
 - [x] *Looks like some "blank" users are added to the db, including a banned one Actually, the banned db can exist only if at least 1 value is inside. So, since owner have all rights, his ID can be added into it, the owner status will bypass it. But I noticed also other banned users while no `/ban` command were done* [Fix here](https://github.com/EDM115/unzip-bot/commit/6b69084cd7337453effb7e9015d2c77da83f8d81)
 #### Added :
-- [x] *Adding file name in description while uploading* Here : [1](https://github.com/EDM115/unzip-bot/commit/37e534873baba858583729f27927f42da368ed86)
-
-
+- [x] *Adding file name in description while uploading* [Added here](https://github.com/EDM115/unzip-bot/commit/37e534873baba858583729f27927f42da368ed86)
+  
+  
 [![Deploy me 🥺](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/beta)  
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/ENIia-?referralCode=EDM115)  
   
