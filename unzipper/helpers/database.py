@@ -41,6 +41,7 @@ async def count_users():
 async def get_users_list():
     return [users_list async for users_list in user_db.find({})]
 
+
 # Banned users database
 b_user_db = unzipper_db["banned_users_db"]
 
@@ -113,5 +114,22 @@ async def get_upload_mode(user_id):
     umode = await mode_db.find_one({"_id": user_id})
     if umode:
         return umode["mode"]
+    return "doc"
+
+
+# Db for how many files user uploaded
+uploaded_db = unzipper_db["uploaded_count_db"]
+
+async def get_uploaded(user_id):
+    up_count = await uploaded_db.find_one({"_id": user_id})
+    if up_count:
+        return up_count["uploaded_files"]
+    return None
+
+async def update_uploaded(user_id, upload_count):
+    is_exist = await uploaded_db.find_one({"_id": user_id})
+    if is_exist:
+        new_count = get_uploaded(user_id) + upload_count
+        await uploaded_db.update_one({"_id": user_id}, {"$set": {"uploaded_files": new_count}})
     else:
-        return "doc"
+        await uploaded_db.insert_one({"_id": user_id, "uploaded_files": upload_count})
