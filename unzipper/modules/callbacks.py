@@ -25,6 +25,7 @@ async def download(url, path):
             async with openfile(path, mode="wb") as file:
                 async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
                     await file.write(chunk)
+    session.close()
 
 # Callbacks
 @Client.on_callback_query()
