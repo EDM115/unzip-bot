@@ -30,6 +30,7 @@ async def download(url, path):
 # Callbacks
 @Client.on_callback_query()
 async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
+    sent_files = 0
     if query.data == "megoinhome":
         await query.edit_message_text(text=Messages.START_TEXT.format(query.from_user.mention), reply_markup=Buttons.START_BUTTON)
     
@@ -170,8 +171,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 print(err)
                 log_msg.reply(err)
     
-    sent_files = 0
     elif query.data.startswith("ext_f"):
+        #sent_files = 0
         spl_data = query.data.split("|")
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
         paths = await get_files(path=file_path)
