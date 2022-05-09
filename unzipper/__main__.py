@@ -11,11 +11,11 @@ from .helpers.unzip_help import check_logs, TimeFormatter
 from config import Config
 from .modules.bot_data import Messages
 
-run = True
+running = True
 
 def handler_stop_signals(signum, frame):
-    global run
-    run = False
+    global running
+    running = False
 
 signal.signal(signal.SIGINT, handler_stop_signals)
 signal.signal(signal.SIGTERM, handler_stop_signals)
@@ -27,7 +27,7 @@ logging.basicConfig(
 LOGGER = logging.getLogger(__name__)
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
-while run:
+while running:
     if __name__ == "__main__" :
         if not os.path.isdir(Config.DOWNLOAD_LOCATION):
             os.makedirs(Config.DOWNLOAD_LOCATION)
