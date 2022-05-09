@@ -2,7 +2,7 @@
 
 import os
 import logging
-from time import time
+import time
 import signal
 
 from pyrogram import idle
@@ -32,13 +32,13 @@ while run:
         if not os.path.isdir(Config.DOWNLOAD_LOCATION):
             os.makedirs(Config.DOWNLOAD_LOCATION)
         unzipperbot.start()
-        starttime = TimeFormatter(time())
+        starttime = time.strftime("%Y/%m/%d - %H:%M:%S")
         unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.START_TXT.format(starttime))
         print("Checking Log channel…")
         check_logs()
         LOGGER.info("Starting bot…")
         print("Bot is running now ! Join @EDM115bots")
         idle()
-        stoptime = TimeFormatter(time())
+        stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
         unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime))
         LOGGER.info("Bot stopped 😪")
