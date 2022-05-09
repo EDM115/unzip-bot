@@ -70,6 +70,7 @@ for i in range(len(data)):
     print("EMA:  ", ema_data[i])
     print("--")
 """
+
 """
 averageSpeed = SMOOTHING_FACTOR * lastSpeed + (1-SMOOTHING_FACTOR) * averageSpeed;
 
@@ -140,7 +141,7 @@ def TimeFormatter(milliseconds: int) -> str:
     return tmp[:-2]
 
 def timeformat_sec(seconds: int) -> str:
-    minutes, seconds = divmod(seconds, 60)
+    minutes, seconds = divmod(int(seconds), 60)
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
     tmp = ((str(days) + "d, ") if days else "") + \
