@@ -20,7 +20,6 @@
 - [ ] The ETA isn't accurate
 - [ ] [Reply markup error](https://github.com/EDM115/unzip-bot/issues/2)
 - [ ] Adding a `/db` command that returns a list of all users + banned ones
-- [ ] ~~Looks like some "blank" users are added to the db, including a banned one~~ *Actually, the banned db can exist only if at least 1 value is inside. So, since owner have all rights, his ID can be added into it, the owner status will bypass it. But I noticed also other banned users while no `/ban` command were done. Investigating on this…*
 - [ ] Add a translation (start a CrowdIn dude)
 - [ ] ~~Some profile links doesn't work~~ **Private ones. But maybe I can force it…**
 - [ ] Get informations with smth like `/user {id}`, that returns his state (banned or not) + lastly uploaded files (5 last with link to channel/group message) + how many files he sent + size of all of them. The user could also get those infos with a `/me` command
@@ -36,9 +35,12 @@
 - [ ] Add group support. You add bot to group as admin, then reply to any file with `/extract`. Then you choose where goes the files (group or PM), and drop here do the instructions (pass or no, what to upload, …)
   
 ## Fixed/added :partying_face:
-- [x] Download speed stays constant, depending of what we have at begining. If the download started at 3 Mb/s, it will stay like that through all the process and can't evolve
-- [x] Unzipping normally a password protected archive makes crash the bot 😭
-- [x] Adding file name in description while uploading
+#### Fixed :
+- [x] *Download speed stays constant, depending of what we have at begining. If the download started at 3 Mb/s, it will stay like that through all the process and can't evolve* Fixed with new PyroGram
+- [x] *Unzipping normally a password protected archive makes crash the bot 😭* Fixed here : [1](https://github.com/EDM115/unzip-bot/commit/41adcb26d11fa0df2425e7aa1654c88d5a4b2151), [2](https://github.com/EDM115/unzip-bot/commit/e933acdf3b61ee1cc92a194cb53c491537405c8f), [3](https://github.com/EDM115/unzip-bot/commit/db59780a14cbde2da53e739f62462719a3c95cd4), [4](https://github.com/EDM115/unzip-bot/commit/9ed2bb8621f8fb874912d8d7b103af83075c0202), [5](https://github.com/EDM115/unzip-bot/commit/5d6004aaae3a494b2e2a83b9c980cb3c4b94c731)
+- [x] *Looks like some "blank" users are added to the db, including a banned one Actually, the banned db can exist only if at least 1 value is inside. So, since owner have all rights, his ID can be added into it, the owner status will bypass it. But I noticed also other banned users while no `/ban` command were done* [Fix here](https://github.com/EDM115/unzip-bot/commit/6b69084cd7337453effb7e9015d2c77da83f8d81)
+#### Added :
+- [x] *Adding file name in description while uploading* Here : [1](https://github.com/EDM115/unzip-bot/commit/37e534873baba858583729f27927f42da368ed86)
 
 
 [![Deploy me 🥺](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/beta)  
