@@ -19,11 +19,11 @@ from unzipper.helpers.database import (
     del_user,
     count_users,
     get_users_list,
-    # Banned Users db
     add_banned_user,
     del_banned_user,
     count_banned_users,
-    get_upload_mode
+    get_upload_mode,
+    get_uploaded
 )
 from unzipper.helpers.unzip_help import humanbytes, TimeFormatter
 from config import Config
