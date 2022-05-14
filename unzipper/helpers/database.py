@@ -124,7 +124,7 @@ async def get_uploaded(user_id):
     up_count = await uploaded_db.find_one({"_id": user_id})
     if up_count:
         return up_count["uploaded_files"]
-    return None
+    return 0
 
 async def update_uploaded(user_id, upload_count):
     is_exist = await uploaded_db.find_one({"_id": user_id})
