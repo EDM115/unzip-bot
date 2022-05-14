@@ -129,6 +129,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 try:
                     await log_msg.reply(Messages.EXT_FAILED_TXT)
                     return await query.message.edit(Messages.EXT_FAILED_TXT)
+                    shutil.rmtree(download_path)
                 except:
                     try:
                         await query.message.delete()
@@ -136,6 +137,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         pass
                     await log_msg.reply(Messages.EXT_FAILED_TXT)
                     return await unzip_bot.send_message(chat_id=query.message.chat.id, text=Messages.EXT_FAILED_TXT)
+                    shutil.rmtree(download_path)
             # Check if user were dumb 😐
             paths = await get_files(path=ext_files_dir)
             if not paths:
@@ -144,6 +146,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 global fooled
                 fooled = True
                 await answer_query(query, Messages.EXT_FAILED_TXT, unzip_client=unzip_bot)
+                shutil.rmtree(download_path)
             else:
                 # Upload extracted files
                 await answer_query(query, Messages.EXT_OK_TXT.format(TimeFormatter(round(ext_e_time-ext_s_time) * 1000)), unzip_client=unzip_bot)
@@ -152,15 +155,15 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await query.message.edit("Select files to upload 👇", reply_markup=i_e_buttons)
                 except:
                     try:
-                        await unzip_bot.send_message(chat_id=query.message.chat.id, text="Select files to upload 👇", reply_markup=i_e_buttons)
                         await query.message.delete()
+                        await unzip_bot.send_message(chat_id=query.message.chat.id, text="Select files to upload 👇", reply_markup=i_e_buttons)
                     except ReplyMarkupTooLong:
                         empty_buttons = await make_keyboard_empty(user_id=user_id, chat_id=query.message.chat.id)
                         try:
                             await query.message.edit("Select files to upload 👇", reply_markup=empty_buttons)
                         except:
-                            await unzip_bot.send_message(chat_id=query.message.chat.id, text="Select files to upload 👇", reply_markup=empty_buttons)
                             await query.message.delete()
+                            await unzip_bot.send_message(chat_id=query.message.chat.id, text="Select files to upload 👇", reply_markup=empty_buttons)
                         global err400
                         err400 = True
             
@@ -209,8 +212,12 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             except:
                 pass
             return await query.message.edit("I've already sent you those files 🙂")
-        i_e_buttons = await make_keyboard(paths=rpaths, user_id=query.from_user.id, chat_id=query.message.chat.id)
-        await query.message.edit("Select files to upload 👇", reply_markup=i_e_buttons)
+        try:
+            i_e_buttons = await make_keyboard(paths=rpaths, user_id=query.from_user.id, chat_id=query.message.chat.id)
+            await query.message.edit("Select files to upload 👇", reply_markup=i_e_buttons)
+        except ReplyMarkupTooLong:
+            empty_buttons = await make_keyboard_empty(user_id=user_id, chat_id=query.message.chat.id)
+            await query.message.edit("Select files to upload 👇", reply_markup=empty_buttons)
     
     elif query.data.startswith("ext_a"):
         user_id = query.from_user.id
@@ -233,11 +240,12 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}"
                         )
 
-        await query.message.edit("**Successfully uploaded ✅** \n\n **Join @EDM115bots ❤️**")
+        await query.message.edit("**Successfully uploaded ✅**\n\n**Join @EDM115bots ❤️**")
         await log_msg.reply(Messages.HOW_MANY_UPLOADED.format(sent_files))
         await update_uploaded(user_id, upload_count=sent_files)
         try:
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
+            shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{query.from_user.id}")
         except Exception as e:
             await query.message.edit(Messages.ERROR_TXT.format(e))
             await log_msg.reply(Messages.ERROR_TXT.format(e))
