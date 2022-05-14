@@ -9,6 +9,7 @@ from aiohttp import ClientSession
 from aiofiles import open as openfile
 from pyrogram import Client
 from pyrogram.types import CallbackQuery
+from pyrogram.errors import ReplyMarkupTooLong
 
 from .bot_data import Buttons, Messages, ERROR_MSGS
 from .ext_script.ext_helper import extr_files, get_files, make_keyboard
@@ -25,11 +26,12 @@ async def download(url, path):
             async with openfile(path, mode="wb") as file:
                 async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
                     await file.write(chunk)
-    session.close()
+    await session.close()
 
 # Callbacks
 @Client.on_callback_query()
 async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
+    global sent_files
     sent_files = 0
     if query.data == "megoinhome":
         await query.edit_message_text(text=Messages.START_TEXT.format(query.from_user.mention), reply_markup=Buttons.START_BUTTON)
@@ -152,13 +154,14 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     try:
                         await unzip_bot.send_message(chat_id=query.message.chat.id, text="Select files to upload 👇", reply_markup=i_e_buttons)
                         await query.message.delete()
-                    except REPLY_MARKUP_TOO_LONG:
+                    except ReplyMarkupTooLong:
                         empty_buttons = await make_keyboard_empty(user_id=user_id, chat_id=query.message.chat.id)
                         try:
                             await query.message.edit("Select files to upload 👇", reply_markup=empty_buttons)
                         except:
                             await unzip_bot.send_message(chat_id=query.message.chat.id, text="Select files to upload 👇", reply_markup=empty_buttons)
                             await query.message.delete()
+                        global err400
                         err400 = True
             
         except Exception as e:
@@ -169,10 +172,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await s.close()
             except Exception as err:
                 print(err)
-                log_msg.reply(err)
+                await log_msg.reply(err)
     
     elif query.data.startswith("ext_f"):
-        #sent_files = 0
+        user_id = query.from_user.id
         spl_data = query.data.split("|")
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
         paths = await get_files(path=file_path)
@@ -190,22 +193,27 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         query=query,
                         full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}"
                     )
+        await update_uploaded(user_id, upload_count=sent_files)
+        global single_up
+        single_up = True
 
-        if not err400:
-            # Refreshing Inline keyboard
-            await query.message.edit("Refreshing… ⏳")
-            rpaths = await get_files(path=file_path)
-            # There are no files let's die
-            if not rpaths:
-                try:
-                    shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
-                except:
-                    pass
-                return await query.message.edit("I've already sent you those files 🙂")
-            i_e_buttons = await make_keyboard(paths=rpaths, user_id=query.from_user.id, chat_id=query.message.chat.id)
-            await query.message.edit("Select files to upload 👇", reply_markup=i_e_buttons)
+        # if not err400:
+        # theorically, err400 shouldn't be here because only ext_a can be used
+        # Refreshing Inline keyboard
+        await query.message.edit("Refreshing… ⏳")
+        rpaths = await get_files(path=file_path)
+        # There are no files let's die
+        if not rpaths:
+            try:
+                shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
+            except:
+                pass
+            return await query.message.edit("I've already sent you those files 🙂")
+        i_e_buttons = await make_keyboard(paths=rpaths, user_id=query.from_user.id, chat_id=query.message.chat.id)
+        await query.message.edit("Select files to upload 👇", reply_markup=i_e_buttons)
     
     elif query.data.startswith("ext_a"):
+        user_id = query.from_user.id
         spl_data = query.data.split("|")
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
         paths = await get_files(path=file_path)
@@ -226,8 +234,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         )
 
         await query.message.edit("**Successfully uploaded ✅** \n\n **Join @EDM115bots ❤️**")
-        log_msg.reply(Messages.HOW_MANY_UPLOADED.format(sent_files))
-        update_uploaded(user_id, upload_count=sent_files)
+        await log_msg.reply(Messages.HOW_MANY_UPLOADED.format(sent_files))
+        await update_uploaded(user_id, upload_count=sent_files)
         try:
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
         except Exception as e:
@@ -238,6 +246,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         try:
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{query.from_user.id}")
             await query.message.edit(Messages.CANCELLED_TXT.format("❌ Process cancelled"))
+            if single_up:
+                await update_uploaded(user_id, upload_count=sent_files)
+                await log_msg.reply(Messages.HOW_MANY_UPLOADED.format(sent_files))
         except:
             return await query.answer("There is nothing to remove 💀", show_alert=True)
     
