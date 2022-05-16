@@ -1,9 +1,9 @@
 name: Deploy of beta branch
 
 on:
-  push:
-    branches:
-      - master
+#  push:
+#    branches:
+#      - master
   workflow_dispatch:
 # Uncomment the previous lines to enable the automatic deploy
 
