@@ -70,7 +70,7 @@ Deploying is easy 🥰 You can deploy this bot in Heroku or in a VPS ♥️
 ---
 #### The legacy way
 ```bash
-git clone -b arch https://github.com/EDM115/unzip-bot.git
+git clone -b master https://github.com/EDM115/unzip-bot.git
 cd unzip-bot
 pip3 install -r requirements.txt
 # Arch linux only ↓
