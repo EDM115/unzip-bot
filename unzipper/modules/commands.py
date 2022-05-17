@@ -239,7 +239,7 @@ async def del_everything(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("logs") & filters.user(Config.BOT_OWNER))
 async def send_logs(_, message: Message):
-    with open('log.txt', 'rb') as doc_f:
+    with open('unzip-log.txt', 'rb') as doc_f:
         try:
             await _.send_document(
                 chat_id=message.chat.id,
