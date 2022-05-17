@@ -41,7 +41,7 @@ https_url_regex = ("((http|https)://)(www.)?" +
 async def _(_, message: Message):
     await check_user(message)
 
-@Client.on_message(filters.private & filters.command("start"))
+@Client.on_message(filters.command("start"))
 async def start_bot(_, message: Message):
     await message.reply_text(text=Messages.START_TEXT.format(message.from_user.mention), reply_markup=Buttons.START_BUTTON, disable_web_page_preview=True)
 
@@ -49,11 +49,11 @@ async def start_bot(_, message: Message):
 async def clean_ma_files(_, message: Message):
     await message.reply_text(text=Messages.CLEAN_TXT, reply_markup=Buttons.CLN_BTNS)
 
-@Client.on_message(filters.private & filters.command("help"))
+@Client.on_message(filters.command("help"))
 async def help_meh(_, message: Message):
     await message.reply_text(text=Messages.HELP_TXT, reply_markup=Buttons.ME_GOIN_HOME)
 
-@Client.on_message(filters.private & filters.command("about"))
+@Client.on_message(filters.command("about"))
 async def about_meee(_, message: Message):
     await message.reply_text(text=Messages.ABOUT_TXT, reply_markup=Buttons.ME_GOIN_HOME, disable_web_page_preview=True)
 
@@ -77,7 +77,7 @@ async def set_up_mode_for_user(_, message: Message):
     upload_mode = await get_upload_mode(message.from_user.id)
     await message.reply(Messages.SELECT_UPLOAD_MODE_TXT.format(upload_mode), reply_markup=Buttons.SET_UPLOAD_MODE_BUTTONS)
 
-@Client.on_message(filters.private & filters.command("stats") & filters.user(Config.BOT_OWNER))
+@Client.on_message(filters.command("stats") & filters.user(Config.BOT_OWNER))
 async def send_stats(_, message: Message):
     stats_msg = await message.reply("`Processing… ⏳`")
     total, used, free = shutil.disk_usage(".")
@@ -132,7 +132,7 @@ async def _do_broadcast(message, user):
     except Exception:
         await del_user(user)
 
-@Client.on_message(filters.private & filters.command("broadcast") & filters.user(Config.BOT_OWNER))
+@Client.on_message(filters.command("broadcast") & filters.user(Config.BOT_OWNER))
 async def broadcast_dis(_, message: Message):
     bc_msg = await message.reply("`Processing… ⏳`")
     r_msg = message.reply_to_message
@@ -158,7 +158,7 @@ async def broadcast_dis(_, message: Message):
 **Failed responses :** `{failed_no}`
     """)
 
-@Client.on_message(filters.private & filters.command("sendto") & filters.user(Config.BOT_OWNER))
+@Client.on_message(filters.command("sendto") & filters.user(Config.BOT_OWNER))
 async def send_dis(_, message: Message):
     sd_msg = await message.reply("`Processing… ⏳`")
     r_msg = message.reply_to_message
@@ -175,7 +175,7 @@ async def send_dis(_, message: Message):
     else:
         await sd_msg.edit("It failed 😣 Retry. If it fails again, it means that {user_id} haven't started bot yet, or he's private")
 
-@Client.on_message(filters.private & filters.command("ban") & filters.user(Config.BOT_OWNER))
+@Client.on_message(filters.command("ban") & filters.user(Config.BOT_OWNER))
 async def ban_user(_, message: Message):
     ban_msg = await message.reply("`Processing… ⏳`")
     try:
@@ -185,7 +185,7 @@ async def ban_user(_, message: Message):
     await add_banned_user(user_id)
     await ban_msg.edit(f"**Successfully banned that user ✅** \n\n**User ID :** `{user_id}`")
 
-@Client.on_message(filters.private & filters.command("unban") & filters.user(Config.BOT_OWNER))
+@Client.on_message(filters.command("unban") & filters.user(Config.BOT_OWNER))
 async def unban_user(_, message: Message):
     unban_msg = await message.reply("`Processing… ⏳`")
     try:
@@ -201,7 +201,7 @@ async def me_stats(_, message: Message):
     #r_message = query.message.reply_to_message
     await message.send_message(chat_id=query.message.chat.id, text=f"`{me_info}`")
 
-@Client.on_message(filters.private & filters.command("user") & filters.user(Config.BOT_OWNER))
+@Client.on_message(filters.command("user") & filters.user(Config.BOT_OWNER))
 async def info_user(_, message: Message):
     info_user_msg = await message.reply(f"`Processing… ⏳`")
     try:
