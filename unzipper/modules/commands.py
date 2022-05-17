@@ -158,6 +158,20 @@ async def broadcast_dis(_, message: Message):
 **Failed responses :** `{failed_no}`
     """)
 
+@Client.on_message(filters.private & filters.command("sendto") & filters.user(Config.BOT_OWNER))
+async def send_dis(_, message: Message):
+    sd_msg = await message.reply("`Processing… ⏳`")
+    r_msg = message.reply_to_message
+    if not r_msg:
+        return await sd_msg.edit("Reply to a message to send it 📡")
+    try:
+        user_id = message.text.split(None, 1)[1]
+    except:
+        return await sd_msg.edit("Give a user id to send a message")
+    await sd_msg.edit("Sending it, please wait... 😪")
+    success = False
+    send = await _do_broadcast(message=r_msg, user=user_id)
+
 @Client.on_message(filters.private & filters.command("ban") & filters.user(Config.BOT_OWNER))
 async def ban_user(_, message: Message):
     ban_msg = await message.reply("`Processing… ⏳`")
