@@ -169,8 +169,11 @@ async def send_dis(_, message: Message):
     except:
         return await sd_msg.edit("Give a user id to send a message")
     await sd_msg.edit("Sending it, please wait... 😪")
-    success = False
     send = await _do_broadcast(message=r_msg, user=user_id)
+    if send == 200:
+        await sd_msg.edit("Send message successfully to `{user_id}`")
+    else:
+        await sd_msg.edit("It failed 😣 Retry. If it fails again, it means that {user_id} haven't started bot yet, or he's private")
 
 @Client.on_message(filters.private & filters.command("ban") & filters.user(Config.BOT_OWNER))
 async def ban_user(_, message: Message):
