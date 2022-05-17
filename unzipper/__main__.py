@@ -25,7 +25,9 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 LOGGER = logging.getLogger(__name__)
-logging.getLogger("pyrogram").setLevel(logging.WARNING)
+logging.getLogger("pyrogram").setLevel(logging.DEBUG)
+logging.getLogger("motor").setLevel(logging.DEBUG)
+logging.getLogger("aiohttp").setLevel(logging.DEBUG)
 
 while running:
     if __name__ == "__main__" :
@@ -34,11 +36,12 @@ while running:
         unzipperbot.start()
         starttime = time.strftime("%Y/%m/%d - %H:%M:%S")
         unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.START_TXT.format(starttime))
-        print("Checking Log channel…")
+        LOGGER.info("Checking Log channel…")
         check_logs()
         LOGGER.info("Starting bot…")
-        print("Bot is running now ! Join @EDM115bots")
+        LOGGER.info("Bot is running now ! Join @EDM115bots")
         idle()
-        stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
-        unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime))
-        LOGGER.info("Bot stopped 😪")
+
+stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
+unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime))
+LOGGER.info("Bot stopped 😪")
