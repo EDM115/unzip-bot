@@ -16,8 +16,7 @@ async def add_user(user_id):
     is_exist = await user_db.find_one({"user_id": new_user_id})
     if is_exist:
         return
-    else:
-        await user_db.insert_one({"user_id": new_user_id})
+    await user_db.insert_one({"user_id": new_user_id})
 
 async def del_user(user_id):
     del_user_id = int(user_id)
@@ -50,8 +49,7 @@ async def add_banned_user(user_id):
     is_exist = await b_user_db.find_one({"banned_user_id": new_user_id})
     if is_exist:
         return
-    else:
-        await b_user_db.insert_one({"banned_user_id": new_user_id})
+    await b_user_db.insert_one({"banned_user_id": new_user_id})
 
 async def del_banned_user(user_id):
     del_user_id = int(user_id)
@@ -79,7 +77,7 @@ async def check_user(message):
     # Checking if user is banned
     is_banned = await is_user_in_bdb(message.from_user.id)
     if is_banned:
-        await message.reply("**Sorry you're banned 💀** \n\nReport this at @EDM115 if you think this is a mistake, I can unban you")
+        await message.reply("**Sorry you're banned 💀**\n\nReport this at @EDM115 if you think this is a mistake, I can unban you")
         await message.stop_propagation()
         return
     # Cheking if user already in db
