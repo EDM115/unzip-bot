@@ -21,13 +21,13 @@ signal.signal(signal.SIGINT, handler_stop_signals)
 signal.signal(signal.SIGTERM, handler_stop_signals)
 
 logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(name)s - %(threadName)s - %(message)s"
 )
 LOGGER = logging.getLogger(__name__)
-logging.getLogger("pyrogram").setLevel(logging.DEBUG)
-logging.getLogger("motor").setLevel(logging.DEBUG)
-logging.getLogger("aiohttp").setLevel(logging.DEBUG)
+logging.getLogger("pyrogram").setLevel(logging.INFO)
+logging.getLogger("motor").setLevel(logging.INFO)
+logging.getLogger("aiohttp").setLevel(logging.INFO)
 
 while running:
     if __name__ == "__main__" :
