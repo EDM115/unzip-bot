@@ -46,19 +46,19 @@ async def start_bot(_, message: Message):
     await message.reply_text(text=Messages.START_TEXT.format(message.from_user.mention), reply_markup=Buttons.START_BUTTON, disable_web_page_preview=True)
 
 @Client.on_message(filters.private & filters.command("clean"))
-async def clean_ma_files(_, message: Message):
+async def clean_my_files(_, message: Message):
     await message.reply_text(text=Messages.CLEAN_TXT, reply_markup=Buttons.CLN_BTNS)
 
 @Client.on_message(filters.command("help"))
-async def help_meh(_, message: Message):
+async def help_me(_, message: Message):
     await message.reply_text(text=Messages.HELP_TXT, reply_markup=Buttons.ME_GOIN_HOME)
 
 @Client.on_message(filters.command("about"))
-async def about_meee(_, message: Message):
+async def about_me(_, message: Message):
     await message.reply_text(text=Messages.ABOUT_TXT, reply_markup=Buttons.ME_GOIN_HOME, disable_web_page_preview=True)
 
 @Client.on_message(filters.incoming & filters.private & filters.regex(https_url_regex) | filters.document)
-async def extract_dis_archive(_, message: Message):
+async def extract_archive(_, message: Message):
     unzip_msg = await message.reply("`Processing… ⏳`", reply_to_message_id=message.message_id)
     user_id = message.from_user.id
     download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
@@ -69,11 +69,11 @@ async def extract_dis_archive(_, message: Message):
     elif message.document:
         await unzip_msg.edit("**What do you want 🤔**", reply_markup=Buttons.CHOOSE_E_F__BTNS)
     else:
-        await unzip_msg.edit("Hold up ! What should I extract there 😳")
+        await unzip_msg.edit("Send a valid archive/URL 🙄")
 
 # Database Commands
 @Client.on_message(filters.private & filters.command(["mode", "setmode"]))
-async def set_up_mode_for_user(_, message: Message):
+async def set_mode_for_user(_, message: Message):
     upload_mode = await get_upload_mode(message.from_user.id)
     await message.reply(Messages.SELECT_UPLOAD_MODE_TXT.format(upload_mode), reply_markup=Buttons.SET_UPLOAD_MODE_BUTTONS)
 
@@ -89,7 +89,7 @@ async def send_stats(_, message: Message):
     cpu_usage = psutil.cpu_percent(interval=0.2)
     ram_usage = psutil.virtual_memory().percent
     disk_usage = psutil.disk_usage('/').percent
-    uptime = TimeFormatter(int(psutil.cpu_times().user)*1000)
+    uptime = TimeFormatter(int(psutil.cpu_times().user)*1000000)
     total_users = await count_users()
     total_banned_users = await count_banned_users()
     await stats_msg.edit(f"""
@@ -99,17 +99,14 @@ async def send_stats(_, message: Message):
  ↳ **Users in database :** `{total_users}`
  ↳ **Total banned users :** `{total_banned_users}`
 
-
 **💾 Disk usage :**
  ↳ **Total Disk Space :** `{total}`
  ↳ **Used :** `{used} - {disk_usage}%`
  ↳ **Free :** `{free}`
 
-
 **🌐 Network usage :**
  ↳ **Uploaded :** `{sent}`
  ↳ **Downloaded :** `{recv}`
-
 
 **🎛 Hardware usage :**
  ↳ **CPU usage :** `{cpu_usage}%`
@@ -133,7 +130,7 @@ async def _do_broadcast(message, user):
         await del_user(user)
 
 @Client.on_message(filters.command("broadcast") & filters.user(Config.BOT_OWNER))
-async def broadcast_dis(_, message: Message):
+async def broadcast_this(_, message: Message):
     bc_msg = await message.reply("`Processing… ⏳`")
     r_msg = message.reply_to_message
     if not r_msg:
@@ -159,7 +156,7 @@ async def broadcast_dis(_, message: Message):
     """)
 
 @Client.on_message(filters.command("sendto") & filters.user(Config.BOT_OWNER))
-async def send_dis(_, message: Message):
+async def send_this(_, message: Message):
     sd_msg = await message.reply("`Processing… ⏳`")
     r_msg = message.reply_to_message
     if not r_msg:
@@ -197,18 +194,18 @@ async def unban_user(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("me"))
 async def me_stats(_, message: Message):
-    me_info = await message.ask(chat_id=query.message.chat.id, text="This is a WIP command that would allow you to get more stats about your utilisation of me 🤓\n\nSend anything :")
+    me_info = await _.ask(chat_id=message.message.chat.id, text="This is a WIP command that would allow you to get more stats about your utilisation of me 🤓\n\nSend anything :")
     #r_message = query.message.reply_to_message
-    await message.send_message(chat_id=query.message.chat.id, text=f"`{me_info}`")
+    await message.send_message(chat_id=message.message.chat.id, text=f"`{me_info}`")
 
 @Client.on_message(filters.command("user") & filters.user(Config.BOT_OWNER))
 async def info_user(_, message: Message):
     info_user_msg = await message.reply(f"`Processing… ⏳`")
     try:
         user_id = message.text.split(None, 1)[1]
-        up_count = get_uploaded(user_id)
     except:
-        return await info_user_msg.edit("`Give a user id 🙂`")
+        return await info_user_msg.edit("Give a user id 🙂")
+    up_count = get_uploaded(user_id)
     await info_user_msg.edit(f"**User ID :** `{user_id}`\n`{up_count}` files uploaded\n…\n\nWIP")
 
 @Client.on_message(filters.private & filters.command("db") & filters.user(Config.BOT_OWNER))
@@ -219,23 +216,30 @@ async def db_info(_, message: Message):
 @Client.on_message(filters.private & filters.command("dbdive") & filters.user(Config.BOT_OWNER))
 async def db_dive(_, message: Message):
     dburl = Config.MONGODB_URL
-    db_dive_msg = await message.reply(f"🚧 Go on [MongoDB.com](https://mongodb.com/cloud/atlas/register), u stupid 😐\n\n`{dburl}`")
+    db_dive_msg = await message.reply(f"🚧 Go on [MongoDB.com](https://account.mongodb.com/account/login?nds=true), u stupid 😐\n\n`{dburl}`")
     
 @Client.on_message(filters.private & filters.command("redbutton") & filters.user(Config.BOT_OWNER))
 async def red_alert(_, message: Message):
-    await message.reply(f"WIP")
+    await message.reply("🚧 WIP 🚧")
+    # restart the whole bot, maybe using execl
+    # but also need to stop currently ongoing processes...
 
 @Client.on_message(filters.private & filters.command("addthumb"))
 async def thumb_add(_, message: Message):
-    await message.reply(f"WIP")
+    await message.reply("🚧 WIP 🚧")
 
 @Client.on_message(filters.private & filters.command("delthumb"))
 async def thumb_del(_, message: Message):
-    await message.reply(f"WIP")
+    await message.reply("🚧 WIP 🚧")
 
 @Client.on_message(filters.private & filters.command("cleanall") & filters.user(Config.BOT_OWNER))
 async def del_everything(_, message: Message):
-    await message.reply(f"WIP")
+    await message.reply("🚧 WIP 🚧\n\nCleaning…")
+    try:
+        shutil.rmtree(os.path.dirname(os.path.abspath(__file__)))
+        await message.reply("The whole server have been cleaned 😌")
+    except:
+        await message.reply("An error happened 😕 probably because command is unstable")
 
 @Client.on_message(filters.private & filters.command("logs") & filters.user(Config.BOT_OWNER))
 async def send_logs(_, message: Message):
@@ -255,9 +259,114 @@ async def send_logs(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("restart") & filters.user(Config.BOT_OWNER))
 async def restart(client, message):
-    shutil.rmtree(Config.DOWNLOAD_LOCATION)
-    LOGGER.info("Deleted {Config.DOWNLOAD_LOCATION} folder successfully")
+    del = Config.DOWNLOAD_LOCATION
+    shutil.rmtree(del)
+    LOGGER.info("Deleted {del} folder successfully")
     restarttime = time.strftime("%Y/%m/%d - %H:%M:%S")
     await message.reply_text(f"**ℹ️ Bot restarted successfully at **`{restarttime}`", quote=True)
     LOGGER.info(f"{message.from_user.id} : Restarting…")
     execl(executable, executable, "-m", "unzipper")
+
+"""
+async def exec_message_f(client, message):
+    if message.from_user.id in AUTH_CHANNEL:
+        DELAY_BETWEEN_EDITS = 0.3
+        PROCESS_RUN_TIME = 100
+        cmd = message.text.split(" ", maxsplit=1)[1]
+
+        reply_to_id = message.message_id
+        if message.reply_to_message:
+            reply_to_id = message.reply_to_message.message_id
+
+        start_time = time.time() + PROCESS_RUN_TIME
+        process = await asyncio.create_subprocess_shell(
+            cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+        )
+        stdout, stderr = await process.communicate()
+        e = stderr.decode()
+        if not e:
+            e = "No Error"
+        o = stdout.decode()
+        if not o:
+            o = "No Output"
+        else:
+            _o = o.split("\n")
+            o = "`\n".join(_o)
+        OUTPUT = f"**QUERY:**\n__Command:__\n`{cmd}` \n__PID:__\n`{process.pid}`\n\n**stderr:** \n`{e}`\n**Output:**\n{o}"
+
+        if len(OUTPUT) > MAX_MESSAGE_LENGTH:
+            with io.BytesIO(str.encode(OUTPUT)) as out_file:
+                out_file.name = "exec.text"
+                await client.send_document(
+                    chat_id=message.chat.id,
+                    document=out_file,
+                    caption=cmd,
+                    disable_notification=True,
+                    reply_to_message_id=reply_to_id,
+                )
+            await message.delete()
+        else:
+            await message.reply_text(OUTPUT)
+
+async def eval_message_f(client, message):
+    if message.from_user.id in AUTH_CHANNEL:
+        status_message = await message.reply_text("Processing ...")
+        cmd = message.text.split(" ", maxsplit=1)[1]
+
+        reply_to_id = message.message_id
+        if message.reply_to_message:
+            reply_to_id = message.reply_to_message.message_id
+
+        old_stderr = sys.stderr
+        old_stdout = sys.stdout
+        redirected_output = sys.stdout = io.StringIO()
+        redirected_error = sys.stderr = io.StringIO()
+        stdout, stderr, exc = None, None, None
+
+        try:
+            await aexec(cmd, client, message)
+        except Exception:
+            exc = traceback.format_exc()
+
+        stdout = redirected_output.getvalue()
+        stderr = redirected_error.getvalue()
+        sys.stdout = old_stdout
+        sys.stderr = old_stderr
+
+        evaluation = ""
+        if exc:
+            evaluation = exc
+        elif stderr:
+            evaluation = stderr
+        elif stdout:
+            evaluation = stdout
+        else:
+            evaluation = "Success"
+
+        final_output = (
+            "<b>EVAL</b>: <code>{}</code>\n\n<b>OUTPUT</b>:\n<code>{}</code> \n".format(
+                cmd, evaluation.strip()
+            )
+        )
+
+        if len(final_output) > MAX_MESSAGE_LENGTH:
+            with open("eval.text", "w+", encoding="utf8") as out_file:
+                out_file.write(str(final_output))
+            await message.reply_document(
+                document="eval.text",
+                caption=cmd,
+                disable_notification=True,
+                reply_to_message_id=reply_to_id,
+            )
+            os.remove("eval.text")
+            await status_message.delete()
+        else:
+            await status_message.edit(final_output)
+
+async def aexec(code, client, message):
+    exec(
+        f"async def __aexec(client, message): "
+        + "".join(f"\n {l}" for l in code.split("\n"))
+    )
+    return await locals()["__aexec"](client, message)
+"""
