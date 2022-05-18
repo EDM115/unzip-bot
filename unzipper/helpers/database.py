@@ -40,7 +40,6 @@ async def count_users():
 async def get_users_list():
     return [users_list async for users_list in user_db.find({})]
 
-
 # Banned users database
 b_user_db = unzipper_db["banned_users_db"]
 
@@ -97,6 +96,14 @@ async def check_user(message):
                 disable_web_page_preview=False
             )
     await message.continue_propagation()
+
+"""
+    async def all_users():
+    users = []
+    banned = []
+    for i in range(count_users()):
+        users.append(
+"""
 
 # Upload mode
 mode_db = unzipper_db["upload_mode_db"]
