@@ -259,9 +259,9 @@ async def send_logs(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("restart") & filters.user(Config.BOT_OWNER))
 async def restart(client, message):
-    del = Config.DOWNLOAD_LOCATION
-    shutil.rmtree(del)
-    LOGGER.info("Deleted {del} folder successfully")
+    folder_to_del = Config.DOWNLOAD_LOCATION
+    shutil.rmtree(folder_to_del)
+    LOGGER.info("Deleted {folder_to_del} folder successfully")
     restarttime = time.strftime("%Y/%m/%d - %H:%M:%S")
     await message.reply_text(f"**ℹ️ Bot restarted successfully at **`{restarttime}`", quote=True)
     LOGGER.info(f"{message.from_user.id} : Restarting…")
