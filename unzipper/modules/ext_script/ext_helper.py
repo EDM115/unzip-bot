@@ -27,7 +27,7 @@ async def _extract_with_7z_helper(protected, path, archive_path, password=None):
             protected = True
     return await __run_cmds_unzipper(command)
 
-##Extract with zstd (for .zst files)
+## Extract with zstd (for .zst files)
 async def _extract_with_zstd(path, archive_path):
     command = f"zstd -f --output-dir-flat {path} -d {archive_path}"
     return await __run_cmds_unzipper(command)
@@ -71,7 +71,7 @@ async def make_keyboard(paths, user_id, chat_id):
     return i_kbd
 
 async def make_keyboard_empty(user_id, chat_id):
-    i_kbd = InlineKeyboard(row_width=1)
+    i_kbd = InlineKeyboard(row_width=2)
     data = []
     data.append(
         InlineKeyboardButton(f"Upload all 📤", f"ext_a|{user_id}|{chat_id}")
