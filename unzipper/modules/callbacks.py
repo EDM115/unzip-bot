@@ -268,7 +268,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{query.from_user.id}")
             await query.message.edit(Messages.CANCELLED_TXT.format("❌ Process cancelled"))
             if single_up:
-                await update_uploaded(user_id, upload_count=sent_files)
+                await update_uploaded(user_id=query.from_user.id, upload_count=sent_files)
                 await log_msg.reply(Messages.HOW_MANY_UPLOADED.format(sent_files))
         except:
             if not already_removed:
