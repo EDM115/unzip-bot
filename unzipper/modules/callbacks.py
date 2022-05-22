@@ -133,7 +133,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await query.message.edit(Messages.EXT_FAILED_TXT)
                     return await log_msg.reply(Messages.EXT_FAILED_TXT)
                     shutil.rmtree(ext_files_dir)
-                    global already_removed
                     already_removed = True
                 except:
                     try:
@@ -142,7 +141,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         pass
                     await unzip_bot.send_message(chat_id=query.message.chat.id, text=Messages.EXT_FAILED_TXT)
                     shutil.rmtree(ext_files_dir)
-                    global already_removed
                     already_removed = True
                     return await log_msg.reply(Messages.EXT_FAILED_TXT)
             # Check if user were dumb 😐
@@ -177,7 +175,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             await answer_query(query, Messages.EXT_FAILED_TXT, unzip_client=unzip_bot)
                             await log_msg.reply(Messages.EXT_FAILED_TXT)
                             shutil.rmtree(ext_files_dir)
-                            global already_removed
                             already_removed = True
                             LOGGER.error("Fatal error : uncorrect archive format")
                             return
@@ -192,7 +189,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await unzip_bot.send_message(chat_id=query.message.chat.id, text=Messages.ERROR_TXT.format(e))
                 await log_msg.reply(Messages.ERROR_TXT.format(e))
                 shutil.rmtree(ext_files_dir)
-                global already_removed
                 already_removed = True
                 await s.close()
                 LOGGER.error(e)
