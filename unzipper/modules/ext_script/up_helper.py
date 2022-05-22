@@ -20,7 +20,7 @@ async def run_shell_cmds(command):
 # Send file to a user
 async def send_file(unzip_bot, c_id, doc_f, query, full_path):
     try:
-        cum = await get_upload_mode(c_id)
+        ul_mode = await get_upload_mode(c_id)
         # Checks if url file size is bigger than 2 Gb (Telegram limit)
         u_file_size = os.stat(doc_f).st_size
         if Config.TG_MAX_SIZE < int(u_file_size):
@@ -28,7 +28,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
                 chat_id=c_id,
                 text="File size is too large to send in telegram 😥 \n\n**Sorry, but I can't do anything about this as it's Telegram limitation 😔**"
             )
-        if cum == "video":
+        if ul_mode == "video":
             vid_duration = await run_shell_cmds(f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}")
             thmb_pth = f"Dump/thumbnail_{os.path.basename(doc_f)}.jpg"
             if os.path.exists(thmb_pth):
@@ -44,7 +44,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
         asyncio.sleep(f.x)
         return send_file(c_id, doc_f)
     except FileNotFoundError:
-        await query.answer("Sorry! I can't find that file 💀", show_alert=True)
+        await query.answer("Sorry ! I can't find that file 💀", show_alert=True)
     except BaseException:
         shutil.rmtree(full_path)
 
