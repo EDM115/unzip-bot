@@ -12,12 +12,13 @@ from pyrogram.types import CallbackQuery
 from pyrogram.errors import ReplyMarkupTooLong
 
 from .bot_data import Buttons, Messages, ERROR_MSGS
-from .ext_script.ext_helper import extr_files, get_files, make_keyboard
+from .ext_script.ext_helper import extr_files, get_files, make_keyboard, make_keyboard_empty
 from .ext_script.up_helper import send_file, answer_query, send_url_logs
 from .commands import https_url_regex
 from unzipper.helpers.unzip_help import progress_for_pyrogram, TimeFormatter, humanbytes, timeformat_sec
 from unzipper.helpers.database import set_upload_mode, update_uploaded
 from config import Config
+from unzipper import LOGGER
 
 # Function to download files from direct link using aiohttp
 async def download(url, path):
@@ -132,6 +133,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await query.message.edit(Messages.EXT_FAILED_TXT)
                     return await log_msg.reply(Messages.EXT_FAILED_TXT)
                     shutil.rmtree(ext_files_dir)
+                    global already_removed
                     already_removed = True
                 except:
                     try:
@@ -140,6 +142,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         pass
                     await unzip_bot.send_message(chat_id=query.message.chat.id, text=Messages.EXT_FAILED_TXT)
                     shutil.rmtree(ext_files_dir)
+                    global already_removed
                     already_removed = True
                     return await log_msg.reply(Messages.EXT_FAILED_TXT)
             # Check if user were dumb 😐
@@ -174,6 +177,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             await answer_query(query, Messages.EXT_FAILED_TXT, unzip_client=unzip_bot)
                             await log_msg.reply(Messages.EXT_FAILED_TXT)
                             shutil.rmtree(ext_files_dir)
+                            global already_removed
                             already_removed = True
                             LOGGER.error("Fatal error : uncorrect archive format")
                             return
@@ -182,9 +186,13 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
 
         except Exception as e:
             try:
-                await query.message.edit(Messages.ERROR_TXT.format(e))
+                try:
+                    await query.message.edit(Messages.ERROR_TXT.format(e))
+                except:
+                    await unzip_bot.send_message(chat_id=query.message.chat.id, text=Messages.ERROR_TXT.format(e))
                 await log_msg.reply(Messages.ERROR_TXT.format(e))
                 shutil.rmtree(ext_files_dir)
+                global already_removed
                 already_removed = True
                 await s.close()
                 LOGGER.error(e)
