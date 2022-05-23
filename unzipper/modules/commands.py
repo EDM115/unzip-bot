@@ -273,7 +273,7 @@ async def export_db(client, message):
     # Will use https://www.mongodb.com/docs/database-tools/mongoexport/ on command to export as CSV
 
 @Client.on_message(filters.command("commands"))
-async def export_db(client, message):
+async def getall_cmds(client, message):
     await message.reply("""
 Here is the list of the commands you can use (only in private btw) :
 
@@ -292,7 +292,7 @@ Here is the list of the commands you can use (only in private btw) :
     """)
 
 @Client.on_message(filters.command("admincmd") & filters.user(Config.BOT_OWNER))
-async def export_db(client, message):
+async def getadmin_cmds(client, message):
     await message.reply("""
 Here's all the commands that only the owner (you) can use :
 
