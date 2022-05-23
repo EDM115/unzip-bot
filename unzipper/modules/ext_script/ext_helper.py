@@ -5,6 +5,7 @@ import os
 
 from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
+from unzipper import LOGGER
 
 ## Run commands in shell
 async def __run_cmds_unzipper(command):
