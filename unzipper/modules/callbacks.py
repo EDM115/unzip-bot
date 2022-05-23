@@ -156,21 +156,23 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 return
             # Upload extracted files
             await answer_query(query, Messages.EXT_OK_TXT.format(TimeFormatter(round(ext_e_time-ext_s_time) * 1000)), unzip_client=unzip_bot)
-            i_e_buttons = await make_keyboard(paths=paths, user_id=user_id, chat_id=query.message.chat.id)
             try:
-                await query.message.edit("Select files to upload 👇", reply_markup=i_e_buttons)
+                i_e_buttons = await make_keyboard(paths=paths, user_id=user_id, chat_id=query.message.chat.id)
+                try:
+                    await query.message.edit("Select files to upload 👇", reply_markup=i_e_buttons)
+                except ReplyMarkupTooLong:
+                    empty_buttons = await make_keyboard_empty(user_id=user_id, chat_id=query.message.chat.id)
+                    await query.message.edit("Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process", reply_markup=empty_buttons)
             except:
                 try:
                     await query.message.delete()
+                    i_e_buttons = await make_keyboard(paths=paths, user_id=user_id, chat_id=query.message.chat.id)
                     await unzip_bot.send_message(chat_id=query.message.chat.id, text="Select files to upload 👇", reply_markup=i_e_buttons)
-                except ReplyMarkupTooLong:
-                    empty_buttons = await make_keyboard_empty(user_id=user_id, chat_id=query.message.chat.id)
-                    try:
-                        await query.message.edit("Select files to upload 👇", reply_markup=empty_buttons)
-                    except:
+                except:
                         try:
                             await query.message.delete()
-                            await unzip_bot.send_message(chat_id=query.message.chat.id, text="Select files to upload 👇", reply_markup=empty_buttons)
+                            empty_buttons = await make_keyboard_empty(user_id=user_id, chat_id=query.message.chat.id)
+                            await unzip_bot.send_message(chat_id=query.message.chat.id, text="Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process", reply_markup=empty_buttons)
                         except:
                             await answer_query(query, Messages.EXT_FAILED_TXT, unzip_client=unzip_bot)
                             await log_msg.reply(Messages.EXT_FAILED_TXT)
@@ -178,8 +180,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             already_removed = True
                             LOGGER.error("Fatal error : uncorrect archive format")
                             return
-                    global err400
-                    err400 = True
+                            global err400
+                            err400 = True
 
         except Exception as e:
             try:
