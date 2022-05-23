@@ -65,9 +65,9 @@ async def extract_archive(_, message: Message):
     if os.path.isdir(download_path):
         return await unzip_msg.edit("Already one process is running, don't spam 😐\n\nWanna clear your files from my server ? Then just send **/clean** command")
     if message.text and (re.match(https_url_regex, message.text)):
-        await unzip_msg.edit("**What do you want 🤔**", reply_markup=Buttons.CHOOSE_E_U__BTNS)
+        await unzip_msg.edit("**Select the extraction mode for that URL 👀**", reply_markup=Buttons.CHOOSE_E_U__BTNS)
     elif message.document:
-        await unzip_msg.edit("**What do you want 🤔**", reply_markup=Buttons.CHOOSE_E_F__BTNS)
+        await unzip_msg.edit("**Select the extraction mode for that file 👀**", reply_markup=Buttons.CHOOSE_E_F__BTNS)
     else:
         await unzip_msg.edit("Send a valid archive/URL 🙄")
 
@@ -89,7 +89,7 @@ async def send_stats(_, message: Message):
     cpu_usage = psutil.cpu_percent(interval=0.2)
     ram_usage = psutil.virtual_memory().percent
     disk_usage = psutil.disk_usage('/').percent
-    uptime = TimeFormatter(int(psutil.cpu_times().user)*1000000)
+    uptime = TimeFormatter(int(psutil.cpu_times().user)/1000)
     total_users = await count_users()
     total_banned_users = await count_banned_users()
     await stats_msg.edit(f"""
@@ -170,7 +170,7 @@ async def send_this(_, message: Message):
     if send == 200:
         await sd_msg.edit("Send message successfully to `{user_id}`")
     else:
-        await sd_msg.edit("It failed 😣 Retry. If it fails again, it means that {user_id} haven't started bot yet, or he's private")
+        await sd_msg.edit("It failed 😣 Retry. If it fails again, it means that {user_id} haven't started bot yet, or he's private/banned/whatever")
 
 @Client.on_message(filters.command("ban") & filters.user(Config.BOT_OWNER))
 async def ban_user(_, message: Message):
@@ -266,6 +266,52 @@ async def restart(client, message):
     await message.reply_text(f"**ℹ️ Bot restarted successfully at **`{restarttime}`", quote=True)
     LOGGER.info(f"{message.from_user.id} : Restarting…")
     execl(executable, executable, "-m", "unzipper")
+
+@Client.on_message(filters.private & filters.command("dbexport") & filters.user(Config.BOT_OWNER))
+async def export_db(client, message):
+    await message.reply("🚧 WIP 🚧")
+    # Will use https://www.mongodb.com/docs/database-tools/mongoexport/ on command to export as CSV
+
+@Client.on_message(filters.command("commands"))
+async def export_db(client, message):
+    await message.reply("""
+Here is the list of the commands you can use (only in private btw) :
+
+**{send any file or URL}** : Prompt the extract dialog
+**/start** : To know if I'm online. Also useful for fixing bugs and using the latest version of me
+**/help** : Gives a simple help
+**/about** : Know more about me
+**/clean** : Remove your files from my server. Also useful if a task failed
+**/mode** : Change your upload mode (either `doc` or `video`)
+**/me** : Useless commands. At least you can know on which Telegram DataCenter your profile is stored
+**/addthumb** : Upload with a permanant custom thumbnail. Don't work for now
+**/delthumb** : Removes your thumbnail
+**/commands** : This message
+
+**/admincmd** : Only if you are the Owner
+    """)
+
+@Client.on_message(filters.command("admincmd") & filters.user(Config.BOT_OWNER))
+async def export_db(client, message):
+    await message.reply("""
+Here's all the commands that only the owner (you) can use :
+
+**/commands** : For all the other commands
+**/stats** : Know all the current stats about me. If you're running on Heroku, it's reset every day (dynos yeah…)
+**/broadcast** : Send something to all the users
+**/sendto {user_id}** : Same as broadcast but for a single user. Don't handle replies for now…
+**/ban {user_id}** : Ban an user. He no longer can use your bot, except if…
+**/unban {user_id}** : …you unban him. All his stats and settings stays saved after a ban
+**/user {user_id}** : Know more about the use of your bot by a single user
+**/db** : Sends an unorganized list of all the user's id. I need to sort that
+**/dbdive** : Useless. Will provide a way to see it online, but MongoDB already does it
+**/redbutton** : Will fully restart bot + server
+**/cleanall** : Same as `/clean`, but for the whole server
+**/logs** : Send you the logs (all of them). Useful for bug tracking. Send them to **@EDM115** if you don't understand them/need help
+**/restart** : Does a basic restart, less intrusive as the `/redbutton` one
+**/dbexport** : Exports the whole database as CSV
+**/admincmd** : This message
+    """)
 
 """
 async def exec_message_f(client, message):
