@@ -10,6 +10,7 @@ from pyrogram.errors import FloodWait
 from unzipper.helpers.database import get_upload_mode
 from unzipper.modules.bot_data import Messages
 from config import Config
+from unzipper import LOGGER
 
 # To get video duration and thumbnail
 async def run_shell_cmds(command):
@@ -24,6 +25,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
         # Checks if url file size is bigger than 2 Gb (Telegram limit)
         u_file_size = os.stat(doc_f).st_size
         if Config.TG_MAX_SIZE < int(u_file_size):
+            LOGGER.info("File too large")
             return await unzip_bot.send_message(
                 chat_id=c_id,
                 text="File size is too large to send in telegram 😥 \n\n**Sorry, but I can't do anything about this as it's Telegram limitation 😔**"
