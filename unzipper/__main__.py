@@ -21,11 +21,11 @@ signal.signal(signal.SIGINT, handler_stop_signals)
 signal.signal(signal.SIGTERM, handler_stop_signals)
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.WARN,
     format="%(asctime)s - %(levelname)s - %(name)s - %(threadName)s - %(message)s"
 )
 LOGGER = logging.getLogger(__name__)
-logging.getLogger("pyrogram").setLevel(logging.INFO)
+logging.getLogger("pyrogram").setLevel(logging.WARN)
 logging.getLogger("motor").setLevel(logging.INFO)
 logging.getLogger("aiohttp").setLevel(logging.INFO)
 
