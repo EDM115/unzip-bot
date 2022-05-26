@@ -58,12 +58,18 @@ class Buttons:
                 InlineKeyboardButton("As video 📹", callback_data="set_mode|video")
             ]
         ])
-
+"""
+    I_PREFER_STOP = InlineKeyboardMarkup([
+            [
+                InlineKeyboardButton("❌ Cancel", callback_data="stopit")
+            ]
+        ])
+"""
 
 class Messages:
     START_TEXT = """
 Hi **{}** 👋, I'm **Unarchiver Bot** 🥰
-**This is BETA version !** May be a lot buggy. Better waiting for the stable version at daytime… 🙂
+**This is BETA version !** May be a lot buggy, but with new features. Better waiting for the stable version at daytime… 🙂
 
 I can extract archives like `zip`, `rar`, `tar`, …
 
@@ -73,32 +79,32 @@ I can extract archives like `zip`, `rar`, `tar`, …
     HELP_TXT = """
 **• How to extract 🤔**
 
-  **1)** Send the file or link that you want to extract
-  **2)** Click on extract button (If you sent a link use `🔗 URL extract` button. If it's a file just use `🗂️ Archive extract` button)
+    **1)** Send the file or link that you want to extract
+    **2)** Click on extract button (If you sent a link use `🔗 URL extract` button. If it's a file just use `🗂️ Archive extract` button)
+
 
 **• How to change upload mode 🤔**
-  Send **/mode** command to the bot. You can change upload mode from there
+    Send **/mode** command to the bot. You can change upload mode from there
 
-**Note:**
-  **1.** If your archive is password protected select `🗂️ Extract a password protected archive 🔐` mode. Bot isn’t a god to know your file’s password, so if this happens just send that password !
-  
-  **2.** Please don’t send corrupted files ! If you sent one by mistake just send **/clean** command
-  
-  **3.** If your archive have +95 files in it then bot can’t show all of extracted files to select from. So in that case if you can’t see your file in the buttons just click on `Upload all 📤` button. It will send all extracted files to you !
+
+**Note :**
+    **1.** If your archive is password protected select `🗂️ Extract a password protected archive 🔐` mode. Bot isn’t a god to know your file’s password, so if this happens just send that password !
+    **2.** Please don’t send corrupted files ! If you sent one by mistake just send **/clean** command
+    **3.** If your archive have +95 files in it then bot can’t show all of extracted files to select from. So in that case if you can’t see your file in the buttons just click on `Upload all 📤` button. It will send all extracted files to you !
+
 
 **• I wanna have help 🥺**
 
-  PM me at **@EDM115**, I'm always here and open for anything 😘
+    PM me at **@EDM115**, I'm always here and open for anything 😘
     """
 
     ABOUT_TXT = """
-**About Unarchiver Bot [BETA]**
+**About Unarchiver Bot [BETA | v4.1.1]**
 
-• **Language :** [Python](https://www.python.org/)
-• **Framework :** [Pyrogram](https://docs.pyrogram.org/)
-• **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot/tree/beta)
+• **Language :** [Python 3.9.1](https://www.python.org/)
+• **Framework :** [Pyrogram 1.4.16](https://docs.pyrogram.org/)
+• **Source code :** [EDM115/unzip-bot[beta]](https://github.com/EDM115/unzip-bot/tree/beta)
 • **Developer :** [EDM115](https://github.com/EDM115)
-
 
 **Made with ❤️ by @EDM115bots**
     """
@@ -150,7 +156,7 @@ have been saved from
     """
 
     STOP_TXT = """
-ℹ️ The bot goes to sleep at `{}` 😴
+ℹ️ The bot goes sleeping at `{}` 😴
     """
 
     EXT_FAILED_TXT = """
@@ -158,23 +164,24 @@ have been saved from
 
 **What to do ?**
 
- • Please make sure archive isn’t corrupted
- • Please make sure that you selected the right mode !
- • Also check if you sent the right password (it's case sensitive)
- • Maybe your archive format isn’t supported yet 😔
- • If you sent splitted archives (.001, .part1, .00001, …), then I can’t extract them 🙂 (for the moment)
+   • Please make sure archive isn’t corrupted
+   • Please make sure that you selected the right mode !
+   • Also check if you sent the right password (it's case sensitive)
+   • Maybe your archive format isn’t supported yet 😔
+   • If you sent splitted archives (.001, .part1, .00001, …), then I can’t extract them 🙂 (for the moment)
 
-**IN ALL CASES**, please send **/clean**, else you couldn’t send any other task 🙂🔫
 
-**Please report this at @EDM115 if you think this is a serious error**
+**IN ALL CASES**, please send **/clean**, else you couldn’t send any other task 🙂🔫 (may be fixed in the future)
+
+Please report this at @EDM115 if you think this is a serious error
     """
 
     ERROR_TXT = """
 **Error Happened 😕**
 
-**ERROR:** `{}`
+**ERROR :** `{}`
 
-**Please report this at @EDM115 if you think this is a serious error**
+Please report this at @EDM115 if you think this is a serious error
     """
 
     CANCELLED_TXT = """
@@ -190,7 +197,7 @@ Now all of your files have been deleted from my server 😌
     CLEAN_TXT = """
 **Are sure want to delete your files from my server 🤔**
 
-**Note : This action cannot be undone !**
+Note : This action cannot be undone !
     """
 
     SELECT_UPLOAD_MODE_TXT = """
@@ -200,7 +207,7 @@ Please select the upload mode by clicking on below buttons 👇
     """
 
     CHANGED_UPLOAD_MODE_TXT = """
-**Successfully changed upload mode to** `{}` **✅**
+**Successfully changed upload mode to** `{}` ✅
     """
 
 
