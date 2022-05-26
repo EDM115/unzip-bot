@@ -192,7 +192,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await log_msg.reply(Messages.ERROR_TXT.format(e))
                 shutil.rmtree(ext_files_dir)
                 already_removed = True
-                await s.close()
+                try:
+                    await ClientSession().close()
+                except:
+                    pass
                 LOGGER.error(e)
             except Exception as err:
                 LOGGER.error(err)
@@ -215,10 +218,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         query=query,
                         full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}"
                     )
-        await update_uploaded(user_id, upload_count=sent_files)
-        global single_up
-        single_up = True
-
+        
         # if not err400:
         # theorically, err400 shouldn't be here because only ext_a can be used
         # Refreshing Inline keyboard
@@ -236,7 +236,12 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             await query.message.edit("Select files to upload 👇", reply_markup=i_e_buttons)
         except ReplyMarkupTooLong:
             empty_buttons = await make_keyboard_empty(user_id=user_id, chat_id=query.message.chat.id)
-            await query.message.edit("Select files to upload 👇", reply_markup=empty_buttons)
+            await query.message.edit("Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process", reply_markup=empty_buttons)
+
+        # Now theorically it refreshes normally
+        await update_uploaded(user_id, upload_count=sent_files)
+        global single_up
+        single_up = True
     
     elif query.data.startswith("ext_a"):
         user_id = query.from_user.id
