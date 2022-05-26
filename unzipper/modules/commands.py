@@ -89,7 +89,7 @@ async def send_stats(_, message: Message):
     cpu_usage = psutil.cpu_percent(interval=0.2)
     ram_usage = psutil.virtual_memory().percent
     disk_usage = psutil.disk_usage('/').percent
-    uptime = TimeFormatter(int(psutil.cpu_times().user)/1000)
+    uptime = TimeFormatter(int(psutil.cpu_times().user)/10)
     total_users = await count_users()
     total_banned_users = await count_banned_users()
     await stats_msg.edit(f"""
@@ -111,7 +111,7 @@ async def send_stats(_, message: Message):
 **🎛 Hardware usage :**
  ↳ **CPU usage :** `{cpu_usage}%`
  ↳ **RAM usage :** `{ram_usage}%`
- ↳ **Uptime :** `{uptime}` (might be wrong)"""
+ ↳ **Uptime :** `{uptime}` (might be 69% wrong)"""
                          )
     
 # Attempt to not make that available for non owner
@@ -165,12 +165,12 @@ async def send_this(_, message: Message):
         user_id = message.text.split(None, 1)[1]
     except:
         return await sd_msg.edit("Give a user id to send a message")
-    await sd_msg.edit("Sending it, please wait... 😪")
+    await sd_msg.edit("Sending it, please wait… 😪")
     send = await _do_broadcast(message=r_msg, user=user_id)
     if send == 200:
-        await sd_msg.edit("Send message successfully to `{user_id}`")
+        await sd_msg.edit(f"Send message successfully to `{user_id}`")
     else:
-        await sd_msg.edit("It failed 😣 Retry. If it fails again, it means that {user_id} haven't started bot yet, or he's private/banned/whatever")
+        await sd_msg.edit(f"It failed 😣 Retry. If it fails again, it means that {user_id} haven't started bot yet, or he's private/banned/whatever")
 
 @Client.on_message(filters.command("ban") & filters.user(Config.BOT_OWNER))
 async def ban_user(_, message: Message):
@@ -222,7 +222,7 @@ async def db_dive(_, message: Message):
 async def red_alert(_, message: Message):
     await message.reply("🚧 WIP 🚧")
     # restart the whole bot, maybe using execl
-    # but also need to stop currently ongoing processes...
+    # but also need to stop currently ongoing processes…
 
 @Client.on_message(filters.private & filters.command("addthumb"))
 async def thumb_add(_, message: Message):
