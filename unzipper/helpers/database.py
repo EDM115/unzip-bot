@@ -4,6 +4,8 @@ from unzipper import unzipperbot as Client
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from config import Config
+from time import sleep
+from unzipper import LOGGER
 
 mongodb = AsyncIOMotorClient(Config.MONGODB_URL)
 unzipper_db = mongodb["Unzipper_Bot"]
@@ -90,11 +92,20 @@ async def check_user(message):
                 disable_web_page_preview=False
             )
         except AttributeError:
-            await Client.send_message(
-                chat_id=Config.LOGS_CHANNEL,
-                text=f"**#NEW_USER** 🎙 \n\n**User profile:** `{message.from_user.mention}` \n**User ID:** `[AttributeError] Can't get it` \n**Profile URL:** Can't get it",
-                disable_web_page_preview=False
-            )
+            try:
+                time.sleep(5)
+                await Client.send_message(
+                    chat_id=Config.LOGS_CHANNEL,
+                    text=f"**#NEW_USER** 🎙 \n\n**User profile:** `{message.from_user.mention}` \n**User ID:** `{message.from_user_id}` \n**Profile URL:** [tg://user?id={message.from_user_id}](tg://user?id={message.from_user_id})",
+                    disable_web_page_preview=False
+                )
+                LOGGER.info("Useless fix have been done here, _id instead of .id")
+            except AttributeError:
+                await Client.send_message(
+                    chat_id=Config.LOGS_CHANNEL,
+                    text=f"**#NEW_USER** 🎙 \n\n**User profile:** `{message.from_user.mention}` \n**User ID:** `[AttributeError] Can't get it` \n**Profile URL:** Can't get it",
+                    disable_web_page_preview=False
+                )
     await message.continue_propagation()
 
 """
