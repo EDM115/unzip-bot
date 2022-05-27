@@ -24,8 +24,10 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
         ul_mode = await get_upload_mode(c_id)
         # Checks if url file size is bigger than 2 Gb (Telegram limit)
         u_file_size = os.stat(doc_f).st_size
-        if Config.TG_MAX_SIZE < int(u_file_size):
+        if int(u_file_size) > Config.TG_MAX_SIZE:
             LOGGER.info("File too large")
+            # Workaround : https://ccm.net/computing/linux/4327-split-a-file-into-several-parts-in-linux/
+            # run_shell_cmds(f"split -b 2GB -d {doc_f} SPLIT-{doc_f}")
             return await unzip_bot.send_message(
                 chat_id=c_id,
                 text="File size is too large to send in telegram 😥 \n\n**Sorry, but I can't do anything about this as it's Telegram limitation 😔**"
