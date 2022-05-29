@@ -45,6 +45,12 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     elif query.data == "aboutcallback":
         await query.edit_message_text(text=Messages.ABOUT_TXT, reply_markup=Buttons.ME_GOIN_HOME, disable_web_page_preview=True)
     
+    elif query.data == "canceldownload":
+        await unzip_bot.stop_transmission()
+        await query.edit_message_text(text=Messages.DL_STOPPED)
+        # Add maybe a .format() with URL or Filename
+        # Idk if server needds to be cleaned
+    
     elif query.data.startswith("set_mode"):
         user_id = query.from_user.id
         mode = query.data.split("|")[1]
@@ -81,7 +87,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.LOG_TXT.format(user_id, url, u_file_size))
                         s_time = time()
                         archive = f"{download_path}/archive_from_{user_id}{os.path.splitext(url)[1]}"
-                        await answer_query(query, f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️", unzip_client=unzip_bot)
+                        await answer_query(query, "`Processing ⏳`", unzip_client=unzip_bot)
+                        await query.edit_message_text(text=f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️", reply_markup=Buttons.I_PREFER_STOP)
                         await download(url, archive)
                         e_time = time()
                         # Send copy in logs in case url has gone
@@ -106,7 +113,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 s_time = time()
                 archive = await r_message.download(
                     file_name=f"{download_path}/archive_from_{user_id}{os.path.splitext(r_message.document.file_name)[1]}",
-                    progress=progress_for_pyrogram, progress_args=("**Trying to download… Please wait** \n", query.message, s_time)
+                    progress=progress_for_pyrogram, progress_args=("**Trying to download… Please wait** \n", query.message, s_time, reply_markup=Buttons.I_PREFER_STOP)
                     )
                 e_time = time()
             else:
