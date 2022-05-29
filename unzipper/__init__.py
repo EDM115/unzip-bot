@@ -14,11 +14,11 @@ unzipperbot = Client(
         api_id=Config.APP_ID,
         api_hash=Config.API_HASH,
         plugins=plugins,
-        sleep_threshold=10
+        sleep_threshold=7
     )
 
 logging.basicConfig(
-    level=logging.WARN,
+    level=logging.INFO,
     # Can't be done due to https://github.com/EDM115/unzip-bot/blob/3f951a29cd2a19d592bbc3e65bbbbb678fa5cee3/unzipper/modules/commands.py#L242
     # Reference for future implementation : https://stackoverflow.com/questions/5013532/open-file-by-filename-wildcard
     #actualtime=time.strftime(%d-%m-%Y)
