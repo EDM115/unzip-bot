@@ -15,11 +15,11 @@
 [![Manual deploy of beta branch](https://github.com/EDM115/unzip-bot/actions/workflows/beta-auto-deploy.yml/badge.svg?branch=beta)](https://github.com/EDM115/unzip-bot/actions/workflows/beta-auto-deploy.yml)  
   
   
-## Bugs to fix and features to add 💀  
+## WORKAROUNDS (bugs to fix and features to add) 💀  
   
 - [ ] The ETA isn't accurate
 - [x] Adding a `/db` command that returns a list of all users + banned ones **WILL BE IMPROVED**
-- [ ] Add a translation (start a CrowdIn dude) [![Crowdin](https://badges.crowdin.net/unzip-bot-edm115/localized.svg)](https://crowdin.com/project/unzip-bot-edm115)
+- [x] Add a translation (start a CrowdIn dude) [![Crowdin](https://badges.crowdin.net/unzip-bot-edm115/localized.svg)](https://crowdin.com/project/unzip-bot-edm115)
 - [ ] Get informations with smth like `/user {id}`, that returns his state (banned or not) + lastly uploaded files (5 last with link to channel/group message) + how many files he sent + size of all of them. The user could also get those infos with a `/me` command
 - [x] Add a `/dbdive` that returns an url where we can visualize the db online **CAN BE IMPROVED**
 - [x] Add status of extraction in logs (uploaded, started, extracted, failed (+ error), what is the password, …) **HALF-DONE**
@@ -33,7 +33,7 @@
   
 ## Fixed/added :partying_face:
 #### Fixed :
-- [x] *Download speed stays constant, depending of what we have at begining. If the download started at 3 Mb/s, it will stay like that through all the process and can't evolve* Fixed with new PyroGram
+- [x] *Download speed stays constant, depending of what we have at begining. If the download started at 3 Mb/s, it will stay like that through all the process and can't evolve* Fixed with new PyroGram | **Since the latest update I did, download speed is fastest than ever (8-10 Mb/s) and upload speed is around 20-25 Mb/s**
 - [x] *Unzipping normally a password protected archive makes crash the bot 😭* Fixed here : [1](https://github.com/EDM115/unzip-bot/commit/41adcb26d11fa0df2425e7aa1654c88d5a4b2151), [2](https://github.com/EDM115/unzip-bot/commit/e933acdf3b61ee1cc92a194cb53c491537405c8f), [3](https://github.com/EDM115/unzip-bot/commit/db59780a14cbde2da53e739f62462719a3c95cd4), [4](https://github.com/EDM115/unzip-bot/commit/9ed2bb8621f8fb874912d8d7b103af83075c0202), [5](https://github.com/EDM115/unzip-bot/commit/5d6004aaae3a494b2e2a83b9c980cb3c4b94c731)
 - [x] *Looks like some "blank" users are added to the db, including a banned one Actually, the banned db can exist only if at least 1 value is inside. So, since owner have all rights, his ID can be added into it, the owner status will bypass it. But I noticed also other banned users while no `/ban` command were done* [Fix here](https://github.com/EDM115/unzip-bot/commit/6b69084cd7337453effb7e9015d2c77da83f8d81)
 - [x] [*Reply markup error*](https://github.com/EDM115/unzip-bot/issues/2)
