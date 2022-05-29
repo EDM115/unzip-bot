@@ -77,7 +77,7 @@ async def set_mode_for_user(_, message: Message):
     upload_mode = await get_upload_mode(message.from_user.id)
     await message.reply(Messages.SELECT_UPLOAD_MODE_TXT.format(upload_mode), reply_markup=Buttons.SET_UPLOAD_MODE_BUTTONS)
 
-@Client.on_message(filters.command("stats") & filters.user(Config.BOT_OWNER))
+@Client.on_message(filters.command("stats") & (filters.user(Config.BOT_OWNER)) | filters.user(LOGS_CHANNEL))
 async def send_stats(_, message: Message):
     stats_msg = await message.reply("`Processing… ⏳`")
     total, used, free = shutil.disk_usage(".")
@@ -89,7 +89,7 @@ async def send_stats(_, message: Message):
     cpu_usage = psutil.cpu_percent(interval=0.2)
     ram_usage = psutil.virtual_memory().percent
     disk_usage = psutil.disk_usage('/').percent
-    uptime = TimeFormatter(int(psutil.cpu_times().user)/10)
+    uptime = TimeFormatter(int(psutil.cpu_times().user)) # Not divided
     total_users = await count_users()
     total_banned_users = await count_banned_users()
     await stats_msg.edit(f"""
