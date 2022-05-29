@@ -85,27 +85,19 @@ async def check_user(message):
     is_in_db = await is_user_in_db(message.from_user.id)
     if not is_in_db:
         await add_user(message.from_user.id)
+        uname = message.from_user.firstname + " " + message.from_user.last_name + " | @" + message.from_user.username
         try:
             await Client.send_message(
                 chat_id=Config.LOGS_CHANNEL,
-                text=f"**#NEW_USER** 🎙 \n\n**User profile:** `{message.from_user.mention}` \n**User ID:** `{message.from_user.id}` \n**Profile URL:** [tg://user?id={message.from_user.id}](tg://user?id={message.from_user.id})",
+                text=f"**#NEW_USER** 🎙 \n\n**User profile :** `{uname}` \n**User ID :** `{message.from_user.id}` \n**Profile URL :** [tg://user?id={message.from_user.id}](tg://user?id={message.from_user.id})",
                 disable_web_page_preview=False
             )
         except AttributeError:
-            try:
-                time.sleep(5)
-                await Client.send_message(
-                    chat_id=Config.LOGS_CHANNEL,
-                    text=f"**#NEW_USER** 🎙 \n\n**User profile:** `{message.from_user.mention}` \n**User ID:** `{message.from_user_id}` \n**Profile URL:** [tg://user?id={message.from_user_id}](tg://user?id={message.from_user_id})",
-                    disable_web_page_preview=False
-                )
-                LOGGER.info("Useless fix have been done here, _id instead of .id")
-            except AttributeError:
-                await Client.send_message(
-                    chat_id=Config.LOGS_CHANNEL,
-                    text=f"**#NEW_USER** 🎙 \n\n**User profile:** `{message.from_user.mention}` \n**User ID:** `[AttributeError] Can't get it` \n**Profile URL:** Can't get it",
-                    disable_web_page_preview=False
-                )
+            await Client.send_message(
+                chat_id=Config.LOGS_CHANNEL,
+                text=f"**#NEW_USER** 🎙 \n\n**User profile :** `{uname}` \n**User ID :** `[AttributeError] Can't get it` \n**Profile URL :** Can't get it",
+                disable_web_page_preview=False
+            )
     await message.continue_propagation()
 
 """
