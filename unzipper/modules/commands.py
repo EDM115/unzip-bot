@@ -77,7 +77,7 @@ async def set_mode_for_user(_, message: Message):
     upload_mode = await get_upload_mode(message.from_user.id)
     await message.reply(Messages.SELECT_UPLOAD_MODE_TXT.format(upload_mode), reply_markup=Buttons.SET_UPLOAD_MODE_BUTTONS)
 
-@Client.on_message(filters.command("stats") & (filters.user(Config.BOT_OWNER)) | filters.user(LOGS_CHANNEL))
+@Client.on_message(filters.command("stats") & (filters.user(Config.BOT_OWNER)) | filters.user(Config.LOGS_CHANNEL))
 async def send_stats(_, message: Message):
     stats_msg = await message.reply("`Processing… ⏳`")
     total, used, free = shutil.disk_usage(".")
