@@ -19,7 +19,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
         time_to_completion = round((total - current) / speed) * 1000
         estimated_total_time = elapsed_time + time_to_completion
         elapsed_time = TimeFormatter(milliseconds=elapsed_time)
-        if (estimated_total_time > elapsed_time and timenow > elapsed_time) or (estimated_total_time > elapsed_time and percentage > 50:
+        if ((estimated_total_time > elapsed_time) and (timenow > elapsed_time)) or ((estimated_total_time > elapsed_time) and (percentage > 50)):
             estimated_total_time -= elapsed_time / 10
         estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
         progress = "[{0}{1}] \n**Processing…** : `{2}%`\n".format(
