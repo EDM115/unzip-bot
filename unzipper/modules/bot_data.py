@@ -58,13 +58,13 @@ class Buttons:
                 InlineKeyboardButton("As video 📹", callback_data="set_mode|video")
             ]
         ])
-"""
+
     I_PREFER_STOP = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("❌ Cancel", callback_data="stopit")
+                InlineKeyboardButton("❌ Cancel", callback_data="canceldownload")
             ]
         ])
-"""
+
 
 class Messages:
     START_TEXT = """
@@ -188,6 +188,10 @@ Please report this at @EDM115 if you think this is a serious error
 **{} ✅**
 
 Now all of your files have been deleted from my server 😌
+    """
+
+    DL_STOPPED = """
+✅ The download of your file have successfully been cancelled 😌
     """
 
     HOW_MANY_UPLOADED = """
