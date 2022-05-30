@@ -12,7 +12,7 @@ from config import Config
 from .modules.bot_data import Messages
 
 running = True
-
+# https://stackoverflow.com/questions/18499497/how-to-process-sigterm-signal-gracefully
 def handler_stop_signals(signum, frame):
     global running
     running = False
@@ -42,6 +42,7 @@ while running:
         LOGGER.info("Bot is running now ! Join @EDM115bots")
         idle()
 
+LOGGER.info("Received SIGTERM")
 stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
 unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime))
 LOGGER.info("Bot stopped 😪")
