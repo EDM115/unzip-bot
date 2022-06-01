@@ -6,6 +6,44 @@
   ## Convention : `vX.Y.Z`, where `X` stands for a major change and a lot of new features, `Y` for some new features and bug fixes, `Z` for testing stuff and unbugged things
 </div>
 
+---
+---
+
+## v4.2.1 **[LATEST BETA RELEASE]**
++ Major bug fixes
+
+### v4.2.0
++ Added workaround for [issue #26](https://github.com/EDM115/unzip-bot/issues/26)
++ The bot now edit its messages each 7s (instead of 10s)
++ Attempt to make a really better ETA
++ Working around allowing user to cancel file/URL download (will look for the extracting process, but can't reply while extracting)
+
+### v4.1.1
++ Reduced amount of lines in logs (that was too much 💀)
++ Definitely fixed the bug of v4.0.1
++ Better texts
++ Keyboard now refreshes correctly after sending a file
+
+### v4.1.0
++ Better handling of issue #2 + better usage of it (no longer systematically delete message)
++ Added `/dbexport`, `/commands`, `/admincmd`
++ Added exec and eval, but not usable now
+
+### v4.0.7 *(.6 don't exists 🥲)*
++ Major bug fixes
++ Empty keyboard buttons are side to side
+
+### v4.0.5
++ Tried to add date+time on logs filename. Can't actually do because I will need to work with wildcards
++ Added logging to motor and asyncio
++ Added `/sendto` that works like `/broadcast` but to a single user. Works with chats and channels too. Will look for handling replies as well
++ You can use commands in more places
+
+### v4.0.4
++ Major bug fixes
++ Upload count return 0 instead of None if it doesn't exist
++ Try to automatically perform a `/clean` when a task failed
+
 ### v4.0.3 *(.2 don't exists 🥲)*
 + `/mode` work finally as expected. Previous behavior added users to banned db when they changed their upload mode, thus the command couldn't work. That huge bug is present in Nexa's repo
 + Created a TimeFormatter with seconds as input
@@ -28,7 +66,7 @@
 
 ---
 
-### v3.3.5 *(.4 don't exists 🥲)*
+### v3.3.5 *(.4 don't exists 🥲)* **[LATEST STABLE RELEASE, WITH FIXES FROM 4.0.3]**
 + More emojis
 + Created `/help` and `/about` from home text
 
