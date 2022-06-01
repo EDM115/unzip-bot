@@ -16,11 +16,11 @@
 + Added workaround for [issue #26](https://github.com/EDM115/unzip-bot/issues/26)
 + The bot now edit its messages each 7s (instead of 10s)
 + Attempt to make a really better ETA
-+ Working around allowing user to cancel file/URL download (will look for the extracting process, but can't reply while extracting)
++ Working around allowing user to cancel file/URL download (will look for the extracting process, bot can't reply while extracting)
 
 ### v4.1.1
 + Reduced amount of lines in logs (that was too much 💀)
-+ Definitely fixed the bug of v4.0.1
++ Definitely fixed the bug of `v4.0.1`
 + Better texts
 + Keyboard now refreshes correctly after sending a file
 
@@ -34,8 +34,8 @@
 + Empty keyboard buttons are side to side
 
 ### v4.0.5
-+ Tried to add date+time on logs filename. Can't actually do because I will need to work with wildcards
-+ Added logging to motor and asyncio
++ Tried to add date+time on logs filename. Can't actually do it because I will need to work with wildcards
++ Added logging for motor and asyncio
 + Added `/sendto` that works like `/broadcast` but to a single user. Works with chats and channels too. Will look for handling replies as well
 + You can use commands in more places
 
@@ -45,7 +45,7 @@
 + Try to automatically perform a `/clean` when a task failed
 
 ### v4.0.3 *(.2 don't exists 🥲)*
-+ `/mode` work finally as expected. Previous behavior added users to banned db when they changed their upload mode, thus the command couldn't work. That huge bug is present in Nexa's repo
++ `/mode` work finally as expected *(previous behavior added users to banned db when they changed their upload mode, thus the command couldn't work. That huge bug is present in Nexa's repo)*
 + Created a TimeFormatter with seconds as input
 + Created upload file count (buggy). Barely saves in DB + only shows up in logs when user selected upload all mode
 + Logs message now replies to the concerned archive. Better if multiple archives are processed at the same time
@@ -92,10 +92,10 @@
 
 ### v3.2.0
 + Added another HumanBytes and functions for a better ETA
-+ BIG CHANGE : Bot no longer hang up when a password protected archive is extracted normally !
++ BIG CHANGE : Bot no longer hang up when a password protected archive is extracted normally ! 🥳
 
 ### v3.1.1
-+ Fixes some errors
++ Fixed some errors
 
 ### v3.1.0
 + Captions *really* works now
