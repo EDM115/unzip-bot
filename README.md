@@ -43,6 +43,7 @@
 - [x] *Adding file name in description while uploading* [Added here](https://github.com/EDM115/unzip-bot/commit/37e534873baba858583729f27927f42da368ed86)
 - [x] *Add a `/cleanall` for forcing the server reset and freeing space*
 
+## Take a look about the [changelog](https://github.com/EDM115/unzip-bot/blob/beta/changelog.md) 😏
   
 [![Deploy me 🥺](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/beta)  
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/ENIia-?referralCode=EDM115)  
