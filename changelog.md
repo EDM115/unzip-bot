@@ -6,14 +6,45 @@
   ## Convention : `vX.Y.Z`, where `X` stands for a major change and a lot of new features, `Y` for some new features and bug fixes, `Z` for testing stuff and unbugged things
 </div>
 
-### v3.
+### v4.0.3 *(.2 don't exists 🥲)*
++ `/mode` work finally as expected. Previous behavior added users to banned db when they changed their upload mode, thus the command couldn't work. That huge bug is present in Nexa's repo
++ Created a TimeFormatter with seconds as input
++ Created upload file count (buggy). Barely saves in DB + only shows up in logs when user selected upload all mode
++ Logs message now replies to the concerned archive. Better if multiple archives are processed at the same time
++ Errors shows up in logs
++ Created an empty keyboard where only Upload all & Cancel shows up
++ Fixed major bug : REPLY_MARKUP_TOO_LONG (refer to [issue #2](https://github.com/EDM115/unzip-bot/issues/2))
++ Try to close session (to fix [issue #4](https://github.com/EDM115/unzip-bot/issues/4))
+
+### v4.0.1
++ Tried to fetch the SITERM signal
++ Trying to fix a bug where the User Id no longer shows up in logs
+
+### v4.0.0
++ Added logging instead of print
++ Bot sends start time to logs *(may send stop time as well, but I need to handle SIGTERM gracefully)*
++ `/restart` now works *(but not as expected. Instead of killing and restart the process, it creates a subprocess that behave the same way)*
++ Added `/logs` to send a `.txt` containing the logs to the owner
+
+---
+
+### v3.3.5 *(.4 don't exists 🥲)*
++ More emojis
++ Created `/help` and `/about` from home text
+
+### v3.3.3
++ Minor bug fixes
+
+### v3.3.2
++ Fully upgraded `/stats`
++ Added `/redbutton`, `/restart`, `/cleanall`, `/addthumb`, `/delthumb`
 
 ### v3.3.1
 + Minor text changes
 
 ### v3.3.0
 + Password archives no longer shows an empty upload button
-+ Sends URL to logs
++ Sends file downloaded from URL to logs
 
 ### v3.2.2
 + Added password warning in both user chat and logs
