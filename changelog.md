@@ -9,7 +9,7 @@
 ---
 ---
 
-## v4.2.1 **[LATEST BETA RELEASE]**
+### v4.2.1 **[LATEST BETA RELEASE]**
 + Major bug fixes
 
 ### v4.2.0
