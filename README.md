@@ -18,8 +18,8 @@
 - Ban / Unban users from using your bot
 - Send logs in a private channel/group
 - Can run only one extract per user at a time
-- Download speed : 2-12 Mb/s, can be even more if you're lucky
-- Upload speed : 5-20 Mb/s, unexpectedly
+- Download speed : 4-12 Mb/s, can be even more if you're lucky
+- Upload speed : 15-25 Mb/s, unexpectedly
 - Fast to answer and process tasks
 - And some other features 🔥 Dive into the code to find them 🤭
   
