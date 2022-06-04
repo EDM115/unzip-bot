@@ -55,6 +55,7 @@ async def add_thumb(_, message):
             reply_to_message_id=message.message_id
         )
 
+"""
 @pyrogram.Client.on_message(pyrogram.Filters.photo)
 async def save_thumb(_, message):
     if message.media_group_id is not None:
@@ -79,6 +80,7 @@ async def save_thumb(_, message):
             text=Messages.SAVED_THUMBNAIL,
             reply_to_message_id=message.message_id
         )
+"""
 
 async def del_thumb(_, message):
     download_location = Config.DOWNLOAD_LOCATION + "/" + str(message.from_user.id)
