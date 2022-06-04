@@ -222,6 +222,14 @@ Please select the upload mode by clicking on below buttons 👇
 **Successfully deleted this thumbnail ✅**
     """
 
+    ERR_2_IN_ALBUM = """
+More than 2 pictures in that Album. It can't work 🤦‍♂️
+    """
+    
+    PLS_REPLY = """
+You need to reply to a picture for saving it as custom thumbnail 😃
+    """
+
 # List of error messages from p7zip
 ERROR_MSGS = [
     "Error",
