@@ -134,7 +134,7 @@ I can extract archives like `zip`, `rar`, `tar`, …
 **Extraction successfull ✅**
 
 **Extraction time :** `{}`
-**Status :** Trying to upload… Please wait
+**Status :** Processing the extracted files… Please wait
     """
 
     EXT_CAPTION = """
@@ -214,6 +214,13 @@ Please select the upload mode by clicking on below buttons 👇
 **Successfully changed upload mode to** `{}` ✅
     """
 
+    SAVED_THUMBNAIL = """
+**Successfully saved this thumbnail ✅**
+    """
+
+    DELETED_THUMB = """
+**Successfully deleted this thumbnail ✅**
+    """
 
 # List of error messages from p7zip
 ERROR_MSGS = [
