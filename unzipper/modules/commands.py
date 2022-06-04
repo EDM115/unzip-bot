@@ -26,6 +26,7 @@ from unzipper.helpers.database import (
     get_uploaded
 )
 from unzipper.helpers.unzip_help import humanbytes, TimeFormatter
+from unzipper.modules.ext_script.custom_thumbnail import add_thumb, del_thumb
 from config import Config
 from unzipper import LOGGER
 
@@ -227,10 +228,12 @@ async def red_alert(_, message: Message):
 @Client.on_message(filters.private & filters.command("addthumb"))
 async def thumb_add(_, message: Message):
     await message.reply("🚧 WIP 🚧")
+    await add_thumb(_, message)
 
 @Client.on_message(filters.private & filters.command("delthumb"))
 async def thumb_del(_, message: Message):
     await message.reply("🚧 WIP 🚧")
+    await del_thumb(_, message)
 
 @Client.on_message(filters.private & filters.command("cleanall") & filters.user(Config.BOT_OWNER))
 async def del_everything(_, message: Message):
