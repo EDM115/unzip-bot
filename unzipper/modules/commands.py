@@ -25,7 +25,7 @@ from unzipper.helpers.database import (
     get_upload_mode,
     get_uploaded
 )
-from unzipper.helpers.unzip_help import humanbytes, TimeFormatter
+from unzipper.helpers.unzip_help import humanbytes, TimeFormatter, timeformat_sec
 from unzipper.modules.ext_script.custom_thumbnail import add_thumb, del_thumb
 from config import Config
 from unzipper import LOGGER
@@ -76,7 +76,7 @@ async def extract_archive(_, message: Message):
 @Client.on_message(filters.private & filters.command(["mode", "setmode"]))
 async def set_mode_for_user(_, message: Message):
     upload_mode = await get_upload_mode(message.from_user.id)
-    await message.reply(Messages.SELECT_UPLOAD_MODE_TXT.format(upload_mode), reply_markup=Buttons.SET_UPLOAD_MODE_BUTTONS)
+    await message.reply(text=Messages.SELECT_UPLOAD_MODE_TXT.format(upload_mode), reply_markup=Buttons.SET_UPLOAD_MODE_BUTTONS)
 
 @Client.on_message(filters.command("stats") & (filters.user(Config.BOT_OWNER)) | filters.user(Config.LOGS_CHANNEL))
 async def send_stats(_, message: Message):
@@ -90,7 +90,7 @@ async def send_stats(_, message: Message):
     cpu_usage = psutil.cpu_percent(interval=0.2)
     ram_usage = psutil.virtual_memory().percent
     disk_usage = psutil.disk_usage('/').percent
-    uptime = TimeFormatter(int(psutil.cpu_times().user)/5)
+    uptime = timeformat_sec(int(psutil.cpu_times().user)) # Not divided thanks to timeformat_sec() funct
     total_users = await count_users()
     total_banned_users = await count_banned_users()
     await stats_msg.edit(f"""
