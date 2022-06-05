@@ -219,7 +219,7 @@ Please select the upload mode by clicking on below buttons 👇
     """
 
     DELETED_THUMB = """
-**Successfully deleted this thumbnail ✅**
+**Successfully removed your thumbnail ✅**
     """
 
     ERR_2_IN_ALBUM = """
