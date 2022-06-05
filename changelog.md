@@ -9,13 +9,13 @@
 ---
 ---
 
-### v4.3.0
+### v4.3.0 **[LATEST BETA RELEASE]**
 + Created this changelog to track updates
 + Once again updated the uptime
 + Added numpy and Pillow in the requirements
 + Tried to have a thumbnail support. Nevertheless, it's removed at each restart. Will look for a Telegra.ph support
 
-### v4.2.1 **[LATEST BETA RELEASE]**
+### v4.2.1
 + Major bug fixes
 
 ### v4.2.0
