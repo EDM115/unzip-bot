@@ -13,9 +13,10 @@ async def add_thumb(_, message):
     if message.reply_to_message is not None:
         reply_message = message.reply_to_message
         if reply_message.media_group_id is not None: # album sent
-            message.reply("You can't use an album. Reply to a single picture sent as photo (not as document)")
+            return message.reply("You can't use an album. Reply to a single picture sent as photo (not as document)")
         else:
             thumb_location = Config.THUMB_LOCATION + "/" + str(message.from_user.id) + ".jpg"
+            pre_thumb = Config.THUMB_LOCATION + "/not_resized_" + str(message.from_user.id) + ".jpg"
             if os.path.exists(thumb_location):
                 # Add later buttons to delete or cancel + preview (TTK)
                 message.reply("A thumbnail already exists. Replacing it with the new one…")
@@ -25,8 +26,15 @@ async def add_thumb(_, message):
                     pass
             await _.download_media(
                 message=message,
-                file_name=thumb_location
+                file_name=pre_thumb
             )
+            size = 320, 320
+            try:
+                previous = Image.open(pre_thumb)
+                previous.thumbnail(size, Image.ANTIALIAS)
+                previous.save(thumb_location, "JPEG")
+            except:
+                return message.reply("Error happened")
             await _.send_message(
                 chat_id=message.chat.id,
                 text=Messages.SAVED_THUMBNAIL,
