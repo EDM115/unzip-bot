@@ -9,6 +9,7 @@ import subprocess
 from pyrogram.errors import FloodWait
 from unzipper.helpers.database import get_upload_mode
 from unzipper.modules.bot_data import Messages
+from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
 from config import Config
 from unzipper import LOGGER
 
@@ -40,9 +41,14 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
             thumb = await run_shell_cmds(f"ffmpeg -i {doc_f} -ss 00:00:01.000 -vframes 1 {thmb_pth}")
             fname = os.path.basename(doc_f)
             await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption=Messages.EXT_CAPTION.format(fname), duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=str(thumb))
+        # add one for sending pictures as full size one, not only doc
         else:
             fname = os.path.basename(doc_f)
-            await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption=Messages.EXT_CAPTION.format(fname))
+            thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
+            if thumb_exists:
+                await unzip_bot.send_document(chat_id=c_id, document=doc_f, thumb=thumb_image, caption=Messages.EXT_CAPTION.format(fname))
+            else:
+                await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption=Messages.EXT_CAPTION.format(fname))
         os.remove(doc_f)
     except FloodWait as f:
         asyncio.sleep(f.x)
