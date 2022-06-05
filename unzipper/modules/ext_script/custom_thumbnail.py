@@ -12,8 +12,29 @@ from unzipper.modules.bot_data import Buttons, Messages
 async def add_thumb(_, message):
     if message.reply_to_message is not None:
         reply_message = message.reply_to_message
-        if reply_message.media_group_id is not None:
-            download_location = Config.DOWNLOAD_LOCATION + "/" + str(message.from_user.id) + "/" + str(reply_message.media_group_id) + "/"
+        if reply_message.media_group_id is not None: # album sent
+            message.reply("You can't use an album. Reply to a single picture sent as photo (not as document)")
+        else:
+            thumb_location = Config.THUMB_LOCATION + "/" + str(message.from_user.id) + ".jpg"
+            if os.path.exists(thumb_location):
+                # Add later buttons to delete or cancel + preview (TTK)
+                message.reply("A thumbnail already exists. Replacing it with the new one…")
+                try:
+                    os.remove(thumb_location + ".jpg")
+                except:
+                    pass
+            await _.download_media(
+                message=message,
+                file_name=thumb_location
+            )
+            await _.send_message(
+                chat_id=message.chat.id,
+                text=Messages.SAVED_THUMBNAIL,
+                reply_to_message_id=reply_message.message_id
+            )
+            """
+            # This combine several pictures one to each other
+            download_location = Config.THUMB_LOCATION + "/" + str(message.from_user.id) + "/" + str(reply_message.media_group_id) + "/"
             save_final_image = download_location + str(round(time.time())) + ".jpg"
             list_im = os.listdir(download_location)
             if len(list_im) == 2:
@@ -37,6 +58,7 @@ async def add_thumb(_, message):
                     text=Messages.ERR_2_IN_ALBUM,
                     reply_to_message_id=message.message_id
                 )
+            
             try:
                 [os.remove(download_location + i) for i in list_im ]
                 os.remove(download_location)
@@ -48,6 +70,7 @@ async def add_thumb(_, message):
                 text=Messages.PLS_REPLY,
                 reply_to_message_id=message.message_id
             )
+            """
     else:
         await _.send_message(
             chat_id=message.chat.id,
@@ -83,10 +106,9 @@ async def save_thumb(_, message):
 """
 
 async def del_thumb(_, message):
-    download_location = Config.DOWNLOAD_LOCATION + "/" + str(message.from_user.id)
+    thumb_location = Config.THUMB_LOCATION + "/" + str(message.from_user.id)
     try:
-        os.remove(download_location + ".jpg")
-        # os.remove(download_location + ".json")
+        os.remove(thumb_location + ".jpg")
     except:
         pass
     await _.send_message(
@@ -94,3 +116,7 @@ async def del_thumb(_, message):
         text=Messages.DELETED_THUMB,
         reply_to_message_id=message.message_id
     )
+
+async def thumb_exists(_, message):
+    thumb_location = Config.THUMB_LOCATION + "/" + str(message.from_user.id) + ".jpg"
+    return os.path.exists(thumb_location)
