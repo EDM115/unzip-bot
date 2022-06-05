@@ -33,6 +33,8 @@ while running:
     if __name__ == "__main__" :
         if not os.path.isdir(Config.DOWNLOAD_LOCATION):
             os.makedirs(Config.DOWNLOAD_LOCATION)
+        if not os.path.isdir(Config.THUMB_LOCATION):
+            os.makedirs(Config.THUMB_LOCATION)
         unzipperbot.start()
         starttime = time.strftime("%Y/%m/%d - %H:%M:%S")
         unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.START_TXT.format(starttime))
