@@ -228,7 +228,7 @@ async def red_alert(_, message: Message):
 @Client.on_message(filters.private & filters.command("addthumb"))
 async def thumb_add(_, message: Message):
     await message.reply("🚧 WIP 🚧")
-    await add_thumb(_, message: Message)
+    await add_thumb(_, message)
 
 @Client.on_message(filters.private & filters.command("delthumb"))
 async def thumb_del(_, message: Message):
