@@ -24,7 +24,7 @@ async def add_thumb(_, message):
                     os.remove(thumb_location + ".jpg")
                 except:
                     pass
-            await _.download_media(
+            await message.download_media(
                 message=message,
                 file_name=pre_thumb
             )
