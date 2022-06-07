@@ -13,6 +13,7 @@ async def add_thumb(_, message):
     if message.reply_to_message is not None:
         reply_message = message.reply_to_message
         if reply_message.media_group_id is not None: # album sent
+            LOGGER.warning("Album")
             return message.reply("You can't use an album. Reply to a single picture sent as photo (not as document)")
         else:
             thumb_location = Config.THUMB_LOCATION + "/" + str(message.from_user.id) + ".jpg"
@@ -20,20 +21,24 @@ async def add_thumb(_, message):
             if os.path.exists(thumb_location):
                 # Add later buttons to delete or cancel + preview (TTK)
                 message.reply("A thumbnail already exists. Replacing it with the new one…")
+                LOGGER.warning("Thumb exists")
                 try:
                     os.remove(thumb_location + ".jpg")
                 except:
                     pass
+            LOGGER.warning("DL thumb")
             await message.download_media(
                 message=message,
                 file_name=pre_thumb
             )
+            LOGGER.warning("DL-ed")
             size = 320, 320
             try:
                 previous = Image.open(pre_thumb)
                 previous.thumbnail(size, Image.ANTIALIAS)
                 previous.save(thumb_location, "JPEG")
             except:
+                LOGGER.warning("Failed to generate thumb")
                 return message.reply("Error happened")
             await _.send_message(
                 chat_id=message.chat.id,
@@ -85,6 +90,7 @@ async def add_thumb(_, message):
             text=Messages.PLS_REPLY,
             reply_to_message_id=message.message_id
         )
+        LOGGER.warning("pls reply to an image")
 
 """
 @pyrogram.Client.on_message(pyrogram.Filters.photo)
