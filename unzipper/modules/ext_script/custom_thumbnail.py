@@ -23,12 +23,12 @@ async def add_thumb(_, message):
                 message.reply("A thumbnail already exists. Replacing it with the new one…")
                 LOGGER.warning("Thumb exists")
                 try:
-                    os.remove(thumb_location + ".jpg")
+                    os.remove(thumb_location)
                 except:
                     pass
             LOGGER.warning("DL thumb")
-            await message.download_media(
-                message=message,
+            await _.download_media(
+                message=reply_message,
                 file_name=pre_thumb
             )
             LOGGER.warning("DL-ed")
