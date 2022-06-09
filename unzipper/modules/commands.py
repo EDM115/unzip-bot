@@ -232,7 +232,7 @@ async def get_all_thumbs(_, message: Message):
                 chat_id=message.chat.id,
                 document=doc_f,
                 file_name=doc_f.name,
-                reply_to_message_id=message.message_id
+                reply_to_message_id=message.message_id,
                 caption=Messages.EXT_CAPTION.format(doc_f.name)
             )
         except FloodWait as e:
