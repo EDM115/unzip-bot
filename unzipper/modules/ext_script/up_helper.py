@@ -34,13 +34,18 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
                 text="File size is too large to send in telegram 😥 \n\n**Sorry, but I can't do anything about this as it's Telegram limitation 😔**"
             )
         if ul_mode == "video":
-            vid_duration = await run_shell_cmds(f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}")
-            thmb_pth = f"Dump/thumbnail_{os.path.basename(doc_f)}.jpg"
-            if os.path.exists(thmb_pth):
-                os.remove(thmb_pth)
-            thumb = await run_shell_cmds(f"ffmpeg -i {doc_f} -ss 00:00:01.000 -vframes 1 {thmb_pth}")
             fname = os.path.basename(doc_f)
-            await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption=Messages.EXT_CAPTION.format(fname), duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=str(thumb))
+            vid_duration = await run_shell_cmds(f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}")
+            if thumb_exists:
+                thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
+                await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption=Messages.EXT_CAPTION.format(fname), duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=thumb_image)
+            else:
+                thmb_pth = f"Config.THUMB_LOCATION/thumbnail_{os.path.basename(doc_f)}.jpg"
+                if os.path.exists(thmb_pth):
+                    os.remove(thmb_pth)
+                thumb = await run_shell_cmds(f"ffmpeg -i {doc_f} -ss 00:00:01.000 -vframes 1 {thmb_pth}")
+                await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption=Messages.EXT_CAPTION.format(fname), duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=str(thumb))
+                os.remove(thmb_pth)
         # add one for sending pictures as full size one, not only doc
         else:
             fname = os.path.basename(doc_f)
