@@ -25,8 +25,10 @@ from unzipper.helpers.database import (
     get_upload_mode,
     get_uploaded
 )
-from unzipper.helpers.unzip_help import humanbytes, TimeFormatter, timeformat_sec
+from unzipper.helpers.unzip_help import humanbytes, TimeFormatter
 from unzipper.modules.ext_script.custom_thumbnail import add_thumb, del_thumb
+from unzipper.modules.ext_script.ext_helper import get_files
+from unzipper.modules.ext_script.up_helper import send_file
 from config import Config
 from unzipper import LOGGER
 
@@ -90,7 +92,7 @@ async def send_stats(_, message: Message):
     cpu_usage = psutil.cpu_percent(interval=0.2)
     ram_usage = psutil.virtual_memory().percent
     disk_usage = psutil.disk_usage('/').percent
-    uptime = timeformat_sec(int(psutil.cpu_times().user)) # Not divided thanks to timeformat_sec() funct
+    uptime = TimeFormatter(int(psutil.cpu_times().user)/2) # Not divided thanks to timeformat_sec() funct
     total_users = await count_users()
     total_banned_users = await count_banned_users()
     await stats_msg.edit(f"""
@@ -219,6 +221,25 @@ async def db_dive(_, message: Message):
     dburl = Config.MONGODB_URL
     db_dive_msg = await message.reply(f"🚧 Go on [MongoDB.com](https://account.mongodb.com/account/login?nds=true), u stupid 😐\n\n`{dburl}`")
     
+@Client.on_message(filters.private & filters.command("getthumbs") & filters.user(Config.BOT_OWNER))
+async def get_all_thumbs(_, message: Message):
+    paths = await get_files(path=Config.THUMB_LOCATION)
+    if not paths:
+        await message.reply("No thumbnails on the server yet")
+    for doc_f in paths:
+        try:
+            await _.send_document(
+                chat_id=message.chat.id,
+                document=doc_f,
+                file_name=doc_f.name,
+                reply_to_message_id=message.message_id
+                caption=Messages.EXT_CAPTION.format(doc_f.name)
+            )
+        except FloodWait as e:
+            sleep(e.x)
+        except RPCError as e:
+            message.reply_text(e, quote=True)
+
 @Client.on_message(filters.private & filters.command("redbutton") & filters.user(Config.BOT_OWNER))
 async def red_alert(_, message: Message):
     await message.reply("🚧 WIP 🚧")
