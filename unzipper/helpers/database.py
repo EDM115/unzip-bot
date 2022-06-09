@@ -85,7 +85,22 @@ async def check_user(message):
     is_in_db = await is_user_in_db(message.from_user.id)
     if not is_in_db:
         await add_user(message.from_user.id)
-        uname = message.from_user.firstname + " " + message.from_user.last_name + " | @" + message.from_user.username
+        try:
+            firstname = message.from_user.first_name
+        except:
+            firstname = ""
+        try:
+            lastname = message.from_user.last_name
+        except:
+            lastname = ""
+        try:
+            username = message.from_user.username
+        except:
+            username = ""
+        if firstname == "" and lastname == "" and username == "":
+            uname = message.from_user.mention
+        else:
+            uname = firstname + " " + lastname + " | @" + username
         try:
             await Client.send_message(
                 chat_id=Config.LOGS_CHANNEL,
