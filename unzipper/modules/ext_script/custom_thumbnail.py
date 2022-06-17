@@ -131,6 +131,6 @@ async def del_thumb(_, message):
         reply_to_message_id=message.message_id
     )
 
-async def thumb_exists(_, message):
-    thumb_location = Config.THUMB_LOCATION + "/" + str(message.from_user.id) + ".jpg"
+async def thumb_exists(chat_id):
+    thumb_location = Config.THUMB_LOCATION + "/" + str(chat_id) + ".jpg"
     return os.path.exists(thumb_location)
