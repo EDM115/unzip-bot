@@ -80,7 +80,7 @@ async def set_mode_for_user(_, message: Message):
     upload_mode = await get_upload_mode(message.from_user.id)
     await message.reply(text=Messages.SELECT_UPLOAD_MODE_TXT.format(upload_mode), reply_markup=Buttons.SET_UPLOAD_MODE_BUTTONS)
 
-@Client.on_message(filters.command("stats") & (filters.user(Config.BOT_OWNER)) | filters.user(Config.LOGS_CHANNEL))
+@Client.on_message(filters.command("stats"))
 async def send_stats(_, message: Message):
     stats_msg = await message.reply("`Processing… ⏳`")
     total, used, free = shutil.disk_usage(".")
@@ -95,7 +95,8 @@ async def send_stats(_, message: Message):
     uptime = TimeFormatter(int(psutil.cpu_times().user)/2) # Not divided thanks to timeformat_sec() funct
     total_users = await count_users()
     total_banned_users = await count_banned_users()
-    await stats_msg.edit(f"""
+    if message.from_user.id == Config.BOT_OWNER:
+        await stats_msg.edit(f"""
 **💫 Current bot stats 💫 [BETA]**
 
 **👥 Users :** 
@@ -116,11 +117,19 @@ async def send_stats(_, message: Message):
  ↳ **RAM usage :** `{ram_usage}%`
  ↳ **Uptime :** `{uptime}` (might be 69% wrong)"""
                          )
-    
-# Attempt to not make that available for non owner
-#@Client.on_message(filters.private & filters.command("stats") & filters.user(!=Config.BOT_OWNER))
-#async def send_stats(_, message: Message):
-#    await message.reply("You are not owner 🧐 Stop that")
+    else:
+        await stats_msg.edit(f"""
+**💫 Current bot stats 💫 [BETA]**
+
+**💾 Disk usage :**
+ ↳ **Total Disk Space :** `{total}`
+ ↳ **Used :** `{used} - {disk_usage}%`
+ ↳ **Free :** `{free}`
+
+**🎛 Hardware usage :**
+ ↳ **CPU usage :** `{cpu_usage}%`
+ ↳ **RAM usage :** `{ram_usage}%`"""
+                         )
 
 async def _do_broadcast(message, user):
     try:
