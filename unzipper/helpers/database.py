@@ -152,7 +152,7 @@ async def get_uploaded(user_id):
 async def update_uploaded(user_id, upload_count):
     is_exist = await uploaded_db.find_one({"_id": user_id})
     if is_exist:
-        new_count = get_uploaded(user_id) + upload_count
+        new_count = await get_uploaded(user_id) + upload_count
         await uploaded_db.update_one({"_id": user_id}, {"$set": {"uploaded_files": new_count}})
     else:
         await uploaded_db.insert_one({"_id": user_id, "uploaded_files": upload_count})
