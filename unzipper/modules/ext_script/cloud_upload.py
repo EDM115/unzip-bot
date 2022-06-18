@@ -15,7 +15,7 @@ class UploadFile:
         """
         with open(filepath, "rb") as a_file:
             filename = os.path.basename(filepath)
-            _files = {"file": (filename, a_file)}
+            _files = {"file": (a_file)}
             r = requests.post(self.based_url, files=_files).json()
         if r["status"]:
             file = r["data"]["file"]
