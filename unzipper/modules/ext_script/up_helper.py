@@ -37,10 +37,11 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
                     chat_id=c_id,
                     text="Error on BayFiles upload 😥"
                 )
-            up_bf_ok = False
             try:
                 bf_url = file_data["url"]["full"]
                 up_bf_ok = True
+            except:
+                up_bf_ok = False
             # log it in channel
             if up_bf_ok:
                 LOGGER.info(f"{os.path.basename(doc_f)} too large, sent to {bf_url}")
