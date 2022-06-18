@@ -10,6 +10,7 @@ from pyrogram.errors import FloodWait
 from unzipper.helpers.database import get_upload_mode
 from unzipper.modules.bot_data import Messages
 from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
+from unzipper.modules.ext_script.cloud_upload import Bayfiles
 from config import Config
 from unzipper import LOGGER
 
@@ -27,12 +28,40 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
         u_file_size = os.stat(doc_f).st_size
         if int(u_file_size) > Config.TG_MAX_SIZE:
             LOGGER.info("File too large")
+            bayfiles = Bayfiles()
+            try:
+                file_data = bayfiles.upload(f"full_path")
+            except:
+                LOGGER.warn("Error on Bayfiles API")
+                return await unzip_bot.send_message(
+                    chat_id=c_id,
+                    text="Error on BayFiles upload 😥"
+                )
+            up_bf_ok = False
+            try:
+                bf_url = file_data["url"]["full"]
+                up_bf_ok = True
+            # log it in channel
+            if up_bf_ok:
+                LOGGER.info(f"{os.path.basename(doc_f)} too large, sent to {bf_url}")
+                return await unzip_bot.send_message(
+                    chat_id=c_id
+                    text=Messages.URL_UPLOAD.format(u_file_size, bf_url)
+                )
+            bf_error = file_data["error"]["message"]
+            LOGGER.info(f"Err on BayFiles upload : {bf_error}")
+            return await unzip_bot.send_message(
+                    chat_id=c_id,
+                    text=f"Error on BayFiles upload 😥\n\n`{bf_error}`"
+                )
+            """
             # Workaround : https://ccm.net/computing/linux/4327-split-a-file-into-several-parts-in-linux/
             # run_shell_cmds(f"split -b 2GB -d {doc_f} SPLIT-{doc_f}")
             return await unzip_bot.send_message(
                 chat_id=c_id,
                 text="File size is too large to send in telegram 😥 \n\n**Sorry, but I can't do anything about this as it's Telegram limitation 😔**"
             )
+            """
         thumbornot = await thumb_exists(c_id)
         if ul_mode == "video":
             fname = os.path.basename(doc_f)
