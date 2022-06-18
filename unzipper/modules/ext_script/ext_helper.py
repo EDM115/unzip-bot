@@ -1,7 +1,7 @@
 # Copyright (c) 2022 EDM115
 
-import subprocess
 import os
+import subprocess
 
 from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
@@ -46,11 +46,9 @@ async def extr_files(protected, path, archive_path, password=None):
 
 # Get files in directory as a list
 async def get_files(path):
-    path_list = []
-    for r, d, f in os.walk(path):
-        for file in f:
-            path_list.append(os.path.join(r, file))
-    return path_list
+    path_list = [val for sublist in [[os.path.join(
+        i[0], j) for j in i[2]] for i in os.walk(path)] for val in sublist]
+    return sorted(path_list)
 
 # Make keyboard
 async def make_keyboard(paths, user_id, chat_id):
