@@ -10,7 +10,7 @@ from pyrogram.errors import FloodWait
 from unzipper.helpers.database import get_upload_mode
 from unzipper.modules.bot_data import Messages
 from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
-from unzipper.modules.ext_script.cloud_upload import Bayfiles
+from unzipper.modules.ext_script.cloud_upload import bayfiles_upload
 from config import Config
 from unzipper import LOGGER
 
@@ -28,15 +28,16 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
         u_file_size = os.stat(doc_f).st_size
         if int(u_file_size) > Config.TG_MAX_SIZE:
             LOGGER.info("File too large")
-            bayfiles = Bayfiles()
             try:
-                file_data = bayfiles.upload(f"{os.path.abspath(doc_f)}")
+                file_path = os.path.abspath(doc_f)
+                file_data = bayfiles_upload(f"{file_path}")
             except:
                 LOGGER.warn("Error on Bayfiles API")
                 return await unzip_bot.send_message(
                     chat_id=c_id,
                     text="Error on BayFiles upload 😥"
                 )
+            """
             try:
                 bf_url = file_data["url"]["full"]
                 up_bf_ok = True
@@ -54,6 +55,11 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
             return await unzip_bot.send_message(
                     chat_id=c_id,
                     text=f"Error on BayFiles upload 😥\n\n`{bf_error}`"
+                )
+            """
+            return await unzip_bot.send_message(
+                    chat_id=c_id,
+                    text=f"{file_data}"
                 )
             """
             # Workaround : https://ccm.net/computing/linux/4327-split-a-file-into-several-parts-in-linux/
