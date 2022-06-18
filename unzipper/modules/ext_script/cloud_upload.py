@@ -1,5 +1,10 @@
 import os
-import requests
+# import requests
+from pathlib import Path
+from requests import get, post, ConnectionError, head
+from requests.exceptions import MissingSchema
+import json
+import sys
 
 class Error(BaseException):
     pass
@@ -33,3 +38,21 @@ class Anonfiles(UploadFile):
 class Bayfiles(UploadFile):
     def __init__(self):
         UploadFile.__init__(self, "https://api.bayfiles.com/upload")
+
+async def bayfiles_upload(file):
+    url = "https://api.bayfiles.com/upload"
+    try:
+        r = post(url, file=file)
+    except ConnectionError:
+        return "[Error]: No internet"
+    resp = json.loads(r.text)
+    if resp["status"]:
+        urlshort = resp['data']['file']['url']['short']
+        urllong = resp['data']['file']['url']['full']
+        print(f'[SUCCESS]: Your file has been succesfully uploaded:\nFull URL: {urllong}\nShort URL: {urlshort}')
+        return urllong
+    else:
+        message = resp['error']['message']
+        errtype = resp['error']['type']
+        print(f'[ERROR]: {message}\n{errtype}')
+        return message
