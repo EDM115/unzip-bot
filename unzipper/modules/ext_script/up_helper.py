@@ -46,7 +46,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
             if up_bf_ok:
                 LOGGER.info(f"{os.path.basename(doc_f)} too large, sent to {bf_url}")
                 return await unzip_bot.send_message(
-                    chat_id=c_id
+                    chat_id=c_id,
                     text=Messages.URL_UPLOAD.format(os.path.basename(doc_f), u_file_size, bf_url)
                 )
             bf_error = file_data["error"]["message"]
