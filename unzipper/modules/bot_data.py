@@ -143,6 +143,12 @@ I can extract archives like `zip`, `rar`, `tar`, …
 Successfully extracted by @unzip_edm115bot 🥰
     """
 
+    URL_UPLOAD = """
+`{}` is too huge to be uploaded to Telegram (`{}`)
+
+Instead, I made it available here : {} 🥰
+    """
+
     LOG_CAPTION = """
 **The file : ** `{}`
 
