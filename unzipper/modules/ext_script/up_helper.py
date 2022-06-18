@@ -30,7 +30,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
             LOGGER.info("File too large")
             bayfiles = Bayfiles()
             try:
-                file_data = bayfiles.upload(f"{full_path}")
+                file_data = bayfiles.upload(f"{os.path.abspath(doc_f)}")
             except:
                 LOGGER.warn("Error on Bayfiles API")
                 return await unzip_bot.send_message(
