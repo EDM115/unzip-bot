@@ -65,7 +65,7 @@ async def bayfiles_upload(file):
 
 async def bayfiles_test(file):
     try:
-        uploaded = await terminal(f"curl -F 'file={file}' https://api.bayfiles.com/upload")
+        uploaded = await terminal(f"curl -F 'file=@{file}' https://api.bayfiles.com/upload")
         return uploaded
     except:
         a = "Nein"
