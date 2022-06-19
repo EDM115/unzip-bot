@@ -1,10 +1,16 @@
 import os
+import subprocess
 # import requests
 from pathlib import Path
 from requests import get, post, ConnectionError, head
 from requests.exceptions import MissingSchema
 import json
 import sys
+
+async def terminal(command):
+    run = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    shell_ouput = run.stdout.read()[:-1].decode("utf-8")
+    return shell_ouput
 
 class Error(BaseException):
     pass
@@ -56,3 +62,11 @@ async def bayfiles_upload(file):
         errtype = resp['error']['type']
         print(f'[ERROR]: {message}\n{errtype}')
         return message
+
+async def bayfiles_test(file):
+    try:
+        uploaded = await terminal(f"curl -F 'file={file}' https://api.bayfiles.com/upload")
+        return uploaded
+    except:
+        a = "Nein"
+        return a
