@@ -68,7 +68,7 @@ class Buttons:
 
 class Messages:
     START_TEXT = """
-Hi **{}** 👋, I'm **Unarchiver Bot** 🥰
+Hi **{}** 👋, I'm **Unarchiver bot** 🥰
 **This is BETA version !** May be a lot buggy, but with new features. Better waiting for the stable version at daytime… 🙂
 
 I can extract archives like `zip`, `rar`, `tar`, …
@@ -99,7 +99,7 @@ I can extract archives like `zip`, `rar`, `tar`, …
     """
 
     ABOUT_TXT = """
-**About Unarchiver Bot [BETA | v4.4.0]**
+**About Unarchiver bot [BETA | v4.4.0]**
 
 • **Language :** [Python 3.9.1](https://www.python.org/)
 • **Framework :** [Pyrogram 1.4.16](https://docs.pyrogram.org/)
@@ -110,7 +110,7 @@ I can extract archives like `zip`, `rar`, `tar`, …
     """
 
     LOG_TXT = """
-**Extract Log 📝**
+**Extract log 📝**
 
 **User ID :** `{}`
 **File Name :** `{}`
@@ -131,7 +131,7 @@ I can extract archives like `zip`, `rar`, `tar`, …
     """
 
     EXT_OK_TXT = """
-**Extraction successfull ✅**
+**Extraction successful ✅**
 
 **Extraction time :** `{}`
 **Status :** Processing the extracted files… Please wait
@@ -147,6 +147,16 @@ Successfully extracted by @unzip_edm115bot 🥰
 `{}` is too huge to be uploaded to Telegram (`{}`)
 
 Instead, I made it available here : {} 🥰
+    """
+
+    URL_ERROR = """
+An error hapenned for `{}` 😕
+
+**Error code :** `{}`
+**Error type :** `{}`
+**Error message :** `{}`
+
+Please report this at @EDM115 if you think this is a serious error
     """
 
     LOG_CAPTION = """
@@ -166,7 +176,7 @@ have been saved from
     """
 
     EXT_FAILED_TXT = """
-**Extraction Failed 😕**
+**Extraction failed 😕**
 
 **What to do ?**
 
@@ -183,7 +193,7 @@ Please report this at @EDM115 if you think this is a serious error
     """
 
     ERROR_TXT = """
-**Error Happened 😕**
+**Error happened 😕**
 
 **ERROR :** `{}`
 
@@ -226,10 +236,6 @@ Please select the upload mode by clicking on below buttons 👇
 
     DELETED_THUMB = """
 **Successfully removed your thumbnail ✅**
-    """
-
-    ERR_2_IN_ALBUM = """
-More than 2 pictures in that Album. It can't work 🤦‍♂️
     """
     
     PLS_REPLY = """
