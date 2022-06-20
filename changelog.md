@@ -9,7 +9,39 @@
 ---
 ---
 
-### v4.3.0 **[LATEST BETA RELEASE]**
+### v4.4.2 **[LATEST BETA RELEASE]**
++ A lot of changes on BayFiles upload :
+  + Errors sent to logs
+  + Formatting the results with size, url and filename
+  + Correct formatting of the errors
+  + Created get_cloud(), will improve it to let choose the upload platform for the user (bayfiles, anonfiles, …)
+
+### v4.4.1
++ Instead of using things from other users, I use the official curl method from BayFiles docs
+
+### v4.4.0
++ If a file is above 2 Gb, it's uploaded to Bayfiles instead
++ Better get_files() according to what Nexa made. Looks faster
+
+### v4.3.4
++ Fixed crashes
++ Made `/stats` working for non owner, as requested in [#34](https://github.com/EDM115/unzip-bot/issues/34)
+
+### v4.3.3
++ Added `/getthumbs`, which don't work 😅
++ User Name is better on the database (better formatting when he joins)
+
+### v4.3.2
++ Custom thumb made better + logging on it
+
+### v4.3.1
++ Buggy thumbnails (files didn't uploads due to this)
++ That version crashes
++ The thumbnail is resized according to Telegram API specifications
++ Thumbnails are saved to a separate folder
++ Created thumb_exists()
+
+### v4.3.0
 + Created this changelog to track updates
 + Once again updated the uptime
 + Added numpy and Pillow in the requirements
