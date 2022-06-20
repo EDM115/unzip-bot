@@ -7,10 +7,10 @@ import asyncio
 import subprocess
 
 from pyrogram.errors import FloodWait
-from unzipper.helpers.database import get_upload_mode
+from unzipper.helpers.database import get_upload_mode, get_cloud
 from unzipper.modules.bot_data import Messages
 from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
-from unzipper.modules.ext_script.cloud_upload import bayfiles_test
+from unzipper.modules.ext_script.cloud_upload import bayfiles
 from config import Config
 from unzipper import LOGGER
 
@@ -21,55 +21,33 @@ async def run_shell_cmds(command):
     return shell_ouput
 
 # Send file to a user
-async def send_file(unzip_bot, c_id, doc_f, query, full_path):
+async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
     try:
         ul_mode = await get_upload_mode(c_id)
         # Checks if url file size is bigger than 2 Gb (Telegram limit)
         u_file_size = os.stat(doc_f).st_size
+        fname = os.path.basename(doc_f)
         if int(u_file_size) > Config.TG_MAX_SIZE:
             LOGGER.info("File too large")
-            bfup = await bayfiles_test(os.path.abspath(doc_f))
-            return await unzip_bot.send_message(
+            uptocloud = await unzip_bot.send_message(
                 chat_id=c_id,
-                text=bfup
+                text=f"`{fname}` is too huge to be sent to Telegram directly.\nUploading to Bayfiles, please wait…"
             )
-            """
-            try:
-                file_path = os.path.abspath(doc_f)
-                file_data = bayfiles_upload(f"{file_path}")
-            except:
-                LOGGER.warn("Error on Bayfiles API")
-                return await unzip_bot.send_message(
-                    chat_id=c_id,
-                    text="Error on BayFiles upload 😥"
-                )
-            """
-            """
-            try:
-                bf_url = file_data["url"]["full"]
-                up_bf_ok = True
-            except:
-                up_bf_ok = False
-            # log it in channel
-            if up_bf_ok:
-                LOGGER.info(f"{os.path.basename(doc_f)} too large, sent to {bf_url}")
-                return await unzip_bot.send_message(
-                    chat_id=c_id,
-                    text=Messages.URL_UPLOAD.format(os.path.basename(doc_f), u_file_size, bf_url)
-                )
-            bf_error = file_data["error"]["message"]
-            LOGGER.info(f"Err on BayFiles upload : {bf_error}")
-            return await unzip_bot.send_message(
-                    chat_id=c_id,
-                    text=f"Error on BayFiles upload 😥\n\n`{bf_error}`"
-                )
-            """
-            """
-            return await unzip_bot.send_message(
-                    chat_id=c_id,
-                    text=f"{file_data}"
-                )
-            """
+            upurl = await get_cloud(c_id)
+            bfup = await bayfiles(os.path.abspath(doc_f), upurl)
+            if "Error happened" in bfup:
+                await uptocloud.edit(bfup)
+            elif bfup["status"] == "true":
+                fsize = bfup["data"]["file"]["metadata"]["size"]["readable"]
+                furl = bfup["data"]["file"]["url"]["full"]
+                await uptocloud.edit(Messages.URL_UPLOAD.format(fname, fsize, furl))
+            else:
+                etype = bfup["error"]["message"]
+                emess = bfup["error"]["type"]
+                ecode = bfup["error"]["code"]
+                await uptocloud.edit(Messages.URL_ERROR.format(fname, ecode, etypr, emess))
+                await log_msg.reply(Messages.URL_ERROR.format(fname, ecode, etypr, emess))
+            os.remove(doc_f)
             """
             # Workaround : https://ccm.net/computing/linux/4327-split-a-file-into-several-parts-in-linux/
             # run_shell_cmds(f"split -b 2GB -d {doc_f} SPLIT-{doc_f}")
@@ -80,7 +58,6 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
             """
         thumbornot = await thumb_exists(c_id)
         if ul_mode == "video":
-            fname = os.path.basename(doc_f)
             vid_duration = await run_shell_cmds(f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}")
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
@@ -94,7 +71,6 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path):
                 os.remove(thmb_pth)
         # add one for sending pictures as full size one, not only doc
         else:
-            fname = os.path.basename(doc_f)
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
                 await unzip_bot.send_document(chat_id=c_id, document=doc_f, thumb=thumb_image, caption=Messages.EXT_CAPTION.format(fname))
