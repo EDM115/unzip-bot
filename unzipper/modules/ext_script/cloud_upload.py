@@ -12,6 +12,16 @@ async def terminal(command):
     shell_ouput = run.stdout.read()[:-1].decode("utf-8")
     return shell_ouput
 
+async def bayfiles(file, url):
+    try:
+        temp_upload = await terminal(f"curl -F 'file=@{file}' {url}")
+        uploaded = json.loads(temp_upload)
+    except:
+        uploaded = "Error happened"
+    return uploaded
+
+"""
+# https://github.com/gamingdy/Anonfiles-Bayfiles-UPLOAD
 class Error(BaseException):
     pass
 
@@ -20,10 +30,8 @@ class UploadFile:
         self.based_url = url
 
     def upload(self, filepath):
-        """
-        Upload files on Anonfiles or Bayfiles, with a Size limit to 5 Go/Gb by files.
-        You must be specified files path(relative or absolute)
-        """
+        # Upload files on Anonfiles or Bayfiles, with a Size limit to 5 Go/Gb by files.
+        # You must be specified files path(relative or absolute)
         with open(filepath, "rb") as a_file:
             filename = os.path.basename(filepath)
             _files = {"file": (filename, a_file)}
@@ -44,7 +52,10 @@ class Anonfiles(UploadFile):
 class Bayfiles(UploadFile):
     def __init__(self):
         UploadFile.__init__(self, "https://api.bayfiles.com/upload")
+"""
 
+"""
+# https://github.com/redevil1/bayfiles
 async def bayfiles_upload(file):
     url = "https://api.bayfiles.com/upload"
     try:
@@ -62,11 +73,4 @@ async def bayfiles_upload(file):
         errtype = resp['error']['type']
         print(f'[ERROR]: {message}\n{errtype}')
         return message
-
-async def bayfiles_test(file):
-    try:
-        uploaded = await terminal(f"curl -F 'file=@{file}' https://api.bayfiles.com/upload")
-        return uploaded
-    except:
-        a = "Nein"
-        return a
+"""
