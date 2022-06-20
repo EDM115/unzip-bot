@@ -15,7 +15,10 @@ async def terminal(command):
 async def bayfiles(file, url):
     try:
         temp_upload = await terminal(f"curl -F 'file=@{file}' {url}")
-        uploaded = json.loads(temp_upload)
+        try:
+            uploaded = json.loads(str(temp_upload))
+        except:
+            uploaded = temp_upload
     except:
         uploaded = "Error happened"
     return uploaded
