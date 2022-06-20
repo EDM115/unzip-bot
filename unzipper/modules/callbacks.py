@@ -223,7 +223,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         c_id=spl_data[2],
                         doc_f=paths[int(spl_data[3])],
                         query=query,
-                        full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}"
+                        full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
+                        log_msg=log_msg
                     )
         
         # if not err400:
@@ -268,7 +269,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             c_id=spl_data[2],
                             doc_f=file,
                             query=query,
-                            full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}"
+                            full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
+                            log_msg=log_msg
                         )
 
         await query.message.edit("**Successfully uploaded ✅**\n\n**Join @EDM115bots ❤️**")
