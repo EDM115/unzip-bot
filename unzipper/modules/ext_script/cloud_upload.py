@@ -5,6 +5,7 @@ from pathlib import Path
 from requests import get, post, ConnectionError, head
 from requests.exceptions import MissingSchema
 import json
+import ast
 import sys
 
 async def terminal(command):
@@ -16,7 +17,8 @@ async def bayfiles(file, url):
     try:
         temp_upload = await terminal(f"curl -F 'file=@{file}' {url}")
         try:
-            uploaded = json.loads(str(temp_upload))
+            # uploaded = json.loads(str(temp_upload))
+            uploaded = ast.literal_eval(temp_upload)
         except:
             uploaded = temp_upload
     except:
