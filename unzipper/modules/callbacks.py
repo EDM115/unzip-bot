@@ -113,7 +113,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 s_time = time()
                 archive = await r_message.download(
                     file_name=f"{download_path}/archive_from_{user_id}{os.path.splitext(r_message.document.file_name)[1]}",
-                    block=False,
                     progress=progress_for_pyrogram,
                     progress_args=("**Trying to download… Please wait** \n", query.message, s_time)
                     )
