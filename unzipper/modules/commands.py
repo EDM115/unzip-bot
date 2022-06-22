@@ -39,7 +39,7 @@ https_url_regex = ("((http|https)://)(www.)?" +
                    "{2,6}\\b([-a-zA-Z0-9@:%" +
                    "._\\+~#?&//=]*)")
 """
-https_url_regex = "[\w+]+\:\/\/)?([\w\d-]+\.)*[\w-]+[\.\:]\w+([\/\?\=\&\#\.]?[\w-]+)*\/?/gm"
+https_url_regex = "([\w+]+\:\/\/)?([\w\d-]+\.)*[\w-]+[\.\:]\w+([\/\?\=\&\#\.]?[\w-]+)*\/?/gm"
 
 # Function to check user status (is banned or not)
 @Client.on_message(filters.private)
