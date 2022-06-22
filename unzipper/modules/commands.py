@@ -33,11 +33,18 @@ from config import Config
 from unzipper import LOGGER
 
 # Regex for http/https urls
+"""
 https_url_regex = ("((http|https)://)(www.)?" +
                    "[a-zA-Z0-9@:%._\\+~#?&//=]" +
                    "{2,256}\\.[a-z]" +
                    "{2,6}\\b([-a-zA-Z0-9@:%" +
                    "._\\+~#?&//=]*)")
+"""
+https_url_regex = ("[\w+]+\:\/\/)?" +
+                   "([\w\d-]+\.)*" +
+                   "[\w-]+[\.\:]" +
+                   "\w+([\/\?\=\&\#\.]?" +
+                   "[\w-]+)*\/?/gm")
 
 # Function to check user status (is banned or not)
 @Client.on_message(filters.private)
