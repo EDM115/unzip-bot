@@ -39,10 +39,15 @@ while running:
         starttime = time.strftime("%Y/%m/%d - %H:%M:%S")
         unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.START_TXT.format(starttime))
         LOGGER.info("Checking Log channel…")
-        check_logs()
-        LOGGER.info("Starting bot…")
-        LOGGER.info("Bot is running now ! Join @EDM115bots")
-        idle()
+        if check_logs():
+            LOGGER.info("Starting bot…")
+            LOGGER.info("Bot is running now ! Join @EDM115bots")
+            idle()
+        else:
+            try:
+                unzipperbot.send_message(chat_id=Config.BOT_OWNER, text=f"Error : the provided **LOGS_CHANNEL** (`{Config.LOGS_CHANNEL}`) is incorrect. Bot crashed 😪")
+            except:
+                stop()
 
 LOGGER.info("Received SIGTERM")
 stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
