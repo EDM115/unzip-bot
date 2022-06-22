@@ -5,7 +5,6 @@ import asyncio
 import re
 import shutil
 import psutil
-from os import execl
 import time
 from sys import executable
 
