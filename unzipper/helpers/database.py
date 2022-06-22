@@ -88,16 +88,16 @@ async def check_user(message):
         try:
             firstname = message.from_user.first_name
         except:
-            firstname = ""
+            firstname = " "
         try:
             lastname = message.from_user.last_name
         except:
-            lastname = ""
+            lastname = " "
         try:
             username = message.from_user.username
         except:
-            username = ""
-        if firstname == "" and lastname == "" and username == "":
+            username = " "
+        if firstname == " " and lastname == " " and username == " ":
             uname = message.from_user.mention
         else:
             uname = firstname + " " + lastname + " | @" + username
@@ -158,6 +158,7 @@ async def update_uploaded(user_id, upload_count):
         await uploaded_db.insert_one({"_id": user_id, "uploaded_files": upload_count})
 
 # Db for cloud_upload
+cloud_db = unzipper_db["cloud_db"]
 
 async def get_cloud(user_id):
     return "https://api.bayfiles.com/upload"
