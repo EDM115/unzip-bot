@@ -1,9 +1,16 @@
 import subprocess
+import json
 
 async def jsonized(command):
     run = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-    shell_ouput = run.stdout.read()[:-1].decode("utf-8")
-    return shell_ouput.replace("true", "True")
+    shell_output = str(run.stdout.read()[:-1].decode("utf-8"))
+    if "true" in shell_output:
+        shell_output.replace("true", "True")
+    elif "false" in shell_output:
+        shell_output.replace("false", "False")
+    else:
+        pass
+    return json.loads(shell_output)
 
 async def bayfiles(file, url):
     try:
