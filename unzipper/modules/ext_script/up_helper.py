@@ -17,8 +17,8 @@ from unzipper import LOGGER
 # To get video duration and thumbnail
 async def run_shell_cmds(command):
     run = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-    shell_ouput = run.stdout.read()[:-1].decode("utf-8")
-    return shell_ouput
+    shell_output = run.stdout.read()[:-1].decode("utf-8")
+    return shell_output
 
 # Send file to a user
 async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
@@ -41,13 +41,16 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                 fsize = bfup["data"]["file"]["metadata"]["size"]["readable"]
                 furl = bfup["data"]["file"]["url"]["full"]
                 await uptocloud.edit(Messages.URL_UPLOAD.format(fname, fsize, furl))
-            else:
+            elif bfup["status"] == "False":
                 etype = bfup["error"]["message"]
                 emess = bfup["error"]["type"]
                 ecode = bfup["error"]["code"]
                 await uptocloud.edit(Messages.URL_ERROR.format(fname, ecode, etypr, emess))
                 await log_msg.reply(Messages.URL_ERROR.format(fname, ecode, etypr, emess))
-            os.remove(doc_f)
+            else:
+                await uptocloud.edit(bfup)
+                await log_msg.reply(bfup)
+            return os.remove(doc_f)
             """
             # Workaround : https://ccm.net/computing/linux/4327-split-a-file-into-several-parts-in-linux/
             # run_shell_cmds(f"split -b 2GB -d {doc_f} SPLIT-{doc_f}")
