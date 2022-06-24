@@ -100,6 +100,12 @@ async def check_user(message):
         if firstname == " " and lastname == " " and username == " ":
             uname = message.from_user.mention
         else:
+            if firstname == None:
+                firstname = " "
+            if lastname == None:
+                lastname = " "
+            if username == None:
+                username = " "
             uname = firstname + " " + lastname + " | @" + username
         try:
             await Client.send_message(
