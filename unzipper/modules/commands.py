@@ -280,21 +280,23 @@ async def del_everything(_, message: Message):
     except:
         await cleaner.edit("An error happened 😕 probably because command is unstable")
 
-@Client.on_message(filters.private & filters.command("logs") & filters.user(Config.BOT_OWNER))
-async def send_logs(_, message: Message):
+async def send_logs(user_id):
     with open('unzip-log.txt', 'rb') as doc_f:
         try:
-            await _.send_document(
-                chat_id=message.chat.id,
+            await unzipperbot.send_document(
+                chat_id=user_id,
                 document=doc_f,
                 file_name=doc_f.name,
-                reply_to_message_id=message.message_id
             )
-            LOGGER.info(f"Log file sent to {message.from_user.id}")
+            LOGGER.info(f"Log file sent to {user_id}")
         except FloodWait as e:
             sleep(e.x)
         except RPCError as e:
-            message.reply_text(e, quote=True)
+            unzipperbot.send_message(chat_id=chat_id, text=e)
+
+@Client.on_message(filters.private & filters.command("logs") & filters.user(Config.BOT_OWNER))
+async def logz(_, message: Message):
+    await send_logs(message.from_user.id)
 
 @Client.on_message(filters.private & filters.command("restart") & filters.user(Config.BOT_OWNER))
 async def restart(_, message: Message):
@@ -303,7 +305,7 @@ async def restart(_, message: Message):
     LOGGER.info(f"Deleted {folder_to_del} folder successfully")
     restarttime = time.strftime("%Y/%m/%d - %H:%M:%S")
     await message.reply_text(f"**ℹ️ Bot restarted successfully at **`{restarttime}`", quote=True)
-    await send_logs(_, message)
+    await send_logs(message.from_user.id)
     LOGGER.info(f"{message.from_user.id} : Restarting…")
     execl(executable, executable, "-m", "unzipper")
 
