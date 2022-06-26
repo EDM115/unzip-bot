@@ -29,7 +29,7 @@ from unzipper.modules.ext_script.custom_thumbnail import add_thumb, del_thumb
 from unzipper.modules.ext_script.ext_helper import get_files
 from unzipper.modules.ext_script.up_helper import send_file
 from config import Config
-from unzipper import LOGGER
+from unzipper import LOGGER, unzipperbot
 
 # Regex for http/https urls
 """
@@ -307,7 +307,7 @@ async def restart(_, message: Message):
     await message.reply_text(f"**ℹ️ Bot restarted successfully at **`{restarttime}`", quote=True)
     await send_logs(message.from_user.id)
     LOGGER.info(f"{message.from_user.id} : Restarting…")
-    execl(executable, executable, "-m", "unzipper")
+    os.execl(executable, executable, "-m", "unzipper")
 
 @Client.on_message(filters.private & filters.command("dbexport") & filters.user(Config.BOT_OWNER))
 async def export_db(client, message):
