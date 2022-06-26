@@ -18,7 +18,7 @@ from .commands import https_url_regex
 from unzipper.helpers.unzip_help import progress_for_pyrogram, TimeFormatter, humanbytes, timeformat_sec
 from unzipper.helpers.database import set_upload_mode, update_uploaded
 from config import Config
-from unzipper import LOGGER, unzipperbot
+from unzipper import LOGGER
 
 # Function to download files from direct link using aiohttp
 async def download(url, path):
@@ -64,7 +64,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         r_message = query.message.reply_to_message
         splitted_data = query.data.split("|")
         global log_msg
-        log_msg = await unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL, text=f"Processing an user query…\n\nUser ID : {user_id}")
+        log_msg = await unzip_bot.send_message(chat_id=Config.LOGS_CHANNEL, text=f"Processing an user query…\n\nUser ID : {user_id}")
 
         try:
             if splitted_data[1] == "url":
@@ -108,6 +108,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     return await query.message.edit("Give me an archive to extract 😐")
                 # Makes download dir
                 os.makedirs(download_path)
+                global archive_msg
                 archive_msg = await r_message.forward(chat_id=Config.LOGS_CHANNEL)
                 await log_msg.edit(Messages.LOG_TXT.format(user_id, r_message.document.file_name, humanbytes(r_message.document.file_size)))
                 s_time = time()
