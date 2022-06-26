@@ -39,7 +39,7 @@ https_url_regex = ("((http|https)://)(www.)?" +
                    "{2,6}\\b([-a-zA-Z0-9@:%" +
                    "._\\+~#?&//=]*)")
 """
-https_url_regex = "([\w+]+\:\/\/)?([\w\d-]+\.)*[\w-]+[\.\:]\w+([\/\?\=\&\#\.]?[\w-]+)*\/?/gm"
+https_url_regex = "((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"
 
 # Function to check user status (is banned or not)
 @Client.on_message(filters.private)
@@ -151,7 +151,7 @@ async def broadcast_this(_, message: Message):
         return await bc_msg.edit("Reply to a message to broadcast 📡")
     users_list = await get_users_list()
     # trying to broadcast
-    await bc_msg.edit("Broadcasting has started, this may take while 😪")
+    await bc_msg.edit("Broadcasting has started, this may take a while 😪")
     success_no = 0
     failed_no = 0
     total_users = await count_users()
@@ -178,13 +178,13 @@ async def send_this(_, message: Message):
     try:
         user_id = message.text.split(None, 1)[1]
     except:
-        return await sd_msg.edit("Give a user id to send a message")
+        return await sd_msg.edit("Give an user id to send a message")
     await sd_msg.edit("Sending it, please wait… 😪")
     send = await _do_broadcast(message=r_msg, user=user_id)
     if send == 200:
-        await sd_msg.edit(f"Send message successfully to `{user_id}`")
+        await sd_msg.edit(f"Message successfully sent to `{user_id}`")
     else:
-        await sd_msg.edit(f"It failed 😣 Retry. If it fails again, it means that {user_id} haven't started bot yet, or he's private/banned/whatever")
+        await sd_msg.edit(f"It failed 😣 Retry\n\nIf it fails again, it means that {user_id} haven't started bot yet, or he's private/banned/whatever")
 
 @Client.on_message(filters.command("ban") & filters.user(Config.BOT_OWNER))
 async def ban_user(_, message: Message):
@@ -192,7 +192,7 @@ async def ban_user(_, message: Message):
     try:
         user_id = message.text.split(None, 1)[1]
     except:
-        return await ban_msg.edit("Give a user id to ban 😈")
+        return await ban_msg.edit("Give an user id to ban 😈")
     await add_banned_user(user_id)
     await ban_msg.edit(f"**Successfully banned that user ✅** \n\n**User ID :** `{user_id}`")
 
@@ -202,14 +202,14 @@ async def unban_user(_, message: Message):
     try:
         user_id = message.text.split(None, 1)[1]
     except:
-        return await unban_msg.edit("Give a user id to unban 😇")
+        return await unban_msg.edit("Give an user id to unban 😇")
     await del_banned_user(user_id)
     await unban_msg.edit(f"**Successfully unbanned that user ✅** \n\n**User ID :** `{user_id}`")
 
 @Client.on_message(filters.private & filters.command("me"))
 async def me_stats(_, message: Message):
-    me_info = await _.ask(chat_id=message.chat.id, text="This is a WIP command that would allow you to get more stats about your utilisation of me 🤓\n\nSend anything :")
-    #r_message = query.message.reply_to_message
+    #me_info = await _.ask(chat_id=message.chat.id, text="This is a WIP command that would allow you to get more stats about your utilisation of me 🤓\n\nSend anything :")
+    me_info = await _.ask(chat_id=message.chat.id, text="Send a text (shorter possible) from any user/chat. And you will have infos about it 👀")
     await _.send_message(chat_id=message.chat.id, text=f"`{me_info}`")
 
 @Client.on_message(filters.command("user") & filters.user(Config.BOT_OWNER))
@@ -218,19 +218,22 @@ async def info_user(_, message: Message):
     try:
         user_id = message.text.split(None, 1)[1]
     except:
-        return await info_user_msg.edit("Give a user id 🙂")
+        return await info_user_msg.edit("Give an user id 🙂")
     up_count = get_uploaded(user_id)
     await info_user_msg.edit(f"**User ID :** `{user_id}`\n`{up_count}` files uploaded\n…\n\nWIP")
 
 @Client.on_message(filters.private & filters.command("db") & filters.user(Config.BOT_OWNER))
 async def db_info(_, message: Message):
     users_list = await get_users_list()
-    db_msg = await message.reply(f"🚧 There you go :\n\n`{users_list}`")
+    try:
+        db_msg = await message.reply(f"🚧 There you go :\n\n`{users_list}`")
+    except:
+        await message.reply("too much users, don't fit into 1 message")
 
 @Client.on_message(filters.private & filters.command("dbdive") & filters.user(Config.BOT_OWNER))
 async def db_dive(_, message: Message):
     dburl = Config.MONGODB_URL
-    db_dive_msg = await message.reply(f"🚧 Go on [MongoDB.com](https://account.mongodb.com/account/login?nds=true), u stupid 😐\n\n`{dburl}`")
+    db_dive_msg = await message.reply(f"🚧 Go on [MongoDB.com](https://account.mongodb.com/account/login?nds=true), u stupid 😐\n\nCreds here : `{dburl}`")
     
 @Client.on_message(filters.private & filters.command("getthumbs") & filters.user(Config.BOT_OWNER))
 async def get_all_thumbs(_, message: Message):
@@ -269,12 +272,13 @@ async def thumb_del(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("cleanall") & filters.user(Config.BOT_OWNER))
 async def del_everything(_, message: Message):
-    await message.reply("🚧 WIP 🚧\n\nCleaning…")
+    cleaner = await message.reply("🚧 WIP 🚧\n\nCleaning…")
     try:
-        shutil.rmtree(os.path.dirname(os.path.abspath(__file__)))
-        await message.reply("The whole server have been cleaned 😌")
+        #shutil.rmtree(os.path.dirname(os.path.abspath(__file__)))
+        shutil.rmtree(Config.DOWNLOAD_LOCATION)
+        await cleaner.edit("The whole server have been cleaned 😌")
     except:
-        await message.reply("An error happened 😕 probably because command is unstable")
+        await cleaner.edit("An error happened 😕 probably because command is unstable")
 
 @Client.on_message(filters.private & filters.command("logs") & filters.user(Config.BOT_OWNER))
 async def send_logs(_, message: Message):
@@ -293,12 +297,13 @@ async def send_logs(_, message: Message):
             message.reply_text(e, quote=True)
 
 @Client.on_message(filters.private & filters.command("restart") & filters.user(Config.BOT_OWNER))
-async def restart(client, message):
-    folder_to_del = Config.DOWNLOAD_LOCATION
-    shutil.rmtree(folder_to_del)
-    LOGGER.info("Deleted {folder_to_del} folder successfully")
+async def restart(_, message: Message):
+    folder_to_del = os.path.dirname(os.path.abspath(Config.DOWNLOAD_LOCATION))
+    shutil.rmtree(Config.DOWNLOAD_LOCATION)
+    LOGGER.info(f"Deleted {folder_to_del} folder successfully")
     restarttime = time.strftime("%Y/%m/%d - %H:%M:%S")
     await message.reply_text(f"**ℹ️ Bot restarted successfully at **`{restarttime}`", quote=True)
+    await send_logs(_, message)
     LOGGER.info(f"{message.from_user.id} : Restarting…")
     execl(executable, executable, "-m", "unzipper")
 
