@@ -107,6 +107,10 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source):
         #shutil.rmtree(full_path)
         pass
 
+async def merge_splitted_archives(user_id, path):
+    cmd = f"cd {path} && cat * > MERGED_{user_id}.zip"
+    await run_shell_cmds(cmd)
+
 # Function to remove basic markdown characters from a string
 async def rm_mark_chars(text: str):
     return re.sub("[*`_]", "", text)
