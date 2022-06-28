@@ -31,14 +31,7 @@ from unzipper.modules.ext_script.up_helper import send_file
 from config import Config
 from unzipper import LOGGER, unzipperbot
 
-# Regex for http/https urls
-"""
-https_url_regex = ("((http|https)://)(www.)?" +
-                   "[a-zA-Z0-9@:%._\\+~#?&//=]" +
-                   "{2,256}\\.[a-z]" +
-                   "{2,6}\\b([-a-zA-Z0-9@:%" +
-                   "._\\+~#?&//=]*)")
-"""
+# Regex for urls
 https_url_regex = "((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"
 
 # Function to check user status (is banned or not)
@@ -77,7 +70,7 @@ async def extract_archive(_, message: Message):
         await unzip_msg.edit("Send a valid archive/URL 🙄")
 
 # For splitted archives
-@Client.on_message(filters.private & filters.command("merge")
+@Client.on_message(filters.private & filters.command("merge"))
 async def merging(_, message: Message):
     merge_msg = await message.reply("Send me **all** the splitted files (.001, .002, .00×, …)\n\nOnce you sent them all, click on the `Merge 🛠️` button", reply_markup=Buttons.MERGE_THEM_ALL)
     # Catch the files id + download + send to callbacks + cat + prompt dialog
