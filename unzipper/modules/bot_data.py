@@ -10,7 +10,7 @@ class Buttons:
                 InlineKeyboardButton("About 👀", callback_data="aboutcallback")
             ]
         ])
-    
+
     CHOOSE_E_F__BTNS = InlineKeyboardMarkup([
             [
                 InlineKeyboardButton("🗂️ Archive extract", callback_data="extract_file|tg_file|no_pass"),
@@ -43,7 +43,7 @@ class Buttons:
                 InlineKeyboardButton("❌ Cancel", callback_data="nobully")
             ]
         ])
-    
+
     ME_GOIN_HOME = InlineKeyboardMarkup([
             [
                 InlineKeyboardButton("Back 🏡", callback_data="megoinhome")
@@ -64,6 +64,7 @@ class Buttons:
                 InlineKeyboardButton("❌ Cancel", callback_data="canceldownload")
             ]
         ])
+
     MERGE_THEM_ALL = InlineKeyboardMarkup([
             [
                 InlineKeyboardButton("Merge 🛠️", callback_data="merge_this")
