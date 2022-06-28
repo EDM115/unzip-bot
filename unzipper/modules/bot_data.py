@@ -64,6 +64,14 @@ class Buttons:
                 InlineKeyboardButton("❌ Cancel", callback_data="canceldownload")
             ]
         ])
+    MERGE_THEM_ALL = InlineKeyboardMarkup([
+            [
+                InlineKeyboardButton("Merge 🛠️", callback_data="merge_this")
+            ],
+            [
+                InlineKeyboardButton("❌ Cancel", callback_data="nobully")
+            ]
+        ])
 
 
 class Messages:
