@@ -76,6 +76,12 @@ async def extract_archive(_, message: Message):
     else:
         await unzip_msg.edit("Send a valid archive/URL 🙄")
 
+# For splitted archives
+@Client.on_message(filters.private & filters.command("merge")
+async def merging(_, message: Message):
+    merge_msg = await message.reply("Send me **all** the splitted files (.001, .002, .00×, …)\n\nOnce you sent them all, click on the `Merge 🛠️` button", reply_markup=Buttons.MERGE_THEM_ALL)
+    # Catch the files id + download + send to callbacks + cat + prompt dialog
+
 # Database Commands
 @Client.on_message(filters.private & filters.command(["mode", "setmode"]))
 async def set_mode_for_user(_, message: Message):
