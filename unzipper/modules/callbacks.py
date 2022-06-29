@@ -89,8 +89,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         s_time = time()
                         archive = f"{download_path}/archive_from_{user_id}{os.path.splitext(url)[1]}"
                         await answer_query(query, "`Processing ⏳`", unzip_client=unzip_bot)
-                        #await query.edit_message_reply_markup(reply_markup=Buttons.I_PREFER_STOP)
-                        await query.edit_message_text(text=f"**Downloading… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️", reply_markup=Buttons.I_PREFER_STOP)
+                        await query.edit_message_text(text=f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️", reply_markup=Buttons.I_PREFER_STOP)
                         await download(url, archive)
                         e_time = time()
                         # Send copy in logs in case url has gone
@@ -113,18 +112,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 archive_msg = await r_message.forward(chat_id=Config.LOGS_CHANNEL)
                 await log_msg.edit(Messages.LOG_TXT.format(user_id, r_message.document.file_name, humanbytes(r_message.document.file_size)))
                 s_time = time()
-                try:
-                    await query.message.delete()
-                except:
-                    pass
-                new_query = await r_message.reply("`Processing… ⏳`", reply_markup=Buttons.I_PREFER_STOP)
                 archive = await r_message.download(
                     file_name=f"{download_path}/archive_from_{user_id}{os.path.splitext(r_message.document.file_name)[1]}",
                     progress=progress_for_pyrogram,
-                    progress_args=(
-                        "**Downloading… Please wait** \n",
-                        new_query,
-                        s_time)
+                    progress_args=("**Trying to download… Please wait** \n", query.message, s_time)
                     )
                 e_time = time()
             else:
@@ -136,7 +127,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             global protected
             protected = False
             if splitted_data[2] == "with_pass":
-                password = await unzip_bot.ask(chat_id=user_id ,text="**Please send me the password 🔑**")
+                password = await unzip_bot.ask(chat_id=query.message.chat.id ,text="**Please send me the password 🔑**")
                 ext_s_time = time()
                 extractor = await extr_files(protected, path=ext_files_dir, archive_path=archive, password=password.text)
                 ext_e_time = time()
@@ -148,16 +139,16 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             # Checks if there is an error happened while extracting the archive
             if any(err in extractor for err in ERROR_MSGS):
                 try:
-                    await new_query.message.edit(Messages.EXT_FAILED_TXT)
+                    await query.message.edit(Messages.EXT_FAILED_TXT)
                     return await log_msg.reply(Messages.EXT_FAILED_TXT)
                     shutil.rmtree(ext_files_dir)
                     already_removed = True
                 except:
                     try:
-                        await new_query.message.delete()
+                        await query.message.delete()
                     except:
                         pass
-                    await unzip_bot.send_message(chat_id=user_id, text=Messages.EXT_FAILED_TXT)
+                    await unzip_bot.send_message(chat_id=query.message.chat.id, text=Messages.EXT_FAILED_TXT)
                     shutil.rmtree(ext_files_dir)
                     already_removed = True
                     return await archive_msg.reply(Messages.EXT_FAILED_TXT)
@@ -165,34 +156,34 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             paths = await get_files(path=ext_files_dir)
             if not paths:
                 await archive_msg.reply("That archive is password protected 😡")
-                await unzip_bot.send_message(chat_id=user_id, text="That archive is password protected 😡\n**Don't fool me !**")
+                await unzip_bot.send_message(chat_id=query.message.chat.id, text="That archive is password protected 😡 **Don't fool me !**")
                 global fooled
                 fooled = True
-                await answer_query(new_query, Messages.EXT_FAILED_TXT, unzip_client=unzip_bot)
+                await answer_query(query, Messages.EXT_FAILED_TXT, unzip_client=unzip_bot)
                 shutil.rmtree(ext_files_dir)
                 already_removed = True
                 return
             # Upload extracted files
-            await answer_query(new_query, Messages.EXT_OK_TXT.format(TimeFormatter(round(ext_e_time-ext_s_time) * 1000)), unzip_client=unzip_bot)
+            await answer_query(query, Messages.EXT_OK_TXT.format(TimeFormatter(round(ext_e_time-ext_s_time) * 1000)), unzip_client=unzip_bot)
             try:
-                i_e_buttons = await make_keyboard(paths=paths, user_id=user_id, chat_id=user_id)
+                i_e_buttons = await make_keyboard(paths=paths, user_id=user_id, chat_id=query.message.chat.id)
                 try:
-                    await new_query.message.edit("Select files to upload 👇", reply_markup=i_e_buttons)
+                    await query.message.edit("Select files to upload 👇", reply_markup=i_e_buttons)
                 except ReplyMarkupTooLong:
-                    empty_buttons = await make_keyboard_empty(user_id=user_id, chat_id=user_id)
-                    await new_query.message.edit("Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process", reply_markup=empty_buttons)
+                    empty_buttons = await make_keyboard_empty(user_id=user_id, chat_id=query.message.chat.id)
+                    await query.message.edit("Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process", reply_markup=empty_buttons)
             except:
                 try:
-                    await new_query.message.delete()
-                    i_e_buttons = await make_keyboard(paths=paths, user_id=user_id, chat_id=user_id)
-                    await unzip_bot.send_message(chat_id=user_id, text="Select files to upload 👇", reply_markup=i_e_buttons)
+                    await query.message.delete()
+                    i_e_buttons = await make_keyboard(paths=paths, user_id=user_id, chat_id=query.message.chat.id)
+                    await unzip_bot.send_message(chat_id=query.message.chat.id, text="Select files to upload 👇", reply_markup=i_e_buttons)
                 except:
                         try:
-                            await new_query.message.delete()
-                            empty_buttons = await make_keyboard_empty(user_id=user_id, chat_id=user_id)
-                            await unzip_bot.send_message(chat_id=user_id, text="Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process", reply_markup=empty_buttons)
+                            await query.message.delete()
+                            empty_buttons = await make_keyboard_empty(user_id=user_id, chat_id=query.message.chat.id)
+                            await unzip_bot.send_message(chat_id=query.message.chat.id, text="Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process", reply_markup=empty_buttons)
                         except:
-                            await answer_query(new_query, Messages.EXT_FAILED_TXT, unzip_client=unzip_bot)
+                            await answer_query(query, Messages.EXT_FAILED_TXT, unzip_client=unzip_bot)
                             await archive_msg.reply(Messages.EXT_FAILED_TXT)
                             shutil.rmtree(ext_files_dir)
                             already_removed = True
@@ -204,9 +195,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         except Exception as e:
             try:
                 try:
-                    await new_query.message.edit(Messages.ERROR_TXT.format(e))
+                    await query.message.edit(Messages.ERROR_TXT.format(e))
                 except:
-                    await unzip_bot.send_message(chat_id=user_id, text=Messages.ERROR_TXT.format(e))
+                    await unzip_bot.send_message(chat_id=query.message.chat.id, text=Messages.ERROR_TXT.format(e))
                 await archive_msg.reply(Messages.ERROR_TXT.format(e))
                 shutil.rmtree(ext_files_dir)
                 already_removed = True
