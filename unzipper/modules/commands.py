@@ -69,6 +69,20 @@ async def extract_archive(_, message: Message):
     else:
         await unzip_msg.edit("Send a valid archive/URL 🙄")
 
+# Waiting for implementing CallbackQuery button for cancel
+@Client.on_message(filters.private & filters.command("cancel"))
+async def cancel_task_by_user(_, message):
+    idtodel = message.message_id - 1
+    try:
+        await _.delete_messages(
+            chat_id=message.from_user.id,
+            message_ids=idtodel
+        )
+    except:
+        pass
+    await _.stop_transmission()
+    await message.reply("Your task have successfully been canceled ❌")
+
 # For splitted archives
 @Client.on_message(filters.private & filters.command("merge"))
 async def merging(_, message: Message):
