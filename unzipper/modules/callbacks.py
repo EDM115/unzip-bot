@@ -117,7 +117,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await query.message.delete()
                 except:
                     pass
-                new_query = await message.reply("`Processing… ⏳`", reply_to_message_id=r_message.message_id, reply_markup=Buttons.I_PREFER_STOP)
+                new_query = await r_message.reply("`Processing… ⏳`", reply_markup=Buttons.I_PREFER_STOP)
                 archive = await r_message.download(
                     file_name=f"{download_path}/archive_from_{user_id}{os.path.splitext(r_message.document.file_name)[1]}",
                     progress=progress_for_pyrogram,
