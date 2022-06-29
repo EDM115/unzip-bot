@@ -89,7 +89,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         s_time = time()
                         archive = f"{download_path}/archive_from_{user_id}{os.path.splitext(url)[1]}"
                         await answer_query(query, "`Processing ⏳`", unzip_client=unzip_bot)
-                        await query.edit_message_text(text=f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️", reply_markup=Buttons.I_PREFER_STOP)
+                        #await query.edit_message_reply_markup(reply_markup=Buttons.I_PREFER_STOP)
+                        await query.edit_message_text(text=f"**Downloading… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️", reply_markup=Buttons.I_PREFER_STOP)
                         await download(url, archive)
                         e_time = time()
                         # Send copy in logs in case url has gone
@@ -112,10 +113,14 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 archive_msg = await r_message.forward(chat_id=Config.LOGS_CHANNEL)
                 await log_msg.edit(Messages.LOG_TXT.format(user_id, r_message.document.file_name, humanbytes(r_message.document.file_size)))
                 s_time = time()
+                
                 archive = await r_message.download(
                     file_name=f"{download_path}/archive_from_{user_id}{os.path.splitext(r_message.document.file_name)[1]}",
                     progress=progress_for_pyrogram,
-                    progress_args=("**Trying to download… Please wait** \n", query.message, s_time)
+                    progress_args=(
+                        "**Downloading… Please wait** \n",
+                        query.message,
+                        s_time)
                     )
                 e_time = time()
             else:
