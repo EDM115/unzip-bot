@@ -67,7 +67,7 @@ class Buttons:
 
     MERGE_THEM_ALL = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("Merge 🛠️", callback_data=f"merge_this|{startid}|{stopid}")
+                InlineKeyboardButton("Merge 🛠️", callback_data="merge_this")
             ],
             [
                 InlineKeyboardButton("❌ Cancel", callback_data="nobully")
