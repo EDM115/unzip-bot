@@ -78,7 +78,7 @@ class Buttons:
 class Messages:
     START_TEXT = """
 Hi **{}** 👋, I'm **Unarchiver bot** 🥰
-**This is BETA version !** May be a lot buggy, but with new features. Better waiting for the stable version at daytime… 🙂
+#**This is BETA version !** May be a lot buggy, but with new features. Better waiting for the stable version at daytime… 🙂
 
 I can extract archives like `zip`, `rar`, `tar`, …
 
@@ -108,11 +108,13 @@ I can extract archives like `zip`, `rar`, `tar`, …
     """
 
     ABOUT_TXT = """
-**About Unarchiver bot [BETA | v4.4.0]**
+#**About Unarchiver bot [BETA | v4.5.0]**
+**About Unarchiver bot [v4.5.0]**
 
 • **Language :** [Python 3.9.1](https://www.python.org/)
 • **Framework :** [Pyrogram 1.4.16](https://docs.pyrogram.org/)
-• **Source code :** [EDM115/unzip-bot[beta]](https://github.com/EDM115/unzip-bot/tree/beta)
+#• **Source code :** [EDM115/unzip-bot[beta]](https://github.com/EDM115/unzip-bot/tree/beta)
+• **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot)
 • **Developer :** [EDM115](https://github.com/EDM115)
 
 **Made with ❤️ by @EDM115bots**
@@ -122,8 +124,8 @@ I can extract archives like `zip`, `rar`, `tar`, …
 **Extract log 📝**
 
 **User ID :** `{}`
-**File Name :** `{}`
-**File Size :** `{}`
+**File name :** `{}`
+**File size :** `{}`
     """
 
     PASS_TXT = """
@@ -136,7 +138,7 @@ I can extract archives like `zip`, `rar`, `tar`, …
 **Successfully downloaded ✅**
 
 **Download time :** `{}`
-**Status :** Trying to extract the archive… Please wait
+**Status :** Extracting the archive… Please wait
     """
 
     EXT_OK_TXT = """
@@ -159,7 +161,7 @@ Instead, I made it available here : {} 🥰
     """
 
     URL_ERROR = """
-An error hapenned for `{}` 😕
+An error happened for `{}` 😕
 
 **Error code :** `{}`
 **Error type :** `{}`
@@ -204,15 +206,13 @@ Please report this at @EDM115 if you think this is a serious error
     ERROR_TXT = """
 **Error happened 😕**
 
-**ERROR :** `{}`
+`{}`
 
 Please report this at @EDM115 if you think this is a serious error
     """
 
     CANCELLED_TXT = """
 **{} ✅**
-
-Now all of your files have been deleted from my server 😌
     """
 
     DL_STOPPED = """
@@ -224,13 +224,13 @@ Now all of your files have been deleted from my server 😌
     """
 
     CLEAN_TXT = """
-**Are sure want to delete your files from my server 🤔**
+**Are sure want to clean your task 🤔**
 
 Note : This action cannot be undone !
     """
 
     SELECT_UPLOAD_MODE_TXT = """
-Please select the upload mode by clicking on below buttons 👇
+Select your upload mode 👇
 
 **Current upload mode is :** `{}`
     """
@@ -248,7 +248,7 @@ Please select the upload mode by clicking on below buttons 👇
     """
     
     PLS_REPLY = """
-You need to reply to a picture for saving it as custom thumbnail 😃
+You need to reply to a picture for saving it as custom thumbnail 🤓
     """
 
 # List of error messages from p7zip
