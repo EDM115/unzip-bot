@@ -1,15 +1,33 @@
 <div align="center">
 
-  <h1><a href="[https://jekyllrb.com/](https://github.com/EDM115/unzip-bot)" target="_blank" rel="noreferrer"><img src="https://telegra.ph/file/426207477776ffa00519f.png" alt="unzip-bot" width="40" height="40"/></a> Unarchiver Bot • Changelog</h1>
+  <h1><a href="https://github.com/EDM115/unzip-bot" target="_blank" rel="noreferrer"><img src="https://telegra.ph/file/426207477776ffa00519f.png" alt="unzip-bot" width="40" height="40"/></a> Unarchiver Bot • Changelog</h1>
   
   ## You will find here all the changes made with each version, in antichronological order 
-  ## Convention : `vX.Y.Z`, where `X` stands for a major change and a lot of new features, `Y` for some new features and bug fixes, `Z` for testing stuff and unbugged things
+  ## Convention : `vX.Y.Z`, where `X` stands for a major change and a lot of new features, `Y` for some new features and bug fixes, `Z` for testing stuff and undebugged things
 </div>
 
 ---
 ---
 
-### v4.4.2 **[LATEST BETA RELEASE]**
+### v4.5.0 **[LATEST STABLE RELEASE]** / **[LATEST BETA RELEASE]**
++ Attempt to add /merge and /cancel commands + linked callbacks. Actually failed
+
+### v4.4.5
++ The logs are better. Putting the text message *before* file, as it does with URL & replies to text message instead of file
++ Made a way more permissive regex for URL
++ Fixed exceptions on nearly all commands
++ Performing a /restart send the logs automatically 
+
+### v4.4.4
++ Definitely fixed #NEW_USER
++ Once again tweaks on BayFiles
+
+### v4.4.3
++ Way better handling of `check_logs()` on start
++ Fixed the #NEW_USER
++ Few changes on BayFiles upload
+
+### v4.4.2
 + A lot of changes on BayFiles upload :
   + Errors sent to logs
   + Formatting the results with size, url and filename
@@ -104,7 +122,7 @@
 
 ---
 
-### v3.3.5 *(.4 don't exists 🥲)* **[LATEST STABLE RELEASE, WITH FIXES FROM 4.0.3]**
+### v3.3.5 *(.4 don't exists 🥲)*
 + More emojis
 + Created `/help` and `/about` from home text
 
