@@ -5,9 +5,11 @@ import re
 import shutil
 import asyncio
 import subprocess
+import pathlib
 
 from pyrogram.errors import FloodWait
 from unzipper.helpers.database import get_upload_mode, get_cloud
+from unzipper.helpers.unzip_help import extentions_list
 from unzipper.modules.bot_data import Messages
 from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
 from unzipper.modules.ext_script.cloud_upload import bayfiles
@@ -27,6 +29,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
         # Checks if url file size is bigger than 2 Gb (Telegram limit)
         u_file_size = os.stat(doc_f).st_size
         fname = os.path.basename(doc_f)
+        fext = (pathlib.Path(os.path.abspath(doc_f)).suffix).casefold()
         if int(u_file_size) > Config.TG_MAX_SIZE:
             LOGGER.info("File too large")
             uptocloud = await unzip_bot.send_message(
@@ -60,7 +63,16 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
             )
             """
         thumbornot = await thumb_exists(c_id)
-        if ul_mode == "video":
+        if ul_mode == "video" and fext in extentions_list["audio"]:
+            if thumbornot:
+                thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
+                await unzip_bot.send_audio(chat_id=c_id, audio=doc_f, caption=Messages.EXT_CAPTION.format(fname), thumb=thumb_image)
+            else:
+                await unzip_bot.send_audio(chat_id=c_id, audio=doc_f, caption=Messages.EXT_CAPTION.format(fname))
+        elif ul_mode == "video" and fext in extentions_list["photo"]:
+            # impossible to use a thumb here :(
+            await await unzip_bot.send_photo(chat_id=c_id, photo=doc_f, caption=Messages.EXT_CAPTION.format(fname))
+        elif ul_mode == "video" and fext in extentions_list["video"]:
             vid_duration = await run_shell_cmds(f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}")
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
@@ -72,7 +84,6 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                 thumb = await run_shell_cmds(f"ffmpeg -i {doc_f} -ss 00:00:01.000 -vframes 1 {thmb_pth}")
                 await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption=Messages.EXT_CAPTION.format(fname), duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=str(thumb))
                 os.remove(thmb_pth)
-        # add one for sending pictures as full size one, not only doc
         else:
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
