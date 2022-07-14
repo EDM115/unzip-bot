@@ -126,3 +126,9 @@ def check_logs():
             exit()
     except:
         print("Error happened while checking Log channel 💀 Make sure you're not dumb enough to provide a wrong Log channel ID 🧐")
+
+# List of common extentions
+extentions_list = {"audio" : ["aif", "aiff", "aac", "flac", "mp3", "ogg", "wav", "wma"],
+                   "photo" : ["gif", "ico", "jpg", "jpeg", "png", "tiff", "webp"],
+                   "video" : ["3gp", "avi", "flv", "mp4", "mkv", "mov", "mpeg", "mpg", "webm"]
+                }
