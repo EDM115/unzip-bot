@@ -169,7 +169,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
 
             # Upload extracted files
             extrtime = TimeFormatter(round(ext_e_time-ext_s_time) * 1000)
-            if extrtime = "":
+            if extrtime == "":
                 extrtime = "1s"
             await answer_query(query, Messages.EXT_OK_TXT.format(extrtime), unzip_client=unzip_bot)
             
