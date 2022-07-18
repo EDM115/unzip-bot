@@ -71,7 +71,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                 await unzip_bot.send_audio(chat_id=c_id, audio=doc_f, caption=Messages.EXT_CAPTION.format(fname))
         elif ul_mode == "video" and fext in extentions_list["photo"]:
             # impossible to use a thumb here :(
-            await await unzip_bot.send_photo(chat_id=c_id, photo=doc_f, caption=Messages.EXT_CAPTION.format(fname))
+            await unzip_bot.send_photo(chat_id=c_id, photo=doc_f, caption=Messages.EXT_CAPTION.format(fname))
         elif ul_mode == "video" and fext in extentions_list["video"]:
             vid_duration = await run_shell_cmds(f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}")
             if thumbornot:
