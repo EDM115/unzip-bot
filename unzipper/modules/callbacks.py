@@ -121,7 +121,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             else:
                 await answer_query(query, "Can't find details 💀 Please contact @EDM115 if it's an error", answer_only=True, unzip_client=unzip_bot)
             
-            await answer_query(query, Messages.AFTER_OK_DL_TXT.format(TimeFormatter(round(e_time-s_time) * 1000)), unzip_client=unzip_bot)
+            dltime = TimeFormatter(round(e_time-s_time) * 1000)
+            if dltime == "":
+                dltime = "1s"
+            await answer_query(query, Messages.AFTER_OK_DL_TXT.format(dltime), unzip_client=unzip_bot)
             
             # Attempt to fetch password protected archives
             global protected
@@ -163,8 +166,13 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 shutil.rmtree(ext_files_dir)
                 already_removed = True
                 return
+
             # Upload extracted files
-            await answer_query(query, Messages.EXT_OK_TXT.format(TimeFormatter(round(ext_e_time-ext_s_time) * 1000)), unzip_client=unzip_bot)
+            extrtime = TimeFormatter(round(ext_e_time-ext_s_time) * 1000)
+            if extrtime = "":
+                extrtime = "1s"
+            await answer_query(query, Messages.EXT_OK_TXT.format(extrtime), unzip_client=unzip_bot)
+            
             try:
                 i_e_buttons = await make_keyboard(paths=paths, user_id=user_id, chat_id=query.message.chat.id)
                 try:
