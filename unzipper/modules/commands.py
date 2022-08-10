@@ -12,6 +12,7 @@ from pyrogram import Client, filters
 from pyrogram.types import Message, CallbackQuery
 from pyrogram.errors import FloodWait, RPCError
 
+from unzipper import boottime
 from .bot_data import Buttons, Messages
 from unzipper.helpers.database import (
     check_user,
@@ -108,7 +109,7 @@ async def send_stats(_, message: Message):
     cpu_usage = psutil.cpu_percent(interval=0.2)
     ram_usage = psutil.virtual_memory().percent
     disk_usage = psutil.disk_usage('/').percent
-    uptime = TimeFormatter(int(psutil.cpu_times().user)/2) # Not divided thanks to timeformat_sec() funct
+    uptime = TimeFormatter(time.time() - boottime)
     total_users = await count_users()
     total_banned_users = await count_banned_users()
     if message.from_user.id == Config.BOT_OWNER:
