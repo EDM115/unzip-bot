@@ -7,6 +7,8 @@ import time
 
 from config import Config
 
+boottime = time.time()
+
 plugins = dict(root="unzipper/modules")
 unzipperbot = Client(
         "UnzipperBot",
