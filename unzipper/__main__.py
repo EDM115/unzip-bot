@@ -6,7 +6,7 @@ import time
 import signal
 
 from pyrogram import idle
-from . import unzipperbot
+from . import unzipperbot, boottime
 from .helpers.unzip_help import check_logs, TimeFormatter
 from config import Config
 from .modules.bot_data import Messages
@@ -36,7 +36,6 @@ while running:
         if not os.path.isdir(Config.THUMB_LOCATION):
             os.makedirs(Config.THUMB_LOCATION)
         unzipperbot.start()
-        boottime = time.time()
         starttime = boottime.strftime("%Y/%m/%d - %H:%M:%S")
         unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.START_TXT.format(starttime))
         LOGGER.info("Checking Log channel…")
