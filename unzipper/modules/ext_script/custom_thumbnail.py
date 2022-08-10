@@ -2,7 +2,6 @@ import os
 import time
 
 from pyrogram import Client, filters
-import numpy
 from PIL import Image
 
 from unzipper import LOGGER
@@ -45,45 +44,6 @@ async def add_thumb(_, message):
                 text=Messages.SAVED_THUMBNAIL,
                 reply_to_message_id=reply_message.message_id
             )
-            """
-            # This combine several pictures one to each other
-            download_location = Config.THUMB_LOCATION + "/" + str(message.from_user.id) + "/" + str(reply_message.media_group_id) + "/"
-            save_final_image = download_location + str(round(time.time())) + ".jpg"
-            list_im = os.listdir(download_location)
-            if len(list_im) == 2:
-                imgs = [ Image.open(download_location + i) for i in list_im ]
-                inm_aesph = sorted([(numpy.sum(i.size), i.size) for i in imgs])
-                min_shape = inm_aesph[1][1]
-                imgs_comb = numpy.hstack(numpy.asarray(i.resize(min_shape)) for i in imgs)
-                imgs_comb = Image.fromarray(imgs_comb)
-                # combine: https://stackoverflow.com/a/30228789/4723940
-                imgs_comb.save(save_final_image)
-                # send
-                await _.send_photo(
-                    chat_id=message.chat.id,
-                    photo=save_final_image,
-                    caption=Messages.SAVED_THUMBNAIL,
-                    reply_to_message_id=message.message_id
-                )
-            else:
-                await _.send_message(
-                    chat_id=message.chat.id,
-                    text=Messages.ERR_2_IN_ALBUM,
-                    reply_to_message_id=message.message_id
-                )
-            
-            try:
-                [os.remove(download_location + i) for i in list_im ]
-                os.remove(download_location)
-            except:
-                pass
-        else:
-            await _.send_message(
-                chat_id=message.chat.id,
-                text=Messages.PLS_REPLY,
-                reply_to_message_id=message.message_id
-            )
-            """
     else:
         await _.send_message(
             chat_id=message.chat.id,
