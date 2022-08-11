@@ -36,7 +36,7 @@ while running:
         if not os.path.isdir(Config.THUMB_LOCATION):
             os.makedirs(Config.THUMB_LOCATION)
         unzipperbot.start()
-        starttime = boottime.int().strftime("%Y/%m/%d - %H:%M:%S")
+        starttime = time.strftime("%Y/%m/%d - %H:%M:%S")
         unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.START_TXT.format(starttime))
         LOGGER.info("Checking Log channel…")
         if check_logs():
