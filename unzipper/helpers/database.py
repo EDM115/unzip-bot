@@ -2,6 +2,7 @@
 
 from unzipper import unzipperbot as Client
 from motor.motor_asyncio import AsyncIOMotorClient
+from requests import post
 
 from config import Config
 from time import sleep
@@ -168,3 +169,29 @@ cloud_db = unzipper_db["cloud_db"]
 
 async def get_cloud(user_id):
     return "https://api.bayfiles.com/upload"
+
+# DB for thumbnails
+thumb_db = unzipper_db["thumb_db"]
+
+async def get_thumb(user_id):
+    existing = await thumb_db.find_one({"_id": user_id})
+    if existing:
+        return existing["url"]
+    return None
+
+async def update_thumb(user_id, thumb_url, force=None):
+    existing = await thumb_db.find_one({"_id": user_id})
+    if existing:
+        if not force:
+            return existing["url"]
+        await thumb_db.update_one({"_id": user_id}, {"$set": {"url": thumb_url}})
+    else:
+        await thumb_db.insert_one({"_id": user_id, "url": thumb_url})
+
+async def upload_thumb(image):
+    with open(image, "rb") as file:
+        request = post(
+            "https://telegra.ph/upload",
+            files={"file": file}
+        ).json()[0]
+        return f"https://telegra.ph{request['src']}"
