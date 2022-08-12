@@ -14,6 +14,7 @@ from pyrogram.errors import ReplyMarkupTooLong
 from .bot_data import Buttons, Messages, ERROR_MSGS
 from .ext_script.ext_helper import extr_files, get_files, make_keyboard, make_keyboard_empty
 from .ext_script.up_helper import send_file, answer_query, send_url_logs
+from .ext_script.custom_thumbnail import silent_del
 from .commands import https_url_regex
 from unzipper.helpers.unzip_help import progress_for_pyrogram, TimeFormatter, humanbytes, timeformat_sec
 from unzipper.helpers.database import set_upload_mode, update_uploaded
@@ -50,6 +51,18 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         await query.edit_message_text(text=Messages.DL_STOPPED)
         # Add maybe a .format() with URL or Filename
         # Idk if server needds to be cleaned
+    
+    elif query.data == "check_thumb":
+        user_id = query.from_user.id
+        thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
+        await unzip_bot.send_photo(chat_id=user_id, photo=thumb_location, caption="Your actual thumbnail")
+        await unzip_bot.delete_messages(chat_id=user_id, message_ids=query.id)
+        await unzip_bot.send_message(chat_id=usr_id, text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_FINAL)
+    
+    elif query.data == "replace_thumb":
+        user.id = query.from_user.id
+        await silent_del(user_id)
+        return
     
     elif query.data.startswith("set_mode"):
         user_id = query.from_user.id
