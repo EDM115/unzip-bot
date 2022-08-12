@@ -3,10 +3,26 @@ import time
 
 from pyrogram import Client, filters
 from PIL import Image
+# from pykeyboard import InlineKeyboard, InlineButton
 
 from unzipper import LOGGER
 from config import Config
 from unzipper.modules.bot_data import Buttons, Messages
+
+"""
+async def thumb_keyboard():
+    keyboard = InlineKeyboard(row_width=2)
+    keyboard.add(
+        InlineButton(Buttons.BROKEN, 'callback:1'),
+    )
+"""
+
+async def silent_del(user_id):
+    try:
+        thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
+        os.remove(thumb_location)
+    except:
+        pass
 
 async def add_thumb(_, message):
     if message.reply_to_message is not None:
@@ -19,12 +35,9 @@ async def add_thumb(_, message):
             pre_thumb = Config.THUMB_LOCATION + "/not_resized_" + str(message.from_user.id) + ".jpg"
             if os.path.exists(thumb_location):
                 # Add later buttons to delete or cancel + preview (TTK)
-                message.reply("A thumbnail already exists. Replacing it with the new one…")
+                # await message.reply("A thumbnail already exists. Replacing it with the new one…")
                 LOGGER.warning("Thumb exists")
-                try:
-                    os.remove(thumb_location)
-                except:
-                    pass
+                await message.reply(text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_REPLACEMENT)
             LOGGER.warning("DL thumb")
             await _.download_media(
                 message=reply_message,
