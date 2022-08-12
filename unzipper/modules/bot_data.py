@@ -13,25 +13,25 @@ class Buttons:
 
     CHOOSE_E_F__BTNS = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("🗂️ Archive extract", callback_data="extract_file|tg_file|no_pass"),
+                InlineKeyboardButton("🗂️", callback_data="extract_file|tg_file|no_pass"),
             ],
             [
-                InlineKeyboardButton("🗂️ Extract a password protected archive 🔐", callback_data="extract_file|tg_file|with_pass")
+                InlineKeyboardButton("🔐", callback_data="extract_file|tg_file|with_pass")
             ],
             [
-                InlineKeyboardButton("❌ Cancel", callback_data="cancel_dis")
+                InlineKeyboardButton("❌", callback_data="cancel_dis")
             ]
         ])
 
     CHOOSE_E_U__BTNS = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("🔗 URL extract", callback_data="extract_file|url|no_pass"),
+                InlineKeyboardButton("🔗", callback_data="extract_file|url|no_pass"),
             ],
             [
-                InlineKeyboardButton("🔗 URL extract (but password protected) 🔐", callback_data="extract_file|url|with_pass")
+                InlineKeyboardButton("🔐", callback_data="extract_file|url|with_pass")
             ],
             [
-                InlineKeyboardButton("❌ Cancel", callback_data="cancel_dis")
+                InlineKeyboardButton("❌", callback_data="cancel_dis")
             ]
         ])
 
@@ -55,7 +55,7 @@ class Buttons:
                 InlineKeyboardButton("As document 📁", callback_data="set_mode|doc")
             ],
             [
-                InlineKeyboardButton("As video 📹", callback_data="set_mode|video")
+                InlineKeyboardButton("As media 📺", callback_data="set_mode|media")
             ]
         ])
 
@@ -89,36 +89,34 @@ I can extract archives like `zip`, `rar`, `tar`, …
 **• How to extract 🤔**
 
     **1)** Send the file or link that you want to extract
-    **2)** Click on extract button (If you sent a link use `🔗 URL extract` button. If it's a file just use `🗂️ Archive extract` button)
+    **2)** Click on extract button (If you sent a link use `🔗` button. If it's a file just use `🗂️` button)
 
 
 **• How to change upload mode 🤔**
-    Send **/mode** command to the bot. You can change upload mode from there
+    Send **/mode**
 
 
 **Note :**
-    **1.** If your archive is password protected select `🗂️ Extract a password protected archive 🔐` mode. Bot isn’t a god to know your file’s password, so if this happens just send that password !
-    **2.** Please don’t send corrupted files ! If you sent one by mistake just send **/clean** command
-    **3.** If your archive have +95 files in it then bot can’t show all of extracted files to select from. So in that case if you can’t see your file in the buttons just click on `Upload all 📤` button. It will send all extracted files to you !
+    **1.** If your archive is password protected select `🔐` button
+    **2.** Please don’t send corrupted files ! If you sent one by mistake just send **/clean**
+    **3.** If your archive have +95 files in it then bot can’t show all of extracted files to select from (yet). So in that case if you can’t see your file in the buttons just click on `Upload all 📤` button. It will send all extracted files to you !
 
 
 **• I wanna have help 🥺**
 
-    PM me at **@EDM115**, I'm always here and open for anything 😘
+    PM me at **@EDM115**
     """
 
     ABOUT_TXT = """
-**About Unarchiver bot [v4.5.0]**
+**About Unarchiver bot [BETA | v5.0.0]**
 
 • **Language :** [Python 3.9.1](https://www.python.org/)
 • **Framework :** [Pyrogram 1.4.16](https://docs.pyrogram.org/)
-• **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot)
+• **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot/tree/beta)
 • **Developer :** [EDM115](https://github.com/EDM115)
 
 **Made with ❤️ by @EDM115bots**
     """
-#**About Unarchiver bot [BETA | v4.5.0]**
-#• **Source code :** [EDM115/unzip-bot[beta]](https://github.com/EDM115/unzip-bot/tree/beta)
 
     LOG_TXT = """
 **Extract log 📝**
@@ -129,7 +127,7 @@ I can extract archives like `zip`, `rar`, `tar`, …
     """
 
     PASS_TXT = """
-**Password of above archive is 🔑**
+**Password of the above archive is 🔑**
 
 `{}`
     """
@@ -173,9 +171,9 @@ Please report this at @EDM115 if you think this is a serious error
     LOG_CAPTION = """
 **The file : ** `{}`
 
-have been saved from
+have been saved from the URL
 
-`{}` ** URL**
+`{}`
     """
 
     START_TXT = """
@@ -195,10 +193,10 @@ have been saved from
    • Please make sure that you selected the right mode !
    • Also check if you sent the right password (it's case sensitive)
    • Maybe your archive format isn’t supported yet 😔
-   • If you sent splitted archives (.001, .part1, .00001, …), then I can’t extract them 🙂 (for the moment)
+   • **If you sent splitted archives (.001, .part1, .00001, …), then I can’t extract them 🙂** (for the moment)
 
 
-**IN ALL CASES**, please send **/clean**, else you couldn’t send any other task 🙂🔫 (may be fixed in the future)
+**⚠ IN ALL CASES ⚠**, please send **/clean**, else you couldn’t send any other task 🙂🔫 (may be fixed in the future)
 
 Please report this at @EDM115 if you think this is a serious error
     """
