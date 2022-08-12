@@ -73,6 +73,15 @@ class Buttons:
                 InlineKeyboardButton("❌ Cancel", callback_data="nobully")
             ]
         ])
+    
+    THUMB_REPLACEMENT = InlineKeyboardMarkup([
+            [
+                InlineKeyboardButton("Replace ⏭", callback_data="replace_thumb")
+            ],
+            [
+                InlineKeyboardButton("❌ Cancel", callback_data="nope")
+            ]
+        ])
 
 
 class Messages:
