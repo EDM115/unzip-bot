@@ -249,6 +249,13 @@ Select your upload mode 👇
 **Successfully changed upload mode to** `{}` ✅
     """
 
+    EXISTING_THUMB = """
+A thumbnail already have been saved 😅 What you wanna do ?
+• Checking the actual thumbnail
+• Replace it with the new one you just sent
+• Cancel
+    """
+
     SAVED_THUMBNAIL = """
 **Successfully saved this thumbnail ✅**
     """
