@@ -8,6 +8,7 @@ from PIL import Image
 from unzipper import LOGGER
 from config import Config
 from unzipper.modules.bot_data import Buttons, Messages
+from unzipper.helpers.database import update_thumb, upload_thumb
 
 """
 async def thumb_keyboard():
@@ -52,6 +53,8 @@ async def add_thumb(_, message):
             except:
                 LOGGER.warning("Failed to generate thumb")
                 return message.reply("Error happened")
+            thumb_url = await upload_thumb(thumb_location)
+            await update_thumb(message.from_user.id, thumb_url, force=True)
             await _.send_message(
                 chat_id=message.chat.id,
                 text=Messages.SAVED_THUMBNAIL,
