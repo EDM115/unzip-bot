@@ -25,7 +25,7 @@ from unzipper.helpers.database import (
     get_upload_mode,
     get_uploaded
 )
-from unzipper.helpers.unzip_help import humanbytes, TimeFormatter
+from unzipper.helpers.unzip_help import humanbytes, TimeFormatter, timeformat_sec
 from unzipper.modules.ext_script.custom_thumbnail import add_thumb, del_thumb
 from unzipper.modules.ext_script.ext_helper import get_files
 from unzipper.modules.ext_script.up_helper import send_file
@@ -109,7 +109,7 @@ async def send_stats(_, message: Message):
     cpu_usage = psutil.cpu_percent(interval=0.2)
     ram_usage = psutil.virtual_memory().percent
     disk_usage = psutil.disk_usage('/').percent
-    uptime = TimeFormatter(time.time() - boottime)
+    uptime = timeformat_sec(time.time() - boottime)
     total_users = await count_users()
     total_banned_users = await count_banned_users()
     if message.from_user.id == Config.BOT_OWNER:
