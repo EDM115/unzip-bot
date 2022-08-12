@@ -195,3 +195,6 @@ async def upload_thumb(image):
             files={"file": file}
         ).json()[0]
         return f"https://telegra.ph{request['src']}"
+
+async def get_thumb_users():
+    return [thumb_list async for thumb_list in thumb_db.find({})]
