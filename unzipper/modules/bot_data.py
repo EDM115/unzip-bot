@@ -77,7 +77,16 @@ class Buttons:
     THUMB_REPLACEMENT = InlineKeyboardMarkup([
             [
                InlineKeyboardButton("Check 👀", callback_data="check_thumb") 
+            ],
+            [
+                InlineKeyboardButton("Replace ⏭", callback_data="replace_thumb")
+            ],
+            [
+                InlineKeyboardButton("❌ Cancel", callback_data="nope")
             ]
+        ])
+    
+    THUMB_FINAL = InlineKeyboardMarkup([
             [
                 InlineKeyboardButton("Replace ⏭", callback_data="replace_thumb")
             ],
