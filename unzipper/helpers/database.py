@@ -198,3 +198,7 @@ async def upload_thumb(image):
 
 async def get_thumb_users():
     return [thumb_list async for thumb_list in thumb_db.find({})]
+
+async def count_thumb_users():
+    users = await thumb_db.count_documents({})
+    return users
