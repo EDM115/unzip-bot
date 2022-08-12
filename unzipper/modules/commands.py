@@ -92,7 +92,7 @@ async def merging(_, message: Message):
     # Catch the files id + download + send to callbacks + cat + prompt dialog
 
 # Database Commands
-@Client.on_message(filters.private & filters.command(["mode", "setmode"]))
+@Client.on_message(filters.private & filters.command("mode"))
 async def set_mode_for_user(_, message: Message):
     upload_mode = await get_upload_mode(message.from_user.id)
     await message.reply(text=Messages.SELECT_UPLOAD_MODE_TXT.format(upload_mode), reply_markup=Buttons.SET_UPLOAD_MODE_BUTTONS)
@@ -132,7 +132,7 @@ async def send_stats(_, message: Message):
 **🎛 Hardware usage :**
  ↳ **CPU usage :** `{cpu_usage}%`
  ↳ **RAM usage :** `{ram_usage}%`
- ↳ **Uptime :** `{uptime}` (might be 69% wrong)"""
+ ↳ **Uptime :** `{uptime}`"""
                          )
     else:
         await stats_msg.edit(f"""
@@ -145,7 +145,8 @@ async def send_stats(_, message: Message):
 
 **🎛 Hardware usage :**
  ↳ **CPU usage :** `{cpu_usage}%`
- ↳ **RAM usage :** `{ram_usage}%`"""
+ ↳ **RAM usage :** `{ram_usage}%`
+ ↳ **Uptime :** `{uptime}`"""
                          )
 
 async def _do_broadcast(message, user):
@@ -163,7 +164,7 @@ async def broadcast_this(_, message: Message):
     bc_msg = await message.reply("`Processing… ⏳`")
     r_msg = message.reply_to_message
     if not r_msg:
-        return await bc_msg.edit("Reply to a message to broadcast 📡")
+        return await bc_msg.edit("Reply to a message to broadcast it 📡")
     users_list = await get_users_list()
     # trying to broadcast
     await bc_msg.edit("Broadcasting has started, this may take a while 😪")
@@ -199,7 +200,7 @@ async def send_this(_, message: Message):
     if send == 200:
         await sd_msg.edit(f"Message successfully sent to `{user_id}`")
     else:
-        await sd_msg.edit(f"It failed 😣 Retry\n\nIf it fails again, it means that {user_id} haven't started bot yet, or he's private/banned/whatever")
+        await sd_msg.edit(f"It failed 😣 Retry\n\nIf it fails again, it means that {user_id} haven't started the bot yet, or he's private/banned/whatever")
 
 @Client.on_message(filters.command("ban") & filters.user(Config.BOT_OWNER))
 async def ban_user(_, message: Message):
@@ -221,20 +222,22 @@ async def unban_user(_, message: Message):
     await del_banned_user(user_id)
     await unban_msg.edit(f"**Successfully unbanned that user ✅** \n\n**User ID :** `{user_id}`")
 
-@Client.on_message(filters.private & filters.command("me"))
+@Client.on_message(filters.private & filters.command("info"))
 async def me_stats(_, message: Message):
-    #me_info = await _.ask(chat_id=message.chat.id, text="This is a WIP command that would allow you to get more stats about your utilisation of me 🤓\n\nSend anything :")
     me_info = await _.ask(chat_id=message.chat.id, text="Send a text (shorter possible) from any user/chat. And you will have infos about it 👀")
     await _.send_message(chat_id=message.chat.id, text=f"`{me_info}`")
 
 @Client.on_message(filters.command("user") & filters.user(Config.BOT_OWNER))
 async def info_user(_, message: Message):
+    await message.reply(chat_id=message.chat.id, text="This is a WIP command that would allow you to get more stats about your utilisation of me 🤓")
     info_user_msg = await message.reply(f"`Processing… ⏳`")
     try:
         user_id = message.text.split(None, 1)[1]
     except:
         return await info_user_msg.edit("Give an user id 🙂")
     up_count = get_uploaded(user_id)
+    if up_count == "":
+        up_count = "Unable to fetch"
     await info_user_msg.edit(f"**User ID :** `{user_id}`\n`{up_count}` files uploaded\n…\n\nWIP")
 
 @Client.on_message(filters.private & filters.command("db") & filters.user(Config.BOT_OWNER))
@@ -340,7 +343,8 @@ Here is the list of the commands you can use (only in private btw) :
 **/about** : Know more about me
 **/clean** : Remove your files from my server. Also useful if a task failed
 **/mode** : Change your upload mode (either `doc` or `video`)
-**/me** : Useless commands. At least you can know on which Telegram DataCenter your profile is stored
+**/stats** : Know all the current stats about me. If you're running on Heroku, it's reset every day (dynos yeah…)
+**/info** : Useless commands. At least you can know on which Telegram DataCenter your profile is stored
 **/addthumb** : Upload with a permanant custom thumbnail. Don't work for now
 **/delthumb** : Removes your thumbnail
 **/commands** : This message
@@ -354,7 +358,6 @@ async def getadmin_cmds(client, message):
 Here's all the commands that only the owner (you) can use :
 
 **/commands** : For all the other commands
-**/stats** : Know all the current stats about me. If you're running on Heroku, it's reset every day (dynos yeah…)
 **/broadcast** : Send something to all the users
 **/sendto {user_id}** : Same as broadcast but for a single user. Don't handle replies for now…
 **/ban {user_id}** : Ban an user. He no longer can use your bot, except if…
