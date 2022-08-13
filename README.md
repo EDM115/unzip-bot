@@ -1,6 +1,6 @@
 <div align="center">
 
-# Unarchiver Bot
+# Unarchiver Bot **BETA**
 ## A Telegram bot to extract various types of archives
 ![Unzip logo](https://telegra.ph/file/426207477776ffa00519f.png)
 </div>
@@ -32,42 +32,7 @@
 - [ ] Add group support. You add bot to group as admin, then reply to any file with `/extract`. Then you choose where goes the files (group or PM), and drop here do the instructions (pass or no, what to upload, …)
 
 ## Things to work with on v5 :
-- [ ] Correct BayFiles upload
-- [ ] Thumb on telegra.ph
-- [ ] Processing multiple extract per user
-- [ ] Extracting not fcking up other tasks (async concurent loops)
-- [ ] Correct uptime
-- [ ] Working on groups
-- [ ] Notice user when bot restarted while processing task
-- [ ] Handle SIGTERM gracefully
-- [ ] Better startup (remove useless Arch things)
-- [ ] Multilingual bot
-- [ ] Settings page
-- [ ] Correct media handling
-- [ ] Process splitted archives
-- [ ] Upload progressbar
-- [ ] Progressbar on DL
-- [ ] Support DLing from more sources + auto-bypass
-- [ ] PyroGram v2
-- [ ] Updating dependancies when we can
-- [ ] Black Code Style
-- [ ] Allow to cancel tasks
-- [ ] Split files
-- [ ] Handle +2Gb files
-- [ ] Better password processing
-- [ ] Auto-clean (and keep archive on error, prompts to re-process it)
-- [ ] Add better logging + custom exceptions
-- [ ] Correct ETA
-- [ ] 🛑 Red Button
-- [ ] Eval and Exec
-- [ ] Automatically report errors + /feedback command
-- [ ] Add to bots list
-- [ ] Fix zip bombs (VirusTotal checks for common bombs + Hash check)
-- [ ] Extract progressbar based on size + compression ratio
-- [ ] Handle people's replies on /sendto
-- [ ] DB explore in telegram
-- [ ] Fix all errors 🙂
-- [ ] Close issues
+Check [issue #38](https://github.com/EDM115/unzip-bot/issues/38)
 
 ### Possible v6 ...?
 - [ ] Web interface
