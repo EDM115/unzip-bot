@@ -1,3 +1,5 @@
+# Copyright 2022 EDM115
+
 import os
 import time
 
@@ -8,7 +10,6 @@ from PIL import Image
 from unzipper import LOGGER
 from config import Config
 from unzipper.modules.bot_data import Buttons, Messages
-from unzipper.helpers.database import update_thumb, upload_thumb
 
 """
 async def thumb_keyboard():
@@ -26,40 +27,41 @@ async def silent_del(user_id):
         pass
 
 async def add_thumb(_, message):
+    user_id = str(message.from_user.id)
     if message.reply_to_message is not None:
         reply_message = message.reply_to_message
         if reply_message.media_group_id is not None: # album sent
-            LOGGER.warning("Album")
+            LOGGER.warning(f"{user_id} tried to save a thumbnail from an album")
             return message.reply("You can't use an album. Reply to a single picture sent as photo (not as document)")
         else:
-            thumb_location = Config.THUMB_LOCATION + "/" + str(message.from_user.id) + ".jpg"
-            pre_thumb = Config.THUMB_LOCATION + "/not_resized_" + str(message.from_user.id) + ".jpg"
+            thumb_location = Config.THUMB_LOCATION + "/" + user_id + ".jpg"
+            pre_thumb = Config.THUMB_LOCATION + "/not_resized_" + user_id + ".jpg"
+            final_thumb = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
             if os.path.exists(thumb_location):
-                # Add later buttons to delete or cancel + preview (TTK)
-                # await message.reply("A thumbnail already exists. Replacing it with the new one…")
-                LOGGER.warning("Thumb exists")
+                LOGGER.warning(f"Thumb exists for {user_id}")
                 await message.reply(text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_REPLACEMENT)
-            LOGGER.warning("DL thumb")
+            LOGGER.warning(f"Downloading thumbnail of {user_id}…")
             await _.download_media(
                 message=reply_message,
                 file_name=pre_thumb
             )
-            LOGGER.warning("DL-ed")
+            LOGGER.warning("Thumbnail downloaded")
             size = 320, 320
             try:
                 previous = Image.open(pre_thumb)
                 previous.thumbnail(size, Image.ANTIALIAS)
-                previous.save(thumb_location, "JPEG")
+                previous.save(final_thumb, "JPEG")
             except:
                 LOGGER.warning("Failed to generate thumb")
-                return message.reply("Error happened")
-            thumb_url = await upload_thumb(thumb_location)
-            await update_thumb(message.from_user.id, thumb_url, force=True)
-            await _.send_message(
-                chat_id=message.chat.id,
-                text=Messages.SAVED_THUMBNAIL,
-                reply_to_message_id=reply_message.message_id
-            )
+                try:
+                    os.remove(pre_thumb)
+                except:
+                    pass
+                try:
+                    os.remove(final_thumb)
+                except:
+                    pass
+                return await message.reply("Error happened 😕 Try again later")
     else:
         await _.send_message(
             chat_id=message.chat.id,
