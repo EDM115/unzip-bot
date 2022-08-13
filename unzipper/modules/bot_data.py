@@ -82,7 +82,7 @@ class Buttons:
                 InlineKeyboardButton("Replace ⏭", callback_data="replace_thumb")
             ],
             [
-                InlineKeyboardButton("❌ Cancel", callback_data="nope")
+                InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")
             ]
         ])
     
@@ -91,7 +91,7 @@ class Buttons:
                 InlineKeyboardButton("Replace ⏭", callback_data="replace_thumb")
             ],
             [
-                InlineKeyboardButton("❌ Cancel", callback_data="nope")
+                InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")
             ]
         ])
 
