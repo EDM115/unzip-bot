@@ -137,6 +137,14 @@ I can extract archives like `zip`, `rar`, `tar`, …
 `{}`
     """
 
+    CHOOSE_EXT_MODE = """
+Select the extraction mode for that {} 👀
+
+🔗 : **Normal mode**
+🔐 : **Password protected**
+❌ : **Cancel your task**
+    """
+
     AFTER_OK_DL_TXT = """
 **Successfully downloaded ✅**
 
