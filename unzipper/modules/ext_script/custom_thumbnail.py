@@ -40,6 +40,8 @@ async def add_thumb(_, message):
             if os.path.exists(thumb_location):
                 LOGGER.warning(f"Thumb exists for {user_id}")
                 await message.reply(text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_REPLACEMENT)
+            else:
+                await message.reply(text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_FINAL)
             LOGGER.warning(f"Downloading thumbnail of {user_id}…")
             await _.download_media(
                 message=reply_message,
@@ -49,8 +51,9 @@ async def add_thumb(_, message):
             size = 320, 320
             try:
                 previous = Image.open(pre_thumb)
-                previous.thumbnail(size, Image.ANTIALIAS)
-                previous.save(final_thumb, "JPEG")
+                then = previous.thumbnail(size, Image.ANTIALIAS)
+                then.save(final_thumb, "JPEG")
+                LOGGER.warning("Thumbnail saved")
             except:
                 LOGGER.warning("Failed to generate thumb")
                 try:
