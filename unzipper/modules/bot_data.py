@@ -14,11 +14,7 @@ class Buttons:
     CHOOSE_E_F__BTNS = InlineKeyboardMarkup([
             [
                 InlineKeyboardButton("🗂️", callback_data="extract_file|tg_file|no_pass"),
-            ],
-            [
-                InlineKeyboardButton("🔐", callback_data="extract_file|tg_file|with_pass")
-            ],
-            [
+                InlineKeyboardButton("🔐", callback_data="extract_file|tg_file|with_pass"),
                 InlineKeyboardButton("❌", callback_data="cancel_dis")
             ]
         ])
@@ -26,20 +22,14 @@ class Buttons:
     CHOOSE_E_U__BTNS = InlineKeyboardMarkup([
             [
                 InlineKeyboardButton("🔗", callback_data="extract_file|url|no_pass"),
-            ],
-            [
-                InlineKeyboardButton("🔐", callback_data="extract_file|url|with_pass")
-            ],
-            [
+                InlineKeyboardButton("🔐", callback_data="extract_file|url|with_pass"),
                 InlineKeyboardButton("❌", callback_data="cancel_dis")
             ]
         ])
 
     CLN_BTNS = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("Clean my files 🚮", callback_data="cancel_dis")
-            ],
-            [
+                InlineKeyboardButton("Clean my files 🚮", callback_data="cancel_dis"),
                 InlineKeyboardButton("❌ Cancel", callback_data="nobully")
             ]
         ])
@@ -67,18 +57,14 @@ class Buttons:
 
     MERGE_THEM_ALL = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("Merge 🛠️", callback_data="merge_this")
-            ],
-            [
+                InlineKeyboardButton("Merge 🛠️", callback_data="merge_this"),
                 InlineKeyboardButton("❌ Cancel", callback_data="nobully")
             ]
         ])
     
     THUMB_REPLACEMENT = InlineKeyboardMarkup([
             [
-               InlineKeyboardButton("Check 👀", callback_data="check_thumb") 
-            ],
-            [
+                InlineKeyboardButton("Check 👀", callback_data="check_thumb"),
                 InlineKeyboardButton("Replace ⏭", callback_data="replace_thumb")
             ],
             [
@@ -88,9 +74,7 @@ class Buttons:
     
     THUMB_FINAL = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("Replace ⏭", callback_data="replace_thumb")
-            ],
-            [
+                InlineKeyboardButton("Replace ⏭", callback_data="replace_thumb"),
                 InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")
             ]
         ])
