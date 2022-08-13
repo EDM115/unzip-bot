@@ -1,4 +1,4 @@
-# Copyright 2022 EDM115
+# Copyright (c) 2022 EDM115
 
 import os
 import time
@@ -51,8 +51,8 @@ async def add_thumb(_, message):
             size = 320, 320
             try:
                 previous = Image.open(pre_thumb)
-                then = previous.thumbnail(size, Image.ANTIALIAS)
-                then.save(final_thumb, "JPEG")
+                previous.thumbnail(size, Image.ANTIALIAS)
+                previous.save(final_thumb, "JPEG")
                 LOGGER.warning("Thumbnail saved")
             except:
                 LOGGER.warning("Failed to generate thumb")
