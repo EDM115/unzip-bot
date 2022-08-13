@@ -64,9 +64,9 @@ async def extract_archive(_, message: Message):
     if os.path.isdir(download_path):
         return await unzip_msg.edit("Already one process is running, don't spam 😐\n\nWanna clear your files from my server ? Then just send **/clean** command")
     if message.text and (re.match(https_url_regex, message.text)):
-        await unzip_msg.edit("**Select the extraction mode for that URL 👀**", reply_markup=Buttons.CHOOSE_E_U__BTNS)
+        await unzip_msg.edit(text=Messages.CHOOSE_EXT_MODE.format("URL"), reply_markup=Buttons.CHOOSE_E_U__BTNS)
     elif message.document:
-        await unzip_msg.edit("**Select the extraction mode for that file 👀**", reply_markup=Buttons.CHOOSE_E_F__BTNS)
+        await unzip_msg.edit(text=Messages.CHOOSE_EXT_MODE.format("file"), reply_markup=Buttons.CHOOSE_E_F__BTNS)
     else:
         await unzip_msg.edit("Send a valid archive/URL 🙄")
 
