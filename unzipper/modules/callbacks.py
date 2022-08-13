@@ -17,7 +17,7 @@ from .ext_script.up_helper import send_file, answer_query, send_url_logs
 from .ext_script.custom_thumbnail import silent_del
 from .commands import https_url_regex
 from unzipper.helpers.unzip_help import progress_for_pyrogram, TimeFormatter, humanbytes, timeformat_sec
-from unzipper.helpers.database import set_upload_mode, update_uploaded
+from unzipper.helpers.database import set_upload_mode, update_uploaded, update_thumb, upload_thumb
 from config import Config
 from unzipper import LOGGER
 
@@ -57,12 +57,31 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
         await unzip_bot.send_photo(chat_id=user_id, photo=thumb_location, caption="Your actual thumbnail")
         await unzip_bot.delete_messages(chat_id=user_id, message_ids=query.id)
-        await unzip_bot.send_message(chat_id=usr_id, text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_FINAL)
+        await unzip_bot.send_message(chat_id=user_id, text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_FINAL)
     
     elif query.data == "replace_thumb":
-        user.id = query.from_user.id
+        user_id = query.from_user.id
         await silent_del(user_id)
-        return
+        thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
+        final_thumb = Config.THUMB_LOCATION + "/waiting_" + str(user_id) + ".jpg"
+        os.rename(final_thumb, thumb_location)
+        thumb_url = await upload_thumb(thumb_location)
+        await update_thumb(message.from_user.id, thumb_url, force=True)
+        await answer_query(query, text=Messages.SAVED_THUMBNAIL)
+    
+    elif query.data == "nope_thumb":
+        user_id = query.from_user.id
+        del_1 = Config.THUMB_LOCATION + "/not_resized_" + user_id + ".jpg"
+        del_2 = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
+        try:
+            os.remove(pre_thumb)
+        except:
+            pass
+        try:
+            os.remove(final_thumb)
+        except:
+            pass
+        await query.edit_message_text(text=Messages.CANCELLED_TXT.format("❌ Task sucessfully canceled"))
     
     elif query.data.startswith("set_mode"):
         user_id = query.from_user.id
