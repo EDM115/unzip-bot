@@ -37,11 +37,11 @@ async def add_thumb(_, message):
             thumb_location = Config.THUMB_LOCATION + "/" + user_id + ".jpg"
             pre_thumb = Config.THUMB_LOCATION + "/not_resized_" + user_id + ".jpg"
             final_thumb = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
-            if os.path.exists(thumb_location):
+            if os.path.exists(thumb_location) and os.path.isfile(thumb_location):
                 LOGGER.warning(f"Thumb exists for {user_id}")
                 await message.reply(text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_REPLACEMENT)
             else:
-                await message.reply(text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_FINAL)
+                await message.reply(text=Messages.SAVING_THUMB, reply_markup=Buttons.THUMB_SAVE)
             LOGGER.warning(f"Downloading thumbnail of {user_id}…")
             await _.download_media(
                 message=reply_message,
