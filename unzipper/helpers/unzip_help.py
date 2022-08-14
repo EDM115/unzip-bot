@@ -128,7 +128,9 @@ def check_logs():
         print("Error happened while checking Log channel 💀 Make sure you're not dumb enough to provide a wrong Log channel ID 🧐")
 
 # List of common extentions
-extentions_list = {"audio" : ["aif", "aiff", "aac", "flac", "mp3", "ogg", "wav", "wma"],
-                   "photo" : ["gif", "ico", "jpg", "jpeg", "png", "tiff", "webp"],
-                   "video" : ["3gp", "avi", "flv", "mp4", "mkv", "mov", "mpeg", "mpg", "webm"]
-                }
+extentions_list = {
+        "archive" : ["7z", "apk", "apkm", "apks", "appx", "arc", "bin", "bz2", "dmg", "exe", "gz", "img", "iso", "jar", "msi", "paf", "pak", "pea", "rar", "tar", "xapk", "z", "zip"],
+        "audio" : ["aif", "aiff", "aac", "flac", "mp3", "ogg", "wav", "wma"],
+        "photo" : ["gif", "ico", "jpg", "jpeg", "png", "tiff", "webp"],
+        "video" : ["3gp", "avi", "flv", "mp4", "mkv", "mov", "mpeg", "mpg", "webm"]
+    }
