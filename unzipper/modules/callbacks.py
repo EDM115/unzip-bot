@@ -73,7 +73,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 LOGGER.warning("Error while updating thumb URL on DB")
         except:
             LOGGER.warning("Error on Telegra.ph upload")
-        await answer_query(query, text=Messages.SAVED_THUMBNAIL)
+        await answer_query(query, Messages.SAVED_THUMBNAIL)
     
     elif query.data == "nope_thumb":
         user_id = query.from_user.id
