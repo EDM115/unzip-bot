@@ -56,7 +56,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         user_id = query.from_user.id
         thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
         await unzip_bot.send_photo(chat_id=user_id, photo=thumb_location, caption="Your actual thumbnail")
-        await unzip_bot.delete_messages(chat_id=user_id, message_ids=query.id)
+        await unzip_bot.delete_messages(chat_id=user_id, message_ids=query.message.id)
         await unzip_bot.send_message(chat_id=user_id, text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_FINAL)
     
     elif query.data == "replace_thumb":
