@@ -65,7 +65,7 @@ class Buttons:
     THUMB_REPLACEMENT = InlineKeyboardMarkup([
             [
                 InlineKeyboardButton("Check 👀", callback_data="check_thumb"),
-                InlineKeyboardButton("Replace ⏭", callback_data="replace_thumb")
+                InlineKeyboardButton("Replace ⏭", callback_data="save_thumb|replace")
             ],
             [
                 InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")
@@ -74,14 +74,14 @@ class Buttons:
     
     THUMB_FINAL = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("Replace ⏭", callback_data="replace_thumb"),
+                InlineKeyboardButton("Replace ⏭", callback_data="save_thumb|replace"),
                 InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")
             ]
         ])
     
     THUMB_SAVE = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("Save 💾", callback_data="save_thumb"),
+                InlineKeyboardButton("Save 💾", callback_data="save_thumb|save"),
                 InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")
             ]
         ])
