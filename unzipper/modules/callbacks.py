@@ -60,9 +60,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         await unzip_bot.delete_messages(chat_id=user_id, message_ids=query.message.id)
         await unzip_bot.send_message(chat_id=user_id, text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_FINAL)
     
-    elif query.data == "replace_thumb":
+    elif query.data.startswith("save_thumb"):
         user_id = query.from_user.id
-        await silent_del(user_id)
+        replace = query.data.split("|")[1]
+        if replace == "replace":
+            await silent_del(user_id)
         thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
         final_thumb = Config.THUMB_LOCATION + "/waiting_" + str(user_id) + ".jpg"
         os.rename(final_thumb, thumb_location)
