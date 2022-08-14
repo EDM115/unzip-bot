@@ -67,7 +67,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         os.rename(final_thumb, thumb_location)
         try:
             thumb_url = await upload_thumb(thumb_location)
-            await update_thumb(message.from_user.id, thumb_url, force=True)
+            try:
+                await update_thumb(message.from_user.id, thumb_url, force=True)
+            except:
+                LOGGER.warning("Error while updating thumb URL on DB")
         except:
             LOGGER.warning("Error on Telegra.ph upload")
         await answer_query(query, text=Messages.SAVED_THUMBNAIL)
