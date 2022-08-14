@@ -179,7 +179,7 @@ async def get_thumb(user_id):
         return existing["url"]
     return None
 
-async def update_thumb(user_id, thumb_url, force=None):
+async def update_thumb(user_id, thumb_url, force):
     existing = await thumb_db.find_one({"_id": user_id})
     if existing:
         if not force:
