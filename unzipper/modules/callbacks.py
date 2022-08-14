@@ -3,6 +3,7 @@
 import os
 import re
 import shutil
+import pathlib
 
 from time import time
 from aiohttp import ClientSession
@@ -16,7 +17,7 @@ from .ext_script.ext_helper import extr_files, get_files, make_keyboard, make_ke
 from .ext_script.up_helper import send_file, answer_query, send_url_logs
 from .ext_script.custom_thumbnail import silent_del
 from .commands import https_url_regex
-from unzipper.helpers.unzip_help import progress_for_pyrogram, TimeFormatter, humanbytes, timeformat_sec
+from unzipper.helpers.unzip_help import progress_for_pyrogram, TimeFormatter, humanbytes, timeformat_sec, extentions_list
 from unzipper.helpers.database import set_upload_mode, update_uploaded, update_thumb, upload_thumb
 from config import Config
 from unzipper import LOGGER
@@ -144,14 +145,19 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             elif splitted_data[1] == "tg_file":
                 if r_message.document is None:
                     return await query.message.edit("Give me an archive to extract 😐")
+                # Checks if it's actually an archive
+                fname = r_message.document.file_name
+                fext = (pathlib.Path(os.path.abspath(r_message.document)).suffix).casefold()
+                if fext not in extentions_list["archive"]:
+                    return await query.message.edit("This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**")
                 # Makes download dir
                 os.makedirs(download_path)
                 global archive_msg
                 archive_msg = await r_message.forward(chat_id=Config.LOGS_CHANNEL)
-                await log_msg.edit(Messages.LOG_TXT.format(user_id, r_message.document.file_name, humanbytes(r_message.document.file_size)))
+                await log_msg.edit(Messages.LOG_TXT.format(user_id, fname, humanbytes(r_message.document.file_size)))
                 s_time = time()
                 archive = await r_message.download(
-                    file_name=f"{download_path}/archive_from_{user_id}{os.path.splitext(r_message.document.file_name)[1]}",
+                    file_name=f"{download_path}/archive_from_{user_id}{os.path.splitext(fname)[1]}",
                     progress=progress_for_pyrogram,
                     progress_args=("**Trying to download… Please wait** \n", query.message, s_time)
                     )
