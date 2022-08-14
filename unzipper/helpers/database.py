@@ -192,7 +192,7 @@ async def upload_thumb(image):
     with open(image, "rb") as file:
         request = post(
             "https://telegra.ph/upload",
-            files={"file": file}
+            files={"file": ("file", file, "image/jpeg")}
         ).json()[0]
         return f"https://telegra.ph{request['src']}"
 
