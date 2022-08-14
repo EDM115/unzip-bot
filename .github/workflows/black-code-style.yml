@@ -4,8 +4,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint:
+  black:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: psf/black@stable
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Black-ify
+        uses: psf/black@stable
+        with:
+          options: "--verbose"
+      
