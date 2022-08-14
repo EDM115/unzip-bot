@@ -78,6 +78,13 @@ class Buttons:
                 InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")
             ]
         ])
+    
+    THUMB_SAVE = InlineKeyboardMarkup([
+            [
+                InlineKeyboardButton("Save 💾", callback_data="save_thumb"),
+                InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")
+            ]
+        ])
 
 
 class Messages:
@@ -256,7 +263,11 @@ A thumbnail already have been saved 😅 What you wanna do ?
 • Replace it with the new one you just sent
 • Cancel
     """
-
+    
+    SAVING_THUMB = """
+Are you sure you want to save this thumbnail 🤔
+    """
+    
     SAVED_THUMBNAIL = """
 **Successfully saved this thumbnail ✅**
     """
