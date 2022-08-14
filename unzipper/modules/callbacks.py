@@ -126,7 +126,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         os.makedirs(download_path)
                         await log_msg.edit(Messages.LOG_TXT.format(user_id, url, u_file_size))
                         s_time = time()
-                        archive = f"{download_path}/archive_from_{user_id}{os.path.splitext(url)[1]}"
+                        fname = os.path.splitext(url)[1]
+                        fext = fname.split(".")[-1].casefold()
+                        if fext not in extentions_list["archive"]:
+                            return await query.message.edit("This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**")
+                        archive = f"{download_path}/archive_from_{user_id}{fname}"
                         await answer_query(query, "`Processing ⏳`", unzip_client=unzip_bot)
                         await query.edit_message_text(text=f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️", reply_markup=Buttons.I_PREFER_STOP)
                         await download(url, archive)
