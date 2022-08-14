@@ -151,16 +151,16 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             elif splitted_data[1] == "tg_file":
                 if r_message.document is None:
                     return await query.message.edit("Give me an archive to extract 😐")
-                # Checks if it's actually an archive
+                global archive_msg
                 fname = r_message.document.file_name
-                fext = (pathlib.Path(os.path.abspath(r_message.document)).suffix).casefold()
+                archive_msg = await r_message.forward(chat_id=Config.LOGS_CHANNEL)
+                await log_msg.edit(Messages.LOG_TXT.format(user_id, fname, humanbytes(r_message.document.file_size)))
+                # Checks if it's actually an archive
+                fext = (pathlib.Path(fname).suffix).casefold()
                 if fext not in extentions_list["archive"]:
                     return await query.message.edit("This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**")
                 # Makes download dir
                 os.makedirs(download_path)
-                global archive_msg
-                archive_msg = await r_message.forward(chat_id=Config.LOGS_CHANNEL)
-                await log_msg.edit(Messages.LOG_TXT.format(user_id, fname, humanbytes(r_message.document.file_size)))
                 s_time = time()
                 archive = await r_message.download(
                     file_name=f"{download_path}/archive_from_{user_id}{os.path.splitext(fname)[1]}",
