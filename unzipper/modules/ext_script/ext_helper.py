@@ -1,19 +1,25 @@
 # Copyright (c) 2022 EDM115
 
 import os
-import subprocess
+from functools import partial
+from subprocess import Popen, PIPE
+from asyncio import get_running_loop
 
 from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
 from unzipper import LOGGER
 
-## Run commands in shell
-async def __run_cmds_unzipper(command):
-    ext_cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+# Run commands in shell
+def __run_cmds_unzipper(command):
+    ext_cmd = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
     ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8")
     return ext_out
 
-## Extract with 7z
+async def __run_cmds_on_cr(command):
+    loop = get_running_loop()
+    return await loop.run_in_executor(None, partial(__run_cmds_unzipper, command))
+
+# Extract with 7z
 async def _extract_with_7z_helper(protected, path, archive_path, password=None):
     if password:
         command = f"7z x -o{path} -p{password} {archive_path} -y"
@@ -26,12 +32,12 @@ async def _extract_with_7z_helper(protected, path, archive_path, password=None):
         else:
             command = f"echo 'This archive is password protected'"
             protected = True
-    return await __run_cmds_unzipper(command)
+    return await __run_cmds_on_cr(command)
 
-## Extract with zstd (for .zst files)
+# Extract with zstd (for .zst files)
 async def _extract_with_zstd(path, archive_path):
     command = f"zstd -f --output-dir-flat {path} -d {archive_path}"
-    return await __run_cmds_unzipper(command)
+    return await __run_cmds_on_cr(command)
 
 # Main function to extract files
 async def extr_files(protected, path, archive_path, password=None):
@@ -80,20 +86,3 @@ async def make_keyboard_empty(user_id, chat_id):
     )
     i_kbd.add(*data)
     return i_kbd
-
-### --- Saved for later --- ###
-# async def make_keyboard(paths, user_id, chat_id):
-#     num = 0
-#     i_kbd = []
-#     for file in paths:
-#         i_kbd.append(
-#             [InlineKeyboardButton(f"{num} - {os.path.basename(file)}", f"ext_f|{user_id}|{chat_id}|{num}")]
-#         )
-#         num += 1
-#     i_kbd.append(
-#         [InlineKeyboardButton(f"Upload all 📤", f"ext_a|{user_id}|{chat_id}")]
-#     )
-#     i_kbd.append(
-#         [InlineKeyboardButton("❌ Cancel", callback_data="cancel_dis")]
-#     )
-#     return i_kbd
