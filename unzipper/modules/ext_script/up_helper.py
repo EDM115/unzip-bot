@@ -132,7 +132,7 @@ async def rm_mark_chars(text: str):
     return re.sub("[*`_]", "", text)
 
 # Function to answer queries
-async def answer_query(query, message_text: str, answer_only: bool = False, unzip_client = None, buttons: list = None):
+async def answer_query(query, message_text: str, answer_only: bool = False, unzip_client = None, buttons = None):
     try:
         if answer_only:
             await query.answer(await rm_mark_chars(message_text), show_alert=True)
