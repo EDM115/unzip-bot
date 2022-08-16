@@ -6,10 +6,11 @@ import shutil
 import subprocess
 import pathlib
 from asyncio import sleep
+from time import time
 
 from pyrogram.errors import FloodWait
 from unzipper.helpers.database import get_upload_mode, get_cloud
-from unzipper.helpers.unzip_help import extentions_list
+from unzipper.helpers.unzip_help import extentions_list, progress_for_pyrogram
 from unzipper.modules.bot_data import Messages
 from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
 from unzipper.modules.ext_script.cloud_upload import bayfiles
@@ -63,33 +64,34 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
             )
             """
         thumbornot = await thumb_exists(c_id)
+        upmsg = await unzip_bot.send_message("`Processing… ⏳`")
         if ul_mode == "video" and fext in extentions_list["audio"]:
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
-                await unzip_bot.send_audio(chat_id=c_id, audio=doc_f, caption=Messages.EXT_CAPTION.format(fname), thumb=thumb_image)
+                await unzip_bot.send_audio(chat_id=c_id, audio=doc_f, caption=Messages.EXT_CAPTION.format(fname), thumb=thumb_image, progress=progress_for_pyrogram, progress_args=(f"**Trying to upload {fname}… Please wait** \n", upmsg, time()))
             else:
-                await unzip_bot.send_audio(chat_id=c_id, audio=doc_f, caption=Messages.EXT_CAPTION.format(fname))
+                await unzip_bot.send_audio(chat_id=c_id, audio=doc_f, caption=Messages.EXT_CAPTION.format(fname), progress=progress_for_pyrogram, progress_args=(f"**Trying to upload {fname}… Please wait** \n", upmsg, time()))
         elif ul_mode == "video" and fext in extentions_list["photo"]:
             # impossible to use a thumb here :(
-            await unzip_bot.send_photo(chat_id=c_id, photo=doc_f, caption=Messages.EXT_CAPTION.format(fname))
+            await unzip_bot.send_photo(chat_id=c_id, photo=doc_f, caption=Messages.EXT_CAPTION.format(fname), progress=progress_for_pyrogram, progress_args=(f"**Trying to upload {fname}… Please wait** \n", upmsg, time()))
         elif ul_mode == "video" and fext in extentions_list["video"]:
             vid_duration = await run_shell_cmds(f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}")
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
-                await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption=Messages.EXT_CAPTION.format(fname), duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=thumb_image)
+                await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption=Messages.EXT_CAPTION.format(fname), duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=thumb_image, progress=progress_for_pyrogram, progress_args=(f"**Trying to upload {fname}… Please wait** \n", upmsg, time()))
             else:
                 thmb_pth = f"{Config.THUMB_LOCATION}/thumbnail_{os.path.basename(doc_f)}.jpg"
                 if os.path.exists(thmb_pth):
                     os.remove(thmb_pth)
                 thumb = await run_shell_cmds(f"ffmpeg -ss 00:00:01.00 -i {doc_f} -vf 'scale=320:320:force_original_aspect_ratio=decrease' -vframes 1 {thmb_pth}")
-                await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption=Messages.EXT_CAPTION.format(fname), duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=str(thumb))
+                await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption=Messages.EXT_CAPTION.format(fname), duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=str(thumb), progress=progress_for_pyrogram, progress_args=(f"**Trying to upload {fname}… Please wait** \n", upmsg, time()))
                 os.remove(thmb_pth)
         else:
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
-                await unzip_bot.send_document(chat_id=c_id, document=doc_f, thumb=thumb_image, caption=Messages.EXT_CAPTION.format(fname))
+                await unzip_bot.send_document(chat_id=c_id, document=doc_f, thumb=thumb_image, caption=Messages.EXT_CAPTION.format(fname), progress=progress_for_pyrogram, progress_args=(f"**Trying to upload {fname}… Please wait** \n", upmsg, time()))
             else:
-                await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption=Messages.EXT_CAPTION.format(fname))
+                await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption=Messages.EXT_CAPTION.format(fname), progress=progress_for_pyrogram, progress_args=(f"**Trying to upload {fname}… Please wait** \n", upmsg, time()))
         os.remove(doc_f)
     except FloodWait as f:
         sleep(f.x)
