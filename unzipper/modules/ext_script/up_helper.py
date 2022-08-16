@@ -95,7 +95,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
         sleep(f.x)
         return await send_file(c_id, doc_f)
     except FileNotFoundError:
-        await query.answer("Sorry ! I can't find that file 💀", show_alert=True)
+        return await query.answer("Sorry ! I can't find that file 💀", show_alert=True)
     except BaseException:
         shutil.rmtree(full_path)
 
