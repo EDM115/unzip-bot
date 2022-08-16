@@ -66,16 +66,16 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
             """
         thumbornot = await thumb_exists(c_id)
         upmsg = await unzip_bot.send_message(c_id, "`Processing… ⏳`")
-        if ul_mode == "video" and fext in extentions_list["audio"]:
+        if ul_mode == "media" and fext in extentions_list["audio"]:
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
                 await unzip_bot.send_audio(chat_id=c_id, audio=doc_f, caption=Messages.EXT_CAPTION.format(fname), thumb=thumb_image, progress=progress_for_pyrogram, progress_args=(f"**Trying to upload {fname}… Please wait** \n", upmsg, time()))
             else:
                 await unzip_bot.send_audio(chat_id=c_id, audio=doc_f, caption=Messages.EXT_CAPTION.format(fname), progress=progress_for_pyrogram, progress_args=(f"**Trying to upload {fname}… Please wait** \n", upmsg, time()))
-        elif ul_mode == "video" and fext in extentions_list["photo"]:
+        elif ul_mode == "media" and fext in extentions_list["photo"]:
             # impossible to use a thumb here :(
             await unzip_bot.send_photo(chat_id=c_id, photo=doc_f, caption=Messages.EXT_CAPTION.format(fname), progress=progress_for_pyrogram, progress_args=(f"**Trying to upload {fname}… Please wait** \n", upmsg, time()))
-        elif ul_mode == "video" and fext in extentions_list["video"]:
+        elif ul_mode == "media" and fext in extentions_list["video"]:
             vid_duration = await run_shell_cmds(f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}")
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
