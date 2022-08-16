@@ -64,7 +64,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
             )
             """
         thumbornot = await thumb_exists(c_id)
-        upmsg = await unzip_bot.send_message("`Processing… ⏳`")
+        upmsg = await unzip_bot.send_message(c_id, "`Processing… ⏳`")
         if ul_mode == "video" and fext in extentions_list["audio"]:
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
@@ -92,6 +92,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                 await unzip_bot.send_document(chat_id=c_id, document=doc_f, thumb=thumb_image, caption=Messages.EXT_CAPTION.format(fname), progress=progress_for_pyrogram, progress_args=(f"**Trying to upload {fname}… Please wait** \n", upmsg, time()))
             else:
                 await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption=Messages.EXT_CAPTION.format(fname), progress=progress_for_pyrogram, progress_args=(f"**Trying to upload {fname}… Please wait** \n", upmsg, time()))
+        await upmsg.delete()
         os.remove(doc_f)
     except FloodWait as f:
         sleep(f.x)
