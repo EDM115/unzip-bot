@@ -140,6 +140,6 @@ async def answer_query(query, message_text: str, answer_only: bool = False, unzi
             await query.message.edit(message_text, reply_markup=buttons)
     except:
         if unzip_client:
-            await unzip_client.send_message(chat_id=query.message.chat.id, text=message_text reply_markup=buttons)
+            await unzip_client.send_message(chat_id=query.message.chat.id, text=message_text, reply_markup=buttons)
         else:
-            await unzipperbot.send_message(chat_id=query.message.chat.id, text=message_text reply_markup=buttons)
+            await unzipperbot.send_message(chat_id=query.message.chat.id, text=message_text, reply_markup=buttons)
