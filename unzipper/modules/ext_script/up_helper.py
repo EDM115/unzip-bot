@@ -81,7 +81,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                 thmb_pth = f"{Config.THUMB_LOCATION}/thumbnail_{os.path.basename(doc_f)}.jpg"
                 if os.path.exists(thmb_pth):
                     os.remove(thmb_pth)
-                thumb = await run_shell_cmds(f"ffmpeg -i {doc_f} -ss 00:00:01.000 -vframes 1 {thmb_pth}")
+                thumb = await run_shell_cmds(f"ffmpeg -ss 00:00:01.00 -i {doc_f} -vf 'scale=320:320:force_original_aspect_ratio=decrease' -vframes 1 {thmb_pth}")
                 await unzip_bot.send_video(chat_id=c_id, video=doc_f, caption=Messages.EXT_CAPTION.format(fname), duration=int(vid_duration) if vid_duration.isnumeric() else 0, thumb=str(thumb))
                 os.remove(thmb_pth)
         else:
