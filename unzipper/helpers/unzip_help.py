@@ -132,5 +132,6 @@ extentions_list = {
         "archive" : ["7z", "apk", "apkm", "apks", "appx", "arc", "bcm", "bin", "br", "bz2", "dmg", "exe", "gz", "img", "iso", "jar", "lz4", "msi", "paf", "pak", "pea", "rar", "tar", "wim", "xapk", "xz", "z", "zip", "zpaq", "zstd"],
         "audio" : ["aif", "aiff", "aac", "flac", "mp3", "ogg", "wav", "wma"],
         "photo" : ["gif", "ico", "jpg", "jpeg", "png", "tiff", "webp"],
+        "split" : ["0*" "001", "002", "003", "004", "005"],
         "video" : ["3gp", "avi", "flv", "mp4", "mkv", "mov", "mpeg", "mpg", "webm"]
     }
