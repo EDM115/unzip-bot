@@ -3,9 +3,9 @@
 import os
 import re
 import shutil
-import asyncio
 import subprocess
 import pathlib
+from asyncio import sleep
 
 from pyrogram.errors import FloodWait
 from unzipper.helpers.database import get_upload_mode, get_cloud
@@ -92,8 +92,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                 await unzip_bot.send_document(chat_id=c_id, document=doc_f, caption=Messages.EXT_CAPTION.format(fname))
         os.remove(doc_f)
     except FloodWait as f:
-        asyncio.sleep(f.x)
-        return send_file(c_id, doc_f)
+        sleep(f.x)
+        return await send_file(c_id, doc_f)
     except FileNotFoundError:
         await query.answer("Sorry ! I can't find that file 💀", show_alert=True)
     except BaseException:
