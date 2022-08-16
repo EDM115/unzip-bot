@@ -9,6 +9,7 @@ from asyncio import sleep
 from time import time
 
 from pyrogram.errors import FloodWait
+from unzipper import unzipperbot
 from unzipper.helpers.database import get_upload_mode, get_cloud
 from unzipper.helpers.unzip_help import extentions_list, progress_for_pyrogram
 from unzipper.modules.bot_data import Messages
@@ -131,12 +132,14 @@ async def rm_mark_chars(text: str):
     return re.sub("[*`_]", "", text)
 
 # Function to answer queries
-async def answer_query(query, message_text: str, answer_only: bool = False, unzip_client = None):
+async def answer_query(query, message_text: str, buttons: list answer_only: bool = False, unzip_client = None):
     try:
         if answer_only:
             await query.answer(await rm_mark_chars(message_text), show_alert=True)
         else:
-            await query.message.edit(message_text)
+            await query.message.edit(message_text, reply_markup=buttons)
     except:
         if unzip_client:
-            await unzip_client.send_message(chat_id=query.message.chat.id, text=message_text)
+            await unzip_client.send_message(chat_id=query.message.chat.id, text=message_text reply_markup=buttons)
+        else:
+            await unzipperbot.send_message(chat_id=query.message.chat.id, text=message_text reply_markup=buttons)
