@@ -4,6 +4,7 @@ import os
 import re
 import shutil
 import pathlib
+from fnmatch import fnmatch
 
 from time import time
 from aiohttp import ClientSession
@@ -119,6 +120,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     unzip_head = await session.head(url)
                     f_size = unzip_head.headers.get('content-length')
                     u_file_size = f_size if f_size else "undefined"
+                    await log_msg.edit(Messages.LOG_TXT.format(user_id, url, u_file_size))
                     # Checks if file is an archive using content-type header
                     unzip_resp = await session.get(url, timeout=None)
                     if "application/" not in unzip_resp.headers.get('content-type'):
@@ -126,7 +128,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     if unzip_resp.status == 200:
                         # Makes download dir
                         os.makedirs(download_path)
-                        await log_msg.edit(Messages.LOG_TXT.format(user_id, url, u_file_size))
                         s_time = time()
                         fname = os.path.splitext(url)[1]
                         fext = fname.split(".")[-1].casefold()
@@ -159,6 +160,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 fext = (pathlib.Path(fname).suffix).casefold()
                 if fext not in extentions_list["archive"]:
                     return await query.message.edit("This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**")
+                if fnmatch(fext, extentions_list["split"][0]) or fext in extentions_list["split"]:
+                    return await query.message.edit("Splitted archives can't be processed yet")
                 # Makes download dir
                 os.makedirs(download_path)
                 s_time = time()
