@@ -58,7 +58,7 @@ async def about_me(_, message: Message):
 
 @Client.on_message(filters.incoming & filters.private & filters.regex(https_url_regex) | filters.document)
 async def extract_archive(_, message: Message):
-    unzip_msg = await message.reply("`Processing… ⏳`", reply_to_message_id=message.message_id)
+    unzip_msg = await message.reply("`Processing… ⏳`", reply_to_message_id=message.id)
     user_id = message.from_user.id
     download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
     if os.path.isdir(download_path):
@@ -73,7 +73,7 @@ async def extract_archive(_, message: Message):
 # Waiting for implementing CallbackQuery button for cancel
 @Client.on_message(filters.private & filters.command("cancel"))
 async def cancel_task_by_user(_, message):
-    idtodel = message.message_id - 1
+    idtodel = message.id - 1
     try:
         await _.delete_messages(
             chat_id=message.from_user.id,
