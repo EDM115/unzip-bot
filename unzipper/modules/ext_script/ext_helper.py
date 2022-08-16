@@ -11,33 +11,32 @@ from unzipper import LOGGER
 
 # Run commands in shell
 def __run_cmds_unzipper(command):
-    ext_cmd = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
+    ext_cmd = Popen(command["cmd"], stdout=PIPE, stderr=PIPE, shell=True)
     ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8")
     return ext_out
 
-async def __run_cmds_on_cr(command):
+async def run_cmds_on_cr(func, **kwargs):
     loop = get_running_loop()
-    return await loop.run_in_executor(None, partial(__run_cmds_unzipper, command))
+    return await loop.run_in_executor(None, partial(func, kwargs))
 
 # Extract with 7z
 async def _extract_with_7z_helper(protected, path, archive_path, password=None):
     if password:
-        command = f"7z x -o{path} -p{password} {archive_path} -y"
+        command = f"7z x -o{path} -p\"{password}\" {archive_path} -y"
     else:
-        command = f"7z t {archive_path} -pIAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA -y"
-        ext_cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-        ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8")
-        if "Everything is Ok" in ext_out:
+        testcommand = f"7z t {archive_path} -p\"IAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA\" -y"
+        testoutput = await run_cmds_on_cr(__run_cmds_unzipper, cmd=testcommand)
+        if "Everything is Ok" in testoutput:
             command = f"7z x -o{path} {archive_path} -y"
         else:
             command = f"echo 'This archive is password protected'"
             protected = True
-    return await __run_cmds_on_cr(command)
+    return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
 # Extract with zstd (for .zst files)
 async def _extract_with_zstd(path, archive_path):
     command = f"zstd -f --output-dir-flat {path} -d {archive_path}"
-    return await __run_cmds_on_cr(command)
+    return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
 # Main function to extract files
 async def extr_files(protected, path, archive_path, password=None):
