@@ -131,7 +131,7 @@ async def check_user(message):
 """
 
 # Upload mode
-mode_db = unzipper_db["upload_mode_db"]
+mode_db = unzipper_db["ulmode_db"]
 
 async def set_upload_mode(user_id, mode):
     is_exist = await mode_db.find_one({"_id": user_id})
@@ -144,7 +144,7 @@ async def get_upload_mode(user_id):
     umode = await mode_db.find_one({"_id": user_id})
     if umode:
         return umode["mode"]
-    return "doc"
+    return "media"
 
 
 # Db for how many files user uploaded
