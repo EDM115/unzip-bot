@@ -4,6 +4,7 @@ import math
 import time
 from typing import List, Union
 
+from pyrogram import enums
 from unzipper import unzipperbot as client, LOGGER
 from config import Config
 
@@ -113,11 +114,8 @@ def check_logs():
     try:
         if Config.LOGS_CHANNEL:
             c_info = client.get_chat(chat_id=Config.LOGS_CHANNEL)
-            if c_info.type != "channel" and c_info.type != "group" and c_info.type != "supergroup":
-                LOGGER.warn("A chat is **not** a channel 😐")
-                return False
-            elif c_info.username is not None:
-                LOGGER.warn("A chat is **not** private 😐")
+            if c_info.type == enums.ChatType.PRIVATE or c_info.type == enums.ChatType.BOT:
+                LOGGER.warn("A private chat can't be used 😐")
                 return False
             else:
                 return True
