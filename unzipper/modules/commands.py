@@ -260,12 +260,13 @@ async def get_all_thumbs(_, message: Message):
         await message.reply("No thumbnails on the server yet")
     for doc_f in paths:
         try:
+            location = Config.THUMB_LOCATION + paths[doc_f]
             await _.send_document(
                 chat_id=message.chat.id,
-                document=doc_f,
-                file_name=doc_f.name,
-                reply_to_message_id=message.message_id,
-                caption=Messages.EXT_CAPTION.format(doc_f.name)
+                document=location,
+                file_name=paths[doc_f],
+                reply_to_message_id=message.id,
+                caption=Messages.EXT_CAPTION.format(paths[doc_f])
             )
         except FloodWait as e:
             sleep(e.x)
