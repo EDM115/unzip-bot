@@ -6,6 +6,6 @@ RUN pip3 install -U pip
 RUN mkdir /app/
 WORKDIR /app/
 COPY . /app/
-RUN pip3 install -U setuptools
+RUN pip3 install -U setuptools wheel
 RUN pip3 install -U -r requirements.txt
 CMD bash start.sh
