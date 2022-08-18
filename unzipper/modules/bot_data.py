@@ -120,10 +120,10 @@ I can extract archives like `zip`, `rar`, `tar`, …
     """
 
     ABOUT_TXT = """
-**About Unarchiver bot [BETA | v5.0.0]**
+**About Unarchiver bot [BETA | v5.0.1]**
 
-• **Language :** [Python 3.9.1](https://www.python.org/)
-• **Framework :** [Pyrogram 1.4.16](https://docs.pyrogram.org/)
+• **Language :** [Python 3.10.6](https://www.python.org/)
+• **Framework :** [Pyrogram 2.0.41](https://docs.pyrogram.org/)
 • **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot/tree/beta)
 • **Developer :** [EDM115](https://github.com/EDM115)
 
