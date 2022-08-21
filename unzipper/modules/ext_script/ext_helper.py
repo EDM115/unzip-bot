@@ -77,7 +77,7 @@ async def make_keyboard(paths, user_id, chat_id):
         data.append(
             InlineKeyboardButton(
                 f"{num} - {os.path.basename(file)}".encode("utf-8").decode("utf-8"),
-                f"ext_f|{user_id}|{chat_id}|{num}",
+                f"ext_f|{user_id}|{chat_id}|{num}"
             )
         )
         num += 1
