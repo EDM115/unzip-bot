@@ -16,4 +16,17 @@ jobs:
         uses: psf/black@stable
         with:
           options: "--verbose"
-      
+      - name: Commit changes
+        run: |
+          d=`date '+%Y/%m/%dT%H:%M:%SZ'`
+          git config --local user.email ${{ secrets.MAIL }}
+          git config --local user.name ${{ secrets.USERNAME }}
+          git add -A
+          git commit -m "Code style changed to Black at ${d}"
+      - name: Push commit
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          force: true
+          directory: "."
+          branch: ${{ github.ref }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
