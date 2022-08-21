@@ -39,7 +39,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
             LOGGER.info("File too large")
             uptocloud = await unzip_bot.send_message(
                 chat_id=c_id,
-                text=f"`{fname}` is too huge to be sent to Telegram directly (`{u_file_size}`).\nUploading to Bayfiles, please wait some minutes…",
+                text=f"`{fname}` is too huge to be sent to Telegram directly (`{u_file_size}`).\nUploading to Bayfiles, please wait some minutes…"
             )
             upurl = await get_cloud(c_id)
             bfup = await bayfiles(os.path.abspath(doc_f), upurl)
@@ -85,8 +85,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                     progress_args=(
                         f"**Trying to upload {fname}… Please wait** \n",
                         upmsg,
-                        time(),
-                    ),
+                        time()
+                    )
                 )
             else:
                 await unzip_bot.send_audio(
@@ -97,8 +97,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                     progress_args=(
                         f"**Trying to upload {fname}… Please wait** \n",
                         upmsg,
-                        time(),
-                    ),
+                        time()
+                    )
                 )
         elif ul_mode == "media" and fext in extentions_list["photo"]:
             # impossible to use a thumb here :(
@@ -110,8 +110,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                 progress_args=(
                     f"**Trying to upload {fname}… Please wait** \n",
                     upmsg,
-                    time(),
-                ),
+                    time()
+                )
             )
         elif ul_mode == "media" and fext in extentions_list["video"]:
             vid_duration = await run_shell_cmds(
@@ -129,8 +129,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                     progress_args=(
                         f"**Trying to upload {fname}… Please wait** \n",
                         upmsg,
-                        time(),
-                    ),
+                        time()
+                    )
                 )
             else:
                 thmb_pth = (
@@ -151,8 +151,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                     progress_args=(
                         f"**Trying to upload {fname}… Please wait** \n",
                         upmsg,
-                        time(),
-                    ),
+                        time()
+                    )
                 )
                 os.remove(thmb_pth)
         else:
@@ -167,8 +167,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                     progress_args=(
                         f"**Trying to upload {fname}… Please wait** \n",
                         upmsg,
-                        time(),
-                    ),
+                        time()
+                    )
                 )
             else:
                 await unzip_bot.send_document(
@@ -179,8 +179,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                     progress_args=(
                         f"**Trying to upload {fname}… Please wait** \n",
                         upmsg,
-                        time(),
-                    ),
+                        time()
+                    )
                 )
         await upmsg.delete()
         os.remove(doc_f)
@@ -205,7 +205,7 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source):
         await unzip_bot.send_document(
             chat_id=c_id,
             document=doc_f,
-            caption=Messages.LOG_CAPTION.format(fname, source),
+            caption=Messages.LOG_CAPTION.format(fname, source)
         )
     except FloodWait as f:
         asyncio.sleep(f.x)
@@ -213,10 +213,9 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source):
     except FileNotFoundError:
         await unzip_bot.send_message(
             chat_id=Config.LOGS_CHANNEL,
-            text="Archive has gone from servers before uploading 😥",
+            text="Archive has gone from servers before uploading 😥"
         )
     except BaseException:
-        # shutil.rmtree(full_path)
         pass
 
 
