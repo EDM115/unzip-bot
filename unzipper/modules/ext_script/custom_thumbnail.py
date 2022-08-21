@@ -75,7 +75,7 @@ async def add_thumb(_, message):
         await _.send_message(
             chat_id=message.chat.id,
             text=Messages.PLS_REPLY,
-            reply_to_message_id=message.id,
+            reply_to_message_id=message.id
         )
         LOGGER.warning("pls reply to an image")
 
@@ -117,7 +117,7 @@ async def del_thumb(_, message):
     await _.send_message(
         chat_id=message.chat.id,
         text=Messages.DELETED_THUMB,
-        reply_to_message_id=message.id,
+        reply_to_message_id=message.id
     )
 
 
