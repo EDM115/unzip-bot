@@ -23,7 +23,7 @@ from unzipper.helpers.database import (
     del_banned_user,
     count_banned_users,
     get_upload_mode,
-    get_uploaded,
+    get_uploaded
 )
 from unzipper.helpers.unzip_help import humanbytes, TimeFormatter, timeformat_sec
 from unzipper.modules.ext_script.custom_thumbnail import add_thumb, del_thumb
@@ -46,7 +46,7 @@ async def start_bot(_, message: Message):
     await message.reply_text(
         text=Messages.START_TEXT.format(message.from_user.mention),
         reply_markup=Buttons.START_BUTTON,
-        disable_web_page_preview=True,
+        disable_web_page_preview=True
     )
 
 
@@ -65,7 +65,7 @@ async def about_me(_, message: Message):
     await message.reply_text(
         text=Messages.ABOUT_TXT,
         reply_markup=Buttons.ME_GOIN_HOME,
-        disable_web_page_preview=True,
+        disable_web_page_preview=True
     )
 
 
@@ -84,12 +84,12 @@ async def extract_archive(_, message: Message):
     if message.text and (re.match(https_url_regex, message.text)):
         await unzip_msg.edit(
             text=Messages.CHOOSE_EXT_MODE.format("URL", "🔗"),
-            reply_markup=Buttons.CHOOSE_E_U__BTNS,
+            reply_markup=Buttons.CHOOSE_E_U__BTNS
         )
     elif message.document:
         await unzip_msg.edit(
             text=Messages.CHOOSE_EXT_MODE.format("file", "🗂️"),
-            reply_markup=Buttons.CHOOSE_E_F__BTNS,
+            reply_markup=Buttons.CHOOSE_E_F__BTNS
         )
     else:
         await unzip_msg.edit("Send a valid archive/URL 🙄")
@@ -112,7 +112,7 @@ async def cancel_task_by_user(_, message):
 async def merging(_, message: Message):
     merge_msg = await message.reply(
         "Send me **all** the splitted files (.001, .002, .00×, …)\n\nOnce you sent them all, click on the `Merge 🛠️` button",
-        reply_markup=Buttons.MERGE_THEM_ALL,
+        reply_markup=Buttons.MERGE_THEM_ALL
     )
     startid = merge_msg.id + 1
     # Catch the files id + download + send to callbacks + cat + prompt dialog
@@ -124,7 +124,7 @@ async def set_mode_for_user(_, message: Message):
     upload_mode = await get_upload_mode(message.from_user.id)
     await message.reply(
         text=Messages.SELECT_UPLOAD_MODE_TXT.format(upload_mode),
-        reply_markup=Buttons.SET_UPLOAD_MODE_BUTTONS,
+        reply_markup=Buttons.SET_UPLOAD_MODE_BUTTONS
     )
 
 
@@ -273,7 +273,7 @@ async def unban_user(_, message: Message):
 async def me_stats(_, message: Message):
     me_info = await _.ask(
         chat_id=message.chat.id,
-        text="Send a text (shorter possible) from any user/chat. And you will have infos about it 👀",
+        text="Send a text (shorter possible) from any user/chat. And you will have infos about it 👀"
     )
     await _.send_message(chat_id=message.chat.id, text=f"`{me_info}`")
 
@@ -281,8 +281,7 @@ async def me_stats(_, message: Message):
 @Client.on_message(filters.command("user") & filters.user(Config.BOT_OWNER))
 async def info_user(_, message: Message):
     await message.reply(
-        chat_id=message.chat.id,
-        text="This is a WIP command that would allow you to get more stats about your utilisation of me 🤓",
+        "This is a WIP command that would allow you to get more stats about your utilisation of me 🤓"
     )
     info_user_msg = await message.reply(f"`Processing… ⏳`")
     try:
@@ -333,7 +332,7 @@ async def get_all_thumbs(_, message: Message):
                 document=location,
                 file_name=paths[doc_f],
                 reply_to_message_id=message.id,
-                caption=Messages.EXT_CAPTION.format(paths[doc_f]),
+                caption=Messages.EXT_CAPTION.format(paths[doc_f])
             )
         except FloodWait as e:
             sleep(e.x)
