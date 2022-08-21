@@ -18,7 +18,7 @@ from .ext_script.ext_helper import (
     extr_files,
     get_files,
     make_keyboard,
-    make_keyboard_empty,
+    make_keyboard_empty
 )
 from .ext_script.up_helper import send_file, answer_query, send_url_logs
 from .ext_script.custom_thumbnail import silent_del
@@ -28,13 +28,13 @@ from unzipper.helpers.unzip_help import (
     TimeFormatter,
     humanbytes,
     timeformat_sec,
-    extentions_list,
+    extentions_list
 )
 from unzipper.helpers.database import (
     set_upload_mode,
     update_uploaded,
     update_thumb,
-    upload_thumb,
+    upload_thumb
 )
 from config import Config
 from unzipper import LOGGER
@@ -59,7 +59,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     if query.data == "megoinhome":
         await query.edit_message_text(
             text=Messages.START_TEXT.format(query.from_user.mention),
-            reply_markup=Buttons.START_BUTTON,
+            reply_markup=Buttons.START_BUTTON
         )
 
     elif query.data == "helpcallback":
@@ -71,7 +71,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         await query.edit_message_text(
             text=Messages.ABOUT_TXT,
             reply_markup=Buttons.ME_GOIN_HOME,
-            disable_web_page_preview=True,
+            disable_web_page_preview=True
         )
 
     elif query.data == "canceldownload":
@@ -90,7 +90,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         await unzip_bot.send_message(
             chat_id=user_id,
             text=Messages.EXISTING_THUMB,
-            reply_markup=Buttons.THUMB_FINAL,
+            reply_markup=Buttons.THUMB_FINAL
         )
 
     elif query.data.startswith("save_thumb"):
@@ -142,7 +142,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         global log_msg
         log_msg = await unzip_bot.send_message(
             chat_id=Config.LOGS_CHANNEL,
-            text=f"Processing an user query…\n\nUser ID : {user_id}",
+            text=f"Processing an user query…\n\nUser ID : {user_id}"
         )
 
         try:
@@ -180,7 +180,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         )
                         await query.edit_message_text(
                             text=f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️",
-                            reply_markup=Buttons.I_PREFER_STOP,
+                            reply_markup=Buttons.I_PREFER_STOP
                         )
                         await download(url, archive)
                         e_time = time()
@@ -190,7 +190,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             unzip_bot=unzip_bot,
                             c_id=Config.LOGS_CHANNEL,
                             doc_f=archive,
-                            source=url,
+                            source=url
                         )
                     else:
                         return await query.message.edit(
@@ -231,8 +231,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     progress_args=(
                         "**Trying to download… Please wait** \n",
                         query.message,
-                        s_time,
-                    ),
+                        s_time
+                    )
                 )
                 e_time = time()
             else:
@@ -240,7 +240,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     query,
                     "Can't find details 💀 Please contact @EDM115 if it's an error",
                     answer_only=True,
-                    unzip_client=unzip_bot,
+                    unzip_client=unzip_bot
                 )
 
             dltime = TimeFormatter(round(e_time - s_time) * 1000)
@@ -256,14 +256,14 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             if splitted_data[2] == "with_pass":
                 password = await unzip_bot.ask(
                     chat_id=query.message.chat.id,
-                    text="**Please send me the password 🔑**",
+                    text="**Please send me the password 🔑**"
                 )
                 ext_s_time = time()
                 extractor = await extr_files(
                     protected,
                     path=ext_files_dir,
                     archive_path=archive,
-                    password=password.text,
+                    password=password.text
                 )
                 ext_e_time = time()
                 await archive_msg.reply(Messages.PASS_TXT.format(password.text))
@@ -297,7 +297,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await archive_msg.reply("That archive is password protected 😡")
                 await unzip_bot.send_message(
                     chat_id=query.message.chat.id,
-                    text="That archive is password protected 😡 **Don't fool me !**",
+                    text="That archive is password protected 😡 **Don't fool me !**"
                 )
                 global fooled
                 fooled = True
@@ -330,7 +330,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     )
                     await query.message.edit(
                         "Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process",
-                        reply_markup=empty_buttons,
+                        reply_markup=empty_buttons
                     )
             except:
                 try:
@@ -341,7 +341,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await unzip_bot.send_message(
                         chat_id=query.message.chat.id,
                         text="Select files to upload 👇",
-                        reply_markup=i_e_buttons,
+                        reply_markup=i_e_buttons
                     )
                 except:
                     try:
@@ -352,7 +352,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         await unzip_bot.send_message(
                             chat_id=query.message.chat.id,
                             text="Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process",
-                            reply_markup=empty_buttons,
+                            reply_markup=empty_buttons
                         )
                     except:
                         await answer_query(
@@ -403,7 +403,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             doc_f=paths[int(spl_data[3])],
             query=query,
             full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
-            log_msg=log_msg,
+            log_msg=log_msg
         )
 
         # if not err400:
@@ -431,7 +431,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             )
             await query.message.edit(
                 "Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process",
-                reply_markup=empty_buttons,
+                reply_markup=empty_buttons
             )
 
         # Now theorically it refreshes normally
@@ -459,7 +459,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 doc_f=file,
                 query=query,
                 full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
-                log_msg=log_msg,
+                log_msg=log_msg
             )
 
         await query.message.edit(
