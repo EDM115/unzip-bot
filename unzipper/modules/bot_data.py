@@ -4,87 +4,99 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 # Inline buttons
 class Buttons:
-    START_BUTTON = InlineKeyboardMarkup([
+    START_BUTTON = InlineKeyboardMarkup(
+        [
             [
                 InlineKeyboardButton("Help 📜", callback_data="helpcallback"),
-                InlineKeyboardButton("About 👀", callback_data="aboutcallback")
+                InlineKeyboardButton("About 👀", callback_data="aboutcallback"),
             ]
-        ])
+        ]
+    )
 
-    CHOOSE_E_F__BTNS = InlineKeyboardMarkup([
+    CHOOSE_E_F__BTNS = InlineKeyboardMarkup(
+        [
             [
-                InlineKeyboardButton("🗂️", callback_data="extract_file|tg_file|no_pass"),
-                InlineKeyboardButton("🔐", callback_data="extract_file|tg_file|with_pass"),
-                InlineKeyboardButton("❌", callback_data="cancel_dis")
+                InlineKeyboardButton(
+                    "🗂️", callback_data="extract_file|tg_file|no_pass"
+                ),
+                InlineKeyboardButton(
+                    "🔐", callback_data="extract_file|tg_file|with_pass"
+                ),
+                InlineKeyboardButton("❌", callback_data="cancel_dis"),
             ]
-        ])
+        ]
+    )
 
-    CHOOSE_E_U__BTNS = InlineKeyboardMarkup([
+    CHOOSE_E_U__BTNS = InlineKeyboardMarkup(
+        [
             [
                 InlineKeyboardButton("🔗", callback_data="extract_file|url|no_pass"),
                 InlineKeyboardButton("🔐", callback_data="extract_file|url|with_pass"),
-                InlineKeyboardButton("❌", callback_data="cancel_dis")
+                InlineKeyboardButton("❌", callback_data="cancel_dis"),
             ]
-        ])
+        ]
+    )
 
-    CLN_BTNS = InlineKeyboardMarkup([
+    CLN_BTNS = InlineKeyboardMarkup(
+        [
             [
                 InlineKeyboardButton("Clean my files 🚮", callback_data="cancel_dis"),
-                InlineKeyboardButton("❌ Cancel", callback_data="nobully")
+                InlineKeyboardButton("❌ Cancel", callback_data="nobully"),
             ]
-        ])
+        ]
+    )
 
-    ME_GOIN_HOME = InlineKeyboardMarkup([
-            [
-                InlineKeyboardButton("Back 🏡", callback_data="megoinhome")
-            ]
-        ])
+    ME_GOIN_HOME = InlineKeyboardMarkup(
+        [[InlineKeyboardButton("Back 🏡", callback_data="megoinhome")]]
+    )
 
-    SET_UPLOAD_MODE_BUTTONS = InlineKeyboardMarkup([
-            [
-                InlineKeyboardButton("As document 📁", callback_data="set_mode|doc")
-            ],
-            [
-                InlineKeyboardButton("As media 📺", callback_data="set_mode|media")
-            ]
-        ])
+    SET_UPLOAD_MODE_BUTTONS = InlineKeyboardMarkup(
+        [
+            [InlineKeyboardButton("As document 📁", callback_data="set_mode|doc")],
+            [InlineKeyboardButton("As media 📺", callback_data="set_mode|media")],
+        ]
+    )
 
-    I_PREFER_STOP = InlineKeyboardMarkup([
-            [
-                InlineKeyboardButton("❌ Cancel", callback_data="canceldownload")
-            ]
-        ])
+    I_PREFER_STOP = InlineKeyboardMarkup(
+        [[InlineKeyboardButton("❌ Cancel", callback_data="canceldownload")]]
+    )
 
-    MERGE_THEM_ALL = InlineKeyboardMarkup([
+    MERGE_THEM_ALL = InlineKeyboardMarkup(
+        [
             [
                 InlineKeyboardButton("Merge 🛠️", callback_data="merge_this"),
-                InlineKeyboardButton("❌ Cancel", callback_data="nobully")
+                InlineKeyboardButton("❌ Cancel", callback_data="nobully"),
             ]
-        ])
-    
-    THUMB_REPLACEMENT = InlineKeyboardMarkup([
+        ]
+    )
+
+    THUMB_REPLACEMENT = InlineKeyboardMarkup(
+        [
             [
                 InlineKeyboardButton("Check 👀", callback_data="check_thumb"),
-                InlineKeyboardButton("Replace ⏭", callback_data="save_thumb|replace")
+                InlineKeyboardButton("Replace ⏭", callback_data="save_thumb|replace"),
             ],
-            [
-                InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")
-            ]
-        ])
-    
-    THUMB_FINAL = InlineKeyboardMarkup([
+            [InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")],
+        ]
+    )
+
+    THUMB_FINAL = InlineKeyboardMarkup(
+        [
             [
                 InlineKeyboardButton("Replace ⏭", callback_data="save_thumb|replace"),
-                InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")
+                InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb"),
             ]
-        ])
-    
-    THUMB_SAVE = InlineKeyboardMarkup([
+        ]
+    )
+
+    THUMB_SAVE = InlineKeyboardMarkup(
+        [
             [
                 InlineKeyboardButton("Save 💾", callback_data="save_thumb|save"),
-                InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")
+                InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb"),
             ]
-        ])
+        ]
+    )
 
 
 class Messages:
@@ -95,7 +107,7 @@ I can extract archives like `zip`, `rar`, `tar`, …
 
 **Made with ❤️ by @EDM115bots**
     """
-#**This is BETA version !** May be a lot buggy, but with new features. Better waiting for the stable version at daytime… 🙂
+    # **This is BETA version !** May be a lot buggy, but with new features. Better waiting for the stable version at daytime… 🙂
 
     HELP_TXT = """
 **• How to extract 🤔**
@@ -263,11 +275,11 @@ A thumbnail already have been saved 😅 What you wanna do ?
 • Replace it with the new one you just sent
 • Cancel
     """
-    
+
     SAVING_THUMB = """
 Are you sure you want to save this thumbnail 🤔
     """
-    
+
     SAVED_THUMBNAIL = """
 **Successfully saved this thumbnail ✅**
     """
@@ -275,13 +287,11 @@ Are you sure you want to save this thumbnail 🤔
     DELETED_THUMB = """
 **Successfully removed your thumbnail ✅**
     """
-    
+
     PLS_REPLY = """
 You need to reply to a picture for saving it as custom thumbnail 🤓
     """
 
+
 # List of error messages from p7zip
-ERROR_MSGS = [
-    "Error",
-    "Can't open as archive"
-    ]
+ERROR_MSGS = ["Error", "Can't open as archive"]

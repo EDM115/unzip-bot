@@ -5,6 +5,7 @@ import time
 
 from pyrogram import Client, filters
 from PIL import Image
+
 # from pykeyboard import InlineKeyboard, InlineButton
 
 from unzipper import LOGGER
@@ -19,6 +20,7 @@ async def thumb_keyboard():
     )
 """
 
+
 async def silent_del(user_id):
     try:
         thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
@@ -26,27 +28,31 @@ async def silent_del(user_id):
     except:
         pass
 
+
 async def add_thumb(_, message):
     user_id = str(message.from_user.id)
     if message.reply_to_message is not None:
         reply_message = message.reply_to_message
-        if reply_message.media_group_id is not None: # album sent
+        if reply_message.media_group_id is not None:  # album sent
             LOGGER.warning(f"{user_id} tried to save a thumbnail from an album")
-            return message.reply("You can't use an album. Reply to a single picture sent as photo (not as document)")
+            return message.reply(
+                "You can't use an album. Reply to a single picture sent as photo (not as document)"
+            )
         else:
             thumb_location = Config.THUMB_LOCATION + "/" + user_id + ".jpg"
             pre_thumb = Config.THUMB_LOCATION + "/not_resized_" + user_id + ".jpg"
             final_thumb = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
             if os.path.exists(thumb_location) and os.path.isfile(thumb_location):
                 LOGGER.warning(f"Thumb exists for {user_id}")
-                await message.reply(text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_REPLACEMENT)
+                await message.reply(
+                    text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_REPLACEMENT
+                )
             else:
-                await message.reply(text=Messages.SAVING_THUMB, reply_markup=Buttons.THUMB_SAVE)
+                await message.reply(
+                    text=Messages.SAVING_THUMB, reply_markup=Buttons.THUMB_SAVE
+                )
             LOGGER.warning(f"Downloading thumbnail of {user_id}…")
-            await _.download_media(
-                message=reply_message,
-                file_name=pre_thumb
-            )
+            await _.download_media(message=reply_message, file_name=pre_thumb)
             LOGGER.warning("Thumbnail downloaded")
             size = 320, 320
             try:
@@ -69,9 +75,10 @@ async def add_thumb(_, message):
         await _.send_message(
             chat_id=message.chat.id,
             text=Messages.PLS_REPLY,
-            reply_to_message_id=message.id
+            reply_to_message_id=message.id,
         )
         LOGGER.warning("pls reply to an image")
+
 
 """
 @pyrogram.Client.on_message(pyrogram.Filters.photo)
@@ -100,6 +107,7 @@ async def save_thumb(_, message):
         )
 """
 
+
 async def del_thumb(_, message):
     thumb_location = Config.THUMB_LOCATION + "/" + str(message.from_user.id)
     try:
@@ -109,8 +117,9 @@ async def del_thumb(_, message):
     await _.send_message(
         chat_id=message.chat.id,
         text=Messages.DELETED_THUMB,
-        reply_to_message_id=message.id
+        reply_to_message_id=message.id,
     )
+
 
 async def thumb_exists(chat_id):
     thumb_location = Config.THUMB_LOCATION + "/" + str(chat_id) + ".jpg"
