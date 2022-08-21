@@ -16,7 +16,7 @@ unzipperbot = Client(
     api_id=Config.APP_ID,
     api_hash=Config.API_HASH,
     plugins=plugins,
-    sleep_threshold=10,
+    sleep_threshold=10
 )
 
 logging.basicConfig(
@@ -27,7 +27,7 @@ logging.basicConfig(
     # logfilename=actualtime+"unzip-log.txt"
     # handlers=[logging.FileHandler(logfilename), logging.StreamHandler()],
     handlers=[logging.FileHandler("unzip-log.txt"), logging.StreamHandler()],
-    format="%(asctime)s - %(levelname)s - %(name)s - %(threadName)s - %(message)s",
+    format="%(asctime)s - %(levelname)s - %(name)s - %(threadName)s - %(message)s"
 )
 LOGGER = logging.getLogger(__name__)
 logging.getLogger("pyrogram").setLevel(logging.WARN)
