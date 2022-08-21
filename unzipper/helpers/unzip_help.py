@@ -26,7 +26,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
         progress = "[{0}{1}] \n**Processing…** : `{2}%`\n".format(
             "".join(["⬢" for i in range(math.floor(percentage / 5))]),
             "".join(["⬡" for i in range(20 - math.floor(percentage / 5))]),
-            round(percentage, 2),
+            round(percentage, 2)
         )
 
         tmp = progress + "`{0} of {1}`\n**Speed :** `{2}/s`\n**ETA :** `{3}`\n".format(
@@ -35,7 +35,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
             humanbytes(speed),
             estimated_total_time
             if estimated_total_time != "" or percentage != "100"
-            else "0 s",
+            else "0 s"
         )
         try:
             await message.edit(
@@ -68,14 +68,14 @@ class HumanBytes:
         "PiB",
         "EiB",
         "ZiB",
-        "YiB",
+        "YiB"
     ]
     PRECISION_OFFSETS: List[float] = [0.5, 0.05, 0.005, 0.0005]  # PREDEFINED FOR SPEED.
     PRECISION_FORMATS: List[str] = [
         "{}{:.0f} {}",
         "{}{:.1f} {}",
         "{}{:.2f} {}",
-        "{}{:.3f} {}",
+        "{}{:.3f} {}"
     ]  # PREDEFINED FOR SPEED.
 
     @staticmethod
@@ -199,10 +199,10 @@ extentions_list = {
         "z",
         "zip",
         "zpaq",
-        "zstd",
+        "zstd"
     ],
     "audio": ["aif", "aiff", "aac", "flac", "mp3", "ogg", "wav", "wma"],
     "photo": ["gif", "ico", "jpg", "jpeg", "png", "tiff", "webp"],
-    "split": ["0*" "001", "002", "003", "004", "005"],
-    "video": ["3gp", "avi", "flv", "mp4", "mkv", "mov", "mpeg", "mpg", "webm"],
+    "split": ["0*", "001", "002", "003", "004", "005"],
+    "video": ["3gp", "avi", "flv", "mp4", "mkv", "mov", "mpeg", "mpg", "webm"]
 }
