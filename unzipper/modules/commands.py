@@ -114,7 +114,7 @@ async def send_stats(_, message: Message):
     total_banned_users = await count_banned_users()
     if message.from_user.id == Config.BOT_OWNER:
         await stats_msg.edit(f"""
-**💫 Current bot stats 💫 [BETA]**
+**💫 Current bot stats 💫**
 
 **👥 Users :** 
  ↳ **Users in database :** `{total_users}`
@@ -136,7 +136,7 @@ async def send_stats(_, message: Message):
                          )
     else:
         await stats_msg.edit(f"""
-**💫 Current bot stats 💫 [BETA]**
+**💫 Current bot stats 💫**
 
 **💾 Disk usage :**
  ↳ **Total Disk Space :** `{total}`
@@ -281,12 +281,10 @@ async def red_alert(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("addthumb"))
 async def thumb_add(_, message: Message):
-    await message.reply("🚧 WIP 🚧")
     await add_thumb(_, message)
 
 @Client.on_message(filters.private & filters.command("delthumb"))
 async def thumb_del(_, message: Message):
-    await message.reply("🚧 WIP 🚧")
     await del_thumb(_, message)
 
 @Client.on_message(filters.private & filters.command("cleanall") & filters.user(Config.BOT_OWNER))
@@ -339,14 +337,14 @@ async def getall_cmds(client, message):
 Here is the list of the commands you can use (only in private btw) :
 
 **{send any file or URL}** : Prompt the extract dialog
-**/start** : To know if I'm online. Also useful for fixing bugs and using the latest version of me
+**/start** : To know if I'm online
 **/help** : Gives a simple help
 **/about** : Know more about me
 **/clean** : Remove your files from my server. Also useful if a task failed
-**/mode** : Change your upload mode (either `doc` or `video`)
-**/stats** : Know all the current stats about me. If you're running on Heroku, it's reset every day (dynos yeah…)
-**/info** : Useless commands. At least you can know on which Telegram DataCenter your profile is stored
-**/addthumb** : Upload with a permanant custom thumbnail. Don't work for now
+**/mode** : Change your upload mode (either `doc` or `media`)
+**/stats** : Know all the current stats about me. If you're running on Heroku, it's reset every day
+**/info** : Get full info about a [Message](https://docs.pyrogram.org/api/types/Message) (info returned by Pyrogram)
+**/addthumb** : Upload with a custom thumbnail (not permanant yet)
 **/delthumb** : Removes your thumbnail
 **/commands** : This message
 
