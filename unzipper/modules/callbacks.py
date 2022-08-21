@@ -157,7 +157,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 archive_msg = await r_message.forward(chat_id=Config.LOGS_CHANNEL)
                 await log_msg.edit(Messages.LOG_TXT.format(user_id, fname, humanbytes(r_message.document.file_size)))
                 # Checks if it's actually an archive
-                fext = (pathlib.Path(fname).suffix).casefold()
+                # fext = (pathlib.Path(fname).suffix).casefold()
+                fext = fname.split(".")[-1].casefold()
                 if fext not in extentions_list["archive"]:
                     return await query.message.edit("This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**")
                 if fnmatch(fext, extentions_list["split"][0]) or fext in extentions_list["split"]:
