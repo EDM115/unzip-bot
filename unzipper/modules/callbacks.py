@@ -113,8 +113,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
 
     elif query.data == "nope_thumb":
         user_id = query.from_user.id
-        del_1 = Config.THUMB_LOCATION + "/not_resized_" + user_id + ".jpg"
-        del_2 = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
+        del_1 = Config.THUMB_LOCATION + "/not_resized_" + str(user_id) + ".jpg"
+        del_2 = Config.THUMB_LOCATION + "/waiting_" + str(user_id) + ".jpg"
         try:
             os.remove(pre_thumb)
         except:
