@@ -56,11 +56,8 @@ async def extr_files(protected, path, archive_path, password=None):
 
 # Get files in directory as a list
 async def get_files(path):
-    path_list = [
-        val
-        for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(path)]
-        for val in sublist
-    ]
+    path_list = [val for sublist in [[os.path.join(
+        i[0], j) for j in i[2]] for i in os.walk(path)] for val in sublist]
     return sorted(path_list)
 
 
