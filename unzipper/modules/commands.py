@@ -296,6 +296,26 @@ async def info_user(_, message: Message):
     )
 
 
+@Client.on_message(filters.command("user2") & filters.user(Config.BOT_OWNER))
+async def info_user2(_, message: Message):
+    user2_msg = await message.reply(f"`Processing… ⏳`")
+    try:
+        user_id = message.text.split(None, 1)[1]
+    except:
+        return await user2_msg.edit("Give an user id 🙂")
+    try:
+        infos = await _.get_users(user_id)
+    except:
+        return await user2_msg.edit("Error happened. The user ID is probably invalid")
+    await user2_msg.edit(infos)
+
+
+@Client.on_message(filters.command("self") & filters.user(Config.BOT_OWNER))
+async def info_self(_, message: Message):
+    self_infos = _.get_me()
+    await message.reply(self_infos)
+
+
 @Client.on_message(
     filters.private & filters.command("db") & filters.user(Config.BOT_OWNER)
 )
@@ -437,7 +457,8 @@ Here is the list of the commands you can use (only in private btw) :
 **/commands** : This message
 
 **/admincmd** : Only if you are the Owner
-    """
+        """,
+        disable_web_page_preview=True
     )
 
 
@@ -453,6 +474,8 @@ Here's all the commands that only the owner (you) can use :
 **/ban {user_id}** : Ban an user. He no longer can use your bot, except if…
 **/unban {user_id}** : …you unban him. All his stats and settings stays saved after a ban
 **/user {user_id}** : Know more about the use of your bot by a single user
+**/user2 {user_id}** : Get full info about an [User](https://docs.pyrogram.org/api/types/User) (info returned by Pyrogram)
+**/self** : Get full info about me (info returned by Pyrogram)
 **/db** : Sends an unorganized list of all the user's id. I need to sort that
 **/dbdive** : Useless. Will provide a way to see it online, but MongoDB already does it
 **/redbutton** : Will fully restart bot + server
@@ -461,7 +484,8 @@ Here's all the commands that only the owner (you) can use :
 **/restart** : Does a basic restart, less intrusive as the `/redbutton` one
 **/dbexport** : Exports the whole database as CSV
 **/admincmd** : This message
-    """
+        """,
+        disable_web_page_preview=True
     )
 
 
