@@ -307,13 +307,13 @@ async def info_user2(_, message: Message):
         infos = await _.get_users(user_id)
     except:
         return await user2_msg.edit("Error happened. The user ID is probably invalid")
-    await user2_msg.edit(`infos`)
+    await user2_msg.edit(f"`{infos}`")
 
 
 @Client.on_message(filters.command("self") & filters.user(Config.BOT_OWNER))
 async def info_self(_, message: Message):
     self_infos = await _.get_me()
-    await message.reply(`self_infos`)
+    await message.reply(f"`{self_infos}`")
 
 
 @Client.on_message(
