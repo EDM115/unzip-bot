@@ -3,6 +3,8 @@
 # Unarchiver Bot **BETA**
 ## A Telegram bot to extract various types of archives
 ![Unzip logo](https://telegra.ph/file/426207477776ffa00519f.png)  
+  
+  
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 </div>  
   
@@ -11,9 +13,9 @@
 [@unzip_edm115bot](https://t.me/unzip_edm115bot)  
 ⚠️ From 22h to 06h UTC+1, this beta version is running. Try it at your own risks…  
   
-# **THIS IS BETA BRANCH, DON'T BE MAD AT ME IF IT'S BUGGY 😞**
-[![Manual deploy of beta branch](https://github.com/EDM115/unzip-bot/actions/workflows/beta-auto-deploy.yml/badge.svg?branch=beta)](https://github.com/EDM115/unzip-bot/actions/workflows/beta-auto-deploy.yml)  
-  
+## **THIS IS BETA BRANCH, DON'T BE MAD AT ME IF IT'S BUGGY 😞**
+
+## Important note : it may no longer be deployable. More informations here : https://blog.heroku.com/next-chapter
   
 ## WORKAROUNDS (bugs to fix and features to add) 💀  
   
