@@ -175,6 +175,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                                 "This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**"
                             )
                         archive = f"{download_path}/archive_from_{user_id}{fname}"
+                        location = archive
                         await answer_query(
                             query, "`Processing ⏳`", unzip_client=unzip_bot
                         )
@@ -225,8 +226,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 # Makes download dir
                 os.makedirs(download_path)
                 s_time = time()
+                location = f"{download_path}/archive_from_{user_id}{os.path.splitext(fname)[1]}"
                 archive = await r_message.download(
-                    file_name=f"{download_path}/archive_from_{user_id}{os.path.splitext(fname)[1]}",
+                    file_name=location,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         "**Trying to download… Please wait** \n",
@@ -241,6 +243,17 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     "Can't find details 💀 Please contact @EDM115 if it's an error",
                     answer_only=True,
                     unzip_client=unzip_bot
+                )
+
+            if splitted_data[2] == "thumb":
+                await query.message.delete()
+                return await send_file(
+                    unzip_bot=unzip_bot,
+                    c_id=user_id,
+                    doc_f=archive,
+                    query=query,
+                    full_path=location,
+                    log_msg=log_msg
                 )
 
             dltime = TimeFormatter(round(e_time - s_time) * 1000)
