@@ -21,6 +21,11 @@ class Buttons:
                 ),
                 InlineKeyboardButton(
                     "🔐", callback_data="extract_file|tg_file|with_pass"
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    "🖼️", callback_data="thumbify|tg_file"
                 ),
                 InlineKeyboardButton("❌", callback_data="cancel_dis")
             ]
@@ -31,7 +36,12 @@ class Buttons:
         [
             [
                 InlineKeyboardButton("🔗", callback_data="extract_file|url|no_pass"),
-                InlineKeyboardButton("🔐", callback_data="extract_file|url|with_pass"),
+                InlineKeyboardButton("🔐", callback_data="extract_file|url|with_pass")
+            ],
+            [
+                InlineKeyboardButton(
+                    "🖼️", callback_data="thumbify|url"
+                ),
                 InlineKeyboardButton("❌", callback_data="cancel_dis")
             ]
         ]
@@ -161,6 +171,7 @@ Select the extraction mode for that {} 👀
 
 {} : **Normal mode**
 🔐 : **Password protected**
+🖼️ : **Change the thumbnail**
 ❌ : **Cancel your task**
     """
 
