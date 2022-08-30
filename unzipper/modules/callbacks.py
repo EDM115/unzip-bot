@@ -246,9 +246,15 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 )
 
             if splitted_data[2] == "thumb":
+                LOGGER.info(location)
                 changed_name = location.split("/")[-1]
+                LOGGER.info(changed_name)
                 renamed = location.replace(changed_name, fname)
-                os.rename(location, renamed)
+                LOGGER.info(renamed)
+                try:
+                    os.rename(location, renamed)
+                except Exception as e:
+                    LOGGER.error(e)
                 await send_file(
                     unzip_bot=unzip_bot,
                     c_id=user_id,
