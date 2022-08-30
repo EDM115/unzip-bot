@@ -253,7 +253,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 LOGGER.info(renamed)
                 try:
                     os.rename(location, renamed)
-                except Exception as e:
+                except OSError as e:
                     LOGGER.error(e)
                 await send_file(
                     unzip_bot=unzip_bot,
