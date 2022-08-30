@@ -246,7 +246,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 )
 
             if splitted_data[2] == "thumb":
-                await query.message.delete()
                 changed_name = location.split("/")[-1]
                 renamed = location.replace(changed_name, fname)
                 os.rename(location, renamed)
@@ -258,6 +257,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     full_path=renamed,
                     log_msg=log_msg
                 )
+                await query.message.delete()
                 return shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{query.from_user.id}")
 
             dltime = TimeFormatter(round(e_time - s_time) * 1000)
