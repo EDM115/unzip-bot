@@ -25,7 +25,7 @@ class Buttons:
             ],
             [
                 InlineKeyboardButton(
-                    "🖼️", callback_data="thumbify|tg_file"
+                    "🖼️", callback_data="extract_file|tg_file|thumb"
                 ),
                 InlineKeyboardButton("❌", callback_data="cancel_dis")
             ]
@@ -40,7 +40,7 @@ class Buttons:
             ],
             [
                 InlineKeyboardButton(
-                    "🖼️", callback_data="thumbify|url"
+                    "🖼️", callback_data="extract_file|url|thumb"
                 ),
                 InlineKeyboardButton("❌", callback_data="cancel_dis")
             ]
