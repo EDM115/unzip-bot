@@ -27,6 +27,11 @@ class Buttons:
                 InlineKeyboardButton(
                     "🖼️", callback_data="extract_file|tg_file|thumb"
                 ),
+                InlineKeyboardButton(
+                    "🖼️✏", callback_data="extract_file|tg_file|thumbrename"
+                )
+            ],
+            [
                 InlineKeyboardButton("❌", callback_data="cancel_dis")
             ]
         ]
@@ -42,6 +47,11 @@ class Buttons:
                 InlineKeyboardButton(
                     "🖼️", callback_data="extract_file|url|thumb"
                 ),
+               InlineKeyboardButton(
+                    "🖼️✏", callback_data="extract_file|url|thumbrename"
+                )
+            ],
+            [
                 InlineKeyboardButton("❌", callback_data="cancel_dis")
             ]
         ]
@@ -181,6 +191,7 @@ Select the extraction mode for that {} 👀
 {} : **Normal mode**
 🔐 : **Password protected**
 🖼️ : **Change the thumbnail**
+🖼️✏ : **Change the thumbnail and rename the file**
 ❌ : **Cancel your task**
     """
 
