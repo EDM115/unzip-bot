@@ -251,6 +251,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 LOGGER.info(changed_name)
                 renamed = location.replace(changed_name, fname)
                 LOGGER.info(renamed)
+                LOGGER.info(str(archive))
                 try:
                     os.rename(location, renamed)
                 except OSError as e:
