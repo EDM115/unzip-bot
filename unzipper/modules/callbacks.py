@@ -249,16 +249,16 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
 
             if splitted_data[2] == "thumb":
                 archive_name = location.split("/")[-1]
-                query2 = await query.message.edit(
+                await query.message.edit(
                     "Do you wanna rename your file ?", reply_markup=Buttons.RENAME
                 )
-                if query2.data == "renameit":
+                if query.data == "renameit":
                     newname = await unzip_bot.ask(
                         chat_id=user_id,
                         text=f"Current file name : `{fname}`\nPlease send the new file name (**--INCLUDE THE FILE EXTENTION !--**)"
                     )
                     renamed = location.replace(archive_name, newname)
-                elif query2.data == "norename":
+                elif query.data == "norename":
                     renamed = location.replace(archive_name, fname)
                 try:
                     os.rename(location, renamed)
