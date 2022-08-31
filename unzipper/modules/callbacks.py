@@ -169,15 +169,16 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         os.makedirs(download_path)
                         s_time = time()
                         fname = os.path.splitext(url)[1]
-                        fext = fname.split(".")[-1].casefold()
-                        if fext not in extentions_list["archive"]:
-                            return await query.message.edit(
-                                "This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**"
-                            )
+                        if splitted_data[2] != "thumb":
+                            fext = fname.split(".")[-1].casefold()
+                            if fext not in extentions_list["archive"]:
+                                return await query.message.edit(
+                                    "This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**"
+                                )
                         archive = f"{download_path}/archive_from_{user_id}{fname}"
                         location = archive
                         await answer_query(
-                            query, "`Processing ⏳`", unzip_client=unzip_bot
+                            query, "`Processing… ⏳`", unzip_client=unzip_bot
                         )
                         await query.edit_message_text(
                             text=f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️",
@@ -211,18 +212,19 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 )
                 # Checks if it's actually an archive
                 # fext = (pathlib.Path(fname).suffix).casefold()
-                fext = fname.split(".")[-1].casefold()
-                if fext not in extentions_list["archive"]:
-                    return await query.message.edit(
-                        "This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**"
-                    )
-                if (
-                    fnmatch(fext, extentions_list["split"][0])
-                    or fext in extentions_list["split"]
-                ):
-                    return await query.message.edit(
-                        "Splitted archives can't be processed yet"
-                    )
+                if splitted_data[2] != "thumb":
+                    fext = fname.split(".")[-1].casefold()
+                    if fext not in extentions_list["archive"]:
+                        return await query.message.edit(
+                            "This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**"
+                        )
+                    if (
+                        fnmatch(fext, extentions_list["split"][0])
+                        or fext in extentions_list["split"]
+                    ):
+                        return await query.message.edit(
+                            "Splitted archives can't be processed yet"
+                        )
                 # Makes download dir
                 os.makedirs(download_path)
                 s_time = time()
@@ -246,8 +248,18 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 )
 
             if splitted_data[2] == "thumb":
-                changed_name = location.split("/")[-1]
-                renamed = location.replace(changed_name, fname)
+                archive_name = location.split("/")[-1]
+                query2 = await query.message.edit(
+                    "Do you wanna rename your file ?", reply_markup=Buttons.RENAME
+                )
+                if query2.data == "renameit":
+                    newname = await unzip_bot.ask(
+                        chat_id=user_id,
+                        text=f"Current file name : `{fname}`\nPlease send the new file name (**--INCLUDE THE FILE EXTENTION !--**)"
+                    )
+                    renamed = location.replace(archive_name, newname)
+                elif query2.data == "norename":
+                    renamed = location.replace(archive_name, fname)
                 try:
                     os.rename(location, renamed)
                 except OSError as e:
