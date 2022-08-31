@@ -246,12 +246,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 )
 
             if splitted_data[2] == "thumb":
-                LOGGER.info(location)
                 changed_name = location.split("/")[-1]
-                LOGGER.info(changed_name)
                 renamed = location.replace(changed_name, fname)
-                LOGGER.info(renamed)
-                LOGGER.info(str(archive))
                 try:
                     os.rename(location, renamed)
                 except OSError as e:
@@ -259,13 +255,13 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await send_file(
                     unzip_bot=unzip_bot,
                     c_id=user_id,
-                    doc_f=archive,
+                    doc_f=renamed,
                     query=query,
                     full_path=renamed,
                     log_msg=log_msg
                 )
                 await query.message.delete()
-                return shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{query.from_user.id}")
+                return shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
 
             dltime = TimeFormatter(round(e_time - s_time) * 1000)
             if dltime == "":
