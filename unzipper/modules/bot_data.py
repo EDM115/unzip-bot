@@ -46,6 +46,15 @@ class Buttons:
             ]
         ]
     )
+    
+    RENAME = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("✏", callback_data="renameit"),
+                InlineKeyboardButton("🙅‍♂️", callback_data="norename")
+            ]
+        ]
+    )
 
     CLN_BTNS = InlineKeyboardMarkup(
         [
