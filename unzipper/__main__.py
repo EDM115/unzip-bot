@@ -13,6 +13,8 @@ from .modules.bot_data import Messages
 
 running = True
 # https://stackoverflow.com/questions/18499497/how-to-process-sigterm-signal-gracefully
+
+
 def handler_stop_signals(signum, frame):
     global running
     running = False
@@ -39,7 +41,8 @@ while running:
         unzipperbot.start()
         starttime = time.strftime("%Y/%m/%d - %H:%M:%S")
         unzipperbot.send_message(
-            chat_id=Config.LOGS_CHANNEL, text=Messages.START_TXT.format(starttime)
+            chat_id=Config.LOGS_CHANNEL, text=Messages.START_TXT.format(
+                starttime)
         )
         LOGGER.info("Checking Log channel…")
         if check_logs():
