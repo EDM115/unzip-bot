@@ -3,6 +3,8 @@
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 # Inline buttons
+
+
 class Buttons:
     START_BUTTON = InlineKeyboardMarkup(
         [
@@ -40,14 +42,16 @@ class Buttons:
     CHOOSE_E_U__BTNS = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("🔗", callback_data="extract_file|url|no_pass"),
-                InlineKeyboardButton("🔐", callback_data="extract_file|url|with_pass")
+                InlineKeyboardButton(
+                    "🔗", callback_data="extract_file|url|no_pass"),
+                InlineKeyboardButton(
+                    "🔐", callback_data="extract_file|url|with_pass")
             ],
             [
                 InlineKeyboardButton(
                     "🖼️", callback_data="extract_file|url|thumb"
                 ),
-               InlineKeyboardButton(
+                InlineKeyboardButton(
                     "🖼️✏", callback_data="extract_file|url|thumbrename"
                 )
             ],
@@ -56,7 +60,7 @@ class Buttons:
             ]
         ]
     )
-    
+
     RENAME = InlineKeyboardMarkup(
         [
             [
@@ -69,7 +73,8 @@ class Buttons:
     CLN_BTNS = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("Clean my files 🚮", callback_data="cancel_dis"),
+                InlineKeyboardButton("Clean my files 🚮",
+                                     callback_data="cancel_dis"),
                 InlineKeyboardButton("❌ Cancel", callback_data="nobully")
             ]
         ]
@@ -81,8 +86,10 @@ class Buttons:
 
     SET_UPLOAD_MODE_BUTTONS = InlineKeyboardMarkup(
         [
-            [InlineKeyboardButton("As document 📁", callback_data="set_mode|doc")],
-            [InlineKeyboardButton("As media 📺", callback_data="set_mode|media")]
+            [InlineKeyboardButton(
+                "As document 📁", callback_data="set_mode|doc")],
+            [InlineKeyboardButton(
+                "As media 📺", callback_data="set_mode|media")]
         ]
     )
 
@@ -103,7 +110,8 @@ class Buttons:
         [
             [
                 InlineKeyboardButton("Check 👀", callback_data="check_thumb"),
-                InlineKeyboardButton("Replace ⏭", callback_data="save_thumb|replace")
+                InlineKeyboardButton(
+                    "Replace ⏭", callback_data="save_thumb|replace")
             ],
             [InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")]
         ]
@@ -112,7 +120,8 @@ class Buttons:
     THUMB_FINAL = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("Replace ⏭", callback_data="save_thumb|replace"),
+                InlineKeyboardButton(
+                    "Replace ⏭", callback_data="save_thumb|replace"),
                 InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")
             ]
         ]
@@ -121,7 +130,8 @@ class Buttons:
     THUMB_SAVE = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("Save 💾", callback_data="save_thumb|save"),
+                InlineKeyboardButton(
+                    "Save 💾", callback_data="save_thumb|save"),
                 InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")
             ]
         ]

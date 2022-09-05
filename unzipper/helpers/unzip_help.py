@@ -9,6 +9,8 @@ from unzipper import unzipperbot as client, LOGGER
 from config import Config
 
 # Credits: SpEcHiDe's AnyDL-Bot for Progress bar + Time formatter
+
+
 async def progress_for_pyrogram(current, total, ud_type, message, start):
     now = time.time()
     diff = now - start
@@ -39,7 +41,8 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
         )
         try:
             await message.edit(
-                text="{}\n {} \n\n**Powered by @EDM115bots**".format(ud_type, tmp)
+                text="{}\n {} \n\n**Powered by @EDM115bots**".format(
+                    ud_type, tmp)
             )
         except:
             pass
@@ -58,7 +61,8 @@ def humanbytes(size):
 
 
 class HumanBytes:
-    METRIC_LABELS: List[str] = ["B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+    METRIC_LABELS: List[str] = ["B", "kB", "MB",
+                                "GB", "TB", "PB", "EB", "ZB", "YB"]
     BINARY_LABELS: List[str] = [
         "B",
         "KiB",
@@ -70,7 +74,8 @@ class HumanBytes:
         "ZiB",
         "YiB"
     ]
-    PRECISION_OFFSETS: List[float] = [0.5, 0.05, 0.005, 0.0005]  # PREDEFINED FOR SPEED.
+    # PREDEFINED FOR SPEED.
+    PRECISION_OFFSETS: List[float] = [0.5, 0.05, 0.005, 0.0005]
     PRECISION_FORMATS: List[str] = [
         "{}{:.0f} {}",
         "{}{:.1f} {}",

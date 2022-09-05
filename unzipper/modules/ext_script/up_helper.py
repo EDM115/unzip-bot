@@ -19,6 +19,8 @@ from config import Config
 from unzipper import LOGGER
 
 # To get video duration and thumbnail
+
+
 async def run_shell_cmds(command):
     run = subprocess.Popen(
         command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
@@ -123,7 +125,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                     chat_id=c_id,
                     video=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
-                    duration=int(vid_duration) if vid_duration.isnumeric() else 0,
+                    duration=int(
+                        vid_duration) if vid_duration.isnumeric() else 0,
                     thumb=thumb_image,
                     progress=progress_for_pyrogram,
                     progress_args=(
@@ -145,7 +148,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                     chat_id=c_id,
                     video=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
-                    duration=int(vid_duration) if vid_duration.isnumeric() else 0,
+                    duration=int(
+                        vid_duration) if vid_duration.isnumeric() else 0,
                     thumb=str(thumb),
                     progress=progress_for_pyrogram,
                     progress_args=(
