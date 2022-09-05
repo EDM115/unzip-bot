@@ -1,12 +1,13 @@
 # Copyright (c) 2022 EDM115
 
-from unzipper import unzipperbot as Client
+from time import sleep
+
 from motor.motor_asyncio import AsyncIOMotorClient
 from requests import post
 
 from config import Config
-from time import sleep
 from unzipper import LOGGER
+from unzipper import unzipperbot as Client
 
 mongodb = AsyncIOMotorClient(Config.MONGODB_URL)
 unzipper_db = mongodb["Unzipper_Bot"]

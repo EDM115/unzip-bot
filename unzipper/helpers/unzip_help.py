@@ -5,8 +5,10 @@ import time
 from typing import List, Union
 
 from pyrogram import enums
-from unzipper import unzipperbot as client, LOGGER
+
 from config import Config
+from unzipper import LOGGER
+from unzipper import unzipperbot as client
 
 # Credits: SpEcHiDe's AnyDL-Bot for Progress bar + Time formatter
 
