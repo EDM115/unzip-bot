@@ -155,7 +155,7 @@ async def send_stats(_, message: Message):
             f"""
 **💫 Current bot stats 💫**
 
-**👥 Users :** 
+**👥 Users :**
  ↳ **Users in database :** `{total_users}`
  ↳ **Total banned users :** `{total_banned_users}`
 

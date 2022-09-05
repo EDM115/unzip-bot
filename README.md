@@ -8,11 +8,11 @@
 
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 
-</div>  
-  
+</div>
+
 ## Demo 🥰
 
-[@unzip_edm115bot](https://t.me/unzip_edm115bot)  
+[@unzip_edm115bot](https://t.me/unzip_edm115bot)
 ⚠️ From 22h to 06h UTC+1, this beta version is running. Try it at your own risks…
 
 ## **THIS IS BETA BRANCH, DON'T BE MAD AT ME IF IT'S BUGGY 😞**
@@ -64,10 +64,10 @@ Check [issue #38](https://github.com/EDM115/unzip-bot/issues/38)
 
 ## Take a look about the [changelog](https://github.com/EDM115/unzip-bot/blob/beta/changelog.md) 😏
 
-[![Deploy me 🥺](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/beta)  
+[![Deploy me 🥺](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/beta)
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/ENIia-?referralCode=EDM115)
 
 ## Found a bug 🐞
 
-If you found a bug in this beta version please open an [issue](https://github.com/EDM115/unzip-bot/issues) or report it at [me](https://t.me/EDM115)  
+If you found a bug in this beta version please open an [issue](https://github.com/EDM115/unzip-bot/issues) or report it at [me](https://t.me/EDM115)
 Same if you have any feature request ☺️
