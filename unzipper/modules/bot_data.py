@@ -6,86 +6,120 @@ from pyrogram.types import InlineKeyboardMarkup
 
 
 class Buttons:
-    START_BUTTON = InlineKeyboardMarkup([[
-        InlineKeyboardButton("Help 📜", callback_data="helpcallback"),
-        InlineKeyboardButton("About 👀", callback_data="aboutcallback"),
-    ]])
-
-    CHOOSE_E_F__BTNS = InlineKeyboardMarkup([
+    START_BUTTON = InlineKeyboardMarkup(
         [
-            InlineKeyboardButton("🗂️",
-                                 callback_data="extract_file|tg_file|no_pass"),
-            InlineKeyboardButton(
-                "🔐", callback_data="extract_file|tg_file|with_pass"),
-        ],
-        [
-            InlineKeyboardButton("🖼️",
-                                 callback_data="extract_file|tg_file|thumb"),
-            InlineKeyboardButton(
-                "🖼️✏", callback_data="extract_file|tg_file|thumbrename"),
-        ],
-        [InlineKeyboardButton("❌", callback_data="cancel_dis")],
-    ])
+            [
+                InlineKeyboardButton("Help 📜", callback_data="helpcallback"),
+                InlineKeyboardButton("About 👀", callback_data="aboutcallback"),
+            ]
+        ]
+    )
 
-    CHOOSE_E_U__BTNS = InlineKeyboardMarkup([
+    CHOOSE_E_F__BTNS = InlineKeyboardMarkup(
         [
-            InlineKeyboardButton("🔗",
-                                 callback_data="extract_file|url|no_pass"),
-            InlineKeyboardButton("🔐",
-                                 callback_data="extract_file|url|with_pass"),
-        ],
+            [
+                InlineKeyboardButton(
+                    "🗂️", callback_data="extract_file|tg_file|no_pass"
+                ),
+                InlineKeyboardButton(
+                    "🔐", callback_data="extract_file|tg_file|with_pass"
+                ),
+            ],
+            [
+                InlineKeyboardButton("🖼️", callback_data="extract_file|tg_file|thumb"),
+                InlineKeyboardButton(
+                    "🖼️✏", callback_data="extract_file|tg_file|thumbrename"
+                ),
+            ],
+            [InlineKeyboardButton("❌", callback_data="cancel_dis")],
+        ]
+    )
+
+    CHOOSE_E_U__BTNS = InlineKeyboardMarkup(
         [
-            InlineKeyboardButton("🖼️", callback_data="extract_file|url|thumb"),
-            InlineKeyboardButton("🖼️✏",
-                                 callback_data="extract_file|url|thumbrename"),
-        ],
-        [InlineKeyboardButton("❌", callback_data="cancel_dis")],
-    ])
+            [
+                InlineKeyboardButton("🔗", callback_data="extract_file|url|no_pass"),
+                InlineKeyboardButton("🔐", callback_data="extract_file|url|with_pass"),
+            ],
+            [
+                InlineKeyboardButton("🖼️", callback_data="extract_file|url|thumb"),
+                InlineKeyboardButton(
+                    "🖼️✏", callback_data="extract_file|url|thumbrename"
+                ),
+            ],
+            [InlineKeyboardButton("❌", callback_data="cancel_dis")],
+        ]
+    )
 
-    RENAME = InlineKeyboardMarkup([[
-        InlineKeyboardButton("✏", callback_data="renameit"),
-        InlineKeyboardButton("🙅‍♂️", callback_data="norename"),
-    ]])
+    RENAME = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("✏", callback_data="renameit"),
+                InlineKeyboardButton("🙅‍♂️", callback_data="norename"),
+            ]
+        ]
+    )
 
-    CLN_BTNS = InlineKeyboardMarkup([[
-        InlineKeyboardButton("Clean my files 🚮", callback_data="cancel_dis"),
-        InlineKeyboardButton("❌ Cancel", callback_data="nobully"),
-    ]])
+    CLN_BTNS = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("Clean my files 🚮", callback_data="cancel_dis"),
+                InlineKeyboardButton("❌ Cancel", callback_data="nobully"),
+            ]
+        ]
+    )
 
     ME_GOIN_HOME = InlineKeyboardMarkup(
-        [[InlineKeyboardButton("Back 🏡", callback_data="megoinhome")]])
+        [[InlineKeyboardButton("Back 🏡", callback_data="megoinhome")]]
+    )
 
-    SET_UPLOAD_MODE_BUTTONS = InlineKeyboardMarkup([
-        [InlineKeyboardButton("As document 📁", callback_data="set_mode|doc")],
-        [InlineKeyboardButton("As media 📺", callback_data="set_mode|media")],
-    ])
+    SET_UPLOAD_MODE_BUTTONS = InlineKeyboardMarkup(
+        [
+            [InlineKeyboardButton("As document 📁", callback_data="set_mode|doc")],
+            [InlineKeyboardButton("As media 📺", callback_data="set_mode|media")],
+        ]
+    )
 
     I_PREFER_STOP = InlineKeyboardMarkup(
-        [[InlineKeyboardButton("❌ Cancel", callback_data="canceldownload")]])
+        [[InlineKeyboardButton("❌ Cancel", callback_data="canceldownload")]]
+    )
 
-    MERGE_THEM_ALL = InlineKeyboardMarkup([[
-        InlineKeyboardButton("Merge 🛠️", callback_data="merge_this"),
-        InlineKeyboardButton("❌ Cancel", callback_data="nobully"),
-    ]])
-
-    THUMB_REPLACEMENT = InlineKeyboardMarkup([
+    MERGE_THEM_ALL = InlineKeyboardMarkup(
         [
-            InlineKeyboardButton("Check 👀", callback_data="check_thumb"),
-            InlineKeyboardButton("Replace ⏭",
-                                 callback_data="save_thumb|replace"),
-        ],
-        [InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")],
-    ])
+            [
+                InlineKeyboardButton("Merge 🛠️", callback_data="merge_this"),
+                InlineKeyboardButton("❌ Cancel", callback_data="nobully"),
+            ]
+        ]
+    )
 
-    THUMB_FINAL = InlineKeyboardMarkup([[
-        InlineKeyboardButton("Replace ⏭", callback_data="save_thumb|replace"),
-        InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb"),
-    ]])
+    THUMB_REPLACEMENT = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("Check 👀", callback_data="check_thumb"),
+                InlineKeyboardButton("Replace ⏭", callback_data="save_thumb|replace"),
+            ],
+            [InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")],
+        ]
+    )
 
-    THUMB_SAVE = InlineKeyboardMarkup([[
-        InlineKeyboardButton("Save 💾", callback_data="save_thumb|save"),
-        InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb"),
-    ]])
+    THUMB_FINAL = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("Replace ⏭", callback_data="save_thumb|replace"),
+                InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb"),
+            ]
+        ]
+    )
+
+    THUMB_SAVE = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("Save 💾", callback_data="save_thumb|save"),
+                InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb"),
+            ]
+        ]
+    )
 
 
 class Messages:
