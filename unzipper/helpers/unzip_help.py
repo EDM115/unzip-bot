@@ -1,8 +1,7 @@
 # Copyright (c) 2022 EDM115
 import math
 import time
-from typing import List
-from typing import Union
+from typing import List, Union
 
 from pyrogram import enums
 
