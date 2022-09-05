@@ -37,13 +37,12 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
             humanbytes(total),
             humanbytes(speed),
             estimated_total_time
-            if estimated_total_time != "" or percentage != "100"
-            else "0 s",
+            if estimated_total_time != "" or percentage != "100" else "0 s",
         )
         try:
             await message.edit(
-                text="{}\n {} \n\n**Powered by @EDM115bots**".format(ud_type, tmp)
-            )
+                text="{}\n {} \n\n**Powered by @EDM115bots**".format(
+                    ud_type, tmp))
         except:
             pass
 
@@ -61,7 +60,9 @@ def humanbytes(size):
 
 
 class HumanBytes:
-    METRIC_LABELS: List[str] = ["B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+    METRIC_LABELS: List[str] = [
+        "B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"
+    ]
     BINARY_LABELS: List[str] = [
         "B",
         "KiB",
@@ -83,14 +84,15 @@ class HumanBytes:
     ]  # PREDEFINED FOR SPEED.
 
     @staticmethod
-    def format(num: Union[int, float], metric: bool = False, precision: int = 1) -> str:
+    def format(num: Union[int, float],
+               metric: bool = False,
+               precision: int = 1) -> str:
         # Human-readable formatting of bytes, using binary (powers of 1024)
         # or metric (powers of 1000) representation.
         assert isinstance(num, (int, float)), "num must be an int or float"
         assert isinstance(metric, bool), "metric must be a bool"
-        assert (
-            isinstance(precision, int) and precision >= 0 and precision <= 3
-        ), "precision must be an int (range 0-3)"
+        assert (isinstance(precision, int) and precision >= 0
+                and precision <= 3), "precision must be an int (range 0-3)"
         unit_labels = HumanBytes.METRIC_LABELS if metric else HumanBytes.BINARY_LABELS
         last_label = unit_labels[-1]
         unit_step = 1000 if metric else 1024
@@ -114,8 +116,7 @@ class HumanBytes:
                 # and further down in the decimals, so it doesn't matter at all.
                 num /= unit_step
         return HumanBytes.PRECISION_FORMATS[precision].format(
-            "-" if is_negative else "", num, unit
-        )
+            "-" if is_negative else "", num, unit)
 
 
 # Usage : HumanBytes.format({value}))
@@ -126,13 +127,11 @@ def TimeFormatter(milliseconds: int) -> str:
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
-    tmp = (
-        ((str(days) + "d, ") if days else "")
-        + ((str(hours) + "h, ") if hours else "")
-        + ((str(minutes) + "m, ") if minutes else "")
-        + ((str(seconds) + "s, ") if seconds else "")
-        + ((str(milliseconds) + "ms, ") if milliseconds else "")
-    )
+    tmp = (((str(days) + "d, ") if days else "") +
+           ((str(hours) + "h, ") if hours else "") +
+           ((str(minutes) + "m, ") if minutes else "") +
+           ((str(seconds) + "s, ") if seconds else "") +
+           ((str(milliseconds) + "ms, ") if milliseconds else ""))
     return tmp[:-2]
 
 
@@ -140,12 +139,10 @@ def timeformat_sec(seconds: int) -> str:
     minutes, seconds = divmod(int(seconds), 60)
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
-    tmp = (
-        ((str(days) + "d, ") if days else "")
-        + ((str(hours) + "h, ") if hours else "")
-        + ((str(minutes) + "m, ") if minutes else "")
-        + ((str(seconds) + "s, ") if seconds else "")
-    )
+    tmp = (((str(days) + "d, ") if days else "") +
+           ((str(hours) + "h, ") if hours else "") +
+           ((str(minutes) + "m, ") if minutes else "") +
+           ((str(seconds) + "s, ") if seconds else ""))
     return tmp[:-2]
 
 
@@ -154,10 +151,8 @@ def check_logs():
     try:
         if Config.LOGS_CHANNEL:
             c_info = client.get_chat(chat_id=Config.LOGS_CHANNEL)
-            if (
-                c_info.type == enums.ChatType.PRIVATE
-                or c_info.type == enums.ChatType.BOT
-            ):
+            if (c_info.type == enums.ChatType.PRIVATE
+                    or c_info.type == enums.ChatType.BOT):
                 LOGGER.warn("A private chat can't be used 😐")
                 return False
             else:
