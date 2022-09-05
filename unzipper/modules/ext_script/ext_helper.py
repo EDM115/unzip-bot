@@ -1,12 +1,13 @@
 # Copyright (c) 2022 EDM115
 
 import os
-from functools import partial
-from subprocess import Popen, PIPE
 from asyncio import get_running_loop
+from functools import partial
+from subprocess import PIPE, Popen
 
 from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
+
 from unzipper import LOGGER
 
 # Run commands in shell

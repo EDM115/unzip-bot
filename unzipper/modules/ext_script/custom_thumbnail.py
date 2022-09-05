@@ -3,14 +3,15 @@
 import os
 import time
 
-from pyrogram import Client, filters
 from PIL import Image
+from pyrogram import Client, filters
+
+from config import Config
+from unzipper import LOGGER
+from unzipper.modules.bot_data import Buttons, Messages
 
 # from pykeyboard import InlineKeyboard, InlineButton
 
-from unzipper import LOGGER
-from config import Config
-from unzipper.modules.bot_data import Buttons, Messages
 
 """
 async def thumb_keyboard():
