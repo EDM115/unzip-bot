@@ -2,13 +2,7 @@
   "name": "Unzipper Bot [BETA VERSION]",
   "description": "A Telegram Bot to Extract Various Types Of Archives",
   "logo": "https://telegra.ph/file/00e96e3c5dda1c9ab40da.jpg",
-  "keywords": [
-    "7z",
-    "zip",
-    "rar",
-    "Telegram Bot",
-    "unzipper bot"
-  ],
+  "keywords": ["7z", "zip", "rar", "Telegram Bot", "unzipper bot"],
   "website": "https://t.me/EDM115bots",
   "repository": "https://github.com/EDM115/unzip-bot",
   "success_url": "https://t.me/EDM115bots",
