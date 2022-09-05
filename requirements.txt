@@ -6,6 +6,6 @@ dnspython==2.2.1
 psutil==5.9.2
 pykeyboard==0.1.5
 aiohttp==3.8.1
-aiofiles==0.8.0
+aiofiles==22.1.0
 Pillow==9.2.0
 requests==2.28.1
