@@ -2,8 +2,7 @@
 import os
 from asyncio import get_running_loop
 from functools import partial
-from subprocess import PIPE
-from subprocess import Popen
+from subprocess import PIPE, Popen
 
 from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton

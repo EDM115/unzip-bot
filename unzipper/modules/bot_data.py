@@ -1,6 +1,5 @@
 # Copyright (c) 2022 EDM115
-from pyrogram.types import InlineKeyboardButton
-from pyrogram.types import InlineKeyboardMarkup
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 # Inline buttons
 
