@@ -43,8 +43,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
             LOGGER.info("File too large")
             uptocloud = await unzip_bot.send_message(
                 chat_id=c_id,
-                text=
-                f"`{fname}` is too huge to be sent to Telegram directly (`{u_file_size}`).\nUploading to Bayfiles, please wait some minutes…",
+                text=f"`{fname}` is too huge to be sent to Telegram directly (`{u_file_size}`).\nUploading to Bayfiles, please wait some minutes…",
             )
             upurl = await get_cloud(c_id)
             bfup = await bayfiles(os.path.abspath(doc_f), upurl)
