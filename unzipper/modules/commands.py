@@ -276,8 +276,7 @@ async def unban_user(_, message: Message):
 async def me_stats(_, message: Message):
     me_info = await _.ask(
         chat_id=message.chat.id,
-        text=
-        "Send a text (shorter possible) from any user/chat. And you will have infos about it 👀",
+        text="Send a text (shorter possible) from any user/chat. And you will have infos about it 👀",
     )
     await _.send_message(chat_id=message.chat.id, text=f"`{me_info}`")
 

@@ -31,6 +31,8 @@ async def run_shell_cmds(command):
     return shell_output
 
 # Get file size
+
+
 async def get_size(doc_f):
     try:
         fsize = os.stat(doc_f).st_size
@@ -39,6 +41,8 @@ async def get_size(doc_f):
         return 0
 
 # Send file to a user
+
+
 async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
     try:
         ul_mode = await get_upload_mode(c_id)
