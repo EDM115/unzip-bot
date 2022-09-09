@@ -19,10 +19,12 @@ from .commands import https_url_regex
 from .ext_script.custom_thumbnail import silent_del
 from .ext_script.ext_helper import extr_files
 from .ext_script.ext_helper import get_files
+from .ext_script.ext_helper import split_files
 from .ext_script.ext_helper import make_keyboard
 from .ext_script.ext_helper import make_keyboard_empty
 from .ext_script.up_helper import answer_query
 from .ext_script.up_helper import send_file
+from .ext_script.up_helper import get_size
 from .ext_script.up_helper import send_url_logs
 from config import Config
 from unzipper import LOGGER
@@ -262,17 +264,72 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 try:
                     os.rename(location, renamed)
                 except OSError as e:
-                    LOGGER.error(e)
-                await send_file(
-                    unzip_bot=unzip_bot,
-                    c_id=user_id,
-                    doc_f=renamed,
-                    query=query,
-                    full_path=renamed,
-                    log_msg=log_msg,
-                )
-                await query.message.delete()
-                return shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                    return LOGGER.error(e)
+                newfname = renamed.split("/")[-1]
+                fsize = await get_size(doc_f)
+                if await fsize <= Config.TG_MAX_SIZE:
+                    await send_file(
+                        unzip_bot=unzip_bot,
+                        c_id=user_id,
+                        doc_f=renamed,
+                        query=query,
+                        full_path=renamed,
+                        log_msg=log_msg,
+                    )
+                    await query.message.delete()
+                    return shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                else:
+                    LOGGER.info("File too large")
+                    """
+                    Way to upload to bayfiles (it actually happens but fails to get link)
+                    uptocloud = await unzip_bot.send_message(
+                        chat_id=c_id,
+                        text=
+                        f"`{fname}` is too huge to be sent to Telegram directly (`{u_file_size}`).\nUploading to Bayfiles, please wait some minutes…",
+                    )
+                    upurl = await get_cloud(c_id)
+                    bfup = await bayfiles(os.path.abspath(doc_f), upurl)
+                    if "Error happened on BayFiles upload" in bfup:
+                        await uptocloud.edit(bfup)
+                    elif bfup["status"] == "True":
+                        fsize = bfup["data"]["file"]["metadata"]["size"]["readable"]
+                        furl = bfup["data"]["file"]["url"]["full"]
+                        await uptocloud.edit(
+                            Messages.URL_UPLOAD.format(fname, fsize, furl))
+                    elif bfup["status"] == "False":
+                        etype = bfup["error"]["message"]
+                        emess = bfup["error"]["type"]
+                        ecode = bfup["error"]["code"]
+                        await uptocloud.edit(
+                            Messages.URL_ERROR.format(fname, ecode, etypr, emess))
+                        await log_msg.reply(
+                            Messages.URL_ERROR.format(fname, ecode, etypr, emess))
+                    else:
+                        await uptocloud.edit(bfup)
+                        await log_msg.reply(bfup)
+                    return os.remove(doc_f)
+                    """
+                    splitteddir = os.makedirs(f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}")
+                    splittedfiles = await split_files(doc_f, splitteddir, newfname)
+                    if not splittedfiles:
+                        try:
+                            shutil.rmtree(splitteddir)
+                        except:
+                            pass
+                        return await query.message.edit(
+                            "I've already sent you those files 🙂")
+                    await query.answer("Trying to send all files to you… Please wait")
+                    for file in paths:
+                        sent_files += 1
+                        await send_file(
+                            unzip_bot=unzip_bot,
+                            c_id=user_id,
+                            doc_f=file,
+                            query=query,
+                            full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
+                            log_msg=log_msg,
+                        )
+                    
 
             dltime = TimeFormatter(round(e_time - s_time) * 1000)
             if dltime == "":
