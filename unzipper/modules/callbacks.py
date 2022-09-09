@@ -317,18 +317,20 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         except:
                             pass
                         return await query.message.edit(
-                            "I've already sent you those files 🙂")
-                    await query.answer("Trying to send all files to you… Please wait")
-                    for file in paths:
+                            "An error occured while splitting a file above 2 Gb 😥")
+                    await query.answer("Trying to send all parts of the file to you… Please wait")
+                    for file in splittedfiles:
                         sent_files += 1
                         await send_file(
                             unzip_bot=unzip_bot,
                             c_id=user_id,
                             doc_f=file,
                             query=query,
-                            full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
+                            full_path=splitteddir,
                             log_msg=log_msg,
                         )
+                    shutil.rmtree(splitteddir)
+                    shutil.rmtree(renamed.replace(newfname, ""))
                     
 
             dltime = TimeFormatter(round(e_time - s_time) * 1000)
