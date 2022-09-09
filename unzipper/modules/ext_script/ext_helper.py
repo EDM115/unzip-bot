@@ -11,8 +11,6 @@ from pyrogram.types import InlineKeyboardButton
 from unzipper import LOGGER
 
 # Run commands in shell
-
-
 def __run_cmds_unzipper(command):
     ext_cmd = Popen(command["cmd"], stdout=PIPE, stderr=PIPE, shell=True)
     ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8")
@@ -61,11 +59,18 @@ async def extr_files(protected, path, archive_path, password=None):
         return ex
 
 
+# Split files
+async def split_files(doc_f, splitteddir, fname):
+    # Workaround : https://ccm.net/computing/linux/4327-split-a-file-into-several-parts-in-linux/
+    command = f"split -b 2GB -d {doc_f} '{splitteddir}/{fname}'"
+    await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
+    splittedfiles = await get_files(splitteddir)
+    return splittedfiles
+
 # Get files in directory as a list
 async def get_files(path):
     path_list = [
-        val for sublist in [[os.path.join(i[0], j) for j in i[2]]
-                            for i in os.walk(path)] for val in sublist
+        val for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(path)] for val in sublist
     ]
     return sorted(path_list)
 
