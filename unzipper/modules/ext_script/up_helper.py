@@ -23,9 +23,10 @@ from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
 
 # To get video duration and thumbnail
 async def run_shell_cmds(command):
-    run = subprocess.Popen(
-        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
-    )
+    run = subprocess.Popen(command,
+                           stdout=subprocess.PIPE,
+                           stderr=subprocess.PIPE,
+                           shell=True)
     shell_output = run.stdout.read()[:-1].decode("utf-8")
     return shell_output
 
@@ -101,7 +102,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                     chat_id=c_id,
                     video=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
-                    duration=int(vid_duration) if vid_duration.isnumeric() else 0,
+                    duration=int(vid_duration)
+                    if vid_duration.isnumeric() else 0,
                     thumb=thumb_image,
                     progress=progress_for_pyrogram,
                     progress_args=(
@@ -123,7 +125,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
                     chat_id=c_id,
                     video=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
-                    duration=int(vid_duration) if vid_duration.isnumeric() else 0,
+                    duration=int(vid_duration)
+                    if vid_duration.isnumeric() else 0,
                     thumb=str(thumb),
                     progress=progress_for_pyrogram,
                     progress_args=(
@@ -166,7 +169,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
         sleep(f.x)
         return await send_file(c_id, doc_f)
     except FileNotFoundError:
-        return await query.answer("Sorry ! I can't find that file 💀", show_alert=True)
+        return await query.answer("Sorry ! I can't find that file 💀",
+                                  show_alert=True)
     except BaseException as e:
         LOGGER.warning(e)
         shutil.rmtree(full_path)
@@ -177,8 +181,8 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source):
         u_file_size = os.stat(doc_f).st_size
         if Config.TG_MAX_SIZE < int(u_file_size):
             return await unzip_bot.send_message(
-                chat_id=c_id, text="URL file is too large to send in telegram 😥"
-            )
+                chat_id=c_id,
+                text="URL file is too large to send in telegram 😥")
         fname = os.path.basename(doc_f)
         await unzip_bot.send_document(
             chat_id=c_id,
@@ -208,20 +212,23 @@ async def rm_mark_chars(text: str):
 
 
 # Function to answer queries
-async def answer_query(
-    query, message_text: str, answer_only: bool = False, unzip_client=None, buttons=None
-):
+async def answer_query(query,
+                       message_text: str,
+                       answer_only: bool = False,
+                       unzip_client=None,
+                       buttons=None):
     try:
         if answer_only:
-            await query.answer(await rm_mark_chars(message_text), show_alert=True)
+            await query.answer(await rm_mark_chars(message_text),
+                               show_alert=True)
         else:
             await query.message.edit(message_text, reply_markup=buttons)
     except:
         if unzip_client:
-            await unzip_client.send_message(
-                chat_id=query.message.chat.id, text=message_text, reply_markup=buttons
-            )
+            await unzip_client.send_message(chat_id=query.message.chat.id,
+                                            text=message_text,
+                                            reply_markup=buttons)
         else:
-            await unzipperbot.send_message(
-                chat_id=query.message.chat.id, text=message_text, reply_markup=buttons
-            )
+            await unzipperbot.send_message(chat_id=query.message.chat.id,
+                                           text=message_text,
+                                           reply_markup=buttons)
