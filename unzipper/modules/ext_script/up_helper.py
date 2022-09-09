@@ -30,51 +30,20 @@ async def run_shell_cmds(command):
     shell_output = run.stdout.read()[:-1].decode("utf-8")
     return shell_output
 
+# Get file size
+async def get_size(doc_f):
+    try:
+        fsize = os.stat(doc_f).st_size
+        return fsize
+    except:
+        return 0
 
 # Send file to a user
 async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
     try:
         ul_mode = await get_upload_mode(c_id)
-        # Checks if url file size is bigger than 2 Gb (Telegram limit)
-        u_file_size = os.stat(doc_f).st_size
         fname = os.path.basename(doc_f)
         fext = (pathlib.Path(os.path.abspath(doc_f)).suffix).casefold()
-        if int(u_file_size) > Config.TG_MAX_SIZE:
-            LOGGER.info("File too large")
-            uptocloud = await unzip_bot.send_message(
-                chat_id=c_id,
-                text=
-                f"`{fname}` is too huge to be sent to Telegram directly (`{u_file_size}`).\nUploading to Bayfiles, please wait some minutes…",
-            )
-            upurl = await get_cloud(c_id)
-            bfup = await bayfiles(os.path.abspath(doc_f), upurl)
-            if "Error happened on BayFiles upload" in bfup:
-                await uptocloud.edit(bfup)
-            elif bfup["status"] == "True":
-                fsize = bfup["data"]["file"]["metadata"]["size"]["readable"]
-                furl = bfup["data"]["file"]["url"]["full"]
-                await uptocloud.edit(
-                    Messages.URL_UPLOAD.format(fname, fsize, furl))
-            elif bfup["status"] == "False":
-                etype = bfup["error"]["message"]
-                emess = bfup["error"]["type"]
-                ecode = bfup["error"]["code"]
-                await uptocloud.edit(
-                    Messages.URL_ERROR.format(fname, ecode, etypr, emess))
-                await log_msg.reply(
-                    Messages.URL_ERROR.format(fname, ecode, etypr, emess))
-            else:
-                await uptocloud.edit(bfup)
-                await log_msg.reply(bfup)
-            return os.remove(doc_f)
-            """
-            # Workaround : https://ccm.net/computing/linux/4327-split-a-file-into-several-parts-in-linux/
-            # run_shell_cmds(f"split -b 2GB -d {doc_f} SPLIT-{doc_f}")
-            return await unzip_bot.send_message(
-                chat_id=c_id,
-                text="File size is too large to send in telegram 😥 \n\n**Sorry, but I can't do anything about this as it's Telegram limitation 😔**"
-            )
-            """
         thumbornot = await thumb_exists(c_id)
         upmsg = await unzip_bot.send_message(c_id, "`Processing… ⏳`")
         if ul_mode == "media" and fext in extentions_list["audio"]:
