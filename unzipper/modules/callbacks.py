@@ -161,6 +161,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     u_file_size = f_size if f_size else "undefined"
                     await log_msg.edit(
                         Messages.LOG_TXT.format(user_id, url, u_file_size))
+                    archive_msg = log_msg
                     # Checks if file is an archive using content-type header
                     unzip_resp = await session.get(url, timeout=None)
                     if "application/" not in unzip_resp.headers.get(
