@@ -267,7 +267,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     return LOGGER.error(e)
                 newfname = renamed.split("/")[-1]
                 fsize = await get_size(doc_f)
-                if await fsize <= Config.TG_MAX_SIZE:
+                if fsize <= Config.TG_MAX_SIZE:
                     await send_file(
                         unzip_bot=unzip_bot,
                         c_id=user_id,
@@ -278,9 +278,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     )
                     await query.message.delete()
                     return shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
-                else:
-                    LOGGER.info("File too large")
-                    """
+                LOGGER.info("File too large")
+                """
                     Way to upload to bayfiles (it actually happens but fails to get link)
                     uptocloud = await unzip_bot.send_message(
                         chat_id=c_id,
@@ -308,29 +307,29 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         await uptocloud.edit(bfup)
                         await log_msg.reply(bfup)
                     return os.remove(doc_f)
-                    """
-                    splitteddir = os.makedirs(f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}")
-                    splittedfiles = await split_files(doc_f, splitteddir, newfname)
-                    if not splittedfiles:
-                        try:
-                            shutil.rmtree(splitteddir)
-                        except:
-                            pass
-                        return await query.message.edit(
-                            "An error occured while splitting a file above 2 Gb 😥")
-                    await query.answer("Trying to send all parts of the file to you… Please wait")
-                    for file in splittedfiles:
-                        sent_files += 1
-                        await send_file(
-                            unzip_bot=unzip_bot,
-                            c_id=user_id,
-                            doc_f=file,
-                            query=query,
-                            full_path=splitteddir,
-                            log_msg=log_msg,
-                        )
-                    shutil.rmtree(splitteddir)
-                    shutil.rmtree(renamed.replace(newfname, ""))
+                """
+                splitteddir = os.makedirs(f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}")
+                splittedfiles = await split_files(doc_f, splitteddir, newfname)
+                if not splittedfiles:
+                    try:
+                        shutil.rmtree(splitteddir)
+                    except:
+                        pass
+                    return await query.message.edit(
+                        "An error occured while splitting a file above 2 Gb 😥")
+                await query.answer("Trying to send all parts of the file to you… Please wait")
+                for file in splittedfiles:
+                    sent_files += 1
+                    await send_file(
+                        unzip_bot=unzip_bot,
+                        c_id=user_id,
+                        doc_f=file,
+                        query=query,
+                        full_path=splitteddir,
+                        log_msg=log_msg,
+                    )
+                shutil.rmtree(splitteddir)
+                return shutil.rmtree(renamed.replace(newfname, ""))
                     
 
             dltime = TimeFormatter(round(e_time - s_time) * 1000)
