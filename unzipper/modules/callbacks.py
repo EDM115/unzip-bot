@@ -266,7 +266,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 except OSError as e:
                     return LOGGER.error(e)
                 newfname = renamed.split("/")[-1]
-                fsize = await get_size(doc_f)
+                fsize = await get_size(renamed)
                 if fsize <= Config.TG_MAX_SIZE:
                     await send_file(
                         unzip_bot=unzip_bot,
