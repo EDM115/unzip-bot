@@ -310,14 +310,17 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     return os.remove(doc_f)
                 """
                 splitteddir = os.makedirs(f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}")
-                splittedfiles = await split_files(doc_f, splitteddir, newfname)
+                LOGGER.info(splitteddir)
+                splittedfiles = await split_files(renamed, splitteddir, newfname)
                 if not splittedfiles:
                     try:
                         shutil.rmtree(splitteddir)
                     except:
                         pass
+                    LOGGER.info("no splittedfiles")
                     return await query.message.edit(
                         "An error occured while splitting a file above 2 Gb 😥")
+                LOGGER.info(splittedfiles)
                 await query.answer("Trying to send all parts of the file to you… Please wait")
                 for file in splittedfiles:
                     sent_files += 1
