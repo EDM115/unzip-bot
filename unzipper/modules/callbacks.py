@@ -146,6 +146,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             chat_id=Config.LOGS_CHANNEL,
             text=f"Processing an user query…\n\nUser ID : {user_id}",
         )
+        global archive_msg
 
         try:
             if splitted_data[1] == "url":
@@ -208,7 +209,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 if r_message.document is None:
                     return await query.message.edit(
                         "Give me an archive to extract 😐")
-                global archive_msg
                 fname = r_message.document.file_name
                 archive_msg = await r_message.forward(
                     chat_id=Config.LOGS_CHANNEL)
