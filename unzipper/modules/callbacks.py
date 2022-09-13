@@ -253,6 +253,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             if splitted_data[2].startswith("thumb"):
                 await query.message.edit("`Processing… ⏳`")
                 archive_name = location.split("/")[-1]
+                LOGGER.info(archive_name)
                 if "rename" in splitted_data[2]:
                     newname = await unzip_bot.ask(
                         chat_id=user_id,
@@ -266,8 +267,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     os.rename(location, renamed)
                 except OSError as e:
                     return LOGGER.error(e)
+                LOGGER.info(renamed)
                 newfname = renamed.split("/")[-1]
+                LOGGER.info(newfname)
                 fsize = await get_size(renamed)
+                LOGGER.info(fsize)
                 if fsize <= Config.TG_MAX_SIZE:
                     await send_file(
                         unzip_bot=unzip_bot,
