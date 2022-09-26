@@ -5,6 +5,7 @@ import re
 import shutil
 from fnmatch import fnmatch
 from time import time
+import urllib.parse
 
 from aiofiles import open as openfile
 from aiohttp import ClientSession
@@ -157,7 +158,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 s = ClientSession()
                 async with s as session:
                     # Get the file size
-                    unzip_head = await session.head(url)
+                    unzip_head = await session.head(url, allow_redirects=True)
                     f_size = unzip_head.headers.get("content-length")
                     u_file_size = f_size if f_size else "undefined"
                     await log_msg.edit(
@@ -169,6 +170,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             "content-type"):
                         return await query.message.edit(
                             "That's not an archive 💀")
+					rfnamebro = url.split("/")[-1]
                     if unzip_resp.status == 200:
                         # Makes download dir
                         os.makedirs(download_path)
@@ -210,6 +212,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     return await query.message.edit(
                         "Give me an archive to extract 😐")
                 fname = r_message.document.file_name
+				rfnamebro = fname
                 archive_msg = await r_message.forward(
                     chat_id=Config.LOGS_CHANNEL)
                 await log_msg.edit(
@@ -254,20 +257,21 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await query.message.edit("`Processing… ⏳`")
                 archive_name = location.split("/")[-1]
                 LOGGER.info(archive_name)
+				LOGGER.info(rfnamebro)
                 if "rename" in splitted_data[2]:
                     newname = await unzip_bot.ask(
                         chat_id=user_id,
                         text=
-                        f"Current file name : `{fname}`\nPlease send the new file name (**--INCLUDE THE FILE EXTENTION !--**)",
+                        f"Current file name : `{rfnamebro}`\nPlease send the new file name (**--INCLUDE THE FILE EXTENTION !--**)",
                     )
                     renamed = location.replace(archive_name, newname.text)
                 else:
-                    renamed = location.replace(archive_name, fname)
+                    renamed = location.replace(archive_name, rfnamebro)
+				LOGGER.info(renamed)
                 try:
                     os.rename(location, renamed)
                 except OSError as e:
                     return LOGGER.error(e)
-                LOGGER.info(renamed)
                 newfname = renamed.split("/")[-1]
                 LOGGER.info(newfname)
                 fsize = await get_size(renamed)
@@ -336,6 +340,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         query=query,
                         full_path=splitteddir,
                         log_msg=log_msg,
+						split=True
                     )
                 shutil.rmtree(splitteddir)
                 return shutil.rmtree(renamed.replace(newfname, ""))
