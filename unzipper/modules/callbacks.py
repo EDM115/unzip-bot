@@ -313,7 +313,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         await log_msg.reply(bfup)
                     return os.remove(doc_f)
                 """
-                splitteddir = os.makedirs(f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}")
+                splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
+                os.makedirs(splitteddir)
                 LOGGER.info(splitteddir)
                 splittedfiles = await split_files(renamed, splitteddir, newfname)
                 if not splittedfiles:
