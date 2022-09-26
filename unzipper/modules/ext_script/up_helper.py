@@ -160,8 +160,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
         await upmsg.delete()
         os.remove(doc_f)
     except FloodWait as f:
-        sleep(f.x)
-        return await send_file(c_id, doc_f)
+        await sleep(f.value)
+        return await send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg)
     except FileNotFoundError:
         return await query.answer("Sorry ! I can't find that file 💀",
                                   show_alert=True)
@@ -184,8 +184,8 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source):
             caption=Messages.LOG_CAPTION.format(fname, source),
         )
     except FloodWait as f:
-        asyncio.sleep(f.x)
-        return send_url_logs(c_id, doc_f, source)
+        await sleep(f.value)
+        return send_url_logs(unzip_bot, c_id, doc_f, source)
     except FileNotFoundError:
         await unzip_bot.send_message(
             chat_id=Config.LOGS_CHANNEL,
