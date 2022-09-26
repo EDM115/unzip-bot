@@ -404,7 +404,7 @@ async def send_logs(user_id):
         except FloodWait as e:
             sleep(e.x)
         except RPCError as e:
-            unzipperbot.send_message(chat_id=chat_id, text=e)
+            unzipperbot.send_message(chat_id=user_id, text=e)
 
 
 @Client.on_message(filters.private & filters.command("logs")
