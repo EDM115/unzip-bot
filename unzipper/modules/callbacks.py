@@ -106,7 +106,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         try:
             thumb_url = await upload_thumb(thumb_location)
             try:
-                await update_thumb(message.from_user.id, thumb_url, force=True)
+                await update_thumb(query.from_user.id, thumb_url, force=True)
             except:
                 LOGGER.warning("Error while updating thumb URL on DB")
         except:
