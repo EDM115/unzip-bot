@@ -212,7 +212,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     return await query.message.edit(
                         "Give me an archive to extract 😐")
                 fname = r_message.document.file_name
-				rfnamebro = fname
+                rfnamebro = fname
                 archive_msg = await r_message.forward(
                     chat_id=Config.LOGS_CHANNEL)
                 await log_msg.edit(
@@ -267,7 +267,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     renamed = location.replace(archive_name, newname.text)
                 else:
                     renamed = location.replace(archive_name, rfnamebro)
-				LOGGER.info(renamed)
+                LOGGER.info(renamed)
                 try:
                     os.rename(location, renamed)
                 except OSError as e:
@@ -340,7 +340,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         query=query,
                         full_path=splitteddir,
                         log_msg=log_msg,
-						split=True
+                        split=True
                     )
                 shutil.rmtree(splitteddir)
                 return shutil.rmtree(renamed.replace(newfname, ""))
