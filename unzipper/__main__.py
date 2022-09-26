@@ -47,10 +47,10 @@ while running:
         starttime = time.strftime("%Y/%m/%d - %H:%M:%S")
         unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL,
                                  text=Messages.START_TXT.format(starttime))
-        thumbs = await get_thumb_users()
+        thumbs = get_thumb_users()
         LOGGER.info(thumbs)
         for thumb in thumbs:
-            await download(thumb[1], (Config.THUMB_LOCATION + "/" + thumb[0] + ".jpg"))
+            download(thumb[1], (Config.THUMB_LOCATION + "/" + thumb[0] + ".jpg"))
         LOGGER.info("Checking Log channel…")
         if check_logs():
             LOGGER.info("Log channel alright")
