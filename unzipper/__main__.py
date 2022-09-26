@@ -8,9 +8,11 @@ from pyrogram import idle
 
 from . import boottime
 from . import unzipperbot
+from .helpers.database import get_thumb_users
 from .helpers.unzip_help import check_logs
 from .helpers.unzip_help import TimeFormatter
 from .modules.bot_data import Messages
+from .modules.callbacks import download
 from config import Config
 
 running = True
@@ -45,8 +47,13 @@ while running:
         starttime = time.strftime("%Y/%m/%d - %H:%M:%S")
         unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL,
                                  text=Messages.START_TXT.format(starttime))
+        thumbs = await get_thumb_users()
+        LOGGER.info(thumbs)
+        for thumb in thumbs:
+            await download(thumb[1], (Config.THUMB_LOCATION + "/" + thumb[0] + ".jpg"))
         LOGGER.info("Checking Log channel…")
         if check_logs():
+            LOGGER.info("Log channel alright")
             LOGGER.info("Starting bot…")
             LOGGER.info("Bot is running now ! Join @EDM115bots")
             idle()
