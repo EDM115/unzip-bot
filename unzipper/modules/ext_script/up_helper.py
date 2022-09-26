@@ -39,10 +39,16 @@ async def get_size(doc_f):
         return 0
 
 # Send file to a user
-async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg):
+async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split=None):
     try:
         ul_mode = await get_upload_mode(c_id)
-        fname = os.path.basename(doc_f)
+        try:
+            if split:
+                fname = doc_f
+            else:
+                fname = os.path.basename(doc_f)
+        except:
+            fname = os.path.basename(doc_f)
         fext = (pathlib.Path(os.path.abspath(doc_f)).suffix).casefold()
         thumbornot = await thumb_exists(c_id)
         upmsg = await unzip_bot.send_message(c_id, "`Processing… ⏳`")
