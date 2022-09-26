@@ -170,7 +170,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             "content-type"):
                         return await query.message.edit(
                             "That's not an archive 💀")
-					rfnamebro = url.split("/")[-1]
+                    rfnamebro = url.split("/")[-1]
                     if unzip_resp.status == 200:
                         # Makes download dir
                         os.makedirs(download_path)
@@ -257,7 +257,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await query.message.edit("`Processing… ⏳`")
                 archive_name = location.split("/")[-1]
                 LOGGER.info(archive_name)
-				LOGGER.info(rfnamebro)
+                LOGGER.info(rfnamebro)
                 if "rename" in splitted_data[2]:
                     newname = await unzip_bot.ask(
                         chat_id=user_id,
