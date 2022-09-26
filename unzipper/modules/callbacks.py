@@ -375,9 +375,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             if any(err in extractor for err in ERROR_MSGS):
                 try:
                     await query.message.edit(Messages.EXT_FAILED_TXT)
-                    return await log_msg.reply(Messages.EXT_FAILED_TXT)
                     shutil.rmtree(ext_files_dir)
                     already_removed = True
+                    return await log_msg.reply(Messages.EXT_FAILED_TXT)
                 except:
                     try:
                         await query.message.delete()
