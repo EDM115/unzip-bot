@@ -1,9 +1,9 @@
 # Copyright (c) 2022 EDM115
-import asyncio
 import os
 import re
 import shutil
 import time
+from asyncio import sleep
 from sys import executable
 
 import psutil
@@ -352,8 +352,8 @@ async def get_all_thumbs(_, message: Message):
                 reply_to_message_id=message.id,
                 caption=Messages.EXT_CAPTION.format(paths[doc_f]),
             )
-        except FloodWait as e:
-            sleep(e.x)
+        except FloodWait as f:
+            await sleep(f.value)
         except RPCError as e:
             message.reply_text(e, quote=True)
 
@@ -398,8 +398,8 @@ async def send_logs(user_id):
                 file_name=doc_f.name,
             )
             LOGGER.info(f"Log file sent to {user_id}")
-        except FloodWait as e:
-            sleep(e.x)
+        except FloodWait as f:
+            await sleep(f.value)
         except RPCError as e:
             unzipperbot.send_message(chat_id=user_id, text=e)
 
