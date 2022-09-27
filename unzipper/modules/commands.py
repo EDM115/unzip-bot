@@ -7,6 +7,7 @@ from asyncio import sleep
 from sys import executable
 
 import psutil
+from pyromod import listen
 from pyrogram import Client
 from pyrogram import filters
 from pyrogram.errors import FloodWait
