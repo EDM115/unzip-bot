@@ -14,6 +14,7 @@ from unzipper import LOGGER
 def __run_cmds_unzipper(command):
     ext_cmd = Popen(command["cmd"], stdout=PIPE, stderr=PIPE, shell=True)
     ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8")
+    LOGGER.info(ext_out)
     return ext_out
 
 
