@@ -55,9 +55,9 @@ async def extr_files(protected, path, archive_path, password=None):
 
 
 # Split files
-async def split_files(doc_f, splitteddir, fname):
+async def split_files(iinput, ooutput):
     # Workaround : https://ccm.net/computing/linux/4327-split-a-file-into-several-parts-in-linux/
-    command = f"split -a 3 -e --numeric-suffixes=001 2GB -d {doc_f} '{splitteddir}/{fname}'"
+    command = f"split -a 3 -e --numeric-suffixes=001 2GB -d {iinput} {ooutput}"
     await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
     splittedfiles = await get_files(splitteddir)
     LOGGER.info(splittedfiles)
@@ -66,11 +66,7 @@ async def split_files(doc_f, splitteddir, fname):
 
 # Get files in directory as a list
 async def get_files(path):
-    path_list = [
-        val
-        for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(path)]
-        for val in sublist
-    ]
+    path_list = [val for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(path)] for val in sublist]
     return sorted(path_list)
 
 
