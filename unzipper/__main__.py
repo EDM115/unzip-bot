@@ -6,10 +6,8 @@ import time
 
 from pyrogram import idle
 from . import unzipperbot
-from .helpers.database import get_thumb_users
-from .helpers.unzip_help import check_logs
+from .helpers.unzip_help import check_logs, dl_thumbs
 from .modules.bot_data import Messages
-from .modules.callbacks import download
 from config import Config
 
 running = True
@@ -44,10 +42,7 @@ while running:
         starttime = time.strftime("%Y/%m/%d - %H:%M:%S")
         unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL,
                                  text=Messages.START_TXT.format(starttime))
-        thumbs = get_thumb_users()
-        LOGGER.info(thumbs)
-        for thumb in thumbs:
-            download(thumb[1], (Config.THUMB_LOCATION + "/" + thumb[0] + ".jpg"))
+        dl_thumbs()
         LOGGER.info("Checking Log channel…")
         if check_logs():
             LOGGER.info("Log channel alright")
@@ -62,7 +57,7 @@ while running:
                     f"Error : the provided **LOGS_CHANNEL** (`{Config.LOGS_CHANNEL}`) is incorrect. Bot crashed 😪",
                 )
             except:
-                stop()
+                unzipperbot.stop()
 
 LOGGER.info("Received SIGTERM")
 stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
