@@ -284,7 +284,7 @@ async def info_user(_, message: Message):
     await message.reply(
         "This is a WIP command that would allow you to get more stats about your utilisation of me 🤓"
     )
-    info_user_msg = await message.reply(f"`Processing… ⏳`")
+    info_user_msg = await message.reply("`Processing… ⏳`")
     try:
         user_id = message.text.split(None, 1)[1]
     except:
@@ -298,7 +298,7 @@ async def info_user(_, message: Message):
 
 @Client.on_message(filters.command("user2") & filters.user(Config.BOT_OWNER))
 async def info_user2(_, message: Message):
-    user2_msg = await message.reply(f"`Processing… ⏳`")
+    user2_msg = await message.reply("`Processing… ⏳`")
     try:
         user_id = message.text.split(None, 1)[1]
     except:
