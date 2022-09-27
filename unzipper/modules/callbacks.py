@@ -165,7 +165,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     # Checks if file is an archive using content-type header
                     unzip_resp = await session.get(url, timeout=None)
                     if "application/" not in unzip_resp.headers.get("content-type"):
-                        return await query.message.edit("That's not an archive 💀")
+                        return await query.message.edit("That's not an archive 💀\n\n**Try to @transload it**")
                     rfnamebro = unquote(url.split("/")[-1])
                     if unzip_resp.status == 200:
                         # Makes download dir
