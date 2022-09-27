@@ -75,7 +75,7 @@ async def about_me(_, message: Message):
 
 @Client.on_message(
     filters.incoming & filters.private & filters.regex(https_url_regex)
-    | filters.document
+    | filters.document & ~filters.command("sendfile")
 )
 async def extract_archive(_, message: Message):
     unzip_msg = await message.reply("`Processing… ⏳`", reply_to_message_id=message.id)
