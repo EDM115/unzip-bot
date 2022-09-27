@@ -7,6 +7,7 @@ from config import Config
 from unzipper import LOGGER
 from unzipper.modules.bot_data import Buttons
 from unzipper.modules.bot_data import Messages
+
 """
 async def thumb_keyboard():
     keyboard = InlineKeyboard(row_width=2)
@@ -39,11 +40,13 @@ async def add_thumb(_, message):
         final_thumb = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
         if os.path.exists(thumb_location) and os.path.isfile(thumb_location):
             LOGGER.warning(f"Thumb exists for {user_id}")
-            await message.reply(text=Messages.EXISTING_THUMB,
-                                reply_markup=Buttons.THUMB_REPLACEMENT)
+            await message.reply(
+                text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_REPLACEMENT
+            )
         else:
-            await message.reply(text=Messages.SAVING_THUMB,
-                                reply_markup=Buttons.THUMB_SAVE)
+            await message.reply(
+                text=Messages.SAVING_THUMB, reply_markup=Buttons.THUMB_SAVE
+            )
         LOGGER.warning(f"Downloading thumbnail of {user_id}…")
         await _.download_media(message=reply_message, file_name=pre_thumb)
         LOGGER.warning("Thumbnail downloaded")

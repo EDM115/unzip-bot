@@ -31,12 +31,14 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
             humanbytes(total),
             humanbytes(speed),
             estimated_total_time
-            if estimated_total_time != "" or percentage != "100" else "0 s",
+            if estimated_total_time != "" or percentage != "100"
+            else "0 s",
         )
         try:
             await message.edit(
                 text="{}\n {} \n\n**Powered by @EDM115bots**".format(
-                    ud_type, tmp))
+                    ud_type, tmp)
+            )
         except:
             pass
 
@@ -58,11 +60,13 @@ def TimeFormatter(milliseconds: int) -> str:
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
-    tmp = (((str(days) + "d, ") if days else "") +
-           ((str(hours) + "h, ") if hours else "") +
-           ((str(minutes) + "m, ") if minutes else "") +
-           ((str(seconds) + "s, ") if seconds else "") +
-           ((str(milliseconds) + "ms, ") if milliseconds else ""))
+    tmp = (
+        ((str(days) + "d, ") if days else "")
+        + ((str(hours) + "h, ") if hours else "")
+        + ((str(minutes) + "m, ") if minutes else "")
+        + ((str(seconds) + "s, ") if seconds else "")
+        + ((str(milliseconds) + "ms, ") if milliseconds else "")
+    )
     return tmp[:-2]
 
 
@@ -70,10 +74,12 @@ def timeformat_sec(seconds: int) -> str:
     minutes, seconds = divmod(int(seconds), 60)
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
-    tmp = (((str(days) + "d, ") if days else "") +
-           ((str(hours) + "h, ") if hours else "") +
-           ((str(minutes) + "m, ") if minutes else "") +
-           ((str(seconds) + "s, ") if seconds else ""))
+    tmp = (
+        ((str(days) + "d, ") if days else "")
+        + ((str(hours) + "h, ") if hours else "")
+        + ((str(minutes) + "m, ") if minutes else "")
+        + ((str(seconds) + "s, ") if seconds else "")
+    )
     return tmp[:-2]
 
 
