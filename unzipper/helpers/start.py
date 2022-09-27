@@ -1,12 +1,14 @@
 # Copyright (c) 2022 EDM115
-import sys
 import asyncio
+import sys
 
 from pyrogram import enums
 
 from config import Config
-from unzipper import unzipperbot as client, LOGGER
+from unzipper import LOGGER
+from unzipper import unzipperbot as client
 from unzipper.modules.callbacks import download
+
 from .database import get_thumb_users
 
 # Checking log channel
