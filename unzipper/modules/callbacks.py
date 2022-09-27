@@ -4,6 +4,7 @@ import re
 import shutil
 from fnmatch import fnmatch
 from time import time
+from urllib.parse import unquote
 
 from aiofiles import open as openfile
 from aiohttp import ClientSession
@@ -164,12 +165,12 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     unzip_resp = await session.get(url, timeout=None)
                     if "application/" not in unzip_resp.headers.get("content-type"):
                         return await query.message.edit("That's not an archive 💀")
-                    rfnamebro = url.split("/")[-1]
+                    rfnamebro = unquote(url.split("/")[-1])
                     if unzip_resp.status == 200:
                         # Makes download dir
                         os.makedirs(download_path)
                         s_time = time()
-                        fname = os.path.splitext(url)[1]
+                        fname = unquote(os.path.splitext(url)[1])
                         if splitted_data[2] != "thumb":
                             fext = fname.split(".")[-1].casefold()
                             if fext not in extentions_list["archive"]:
