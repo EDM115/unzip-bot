@@ -92,8 +92,7 @@ def check_logs():
                     or c_info.type == enums.ChatType.BOT):
                 LOGGER.warn("A private chat can't be used 😐")
                 return False
-            else:
-                return True
+            return True
         else:
             LOGGER.warn("No Log channel ID is given !")
             exit()

@@ -39,38 +39,37 @@ async def add_thumb(_, message):
             return message.reply(
                 "You can't use an album. Reply to a single picture sent as photo (not as document)"
             )
+        thumb_location = Config.THUMB_LOCATION + "/" + user_id + ".jpg"
+        pre_thumb = Config.THUMB_LOCATION + "/not_resized_" + user_id + ".jpg"
+        final_thumb = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
+        if os.path.exists(thumb_location) and os.path.isfile(
+                thumb_location):
+            LOGGER.warning(f"Thumb exists for {user_id}")
+            await message.reply(text=Messages.EXISTING_THUMB,
+                                reply_markup=Buttons.THUMB_REPLACEMENT)
         else:
-            thumb_location = Config.THUMB_LOCATION + "/" + user_id + ".jpg"
-            pre_thumb = Config.THUMB_LOCATION + "/not_resized_" + user_id + ".jpg"
-            final_thumb = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
-            if os.path.exists(thumb_location) and os.path.isfile(
-                    thumb_location):
-                LOGGER.warning(f"Thumb exists for {user_id}")
-                await message.reply(text=Messages.EXISTING_THUMB,
-                                    reply_markup=Buttons.THUMB_REPLACEMENT)
-            else:
-                await message.reply(text=Messages.SAVING_THUMB,
-                                    reply_markup=Buttons.THUMB_SAVE)
-            LOGGER.warning(f"Downloading thumbnail of {user_id}…")
-            await _.download_media(message=reply_message, file_name=pre_thumb)
-            LOGGER.warning("Thumbnail downloaded")
-            size = 320, 320
+            await message.reply(text=Messages.SAVING_THUMB,
+                                reply_markup=Buttons.THUMB_SAVE)
+        LOGGER.warning(f"Downloading thumbnail of {user_id}…")
+        await _.download_media(message=reply_message, file_name=pre_thumb)
+        LOGGER.warning("Thumbnail downloaded")
+        size = 320, 320
+        try:
+            previous = Image.open(pre_thumb)
+            previous.thumbnail(size, Image.ANTIALIAS)
+            previous.save(final_thumb, "JPEG")
+            LOGGER.warning("Thumbnail saved")
+        except:
+            LOGGER.warning("Failed to generate thumb")
             try:
-                previous = Image.open(pre_thumb)
-                previous.thumbnail(size, Image.ANTIALIAS)
-                previous.save(final_thumb, "JPEG")
-                LOGGER.warning("Thumbnail saved")
+                os.remove(pre_thumb)
             except:
-                LOGGER.warning("Failed to generate thumb")
-                try:
-                    os.remove(pre_thumb)
-                except:
-                    pass
-                try:
-                    os.remove(final_thumb)
-                except:
-                    pass
-                return await message.reply("Error happened 😕 Try again later")
+                pass
+            try:
+                os.remove(final_thumb)
+            except:
+                pass
+            return await message.reply("Error happened 😕 Try again later")
     else:
         await _.send_message(
             chat_id=message.chat.id,
