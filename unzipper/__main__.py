@@ -26,7 +26,8 @@ signal.signal(signal.SIGTERM, handler_stop_signals)
 
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(name)s - %(threadName)s - %(message)s",
+    format=
+    "%(asctime)s - %(levelname)s - %(name)s - %(threadName)s - %(message)s",
 )
 LOGGER = logging.getLogger(__name__)
 logging.getLogger("pyrogram").setLevel(logging.WARN)
@@ -41,9 +42,8 @@ while running:
             os.makedirs(Config.THUMB_LOCATION)
         unzipperbot.start()
         starttime = time.strftime("%Y/%m/%d - %H:%M:%S")
-        unzipperbot.send_message(
-            chat_id=Config.LOGS_CHANNEL, text=Messages.START_TXT.format(starttime)
-        )
+        unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL,
+                                 text=Messages.START_TXT.format(starttime))
         dl_thumbs()
         LOGGER.info("Checking Log channel…")
         if check_logs():
@@ -55,14 +55,14 @@ while running:
             try:
                 unzipperbot.send_message(
                     chat_id=Config.BOT_OWNER,
-                    text=f"Error : the provided **LOGS_CHANNEL** (`{Config.LOGS_CHANNEL}`) is incorrect. Bot crashed 😪",
+                    text=
+                    f"Error : the provided **LOGS_CHANNEL** (`{Config.LOGS_CHANNEL}`) is incorrect. Bot crashed 😪",
                 )
             except:
                 unzipperbot.stop()
 
 LOGGER.info("Received SIGTERM")
 stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
-unzipperbot.send_message(
-    chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime)
-)
+unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL,
+                         text=Messages.STOP_TXT.format(stoptime))
 LOGGER.info("Bot stopped 😪")
