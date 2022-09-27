@@ -4,12 +4,11 @@ import sys
 
 from pyrogram import enums
 
+from .database import get_thumb_users
 from config import Config
 from unzipper import LOGGER
 from unzipper import unzipperbot as client
 from unzipper.modules.callbacks import download
-
-from .database import get_thumb_users
 
 # Checking log channel
 

@@ -6,11 +6,11 @@ import time
 
 from pyrogram import idle
 
-from config import Config
-
 from . import unzipperbot
-from .helpers.start import check_logs, dl_thumbs
+from .helpers.start import check_logs
+from .helpers.start import dl_thumbs
 from .modules.bot_data import Messages
+from config import Config
 
 running = True
 # https://stackoverflow.com/questions/18499497/how-to-process-sigterm-signal-gracefully

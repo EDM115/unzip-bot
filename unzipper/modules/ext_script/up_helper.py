@@ -10,9 +10,11 @@ from time import time
 from pyrogram.errors import FloodWait
 
 from config import Config
-from unzipper import LOGGER, unzipperbot
+from unzipper import LOGGER
+from unzipper import unzipperbot
 from unzipper.helpers.database import get_upload_mode
-from unzipper.helpers.unzip_help import extentions_list, progress_for_pyrogram
+from unzipper.helpers.unzip_help import extentions_list
+from unzipper.helpers.unzip_help import progress_for_pyrogram
 from unzipper.modules.bot_data import Messages
 from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
 

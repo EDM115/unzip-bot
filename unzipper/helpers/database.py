@@ -1,5 +1,4 @@
 # Copyright (c) 2022 EDM115
-
 from motor.motor_asyncio import AsyncIOMotorClient
 from requests import post
 
