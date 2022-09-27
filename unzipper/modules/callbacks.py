@@ -281,6 +281,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         query=query,
                         full_path=renamed,
                         log_msg=log_msg,
+                        split=False
                     )
                     await query.message.delete()
                     return shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
@@ -317,9 +318,15 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
                 os.makedirs(splitteddir)
                 LOGGER.info(splitteddir)
+                # renamed = 
                 ooutput = f"{splitteddir}/{newfname}"
                 LOGGER.info(ooutput)
                 LOGGER.info(renamed)
+                ex1 = os.path.exists(splitteddir)
+                ex2 = os.path.exists(ooutput)
+                ex3 = os.path.exists(renamed)
+                ex4 = ex1 + " " + ex2 + " " + ex3
+                LOGGER.info(ex4)
                 splittedfiles = await split_files(renamed, ooutput)
                 if not splittedfiles:
                     try:
@@ -510,6 +517,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             query=query,
             full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
             log_msg=log_msg,
+            split=False
         )
 
         # if not err400:
@@ -566,6 +574,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 query=query,
                 full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
                 log_msg=log_msg,
+                split=False
             )
 
         await query.message.edit(
