@@ -72,10 +72,9 @@ async def about_me(_, message: Message):
         disable_web_page_preview=True,
     )
 
-
+# filters.incoming & filters.private & filters.regex(https_url_regex) | filters.document
 @Client.on_message(
-    filters.incoming & filters.private & filters.regex(https_url_regex)
-    | filters.document & ~filters.command("sendfile")
+    filters.incoming & filters.private & filters.document
 )
 async def extract_archive(_, message: Message):
     unzip_msg = await message.reply("`Processing… ⏳`", reply_to_message_id=message.id)
