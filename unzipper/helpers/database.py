@@ -117,11 +117,11 @@ async def check_user(message):
         if firstname == " " and lastname == " " and username == " ":
             uname = message.from_user.mention
         else:
-            if firstname == None:
+            if firstname is None:
                 firstname = " "
-            if lastname == None:
+            if lastname is None:
                 lastname = " "
-            if username == None:
+            if username is None:
                 username = " "
             uname = firstname + " " + lastname + " | @" + username
         try:
