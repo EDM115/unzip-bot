@@ -4,7 +4,6 @@ import os
 import signal
 import time
 
-import pyromod.listen
 from pyrogram import idle
 from . import unzipperbot
 from .helpers.start import check_logs, dl_thumbs
