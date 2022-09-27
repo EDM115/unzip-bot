@@ -344,7 +344,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     )
                 shutil.rmtree(splitteddir)
                 return shutil.rmtree(renamed.replace(newfname, ""))
-                    
+
 
             dltime = TimeFormatter(round(e_time - s_time) * 1000)
             if dltime == "":
