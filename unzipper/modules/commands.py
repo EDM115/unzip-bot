@@ -38,7 +38,7 @@ from unzipper.modules.ext_script.ext_helper import get_files
 from unzipper.modules.ext_script.up_helper import send_file
 
 # Regex for urls
-https_url_regex = "((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"
+https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"
 
 # Function to check user status (is banned or not)
 
