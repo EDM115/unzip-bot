@@ -1,5 +1,6 @@
 # Copyright (c) 2022 EDM115
 import math
+import sys
 import time
 from typing import List
 from typing import Union
@@ -96,7 +97,7 @@ def check_logs():
                 return True
         else:
             LOGGER.warn("No Log channel ID is given !")
-            exit()
+            sys.exit()
     except:
         print(
             "Error happened while checking Log channel 💀 Make sure you're not dumb enough to provide a wrong Log channel ID 🧐"
