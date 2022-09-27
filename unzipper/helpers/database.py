@@ -221,8 +221,8 @@ async def upload_thumb(image):
         return f"https://telegra.ph{request['src']}"
 
 
-async def get_thumb_users():
-    return [thumb_list async for thumb_list in thumb_db.find({})]
+def get_thumb_users():
+    return [thumb_list for thumb_list in thumb_db.find({})]
 
 
 async def count_thumb_users():
