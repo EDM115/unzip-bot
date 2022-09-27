@@ -89,8 +89,7 @@ def check_logs():
     try:
         if Config.LOGS_CHANNEL:
             c_info = client.get_chat(chat_id=Config.LOGS_CHANNEL)
-            if (c_info.type == enums.ChatType.PRIVATE
-                    or c_info.type == enums.ChatType.BOT):
+            if c_info.type in (enums.ChatType.PRIVATE, enums.ChatType.BOT):
                 LOGGER.warn("A private chat can't be used 😐")
                 return False
             return True
