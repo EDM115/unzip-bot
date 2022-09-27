@@ -33,7 +33,7 @@ async def _extract_with_7z_helper(protected,
         if "Everything is Ok" in testoutput:
             command = f"7z x -o{path} {archive_path} -y"
         else:
-            command = f"echo 'This archive is password protected'"
+            command = "echo 'This archive is password protected'"
             protected = True
     return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
@@ -78,7 +78,7 @@ async def make_keyboard(paths, user_id, chat_id):
     i_kbd = InlineKeyboard(row_width=1)
     data = []
     data.append(
-        InlineKeyboardButton(f"Upload all 📤", f"ext_a|{user_id}|{chat_id}"))
+        InlineKeyboardButton("Upload all 📤", f"ext_a|{user_id}|{chat_id}"))
     data.append(InlineKeyboardButton("❌ Cancel", "cancel_dis"))
     for file in paths:
         if num > 96:
@@ -98,7 +98,7 @@ async def make_keyboard_empty(user_id, chat_id):
     i_kbd = InlineKeyboard(row_width=2)
     data = []
     data.append(
-        InlineKeyboardButton(f"Upload all 📤", f"ext_a|{user_id}|{chat_id}"))
+        InlineKeyboardButton("Upload all 📤", f"ext_a|{user_id}|{chat_id}"))
     data.append(InlineKeyboardButton("❌ Cancel", "cancel_dis"))
     i_kbd.add(*data)
     return i_kbd
