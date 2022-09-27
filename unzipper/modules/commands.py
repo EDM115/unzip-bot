@@ -366,7 +366,15 @@ async def get_all_thumbs(_, message: Message):
         except RPCError as e:
             message.reply_text(e, quote=True)
 
-
+@Client.on_message(
+    filters.private & filters.command(
+        "listdir") & filters.user(Config.BOT_OWNER)
+)
+async def list_server_directories(_, message: Message):       
+    dirs = await get_files("/app")
+    LOGGER.info(dirs)
+    await message.reply(dirs)
+            
 @Client.on_message(
     filters.private & filters.command(
         "redbutton") & filters.user(Config.BOT_OWNER)
