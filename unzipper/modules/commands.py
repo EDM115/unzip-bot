@@ -366,15 +366,34 @@ async def get_all_thumbs(_, message: Message):
         except RPCError as e:
             message.reply_text(e, quote=True)
 
-@Client.on_message(
-    filters.private & filters.command(
-        "listdir") & filters.user(Config.BOT_OWNER)
-)
-async def list_server_directories(_, message: Message):       
+@Client.on_message(filters.private & filters.command("listdir") & filters.user(Config.BOT_OWNER))
+async def list_server_directories(_, message: Message):
     dirs = await get_files("/app")
+    for file in dirs:
+        if file.endswith(".py") or file.endswith(".pyc") or file.endswith(".yml") or file.endswith(".toml") or file.endswith(".md"):
+            dirs.remove(file)
     LOGGER.info(dirs)
     await message.reply(dirs)
-            
+
+@Client.on_message(filters.private & filters.command("sendfile") & filters.user(Config.BOT_OWNER))
+async def send_specified_file(_, message: Message):
+    try:
+        file = message.text.split(None, 1)[1]
+    except:
+        return await message.reply("Give a file path 🙂")
+    try:
+        await _.send_document(
+            chat_id=message.chat.id,
+            document=file,
+            file_name=file.split("/")[-1],
+            reply_to_message_id=message.id,
+            caption=Messages.EXT_CAPTION.format(file),
+        )
+        except FloodWait as f:
+            await sleep(f.value)
+        except RPCError as e:
+            message.reply_text(e, quote=True)
+
 @Client.on_message(
     filters.private & filters.command(
         "redbutton") & filters.user(Config.BOT_OWNER)
