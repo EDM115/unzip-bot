@@ -389,10 +389,17 @@ async def send_specified_file(_, message: Message):
             reply_to_message_id=message.id,
             caption=Messages.EXT_CAPTION.format(file),
         )
-        except FloodWait as f:
-            await sleep(f.value)
-        except RPCError as e:
-            message.reply_text(e, quote=True)
+    except FloodWait as f:
+        await sleep(f.value)
+        return await _.send_document(
+            chat_id=message.chat.id,
+            document=file,
+            file_name=file.split("/")[-1],
+            reply_to_message_id=message.id,
+            caption=Messages.EXT_CAPTION.format(file),
+        )
+    except RPCError as e:
+        message.reply_text(e, quote=True)
 
 @Client.on_message(
     filters.private & filters.command(
