@@ -317,7 +317,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
                 os.makedirs(splitteddir)
                 LOGGER.info(splitteddir)
-                splittedfiles = await split_files(renamed, splitteddir, newfname)
+                ooutput = f"{splitteddir}/{newfname}"
+                LOGGER.info(ooutput)
+                LOGGER.info(renamed)
+                splittedfiles = await split_files(renamed, ooutput)
                 if not splittedfiles:
                     try:
                         shutil.rmtree(splitteddir)
