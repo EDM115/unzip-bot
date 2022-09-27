@@ -8,6 +8,7 @@ from urllib.parse import unquote
 
 from aiofiles import open as openfile
 from aiohttp import ClientSession
+from pyromod import listen
 from pyrogram import Client
 from pyrogram.errors import ReplyMarkupTooLong
 from pyrogram.types import CallbackQuery
