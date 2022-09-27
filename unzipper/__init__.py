@@ -3,7 +3,7 @@ import logging
 import time
 
 from pyrogram import Client
-from pyromod import listen
+from pyromod import listen # skipcq: PY-W2000
 
 from config import Config
 
