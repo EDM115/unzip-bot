@@ -30,4 +30,4 @@ def dl_thumbs():
     thumbs = asyncio.run(get_thumb_users())
     LOGGER.info(thumbs)
     for thumb in thumbs:
-        download(thumb[1], (Config.THUMB_LOCATION + "/" + thumb[0] + ".jpg"))
+        download(thumb["url"], (Config.THUMB_LOCATION + "/" + thumb["_id"].str() + ".jpg"))
