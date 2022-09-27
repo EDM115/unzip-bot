@@ -570,7 +570,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         await update_uploaded(user_id, upload_count=sent_files)
         try:
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
-            # shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{query.from_user.id}")
         except Exception as e:
             await query.message.edit(Messages.ERROR_TXT.format(e))
             await archive_msg.reply(Messages.ERROR_TXT.format(e))

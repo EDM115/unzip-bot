@@ -8,7 +8,6 @@ from unzipper import LOGGER
 from unzipper.modules.bot_data import Buttons
 from unzipper.modules.bot_data import Messages
 
-# from pykeyboard import InlineKeyboard, InlineButton
 """
 async def thumb_keyboard():
     keyboard = InlineKeyboard(row_width=2)
