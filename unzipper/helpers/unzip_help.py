@@ -109,7 +109,7 @@ def check_logs():
 
 
 def dl_thumbs():
-    thumbs = await get_thumb_users()
+    thumbs = get_thumb_users()
     LOGGER.info(thumbs)
     for thumb in thumbs:
         download(thumb[1], (Config.THUMB_LOCATION + "/" + thumb[0] + ".jpg"))
