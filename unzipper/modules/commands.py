@@ -191,8 +191,8 @@ async def _do_broadcast(message, user):
     try:
         await message.copy(chat_id=int(user))
         return 200
-    except FloodWait as e:
-        asyncio.sleep(e.x)
+    except FloodWait as f:
+        await sleep(f.value)
         return _do_broadcast(message, user)
     except Exception:
         await del_user(user)
