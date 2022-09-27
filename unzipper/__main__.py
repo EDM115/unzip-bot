@@ -6,7 +6,7 @@ import time
 
 from pyrogram import idle
 from . import unzipperbot
-from .helpers.unzip_help import check_logs, dl_thumbs
+from .helpers.start import check_logs, dl_thumbs
 from .modules.bot_data import Messages
 from config import Config
 
