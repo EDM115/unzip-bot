@@ -39,12 +39,10 @@ from unzipper.helpers.unzip_help import TimeFormatter
 
 # Function to download files from direct link using aiohttp
 async def download(url, path):
-    async with ClientSession() as session:
-        async with session.get(url, timeout=None) as resp:
-            async with openfile(path, mode="wb") as file:
-                async for chunk in resp.content.iter_chunked(
-                        Config.CHUNK_SIZE):
-                    await file.write(chunk)
+    async with ClientSession() as session, session.get(url, timeout=None) as resp, openfile(path, mode="wb") as file:
+        async for chunk in resp.content.iter_chunked(
+                Config.CHUNK_SIZE):
+            await file.write(chunk)
     await session.close()
 
 
