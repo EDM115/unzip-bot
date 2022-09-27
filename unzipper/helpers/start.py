@@ -27,7 +27,9 @@ def check_logs():
 
 
 def dl_thumbs():
-    thumbs = asyncio.run(get_thumb_users())
+    loop = asyncio.get_event_loop()
+    coroutine = get_thumb_users()
+    thumbs = loop.run_until_complete(coroutine)
     LOGGER.info(thumbs)
     for thumb in thumbs:
         download(thumb["url"], (Config.THUMB_LOCATION + "/" + thumb["_id"].str() + ".jpg"))
