@@ -1,10 +1,7 @@
 # Copyright (c) 2022 EDM115
 import os
-import time
 
 from PIL import Image
-from pyrogram import Client
-from pyrogram import filters
 
 from config import Config
 from unzipper import LOGGER
