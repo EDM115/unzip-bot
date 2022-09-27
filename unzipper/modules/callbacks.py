@@ -286,6 +286,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await query.message.delete()
                     return shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
                 LOGGER.info("File too large")
+                await query.message.edit("**Splitting your file… Please wait**")
                 """
                     Way to upload to bayfiles (it actually happens but fails to get link)
                     uptocloud = await unzip_bot.send_message(
@@ -318,14 +319,18 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
                 os.makedirs(splitteddir)
                 LOGGER.info(splitteddir)
-                # renamed = 
                 ooutput = f"{splitteddir}/{newfname}"
                 LOGGER.info(ooutput)
                 LOGGER.info(renamed)
+                """
+                try:
+                    os.rename(renamed, ooutput)
+                except OSError as e:
+                    return LOGGER.error(e)
+                """
                 ex1 = os.path.exists(splitteddir)
-                ex2 = os.path.exists(ooutput)
-                ex3 = os.path.exists(renamed)
-                ex4 = str(ex1) + " " + str(ex2) + " " + str(ex3)
+                ex2 = os.path.exists(renamed)
+                ex4 = str(ex1) + " " + str(ex2)
                 LOGGER.info(ex4)
                 splittedfiles = await split_files(renamed, ooutput)
                 if not splittedfiles:
