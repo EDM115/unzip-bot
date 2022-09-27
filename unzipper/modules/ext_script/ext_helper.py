@@ -9,6 +9,8 @@ from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
 
 # Run commands in shell
+
+
 def __run_cmds_unzipper(command):
     ext_cmd = Popen(command["cmd"], stdout=PIPE, stderr=PIPE, shell=True)
     ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8")
@@ -76,14 +78,16 @@ async def make_keyboard(paths, user_id, chat_id):
     num = 0
     i_kbd = InlineKeyboard(row_width=1)
     data = []
-    data.append(InlineKeyboardButton("Upload all 📤", f"ext_a|{user_id}|{chat_id}"))
+    data.append(InlineKeyboardButton(
+        "Upload all 📤", f"ext_a|{user_id}|{chat_id}"))
     data.append(InlineKeyboardButton("❌ Cancel", "cancel_dis"))
     for file in paths:
         if num > 96:
             break
         data.append(
             InlineKeyboardButton(
-                f"{num} - {os.path.basename(file)}".encode("utf-8").decode("utf-8"),
+                f"{num} - {os.path.basename(file)}".encode(
+                    "utf-8").decode("utf-8"),
                 f"ext_f|{user_id}|{chat_id}|{num}",
             )
         )
@@ -95,7 +99,8 @@ async def make_keyboard(paths, user_id, chat_id):
 async def make_keyboard_empty(user_id, chat_id):
     i_kbd = InlineKeyboard(row_width=2)
     data = []
-    data.append(InlineKeyboardButton("Upload all 📤", f"ext_a|{user_id}|{chat_id}"))
+    data.append(InlineKeyboardButton(
+        "Upload all 📤", f"ext_a|{user_id}|{chat_id}"))
     data.append(InlineKeyboardButton("❌ Cancel", "cancel_dis"))
     i_kbd.add(*data)
     return i_kbd
