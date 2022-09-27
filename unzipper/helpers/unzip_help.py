@@ -9,6 +9,8 @@ from pyrogram import enums
 
 from config import Config
 from unzipper import LOGGER
+from unzipper.modules.callbacks import download
+from .database import get_thumb_users
 from unzipper import unzipperbot as client
 
 
@@ -99,6 +101,13 @@ def check_logs():
         print(
             "Error happened while checking Log channel 💀 Make sure you're not dumb enough to provide a wrong Log channel ID 🧐"
         )
+
+
+def dl_thumbs():
+    thumbs = await get_thumb_users()
+    LOGGER.info(thumbs)
+    for thumb in thumbs:
+        download(thumb[1], (Config.THUMB_LOCATION + "/" + thumb[0] + ".jpg"))
 
 
 # List of common extentions
