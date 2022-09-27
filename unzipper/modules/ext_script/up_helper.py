@@ -101,8 +101,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split=Non
                     chat_id=c_id,
                     video=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
-                    duration=int(
-                        vid_duration) if vid_duration.isnumeric() else 0,
+                    duration=int(vid_duration) if vid_duration.isnumeric() else 0,
                     thumb=thumb_image,
                     progress=progress_for_pyrogram,
                     progress_args=(
@@ -124,8 +123,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split=Non
                     chat_id=c_id,
                     video=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
-                    duration=int(
-                        vid_duration) if vid_duration.isnumeric() else 0,
+                    duration=int(vid_duration) if vid_duration.isnumeric() else 0,
                     thumb=str(thumb),
                     progress=progress_for_pyrogram,
                     progress_args=(

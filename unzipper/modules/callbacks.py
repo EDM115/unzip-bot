@@ -98,8 +98,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         if replace == "replace":
             await silent_del(user_id)
         thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
-        final_thumb = Config.THUMB_LOCATION + \
-            "/waiting_" + str(user_id) + ".jpg"
+        final_thumb = Config.THUMB_LOCATION + "/waiting_" + str(user_id) + ".jpg"
         os.rename(final_thumb, thumb_location)
         try:
             thumb_url = await upload_thumb(thumb_location)
@@ -210,8 +209,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 archive_msg = await r_message.forward(chat_id=Config.LOGS_CHANNEL)
                 await log_msg.edit(
                     Messages.LOG_TXT.format(
-                        user_id, fname, humanbytes(
-                            r_message.document.file_size)
+                        user_id, fname, humanbytes(r_message.document.file_size)
                     )
                 )
                 # Checks if it's actually an archive
@@ -477,8 +475,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await query.message.edit(Messages.ERROR_TXT.format(e))
                 except:
                     await unzip_bot.send_message(
-                        chat_id=query.message.chat.id, text=Messages.ERROR_TXT.format(
-                            e)
+                        chat_id=query.message.chat.id, text=Messages.ERROR_TXT.format(e)
                     )
                 await archive_msg.reply(Messages.ERROR_TXT.format(e))
                 shutil.rmtree(ext_files_dir)

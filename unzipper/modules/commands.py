@@ -332,8 +332,7 @@ async def db_info(_, message: Message):
 
 
 @Client.on_message(
-    filters.private & filters.command(
-        "dbdive") & filters.user(Config.BOT_OWNER)
+    filters.private & filters.command("dbdive") & filters.user(Config.BOT_OWNER)
 )
 async def db_dive(_, message: Message):
     dburl = Config.MONGODB_URL
@@ -343,8 +342,7 @@ async def db_dive(_, message: Message):
 
 
 @Client.on_message(
-    filters.private & filters.command(
-        "getthumbs") & filters.user(Config.BOT_OWNER)
+    filters.private & filters.command("getthumbs") & filters.user(Config.BOT_OWNER)
 )
 async def get_all_thumbs(_, message: Message):
     paths = await get_files(path=Config.THUMB_LOCATION)
@@ -368,8 +366,7 @@ async def get_all_thumbs(_, message: Message):
 
 
 @Client.on_message(
-    filters.private & filters.command(
-        "redbutton") & filters.user(Config.BOT_OWNER)
+    filters.private & filters.command("redbutton") & filters.user(Config.BOT_OWNER)
 )
 async def red_alert(_, message: Message):
     await message.reply("🚧 WIP 🚧")
@@ -388,8 +385,7 @@ async def thumb_del(_, message: Message):
 
 
 @Client.on_message(
-    filters.private & filters.command(
-        "cleanall") & filters.user(Config.BOT_OWNER)
+    filters.private & filters.command("cleanall") & filters.user(Config.BOT_OWNER)
 )
 async def del_everything(_, message: Message):
     cleaner = await message.reply("🚧 WIP 🚧\n\nCleaning…")
@@ -424,8 +420,7 @@ async def logz(_, message: Message):
 
 
 @Client.on_message(
-    filters.private & filters.command(
-        "restart") & filters.user(Config.BOT_OWNER)
+    filters.private & filters.command("restart") & filters.user(Config.BOT_OWNER)
 )
 async def restart(_, message: Message):
     folder_to_del = os.path.dirname(os.path.abspath(Config.DOWNLOAD_LOCATION))
@@ -441,8 +436,7 @@ async def restart(_, message: Message):
 
 
 @Client.on_message(
-    filters.private & filters.command(
-        "dbexport") & filters.user(Config.BOT_OWNER)
+    filters.private & filters.command("dbexport") & filters.user(Config.BOT_OWNER)
 )
 async def export_db(client, message):
     await message.reply("🚧 WIP 🚧")

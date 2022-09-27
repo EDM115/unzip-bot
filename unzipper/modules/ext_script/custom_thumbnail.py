@@ -30,8 +30,7 @@ async def add_thumb(_, message):
     if message.reply_to_message is not None:
         reply_message = message.reply_to_message
         if reply_message.media_group_id is not None:  # album sent
-            LOGGER.warning(
-                f"{user_id} tried to save a thumbnail from an album")
+            LOGGER.warning(f"{user_id} tried to save a thumbnail from an album")
             return message.reply(
                 "You can't use an album. Reply to a single picture sent as photo (not as document)"
             )
