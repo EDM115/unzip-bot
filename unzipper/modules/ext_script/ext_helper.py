@@ -53,10 +53,9 @@ async def extr_files(protected, path, archive_path, password=None):
         os.mkdir(path)
         ex = await _extract_with_zstd(path, archive_path)
         return ex
-    else:
-        ex = await _extract_with_7z_helper(protected, path, archive_path,
-                                           password)
-        return ex
+    ex = await _extract_with_7z_helper(protected, path, archive_path,
+                                       password)
+    return ex
 
 
 # Split files
