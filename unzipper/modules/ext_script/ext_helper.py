@@ -27,7 +27,8 @@ async def _extract_with_7z_helper(protected, path, archive_path, password=None):
     if password:
         command = f'7z x -o{path} -p"{password}" {archive_path} -y'
     else:
-        testcommand = f'7z t {archive_path} -p"IAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA" -y' # skipcq: FLK-E501
+        # skipcq: FLK-E501
+        testcommand = f'7z t {archive_path} -p"IAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA" -y'
         testoutput = await run_cmds_on_cr(__run_cmds_unzipper, cmd=testcommand)
         if "Everything is Ok" in testoutput:
             command = f"7z x -o{path} {archive_path} -y"
@@ -67,7 +68,11 @@ async def split_files(iinput, ooutput):
 
 # Get files in directory as a list
 async def get_files(path):
-    path_list = [val for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(path)] for val in sublist] # skipcq: FLK-E501
+    path_list = [
+        val
+        for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(path)]
+        for val in sublist
+    ]  # skipcq: FLK-E501
     return sorted(path_list)
 
 
