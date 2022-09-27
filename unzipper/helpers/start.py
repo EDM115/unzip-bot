@@ -1,5 +1,6 @@
 # Copyright (c) 2022 EDM115
 import sys
+import asyncio
 
 from pyrogram import enums
 
@@ -26,7 +27,7 @@ def check_logs():
 
 
 def dl_thumbs():
-    thumbs = get_thumb_users()
+    thumbs = asyncio.run(get_thumb_users())
     LOGGER.info(thumbs)
     for thumb in thumbs:
         download(thumb[1], (Config.THUMB_LOCATION + "/" + thumb[0] + ".jpg"))
