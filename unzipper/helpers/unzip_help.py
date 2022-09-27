@@ -93,9 +93,8 @@ def check_logs():
                 LOGGER.warn("A private chat can't be used 😐")
                 return False
             return True
-        else:
-            LOGGER.warn("No Log channel ID is given !")
-            sys.exit()
+        LOGGER.warn("No Log channel ID is given !")
+        sys.exit()
     except:
         print(
             "Error happened while checking Log channel 💀 Make sure you're not dumb enough to provide a wrong Log channel ID 🧐"
