@@ -1,11 +1,9 @@
 # Copyright (c) 2022 EDM115
 import os
-import pathlib
 import re
 import shutil
 from fnmatch import fnmatch
 from time import time
-import urllib.parse
 
 from aiofiles import open as openfile
 from aiohttp import ClientSession
@@ -36,7 +34,6 @@ from unzipper.helpers.database import upload_thumb
 from unzipper.helpers.unzip_help import extentions_list
 from unzipper.helpers.unzip_help import humanbytes
 from unzipper.helpers.unzip_help import progress_for_pyrogram
-from unzipper.helpers.unzip_help import timeformat_sec
 from unzipper.helpers.unzip_help import TimeFormatter
 
 

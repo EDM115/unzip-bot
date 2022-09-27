@@ -8,8 +8,6 @@ from subprocess import Popen
 from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
 
-from unzipper import LOGGER
-
 # Run commands in shell
 def __run_cmds_unzipper(command):
     ext_cmd = Popen(command["cmd"], stdout=PIPE, stderr=PIPE, shell=True)

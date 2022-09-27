@@ -11,7 +11,6 @@ from pyrogram import Client
 from pyrogram import filters
 from pyrogram.errors import FloodWait
 from pyrogram.errors import RPCError
-from pyrogram.types import CallbackQuery
 from pyrogram.types import Message
 
 from .bot_data import Buttons
@@ -31,11 +30,9 @@ from unzipper.helpers.database import get_uploaded
 from unzipper.helpers.database import get_users_list
 from unzipper.helpers.unzip_help import humanbytes
 from unzipper.helpers.unzip_help import timeformat_sec
-from unzipper.helpers.unzip_help import TimeFormatter
 from unzipper.modules.ext_script.custom_thumbnail import add_thumb
 from unzipper.modules.ext_script.custom_thumbnail import del_thumb
 from unzipper.modules.ext_script.ext_helper import get_files
-from unzipper.modules.ext_script.up_helper import send_file
 
 # Regex for urls
 https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"

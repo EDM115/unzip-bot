@@ -3,7 +3,6 @@ import logging
 import time
 
 from pyrogram import Client
-from pyromod import listen
 
 from config import Config
 
