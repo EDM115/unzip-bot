@@ -325,7 +325,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 ex1 = os.path.exists(splitteddir)
                 ex2 = os.path.exists(ooutput)
                 ex3 = os.path.exists(renamed)
-                ex4 = ex1 + " " + ex2 + " " + ex3
+                ex4 = str(ex1) + " " + str(ex2) + " " + str(ex3)
                 LOGGER.info(ex4)
                 splittedfiles = await split_files(renamed, ooutput)
                 if not splittedfiles:
