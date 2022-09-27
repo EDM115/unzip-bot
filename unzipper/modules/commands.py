@@ -353,6 +353,8 @@ async def get_all_thumbs(_, message: Message):
     LOGGER.info(paths)
     for doc_f in paths:
         try:
+            LOGGER.info(doc_f)
+            LOGGER.info(paths[doc_f])
             location = Config.THUMB_LOCATION + paths[doc_f]
             await _.send_document(
                 chat_id=message.chat.id,
