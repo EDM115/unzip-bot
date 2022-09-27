@@ -4,6 +4,8 @@ import time
 from typing import List, Union
 
 # Credits: SpEcHiDe's AnyDL-Bot for Progress bar + Time formatter
+
+
 async def progress_for_pyrogram(current, total, ud_type, message, start):
     now = time.time()
     diff = now - start
@@ -34,7 +36,8 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
         )
         try:
             await message.edit(
-                text="{}\n {} \n\n**Powered by @EDM115bots**".format(ud_type, tmp)
+                text="{}\n {} \n\n**Powered by @EDM115bots**".format(
+                    ud_type, tmp)
             )
         except:
             pass
