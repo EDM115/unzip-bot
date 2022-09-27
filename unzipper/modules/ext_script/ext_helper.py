@@ -8,7 +8,7 @@ from subprocess import Popen
 from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
 
-# Run commands in shell
+from unzipper import LOGGER
 
 
 def __run_cmds_unzipper(command):
@@ -60,6 +60,7 @@ async def split_files(doc_f, splitteddir, fname):
     command = f"split -b 2GB -d {doc_f} '{splitteddir}/{fname}'"
     await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
     splittedfiles = await get_files(splitteddir)
+    LOGGER.info(splittedfiles)
     return splittedfiles
 
 
