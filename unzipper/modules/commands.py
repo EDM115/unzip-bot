@@ -348,6 +348,7 @@ async def get_all_thumbs(_, message: Message):
     paths = await get_files(path=Config.THUMB_LOCATION)
     if not paths:
         await message.reply("No thumbnails on the server yet")
+    LOGGER.info(paths)
     for doc_f in paths:
         try:
             location = Config.THUMB_LOCATION + paths[doc_f]
