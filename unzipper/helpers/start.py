@@ -32,4 +32,4 @@ def dl_thumbs():
     thumbs = loop.run_until_complete(coroutine)
     LOGGER.info(thumbs)
     for thumb in thumbs:
-        download(thumb["url"], (Config.THUMB_LOCATION + "/" + thumb["_id"].str() + ".jpg"))
+        download(thumb["url"], (Config.THUMB_LOCATION + "/" + str(thumb["_id"]) + ".jpg"))
