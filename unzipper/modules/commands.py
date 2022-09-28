@@ -367,7 +367,10 @@ async def get_all_thumbs(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("listdir") & filters.user(Config.BOT_OWNER))
 async def list_server_directories(_, message: Message):
-    dirs = await get_files("/app")
+    try:
+        dirs = await get_files(message.text.split(None, 1)[1])
+    except:
+        dirs = await get_files("/app")
     for file in dirs:
         if file.endswith(".py") or file.endswith(".pyc") or file.endswith(".yml") or file.endswith(".toml") or file.endswith(".md"):
             dirs.remove(file)
