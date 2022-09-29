@@ -164,7 +164,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         os.remove(doc_f)
     except FloodWait as f:
         await sleep(f.value)
-        return await send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg)
+        return await send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split)
     except FileNotFoundError:
         return await query.answer("Sorry ! I can't find that file 💀", show_alert=True)
     except BaseException as e:
