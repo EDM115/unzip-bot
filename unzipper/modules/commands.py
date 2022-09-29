@@ -37,8 +37,6 @@ from unzipper.modules.ext_script.ext_helper import get_files
 # Regex for urls
 https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"
 
-# Function to check user status (is banned or not)
-
 
 @Client.on_message(filters.private)
 async def _(_, message: Message):
@@ -72,9 +70,9 @@ async def about_me(_, message: Message):
         disable_web_page_preview=True,
     )
 
-# filters.incoming & filters.private & filters.regex(https_url_regex) | filters.document
+
 @Client.on_message(
-    filters.incoming & filters.private & filters.document
+    filters.incoming & filters.private & filters.document | filters.regex(https_url_regex)
 )
 async def extract_archive(_, message: Message):
     unzip_msg = await message.reply("`Processing… ⏳`", reply_to_message_id=message.id)
@@ -376,32 +374,6 @@ async def list_server_directories(_, message: Message):
             dirs.remove(file)
     LOGGER.info(dirs)
     await message.reply(dirs)
-
-@Client.on_message(filters.private & filters.command("sendfile") & filters.user(Config.BOT_OWNER))
-async def send_specified_file(_, message: Message):
-    try:
-        file = message.text.split(None, 1)[1]
-    except:
-        return await message.reply("Give a file path 🙂")
-    try:
-        await _.send_document(
-            chat_id=message.chat.id,
-            document=file,
-            file_name=file.split("/")[-1],
-            reply_to_message_id=message.id,
-            caption=Messages.EXT_CAPTION.format(file),
-        )
-    except FloodWait as f:
-        await sleep(f.value)
-        return await _.send_document(
-            chat_id=message.chat.id,
-            document=file,
-            file_name=file.split("/")[-1],
-            reply_to_message_id=message.id,
-            caption=Messages.EXT_CAPTION.format(file),
-        )
-    except RPCError as e:
-        message.reply_text(e, quote=True)
 
 @Client.on_message(
     filters.private & filters.command(
