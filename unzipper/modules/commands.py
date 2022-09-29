@@ -72,7 +72,8 @@ async def about_me(_, message: Message):
 
 
 @Client.on_message(
-    filters.incoming & filters.private & filters.document | filters.regex(https_url_regex)
+    filters.incoming & filters.private & filters.document | filters.regex(
+        https_url_regex)
 )
 async def extract_archive(_, message: Message):
     unzip_msg = await message.reply("`Processing… ⏳`", reply_to_message_id=message.id)
@@ -362,6 +363,7 @@ async def get_all_thumbs(_, message: Message):
         except RPCError as e:
             message.reply_text(e, quote=True)
 
+
 @Client.on_message(filters.private & filters.command("listdir") & filters.user(Config.BOT_OWNER))
 async def list_server_directories(_, message: Message):
     try:
@@ -373,6 +375,7 @@ async def list_server_directories(_, message: Message):
             dirs.remove(file)
     LOGGER.info(dirs)
     await message.reply(dirs)
+
 
 @Client.on_message(
     filters.private & filters.command(
