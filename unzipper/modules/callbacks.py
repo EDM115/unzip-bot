@@ -14,18 +14,30 @@ from pyrogram.types import CallbackQuery
 
 from config import Config
 from unzipper import LOGGER
-from unzipper.helpers.database import (set_upload_mode, update_thumb,
-                                       update_uploaded, upload_thumb)
-from unzipper.helpers.unzip_help import (TimeFormatter, extentions_list,
-                                         humanbytes, progress_for_pyrogram)
+from unzipper.helpers.database import (
+    set_upload_mode,
+    update_thumb,
+    update_uploaded,
+    upload_thumb,
+)
+from unzipper.helpers.unzip_help import (
+    TimeFormatter,
+    extentions_list,
+    humanbytes,
+    progress_for_pyrogram,
+)
 
 from .bot_data import ERROR_MSGS, Buttons, Messages
 from .commands import https_url_regex
 from .ext_script.custom_thumbnail import silent_del
-from .ext_script.ext_helper import (extr_files, get_files, make_keyboard,
-                                    make_keyboard_empty, split_files)
-from .ext_script.up_helper import (answer_query, get_size, send_file,
-                                   send_url_logs)
+from .ext_script.ext_helper import (
+    extr_files,
+    get_files,
+    make_keyboard,
+    make_keyboard_empty,
+    split_files,
+)
+from .ext_script.up_helper import answer_query, get_size, send_file, send_url_logs
 
 
 # Function to download files from direct link using aiohttp
@@ -88,8 +100,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         if replace == "replace":
             await silent_del(user_id)
         thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
-        final_thumb = Config.THUMB_LOCATION + \
-            "/waiting_" + str(user_id) + ".jpg"
+        final_thumb = Config.THUMB_LOCATION + "/waiting_" + str(user_id) + ".jpg"
         os.rename(final_thumb, thumb_location)
         try:
             thumb_url = await upload_thumb(thumb_location)
@@ -155,7 +166,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     # Checks if file is an archive using content-type header
                     unzip_resp = await session.get(url, timeout=None)
                     if "application/" not in unzip_resp.headers.get("content-type"):
-                        return await query.message.edit("That's not an archive 💀\n\n**Try to @transload it**")
+                        return await query.message.edit(
+                            "That's not an archive 💀\n\n**Try to @transload it**"
+                        )
                     rfnamebro = unquote(url.split("/")[-1])
                     if unzip_resp.status == 200:
                         # Makes download dir
@@ -200,8 +213,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 archive_msg = await r_message.forward(chat_id=Config.LOGS_CHANNEL)
                 await log_msg.edit(
                     Messages.LOG_TXT.format(
-                        user_id, fname, humanbytes(
-                            r_message.document.file_size)
+                        user_id, fname, humanbytes(r_message.document.file_size)
                     )
                 )
                 # Checks if it's actually an archive
@@ -271,7 +283,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         query=query,
                         full_path=renamed,
                         log_msg=log_msg,
-                        split=False
+                        split=False,
                     )
                     await query.message.delete()
                     return shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
@@ -479,8 +491,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await query.message.edit(Messages.ERROR_TXT.format(e))
                 except:
                     await unzip_bot.send_message(
-                        chat_id=query.message.chat.id, text=Messages.ERROR_TXT.format(
-                            e)
+                        chat_id=query.message.chat.id, text=Messages.ERROR_TXT.format(e)
                     )
                 await archive_msg.reply(Messages.ERROR_TXT.format(e))
                 shutil.rmtree(ext_files_dir)
@@ -512,7 +523,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             query=query,
             full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
             log_msg=log_msg,
-            split=False
+            split=False,
         )
 
         # if not err400:
@@ -569,7 +580,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 query=query,
                 full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
                 log_msg=log_msg,
-                split=False
+                split=False,
             )
 
         await query.message.edit(
