@@ -350,7 +350,6 @@ async def get_all_thumbs(_, message: Message):
     LOGGER.info(paths)
     for doc_f in paths:
         try:
-            # location = Config.THUMB_LOCATION + doc_f
             await _.send_document(
                 chat_id=message.chat.id,
                 document=doc_f,
@@ -402,7 +401,6 @@ async def thumb_del(_, message: Message):
 async def del_everything(_, message: Message):
     cleaner = await message.reply("🚧 WIP 🚧\n\nCleaning…")
     try:
-        # shutil.rmtree(os.path.dirname(os.path.abspath(__file__)))
         shutil.rmtree(Config.DOWNLOAD_LOCATION)
         await cleaner.edit("The whole server have been cleaned 😌")
     except:
