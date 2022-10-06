@@ -7,7 +7,7 @@ from pyrogram import Client
 
 # Credits: SpEcHiDe's AnyDL-Bot for Progress bar + Time formatter
 async def progress_for_pyrogram(current, total, ud_type, message, start, client, status):
-    if !status :
+    if not status :
         now = time.time()
         diff = now - start
         if round(diff % 10.00) == 0 or current == total:
