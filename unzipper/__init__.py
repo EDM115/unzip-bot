@@ -26,8 +26,7 @@ logging.basicConfig(
     # actualtime=time.strftime(%d-%m-%Y)
     # logfilename=actualtime+"unzip-log.txt"
     # handlers=[logging.FileHandler(logfilename), logging.StreamHandler()],
-    handlers=[logging.FileHandler("unzip-log.txt"),
-              logging.StreamHandler()],
+    handlers=[logging.FileHandler("unzip-log.txt"), logging.StreamHandler()],
     format="%(asctime)s - %(levelname)s - %(name)s - %(threadName)s - %(message)s",
 )
 LOGGER = logging.getLogger(__name__)

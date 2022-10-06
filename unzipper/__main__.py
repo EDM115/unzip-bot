@@ -41,8 +41,9 @@ while running:
             os.makedirs(Config.THUMB_LOCATION)
         unzipperbot.start()
         starttime = time.strftime("%Y/%m/%d - %H:%M:%S")
-        unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL,
-                                 text=Messages.START_TXT.format(starttime))
+        unzipperbot.send_message(
+            chat_id=Config.LOGS_CHANNEL, text=Messages.START_TXT.format(starttime)
+        )
         dl_thumbs()
         LOGGER.info("Checking Log channel…")
         if check_logs():
@@ -61,6 +62,7 @@ while running:
 
 LOGGER.info("Received SIGTERM")
 stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
-unzipperbot.send_message(chat_id=Config.LOGS_CHANNEL,
-                         text=Messages.STOP_TXT.format(stoptime))
+unzipperbot.send_message(
+    chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime)
+)
 LOGGER.info("Bot stopped 😪")
