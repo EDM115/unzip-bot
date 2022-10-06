@@ -102,6 +102,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     duration=int(
                         vid_duration) if vid_duration.isnumeric() else 0,
                     thumb=thumb_image,
+                    supports_streaming=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         f"**Trying to upload {fname}… Please wait** \n",
@@ -125,6 +126,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     duration=int(
                         vid_duration) if vid_duration.isnumeric() else 0,
                     thumb=str(thumb),
+                    supports_streaming=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         f"**Trying to upload {fname}… Please wait** \n",
