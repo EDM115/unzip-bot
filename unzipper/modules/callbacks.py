@@ -241,8 +241,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         "**Trying to download… Please wait** \n",
                         query.message,
                         s_time,
-                        unzip_bot,
-                        False,
                     ),
                 )
                 e_time = time()
