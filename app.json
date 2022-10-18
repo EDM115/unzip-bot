@@ -38,17 +38,38 @@
             "required": true
         }
     },
-    "addons": [],
-    "buildpacks": [
-        {
-            "url": "heroku/python"
-        }
-    ],
-    "formation": {
-        "worker": {
-            "quantity": 1,
-            "size": "free"
-        }
+    "API_HASH": {
+      "description": "Your API_HASH from my.telegram.org",
+      "required": true
     },
-    "stack": "container"
+    "BOT_OWNER": {
+      "description": "Telegram Id of your account",
+      "required": true
+    },
+    "BOT_TOKEN": {
+      "description": "Your Bot Token From @BotFather",
+      "required": true
+    },
+    "MONGODB_URL": {
+      "description": "Your MongoDB url, Get it from https://www.mongodb.com/",
+      "required": true
+    },
+    "LOGS_CHANNEL": {
+      "description": "Id of a channel, can also be a group",
+      "required": true
+    }
+  },
+  "addons": [],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "stack": "container"
 }

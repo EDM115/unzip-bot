@@ -1,0 +1,32 @@
+name: Renders the whole code using Black code style
+
+on:
+  workflow_dispatch:
+
+jobs:
+  black:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Black-ify
+        uses: psf/black@stable
+        with:
+          options: "--verbose"
+      - name: Commit changes
+        run: |
+          d=`date '+%Y/%m/%dT%H:%M:%SZ'`
+          git config --local user.email ${{ secrets.MAIL }}
+          git config --local user.name ${{ secrets.USERNAME }}
+          git add -A
+          git commit -m "Code style changed to Black at ${d}"
+      - name: Push commit
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          force: true
+          directory: "."
+          branch: ${{ github.ref }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
