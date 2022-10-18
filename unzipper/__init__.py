@@ -28,8 +28,7 @@ logging.basicConfig(
     # handlers=[logging.FileHandler(logfilename), logging.StreamHandler()],
     handlers=[logging.FileHandler("unzip-log.txt"),
               logging.StreamHandler()],
-    format=
-    "%(asctime)s - %(levelname)s - %(name)s - %(threadName)s - %(message)s",
+    format="%(asctime)s - %(levelname)s - %(name)s - %(threadName)s - %(message)s",
 )
 LOGGER = logging.getLogger(__name__)
 logging.getLogger("pyrogram").setLevel(logging.WARN)
