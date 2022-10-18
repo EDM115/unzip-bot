@@ -5,8 +5,9 @@ from PIL import Image
 
 from config import Config
 from unzipper import LOGGER
-from unzipper.modules.bot_data import Buttons, Messages
 from unzipper.helpers.database import del_thumb_db
+from unzipper.modules.bot_data import Buttons, Messages
+
 """
 async def thumb_keyboard():
     keyboard = InlineKeyboard(row_width=2)
