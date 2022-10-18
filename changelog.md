@@ -12,7 +12,74 @@
 
 ---
 
-### v4.5.0 **[LATEST STABLE RELEASE]** / **[LATEST BETA RELEASE]**
+### v5.1.2 **[LATEST STABLE RELEASE]** / **[LATEST BETA RELEASE]**
+
+- URL downloaded files finally have their original name
+- Split goes stonks (lie)
+- Prompting users to transload files I can't download
+- What happens on the terminal is now on the logs
+- Made /listdir and /sendfile for testing purposes
+- Added issue templates
+- /delthumb now also deletes it from the DB
+
+### v5.1.1
+
+- **Huge code refactoring**
+- Little fixes
+- Still trying to split files
+- Thumbnail support is permanant 🥳 Redownloads them at every server restart
+- Clears correctly the thumbnails
+- FloodWait correctly handled
+- Bot starting happens on another file (so we can use async/await)
+
+### v5.1.0
+
+- We fetch the file size *before* uploading
+- We try to split files above 2 GB (fail)
+
+### v5.0.3
+
+- Added /user2 and /self
+- Added ability to just change the thumbnail of the file (archive or not)
+- Also we can rename it
+
+### v5.0.2
+
+- Heroku runtime shifted from Python 3.9.11 to 3.10.6
+- Added wheel for faster deployment
+- /getthumbs work
+
+### v5.0.1
+
+- Made thumbnail support better (with buttons)
+- Saves the thumbnail URL (telegra.ph) to the DB
+- Buttons are side-by-side
+- Checks if sent file is actually an archive (so we stop processing PDF and MKV 😭)
+- Code style shifted to Black 🖤 
+- Upgraded to Pyrogram v2 (finally)
+- The bot can process other things while extracting
+- Better password handling
+- Progressbar on uploads too
+- Uploads as media by default
+- Avoids splitted archives to be processed
+- Better LOG_CHANNEL verification
+
+### v5.0.0
+
+- Added extensions list (for verification)
+- Medias are sent as native media
+- Fixed ENTITY_BOUNDS_INVALID error
+- Removed numpy as we don't use it
+- Added requests
+- Added development followup ([#38](https://github.com/EDM115/unzip-bot/issues/38))
+- Uptime on /stats works correctly
+- Simpler buttons
+- Thumbnails on upload are officially supported 🥳
+- Commands updates (no /setmode, /me become /info, addded stats for everyone)
+
+---
+
+### v4.5.0
 
 - Attempt to add /merge and /cancel commands + linked callbacks. Actually failed
 
