@@ -1,15 +1,42 @@
 {
-  "name": "Unzipper Bot [BETA VERSION]",
-  "description": "A Telegram Bot to Extract Various Types Of Archives",
-  "logo": "https://telegra.ph/file/00e96e3c5dda1c9ab40da.jpg",
-  "keywords": ["7z", "zip", "rar", "Telegram Bot", "unzipper bot"],
-  "website": "https://t.me/EDM115bots",
-  "repository": "https://github.com/EDM115/unzip-bot",
-  "success_url": "https://t.me/EDM115bots",
-  "env": {
-    "APP_ID": {
-      "description": "Your APP_ID from my.telegram.org",
-      "required": true
+    "name": "Unzipper Bot",
+    "description": "A Telegram Bot to Extract Various Types Of Archives",
+    "logo": "https://telegra.ph/file/426207477776ffa00519f.png",
+    "keywords": [
+        "7z",
+        "zip",
+        "rar",
+        "Telegram Bot",
+        "unzipper bot"
+    ],
+    "website": "https://t.me/EDM115bots",
+    "repository": "https://github.com/EDM115/unzip-bot",
+    "success_url": "https://t.me/EDM115bots",
+    "env": {
+        "APP_ID": {
+            "description": "Your APP_ID from my.telegram.org",
+            "required": true
+        },
+        "API_HASH": {
+            "description": "Your API_HASH from my.telegram.org",
+            "required": true
+        },
+        "BOT_OWNER": {
+            "description": "Telegram Id of your account",
+            "required": true
+        },
+        "BOT_TOKEN": {
+            "description": "Your Bot Token From @BotFather",
+            "required": true
+        },
+        "MONGODB_URL": {
+            "description": "Your MongoDB url, Get it from https://www.mongodb.com/",
+            "required": true
+        },
+        "LOGS_CHANNEL": {
+            "description": "Id of a channel, can also be a group",
+            "required": true
+        }
     },
     "API_HASH": {
       "description": "Your API_HASH from my.telegram.org",
