@@ -6,6 +6,7 @@ from PIL import Image
 from config import Config
 from unzipper import LOGGER
 from unzipper.modules.bot_data import Buttons, Messages
+from unzipper.helpers.database import del_thumb_db
 """
 async def thumb_keyboard():
     keyboard = InlineKeyboard(row_width=2)
@@ -101,7 +102,9 @@ async def save_thumb(_, message):
 
 
 async def del_thumb(_, message):
-    thumb_location = Config.THUMB_LOCATION + "/" + str(message.from_user.id)
+    id = message.from_user.id
+    thumb_location = Config.THUMB_LOCATION + "/" + str(id)
+    await del_thumb_db(id)
     try:
         os.remove(thumb_location + ".jpg")
     except:
