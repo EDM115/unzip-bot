@@ -240,3 +240,11 @@ async def get_thumb_users():
 async def count_thumb_users():
     users = await thumb_db.count_documents({})
     return users
+
+async def del_thumb_db(user_id):
+    del_thumb_id = int(user_id)
+    is_exist = await thumb_db.find_one({"_id": del_thumb_id})
+    if is_exist:
+        await user_db.delete_one({"_id": del_thumb_id})
+    else:
+        return
