@@ -187,8 +187,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                                            "`Processing… ⏳`",
                                            unzip_client=unzip_bot)
                         await query.edit_message_text(
-                            text=
-                            f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️",
+                            text=f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️",
                             reply_markup=Buttons.I_PREFER_STOP,
                         )
                         await download(url, archive)
@@ -260,8 +259,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 if "rename" in splitted_data[2]:
                     newname = await unzip_bot.ask(
                         chat_id=user_id,
-                        text=
-                        f"Current file name : `{rfnamebro}`\nPlease send the new file name (**--INCLUDE THE FILE EXTENTION !--**)",
+                        text=f"Current file name : `{rfnamebro}`\nPlease send the new file name (**--INCLUDE THE FILE EXTENTION !--**)",
                     )
                     renamed = location.replace(archive_name, newname.text)
                 else:
@@ -416,8 +414,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await archive_msg.reply("That archive is password protected 😡")
                 await unzip_bot.send_message(
                     chat_id=query.message.chat.id,
-                    text=
-                    "That archive is password protected 😡 **Don't fool me !**",
+                    text="That archive is password protected 😡 **Don't fool me !**",
                 )
                 global fooled
                 fooled = True
@@ -470,8 +467,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             user_id=user_id, chat_id=query.message.chat.id)
                         await unzip_bot.send_message(
                             chat_id=query.message.chat.id,
-                            text=
-                            "Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process",
+                            text="Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process",
                             reply_markup=empty_buttons,
                         )
                     except:

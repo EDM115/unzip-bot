@@ -125,15 +125,13 @@ async def check_user(message):
         try:
             await Client.send_message(
                 chat_id=Config.LOGS_CHANNEL,
-                text=
-                f"**#NEW_USER** 🎙 \n\n**User profile :** `{uname}` \n**User ID :** `{message.from_user.id}` \n**Profile URL :** [tg://user?id={message.from_user.id}](tg://user?id={message.from_user.id})",
+                text=f"**#NEW_USER** 🎙 \n\n**User profile :** `{uname}` \n**User ID :** `{message.from_user.id}` \n**Profile URL :** [tg://user?id={message.from_user.id}](tg://user?id={message.from_user.id})",
                 disable_web_page_preview=False,
             )
         except AttributeError:
             await Client.send_message(
                 chat_id=Config.LOGS_CHANNEL,
-                text=
-                f"**#NEW_USER** 🎙 \n\n**User profile :** `{uname}` \n**User ID :** `[AttributeError] Can't get it` \n**Profile URL :** Can't get it",
+                text=f"**#NEW_USER** 🎙 \n\n**User profile :** `{uname}` \n**User ID :** `[AttributeError] Can't get it` \n**Profile URL :** Can't get it",
                 disable_web_page_preview=False,
             )
     await message.continue_propagation()
@@ -240,6 +238,7 @@ async def get_thumb_users():
 async def count_thumb_users():
     users = await thumb_db.count_documents({})
     return users
+
 
 async def del_thumb_db(user_id):
     del_thumb_id = int(user_id)
