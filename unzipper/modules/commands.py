@@ -302,7 +302,7 @@ async def info_user2(_, message: Message):
     except:
         return await user2_msg.edit(
             "Error happened. The user ID is probably invalid")
-    await user2_msg.edit(f"`{infos}`")
+    await user2_msg.edit(f"`{infos}`\n\n**Direct link to profile :** tg://user?id={user_id}")
 
 
 @Client.on_message(filters.command("self") & filters.user(Config.BOT_OWNER))
