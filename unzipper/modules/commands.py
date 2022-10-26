@@ -7,7 +7,7 @@ from asyncio import sleep
 from sys import executable
 
 import psutil
-from pyrogram import Client, filters
+from pyrogram import Client, enums, filters
 from pyrogram.errors import FloodWait, RPCError
 from pyrogram.types import Message
 
@@ -73,6 +73,8 @@ async def about_me(_, message: Message):
 @Client.on_message(filters.incoming & filters.private & filters.document
                    | filters.regex(https_url_regex))
 async def extract_archive(_, message: Message):
+    if message.chat.type != "PRIVATE":
+        return
     unzip_msg = await message.reply("`Processing… ⏳`",
                                     reply_to_message_id=message.id)
     user_id = message.from_user.id
