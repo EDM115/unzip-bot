@@ -7,7 +7,7 @@ from asyncio import sleep
 from sys import executable
 
 import psutil
-from pyrogram import Client, enums, filters
+from pyrogram import Client, filters
 from pyrogram.errors import FloodWait, RPCError
 from pyrogram.types import Message
 
