@@ -121,12 +121,13 @@ async def check_user(message):
                 lastname = " "
             if username is None:
                 username = " "
-            uname = firstname + " " + lastname + " | @" + username
+            uname = firstname + " " + lastname
+            umention = " | @" + username
         try:
             await Client.send_message(
                 chat_id=Config.LOGS_CHANNEL,
                 text=
-                f"**#NEW_USER** 🎙 \n\n**User profile :** `{uname}` \n**User ID :** `{message.from_user.id}` \n**Profile URL :** [tg://user?id={message.from_user.id}](tg://user?id={message.from_user.id})",
+                f"**#NEW_USER** 🎙 \n\n**User profile :** `{uname}` {umention} \n**User ID :** `{message.from_user.id}` \n**Profile URL :** [tg://user?id={message.from_user.id}](tg://user?id={message.from_user.id})",
                 disable_web_page_preview=False,
             )
         except AttributeError:
