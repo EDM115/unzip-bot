@@ -73,7 +73,7 @@ async def about_me(_, message: Message):
 @Client.on_message(filters.incoming & filters.private & filters.document
                    | filters.regex(https_url_regex))
 async def extract_archive(_, message: Message):
-    if message.chat.type != enums.PRIVATE:
+    if message.chat.type != enums.ChatType.PRIVATE:
         return
     unzip_msg = await message.reply("`Processing… ⏳`",
                                     reply_to_message_id=message.id)
