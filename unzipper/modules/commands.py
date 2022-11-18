@@ -249,6 +249,7 @@ async def ban_user(_, message: Message):
     except:
         return await ban_msg.edit("Give an user id to ban 😈")
     await add_banned_user(user_id)
+    await del_user(user_id)
     await ban_msg.edit(
         f"**Successfully banned that user ✅** \n\n**User ID :** `{user_id}`")
 
@@ -260,6 +261,7 @@ async def unban_user(_, message: Message):
         user_id = message.text.split(None, 1)[1]
     except:
         return await unban_msg.edit("Give an user id to unban 😇")
+    await add_user(user_id)
     await del_banned_user(user_id)
     await unban_msg.edit(
         f"**Successfully unbanned that user ✅** \n\n**User ID :** `{user_id}`")
