@@ -95,6 +95,7 @@ extentions_list = {
         "exe",
         "gz",
         "img",
+        "ipsw",
         "iso",
         "jar",
         "lz4",
