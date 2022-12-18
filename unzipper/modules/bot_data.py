@@ -195,6 +195,13 @@ An error happened for `{}` 😕
 Please report this at @EDM115 if you think this is a serious error
     """
 
+    REPORT_TEXT = """
+📢 --Report sent--
+
+**User :** `{}`
+**Message :** `{}`
+    """
+
     LOG_CAPTION = """
 **The file : ** `{}`
 
