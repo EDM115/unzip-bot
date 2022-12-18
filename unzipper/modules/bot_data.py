@@ -115,16 +115,20 @@ I can extract archives like `zip`, `rar`, `tar`, …
     **3.** If your archive have +95 files in it then bot can’t show all of extracted files to select from (yet). So in that case if you can’t see your file in the buttons just click on `Upload all 📤` button. It will send all extracted files to you !
 
 
+**• Got an error ?**
+    Visit edm115.eu.org/unzip#help
+
+
 **• I wanna have help 🥺**
 
     PM me at **@EDM115**
     """
 
     ABOUT_TXT = """
-**About Unarchiver bot [BETA | v5.1.2]**
+**About Unarchiver bot [BETA | v5.2.0]**
 
-• **Language :** [Python 3.10.6](https://www.python.org/)
-• **Framework :** [Pyrogram 2.0.57](https://pyrogram.org/)
+• **Language :** [Python 3.11.1](https://www.python.org/)
+• **Framework :** [Pyrogram 2.0.70](https://pyrogram.org/)
 • **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot/tree/beta)
 • **Developer :** [EDM115](https://github.com/EDM115)
 
@@ -212,11 +216,11 @@ have been saved from the URL
 
 **What to do ?**
 
+   • **If you sent splitted archives (.001, .part1, .00001, …), then I can’t extract them 🙂** (for the moment)
    • Please make sure archive isn’t corrupted
    • Please make sure that you selected the right mode !
    • Also check if you sent the right password (it's case sensitive)
    • Maybe your archive format isn’t supported yet 😔
-   • **If you sent splitted archives (.001, .part1, .00001, …), then I can’t extract them 🙂** (for the moment)
 
 
 **⚠ IN ALL CASES ⚠**, please send **/clean**, else you couldn’t send any other task 🙂🔫 (may be fixed in the future)
