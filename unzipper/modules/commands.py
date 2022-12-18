@@ -14,6 +14,7 @@ from pyrogram.types import Message
 from config import Config
 from unzipper import LOGGER, boottime, unzipperbot
 from unzipper.helpers.database import (
+    add_user,
     add_banned_user,
     check_user,
     count_banned_users,
