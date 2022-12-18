@@ -241,6 +241,17 @@ async def send_this(_, message: Message):
             f"It failed 😣 Retry\n\nIf it fails again, it means that {user_id} haven't started the bot yet, or he's private/banned/whatever"
         )
 
+@Client.on_message(filters.command("report"))
+async def report_this(_, message: Message):
+    sd_msg = await message.reply("`Processing… ⏳`")
+    r_msg = message.reply_to_message
+    u_id = message.from_user.id
+    if not r_msg:
+        return await sd_msg.edit("Reply to a message to report it to @EDM115")
+    await sd_msg.edit("Sending it, please wait… 😪")
+    await _.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.REPORT_TEXT.format(u_id, r_msg.text.markdown))
+    await sd_msg.edit("Report sucessfully sent ! An answer will arrive soon")
+
 
 @Client.on_message(filters.command("ban") & filters.user(Config.BOT_OWNER))
 async def ban_user(_, message: Message):
@@ -461,6 +472,7 @@ Here is the list of the commands you can use (only in private btw) :
 **/info** : Get full info about a [Message](https://docs.pyrogram.org/api/types/Message) (info returned by Pyrogram)
 **/addthumb** : Upload with a custom thumbnail (not permanant yet)
 **/delthumb** : Removes your thumbnail
+**/report** : Used by replying to a message, sends it to the bot owner (useful for bug report, or any question)
 **/commands** : This message
 
 **/admincmd** : Only if you are the Owner
