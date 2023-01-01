@@ -260,10 +260,18 @@ async def ban_user(_, message: Message):
         user_id = message.text.split(None, 1)[1]
     except:
         return await ban_msg.edit("Give an user id to ban 😈")
-    await add_banned_user(user_id)
-    await del_user(user_id)
-    await ban_msg.edit(
-        f"**Successfully banned that user ✅** \n\n**User ID :** `{user_id}`")
+    bdb = await add_banned_user(user_id)
+    db = await del_user(user_id)
+    text = ""
+    if bdb == -1:
+        text.append(f"{user_id} have already been banned\n\n")
+    if db == -1:
+        text.append(f"{user_id} is already deleted from the user database")
+    if text != "":
+        await ban_msg.edit(text)
+    else:
+        await ban_msg.edit(
+            f"**Successfully banned that user ✅** \n\n**User ID :** `{user_id}`")
 
 
 @Client.on_message(filters.command("unban") & filters.user(Config.BOT_OWNER))
@@ -273,10 +281,18 @@ async def unban_user(_, message: Message):
         user_id = message.text.split(None, 1)[1]
     except:
         return await unban_msg.edit("Give an user id to unban 😇")
-    await add_user(user_id)
-    await del_banned_user(user_id)
-    await unban_msg.edit(
-        f"**Successfully unbanned that user ✅** \n\n**User ID :** `{user_id}`")
+    db = await add_user(user_id)
+    bdb = await del_banned_user(user_id)
+    text = ""
+    if db == -1:
+        text.append(f"{user_id} is already in database\n\n")
+    if bdb == -1:
+        text.append(f"{user_id} have already been deleted from banned users database")
+    if text != "":
+        await unban_msg.edit(text)
+    else:
+        await unban_msg.edit(
+            f"**Successfully unbanned that user ✅** \n\n**User ID :** `{user_id}`")
 
 
 @Client.on_message(filters.private & filters.command("info"))
