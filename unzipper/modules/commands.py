@@ -264,9 +264,9 @@ async def ban_user(_, message: Message):
     db = await del_user(user_id)
     text = ""
     if bdb == -1:
-        text.append(f"{user_id} have already been banned\n\n")
+        text += f"{user_id} have already been banned\n\n"
     if db == -1:
-        text.append(f"{user_id} is already deleted from the user database")
+        text += f"{user_id} is already deleted from the user database"
     if text != "":
         await ban_msg.edit(text)
     else:
@@ -285,9 +285,9 @@ async def unban_user(_, message: Message):
     bdb = await del_banned_user(user_id)
     text = ""
     if db == -1:
-        text.append(f"{user_id} is already in database\n\n")
+        text += f"{user_id} is already in database\n\n"
     if bdb == -1:
-        text.append(f"{user_id} have already been deleted from banned users database")
+        text += f"{user_id} have already been deleted from banned users database"
     if text != "":
         await unban_msg.edit(text)
     else:
