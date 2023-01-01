@@ -17,7 +17,7 @@ async def add_user(user_id):
     new_user_id = int(user_id)
     is_exist = await user_db.find_one({"user_id": new_user_id})
     if is_exist:
-        return
+        return -1
     await user_db.insert_one({"user_id": new_user_id})
 
 
@@ -27,7 +27,7 @@ async def del_user(user_id):
     if is_exist:
         await user_db.delete_one({"user_id": del_user_id})
     else:
-        return
+        return -1
 
 
 async def is_user_in_db(user_id):
@@ -55,7 +55,7 @@ async def add_banned_user(user_id):
     new_user_id = int(user_id)
     is_exist = await b_user_db.find_one({"banned_user_id": new_user_id})
     if is_exist:
-        return
+        return -1
     await b_user_db.insert_one({"banned_user_id": new_user_id})
 
 
@@ -65,7 +65,7 @@ async def del_banned_user(user_id):
     if is_exist:
         await b_user_db.delete_one({"banned_user_id": del_user_id})
     else:
-        return
+        return -1
 
 
 async def is_user_in_bdb(user_id):
