@@ -140,6 +140,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         ext_files_dir = f"{download_path}/extracted"
         r_message = query.message.reply_to_message
         splitted_data = query.data.split("|")
+        await query.message.edit("**✅ Processing your task… Please wait**")
         global log_msg
         log_msg = await unzip_bot.send_message(
             chat_id=Config.LOGS_CHANNEL,
