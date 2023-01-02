@@ -49,8 +49,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
             fext = (pathlib.Path(os.path.abspath(doc_f)).suffix).casefold().replace(".", "")
         thumbornot = await thumb_exists(c_id)
         upmsg = await unzip_bot.send_message(c_id, "`Processing… ⏳`")
-        if ul_mode == "media":
-            if fext in extentions_list["audio"]:
+            if ul_mode == "media" and fext in extentions_list["audio"]:
                 if thumbornot:
                     thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
                     await unzip_bot.send_audio(
@@ -77,7 +76,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                             time(),
                         ),
                     )
-            elif fext in extentions_list["photo"]:
+            elif ul_mode == "media" and fext in extentions_list["photo"]:
                 # impossible to use a thumb here :(
                 await unzip_bot.send_photo(
                     chat_id=c_id,
@@ -90,7 +89,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         time(),
                     ),
                 )
-            elif fext in extentions_list["video"]:
+            elif ul_mode == "media" and fext in extentions_list["video"]:
                 #vid_duration = await run_shell_cmds(
                     #f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}"
                 #)
