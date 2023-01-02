@@ -46,7 +46,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
             fext = doc_f.split("/")[-1].split(".")[-1].casefold()
         else:
             fname = os.path.basename(doc_f)
-            fext = (pathlib.Path(os.path.abspath(doc_f)).suffix).casefold()
+            fext = (pathlib.Path(os.path.abspath(doc_f)).suffix).casefold().replace(".", "")
         thumbornot = await thumb_exists(c_id)
         upmsg = await unzip_bot.send_message(c_id, "`Processing… ⏳`")
         if ul_mode == "media":
