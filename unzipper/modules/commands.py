@@ -51,15 +51,12 @@ async def start_bot(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("clean"))
 async def clean_my_files(_, message: Message):
-    await message.reply_text(text=Messages.CLEAN_TXT,
-                             reply_markup=Buttons.CLN_BTNS)
-
+    await message.reply_text(text=Messages.CLEAN_TXT, reply_markup=Buttons.CLN_BTNS)
 
 
 @Client.on_message(filters.command("help"))
 async def help_me(_, message: Message):
-    await message.reply_text(text=Messages.HELP_TXT,
-                             reply_markup=Buttons.ME_GOIN_HOME)
+    await message.reply_text(text=Messages.HELP_TXT, reply_markup=Buttons.ME_GOIN_HOME)
 
 
 @Client.on_message(filters.command("about"))
@@ -71,13 +68,14 @@ async def about_me(_, message: Message):
     )
 
 
-@Client.on_message(filters.incoming & filters.private & filters.document
-                   | filters.regex(https_url_regex))
+@Client.on_message(
+    filters.incoming & filters.private & filters.document
+    | filters.regex(https_url_regex)
+)
 async def extract_archive(_, message: Message):
     if message.chat.type != enums.ChatType.PRIVATE:
         return
-    unzip_msg = await message.reply("`Processing… ⏳`",
-                                    reply_to_message_id=message.id)
+    unzip_msg = await message.reply("`Processing… ⏳`", reply_to_message_id=message.id)
     user_id = message.from_user.id
     download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
     if os.path.isdir(download_path):
@@ -103,8 +101,7 @@ async def extract_archive(_, message: Message):
 async def cancel_task_by_user(_, message):
     idtodel = message.id - 1
     try:
-        await _.delete_messages(chat_id=message.from_user.id,
-                                message_ids=idtodel)
+        await _.delete_messages(chat_id=message.from_user.id, message_ids=idtodel)
     except:
         pass
     await _.stop_transmission()
@@ -148,7 +145,8 @@ async def send_stats(_, message: Message):
     total_users = await count_users()
     total_banned_users = await count_banned_users()
     if message.from_user.id == Config.BOT_OWNER:
-        await stats_msg.edit(f"""
+        await stats_msg.edit(
+            f"""
 **💫 Current bot stats 💫**
 
 **👥 Users :**
@@ -167,9 +165,11 @@ async def send_stats(_, message: Message):
 **🎛 Hardware usage :**
  ↳ **CPU usage :** `{cpu_usage}%`
  ↳ **RAM usage :** `{ram_usage}%`
- ↳ **Uptime :** `{uptime}`""")
+ ↳ **Uptime :** `{uptime}`"""
+        )
     else:
-        await stats_msg.edit(f"""
+        await stats_msg.edit(
+            f"""
 **💫 Current bot stats 💫**
 
 **💾 Disk usage :**
@@ -180,7 +180,8 @@ async def send_stats(_, message: Message):
 **🎛 Hardware usage :**
  ↳ **CPU usage :** `{cpu_usage}%`
  ↳ **RAM usage :** `{ram_usage}%`
- ↳ **Uptime :** `{uptime}`""")
+ ↳ **Uptime :** `{uptime}`"""
+        )
 
 
 async def _do_broadcast(message, user):
@@ -194,8 +195,7 @@ async def _do_broadcast(message, user):
         await del_user(user)
 
 
-@Client.on_message(
-    filters.command("broadcast") & filters.user(Config.BOT_OWNER))
+@Client.on_message(filters.command("broadcast") & filters.user(Config.BOT_OWNER))
 async def broadcast_this(_, message: Message):
     bc_msg = await message.reply("`Processing… ⏳`")
     r_msg = message.reply_to_message
@@ -213,13 +213,15 @@ async def broadcast_this(_, message: Message):
             success_no += 1
         else:
             failed_no += 1
-    await bc_msg.edit(f"""
+    await bc_msg.edit(
+        f"""
 **Broadcast completed ✅**
 
 **Total users :** `{total_users}`
 **Successful responses :** `{success_no}`
 **Failed responses :** `{failed_no}`
-    """)
+    """
+    )
 
 
 @Client.on_message(filters.command("sendto") & filters.user(Config.BOT_OWNER))
@@ -241,6 +243,7 @@ async def send_this(_, message: Message):
             f"It failed 😣 Retry\n\nIf it fails again, it means that {user_id} haven't started the bot yet, or he's private/banned/whatever"
         )
 
+
 @Client.on_message(filters.command("report"))
 async def report_this(_, message: Message):
     sd_msg = await message.reply("`Processing… ⏳`")
@@ -249,7 +252,10 @@ async def report_this(_, message: Message):
     if not r_msg:
         return await sd_msg.edit("Reply to a message to report it to @EDM115")
     await sd_msg.edit("Sending it, please wait… 😪")
-    await _.send_message(chat_id=Config.LOGS_CHANNEL, text=Messages.REPORT_TEXT.format(u_id, r_msg.text.markdown))
+    await _.send_message(
+        chat_id=Config.LOGS_CHANNEL,
+        text=Messages.REPORT_TEXT.format(u_id, r_msg.text.markdown),
+    )
     await sd_msg.edit("Report sucessfully sent ! An answer will arrive soon")
 
 
@@ -271,7 +277,8 @@ async def ban_user(_, message: Message):
         await ban_msg.edit(text)
     else:
         await ban_msg.edit(
-            f"**Successfully banned that user ✅** \n\n**User ID :** `{user_id}`")
+            f"**Successfully banned that user ✅** \n\n**User ID :** `{user_id}`"
+        )
 
 
 @Client.on_message(filters.command("unban") & filters.user(Config.BOT_OWNER))
@@ -292,15 +299,15 @@ async def unban_user(_, message: Message):
         await unban_msg.edit(text)
     else:
         await unban_msg.edit(
-            f"**Successfully unbanned that user ✅** \n\n**User ID :** `{user_id}`")
+            f"**Successfully unbanned that user ✅** \n\n**User ID :** `{user_id}`"
+        )
 
 
 @Client.on_message(filters.private & filters.command("info"))
 async def me_stats(_, message: Message):
     me_info = await _.ask(
         chat_id=message.chat.id,
-        text=
-        "Send a text (shorter possible) from any user/chat. And you will have infos about it 👀",
+        text="Send a text (shorter possible) from any user/chat. And you will have infos about it 👀",
     )
     await _.send_message(chat_id=message.chat.id, text=f"`{me_info}`")
 
@@ -319,7 +326,8 @@ async def info_user(_, message: Message):
     if up_count == "":
         up_count = "Unable to fetch"
     await info_user_msg.edit(
-        f"**User ID :** `{user_id}`\n`{up_count}` files uploaded\n…\n\nWIP")
+        f"**User ID :** `{user_id}`\n`{up_count}` files uploaded\n…\n\nWIP"
+    )
 
 
 @Client.on_message(filters.command("user2") & filters.user(Config.BOT_OWNER))
@@ -332,9 +340,10 @@ async def info_user2(_, message: Message):
     try:
         infos = await _.get_users(user_id)
     except:
-        return await user2_msg.edit(
-            "Error happened. The user ID is probably invalid")
-    await user2_msg.edit(f"`{infos}`\n\n**Direct link to profile :** tg://user?id={user_id}")
+        return await user2_msg.edit("Error happened. The user ID is probably invalid")
+    await user2_msg.edit(
+        f"`{infos}`\n\n**Direct link to profile :** tg://user?id={user_id}"
+    )
 
 
 @Client.on_message(filters.command("self") & filters.user(Config.BOT_OWNER))
@@ -343,8 +352,9 @@ async def info_self(_, message: Message):
     await message.reply(f"`{self_infos}`")
 
 
-@Client.on_message(filters.private & filters.command("db")
-                   & filters.user(Config.BOT_OWNER))
+@Client.on_message(
+    filters.private & filters.command("db") & filters.user(Config.BOT_OWNER)
+)
 async def db_info(_, message: Message):
     users_list = await get_users_list()
     try:
@@ -353,8 +363,9 @@ async def db_info(_, message: Message):
         await message.reply("too much users, don't fit into 1 message")
 
 
-@Client.on_message(filters.private & filters.command("dbdive")
-                   & filters.user(Config.BOT_OWNER))
+@Client.on_message(
+    filters.private & filters.command("dbdive") & filters.user(Config.BOT_OWNER)
+)
 async def db_dive(_, message: Message):
     dburl = Config.MONGODB_URL
     db_dive_msg = await message.reply(
@@ -362,8 +373,9 @@ async def db_dive(_, message: Message):
     )
 
 
-@Client.on_message(filters.private & filters.command("getthumbs")
-                   & filters.user(Config.BOT_OWNER))
+@Client.on_message(
+    filters.private & filters.command("getthumbs") & filters.user(Config.BOT_OWNER)
+)
 async def get_all_thumbs(_, message: Message):
     paths = await get_files(path=Config.THUMB_LOCATION)
     if not paths:
@@ -384,24 +396,30 @@ async def get_all_thumbs(_, message: Message):
             message.reply_text(e, quote=True)
 
 
-@Client.on_message(filters.private & filters.command("listdir")
-                   & filters.user(Config.BOT_OWNER))
+@Client.on_message(
+    filters.private & filters.command("listdir") & filters.user(Config.BOT_OWNER)
+)
 async def list_server_directories(_, message: Message):
     try:
         dirs = await get_files(message.text.split(None, 1)[1])
     except:
         dirs = await get_files("/app")
     for file in dirs:
-        if (file.endswith(".py") or file.endswith(".pyc")
-                or file.endswith(".yml") or file.endswith(".toml")
-                or file.endswith(".md")):
+        if (
+            file.endswith(".py")
+            or file.endswith(".pyc")
+            or file.endswith(".yml")
+            or file.endswith(".toml")
+            or file.endswith(".md")
+        ):
             dirs.remove(file)
     LOGGER.info(dirs)
     await message.reply(dirs)
 
 
-@Client.on_message(filters.private & filters.command("redbutton")
-                   & filters.user(Config.BOT_OWNER))
+@Client.on_message(
+    filters.private & filters.command("redbutton") & filters.user(Config.BOT_OWNER)
+)
 async def red_alert(_, message: Message):
     await message.reply("🚧 WIP 🚧")
     # restart the whole bot, maybe using execl
@@ -418,16 +436,16 @@ async def thumb_del(_, message: Message):
     await del_thumb(_, message)
 
 
-@Client.on_message(filters.private & filters.command("cleanall")
-                   & filters.user(Config.BOT_OWNER))
+@Client.on_message(
+    filters.private & filters.command("cleanall") & filters.user(Config.BOT_OWNER)
+)
 async def del_everything(_, message: Message):
     cleaner = await message.reply("🚧 WIP 🚧\n\nCleaning…")
     try:
         shutil.rmtree(Config.DOWNLOAD_LOCATION)
         await cleaner.edit("The whole server have been cleaned 😌")
     except:
-        await cleaner.edit(
-            "An error happened 😕 probably because command is unstable")
+        await cleaner.edit("An error happened 😕 probably because command is unstable")
 
 
 async def send_logs(user_id):
@@ -445,28 +463,32 @@ async def send_logs(user_id):
             unzipperbot.send_message(chat_id=user_id, text=e)
 
 
-@Client.on_message(filters.private & filters.command("logs")
-                   & filters.user(Config.BOT_OWNER))
+@Client.on_message(
+    filters.private & filters.command("logs") & filters.user(Config.BOT_OWNER)
+)
 async def logz(_, message: Message):
     await send_logs(message.from_user.id)
 
 
-@Client.on_message(filters.private & filters.command("restart")
-                   & filters.user(Config.BOT_OWNER))
+@Client.on_message(
+    filters.private & filters.command("restart") & filters.user(Config.BOT_OWNER)
+)
 async def restart(_, message: Message):
     folder_to_del = os.path.dirname(os.path.abspath(Config.DOWNLOAD_LOCATION))
     shutil.rmtree(Config.DOWNLOAD_LOCATION)
     LOGGER.info(f"Deleted {folder_to_del} folder successfully")
     restarttime = time.strftime("%Y/%m/%d - %H:%M:%S")
     await message.reply_text(
-        f"**ℹ️ Bot restarted successfully at **`{restarttime}`", quote=True)
+        f"**ℹ️ Bot restarted successfully at **`{restarttime}`", quote=True
+    )
     await send_logs(message.from_user.id)
     LOGGER.info(f"{message.from_user.id} : Restarting…")
     os.execl(executable, executable, "-m", "unzipper")
 
 
-@Client.on_message(filters.private & filters.command("dbexport")
-                   & filters.user(Config.BOT_OWNER))
+@Client.on_message(
+    filters.private & filters.command("dbexport") & filters.user(Config.BOT_OWNER)
+)
 async def export_db(client, message):
     await message.reply("🚧 WIP 🚧")
     # Will use https://www.mongodb.com/docs/database-tools/mongoexport/ on command to export as CSV
@@ -497,8 +519,7 @@ Here is the list of the commands you can use (only in private btw) :
     )
 
 
-@Client.on_message(
-    filters.command("admincmd") & filters.user(Config.BOT_OWNER))
+@Client.on_message(filters.command("admincmd") & filters.user(Config.BOT_OWNER))
 async def getadmin_cmds(client, message):
     await message.reply(
         """

@@ -82,9 +82,7 @@ async def count_banned_users():
 
 
 async def get_banned_users_list():
-    return [
-        banned_users_list async for banned_users_list in b_user_db.find({})
-    ]
+    return [banned_users_list async for banned_users_list in b_user_db.find({})]
 
 
 async def check_user(message):
@@ -126,15 +124,13 @@ async def check_user(message):
         try:
             await Client.send_message(
                 chat_id=Config.LOGS_CHANNEL,
-                text=
-                f"**#NEW_USER** 🎙 \n\n**User profile :** `{uname}` {umention} \n**User ID :** `{message.from_user.id}` \n**Profile URL :** [tg://user?id={message.from_user.id}](tg://user?id={message.from_user.id})",
+                text=f"**#NEW_USER** 🎙 \n\n**User profile :** `{uname}` {umention} \n**User ID :** `{message.from_user.id}` \n**Profile URL :** [tg://user?id={message.from_user.id}](tg://user?id={message.from_user.id})",
                 disable_web_page_preview=False,
             )
         except AttributeError:
             await Client.send_message(
                 chat_id=Config.LOGS_CHANNEL,
-                text=
-                f"**#NEW_USER** 🎙 \n\n**User profile :** `{uname}` \n**User ID :** `[AttributeError] Can't get it` \n**Profile URL :** Can't get it",
+                text=f"**#NEW_USER** 🎙 \n\n**User profile :** `{uname}` \n**User ID :** `[AttributeError] Can't get it` \n**Profile URL :** Can't get it",
                 disable_web_page_preview=False,
             )
     await message.continue_propagation()
@@ -182,15 +178,11 @@ async def update_uploaded(user_id, upload_count):
     is_exist = await uploaded_db.find_one({"_id": user_id})
     if is_exist:
         new_count = await get_uploaded(user_id) + upload_count
-        await uploaded_db.update_one({"_id": user_id},
-                                     {"$set": {
-                                         "uploaded_files": new_count
-                                     }})
+        await uploaded_db.update_one(
+            {"_id": user_id}, {"$set": {"uploaded_files": new_count}}
+        )
     else:
-        await uploaded_db.insert_one({
-            "_id": user_id,
-            "uploaded_files": upload_count
-        })
+        await uploaded_db.insert_one({"_id": user_id, "uploaded_files": upload_count})
 
 
 # Db for cloud_upload
@@ -217,20 +209,16 @@ async def update_thumb(user_id, thumb_url, force):
     if existing:
         if not force:
             return existing["url"]
-        await thumb_db.update_one({"_id": user_id},
-                                  {"$set": {
-                                      "url": thumb_url
-                                  }})
+        await thumb_db.update_one({"_id": user_id}, {"$set": {"url": thumb_url}})
     else:
         await thumb_db.insert_one({"_id": user_id, "url": thumb_url})
 
 
 async def upload_thumb(image):
     with open(image, "rb") as file:
-        request = post("https://telegra.ph/upload",
-                       files={
-                           "file": ("file", file, "image/jpeg")
-                       }).json()[0]
+        request = post(
+            "https://telegra.ph/upload", files={"file": ("file", file, "image/jpeg")}
+        ).json()[0]
         return f"https://telegra.ph{request['src']}"
 
 
@@ -241,6 +229,7 @@ async def get_thumb_users():
 async def count_thumb_users():
     users = await thumb_db.count_documents({})
     return users
+
 
 async def del_thumb_db(user_id):
     del_thumb_id = int(user_id)

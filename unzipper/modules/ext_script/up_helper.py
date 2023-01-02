@@ -46,7 +46,11 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
             fext = doc_f.split("/")[-1].split(".")[-1].casefold()
         else:
             fname = os.path.basename(doc_f)
-            fext = (pathlib.Path(os.path.abspath(doc_f)).suffix).casefold().replace(".", "")
+            fext = (
+                (pathlib.Path(os.path.abspath(doc_f)).suffix)
+                .casefold()
+                .replace(".", "")
+            )
         thumbornot = await thumb_exists(c_id)
         upmsg = await unzip_bot.send_message(c_id, "`Processing… ⏳`")
         if ul_mode == "media" and fext in extentions_list["audio"]:
@@ -90,17 +94,17 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                 ),
             )
         elif ul_mode == "media" and fext in extentions_list["video"]:
-            #vid_duration = await run_shell_cmds(
-                #f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}"
-            #)
+            # vid_duration = await run_shell_cmds(
+            # f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}"
+            # )
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
                 await unzip_bot.send_video(
                     chat_id=c_id,
                     video=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
-                    #duration=int(
-                        #vid_duration) if vid_duration.isnumeric() else 0,
+                    # duration=int(
+                    # vid_duration) if vid_duration.isnumeric() else 0,
                     thumb=thumb_image,
                     supports_streaming=True,
                     progress=progress_for_pyrogram,
@@ -111,21 +115,21 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     ),
                 )
             else:
-                #thmb_pth = (
-                    #f"{Config.THUMB_LOCATION}/thumbnail_{os.path.basename(doc_f)}.jpg"
-                #)
-                #if os.path.exists(thmb_pth):
-                    #os.remove(thmb_pth)
-                #thumb = await run_shell_cmds(
-                    #f"ffmpeg -ss 00:00:01.00 -i {doc_f} -vf 'scale=320:320:force_original_aspect_ratio=decrease' -vframes 1 {thmb_pth}"
-                #)
+                # thmb_pth = (
+                # f"{Config.THUMB_LOCATION}/thumbnail_{os.path.basename(doc_f)}.jpg"
+                # )
+                # if os.path.exists(thmb_pth):
+                # os.remove(thmb_pth)
+                # thumb = await run_shell_cmds(
+                # f"ffmpeg -ss 00:00:01.00 -i {doc_f} -vf 'scale=320:320:force_original_aspect_ratio=decrease' -vframes 1 {thmb_pth}"
+                # )
                 await unzip_bot.send_video(
                     chat_id=c_id,
                     video=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
-                    #duration=int(
-                        #vid_duration) if vid_duration.isnumeric() else 0,
-                    #thumb=str(thumb),
+                    # duration=int(
+                    # vid_duration) if vid_duration.isnumeric() else 0,
+                    # thumb=str(thumb),
                     supports_streaming=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
@@ -134,7 +138,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         time(),
                     ),
                 )
-                #os.remove(thmb_pth)
+                # os.remove(thmb_pth)
         else:
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
