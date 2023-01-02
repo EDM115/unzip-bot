@@ -223,11 +223,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 # Checks if it's actually an archive
                 # fext = (pathlib.Path(fname).suffix).casefold()
                 if splitted_data[2] != "thumb":
+                    fext = fname.split(".")[-1].casefold()
                     if (fnmatch(fext, extentions_list["split"][0])
                             or fext in extentions_list["split"] or bool(re.search(split_file_pattern, fname))):
                         return await query.message.edit(
                             "Splitted archives can't be processed yet")
-                    fext = fname.split(".")[-1].casefold()
                     if fext not in extentions_list["archive"]:
                         return await query.message.edit(
                             "This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**"
