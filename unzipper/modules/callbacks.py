@@ -223,15 +223,15 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 # Checks if it's actually an archive
                 # fext = (pathlib.Path(fname).suffix).casefold()
                 if splitted_data[2] != "thumb":
+                    if (fnmatch(fext, extentions_list["split"][0])
+                            or fext in extentions_list["split"] or bool(re.search(split_file_pattern, fname))):
+                        return await query.message.edit(
+                            "Splitted archives can't be processed yet")
                     fext = fname.split(".")[-1].casefold()
                     if fext not in extentions_list["archive"]:
                         return await query.message.edit(
                             "This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**"
                         )
-                    if (fnmatch(fext, extentions_list["split"][0])
-                            or fext in extentions_list["split"] or bool(re.search(split_file_pattern, fname))):
-                        return await query.message.edit(
-                            "Splitted archives can't be processed yet")
                 # Makes download dir
                 os.makedirs(download_path)
                 s_time = time()
@@ -247,9 +247,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 )
                 e_time = time()
             else:
-                await answer_query(
+                return await answer_query(
                     query,
-                    "Can't find details 💀 Please contact @EDM115 if it's an error",
+                    "Fatal query parsing error 💀 Please contact @EDM115 with details and screenshots",
                     answer_only=True,
                     unzip_client=unzip_bot,
                 )
