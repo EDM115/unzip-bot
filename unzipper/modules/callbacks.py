@@ -39,6 +39,7 @@ from .ext_script.ext_helper import (
 )
 from .ext_script.up_helper import answer_query, get_size, send_file, send_url_logs
 
+split_file_pattern = r"\.(?:[0-9]+|part[0-9]+\.rar|z[0-9]+)$"
 
 # Function to download files from direct link using aiohttp
 async def download(url, path):
@@ -228,7 +229,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             "This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**"
                         )
                     if (fnmatch(fext, extentions_list["split"][0])
-                            or fext in extentions_list["split"]):
+                            or fext in extentions_list["split"] or bool(re.search(split_file_pattern, fname))):
                         return await query.message.edit(
                             "Splitted archives can't be processed yet")
                 # Makes download dir
