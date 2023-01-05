@@ -17,15 +17,7 @@ from unzipper.helpers.unzip_help import extentions_list
 from unzipper.helpers.unzip_help import progress_for_pyrogram
 from unzipper.modules.bot_data import Messages
 from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
-
-
-# To get video duration and thumbnail
-async def run_shell_cmds(command):
-    run = subprocess.Popen(
-        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
-    )
-    shell_output = run.stdout.read()[:-1].decode("utf-8")
-    return shell_output
+from unzipper.modules.ext_script.ext_helper import run_cmds_on_cr
 
 
 # Get file size
@@ -90,7 +82,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                 ),
             )
         elif ul_mode == "media" and fext in extentions_list["video"]:
-            vid_duration = await run_shell_cmds(
+            vid_duration = await run_cmds_on_cr(
                 f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}"
             )
             if thumbornot:
@@ -116,7 +108,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                 )
                 if os.path.exists(thmb_pth):
                     os.remove(thmb_pth)
-                thumb = await run_shell_cmds(
+                thumb = await run_cmds_on_cr(
                     f"ffmpeg -ss 00:00:01.00 -i {doc_f} -vf 'scale=320:320:force_original_aspect_ratio=decrease' -vframes 1 {thmb_pth}"
                 )
                 await unzip_bot.send_video(
