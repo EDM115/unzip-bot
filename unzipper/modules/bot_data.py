@@ -5,86 +5,120 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 class Buttons:
-    START_BUTTON = InlineKeyboardMarkup([[
-        InlineKeyboardButton("Help 📜", callback_data="helpcallback"),
-        InlineKeyboardButton("About 👀", callback_data="aboutcallback"),
-    ]])
-
-    CHOOSE_E_F__BTNS = InlineKeyboardMarkup([
+    START_BUTTON = InlineKeyboardMarkup(
         [
-            InlineKeyboardButton("🗂️",
-                                 callback_data="extract_file|tg_file|no_pass"),
-            InlineKeyboardButton(
-                "🔐", callback_data="extract_file|tg_file|with_pass"),
-        ],
-        [
-            InlineKeyboardButton("🖼️",
-                                 callback_data="extract_file|tg_file|thumb"),
-            InlineKeyboardButton(
-                "🖼️✏", callback_data="extract_file|tg_file|thumbrename"),
-        ],
-        [InlineKeyboardButton("❌", callback_data="cancel_dis")],
-    ])
+            [
+                InlineKeyboardButton("Help 📜", callback_data="helpcallback"),
+                InlineKeyboardButton("About 👀", callback_data="aboutcallback"),
+            ]
+        ]
+    )
 
-    CHOOSE_E_U__BTNS = InlineKeyboardMarkup([
+    CHOOSE_E_F__BTNS = InlineKeyboardMarkup(
         [
-            InlineKeyboardButton("🔗",
-                                 callback_data="extract_file|url|no_pass"),
-            InlineKeyboardButton("🔐",
-                                 callback_data="extract_file|url|with_pass"),
-        ],
+            [
+                InlineKeyboardButton(
+                    "🗂️", callback_data="extract_file|tg_file|no_pass"
+                ),
+                InlineKeyboardButton(
+                    "🔐", callback_data="extract_file|tg_file|with_pass"
+                ),
+            ],
+            [
+                InlineKeyboardButton("🖼️", callback_data="extract_file|tg_file|thumb"),
+                InlineKeyboardButton(
+                    "🖼️✏", callback_data="extract_file|tg_file|thumbrename"
+                ),
+            ],
+            [InlineKeyboardButton("❌", callback_data="cancel_dis")],
+        ]
+    )
+
+    CHOOSE_E_U__BTNS = InlineKeyboardMarkup(
         [
-            InlineKeyboardButton("🖼️", callback_data="extract_file|url|thumb"),
-            InlineKeyboardButton("🖼️✏",
-                                 callback_data="extract_file|url|thumbrename"),
-        ],
-        [InlineKeyboardButton("❌", callback_data="cancel_dis")],
-    ])
+            [
+                InlineKeyboardButton("🔗", callback_data="extract_file|url|no_pass"),
+                InlineKeyboardButton("🔐", callback_data="extract_file|url|with_pass"),
+            ],
+            [
+                InlineKeyboardButton("🖼️", callback_data="extract_file|url|thumb"),
+                InlineKeyboardButton(
+                    "🖼️✏", callback_data="extract_file|url|thumbrename"
+                ),
+            ],
+            [InlineKeyboardButton("❌", callback_data="cancel_dis")],
+        ]
+    )
 
-    RENAME = InlineKeyboardMarkup([[
-        InlineKeyboardButton("✏", callback_data="renameit"),
-        InlineKeyboardButton("🙅‍♂️", callback_data="norename"),
-    ]])
+    RENAME = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("✏", callback_data="renameit"),
+                InlineKeyboardButton("🙅‍♂️", callback_data="norename"),
+            ]
+        ]
+    )
 
-    CLN_BTNS = InlineKeyboardMarkup([[
-        InlineKeyboardButton("Clean my files 🚮", callback_data="cancel_dis"),
-        InlineKeyboardButton("❌ Cancel", callback_data="nobully"),
-    ]])
+    CLN_BTNS = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("Clean my files 🚮", callback_data="cancel_dis"),
+                InlineKeyboardButton("❌ Cancel", callback_data="nobully"),
+            ]
+        ]
+    )
 
     ME_GOIN_HOME = InlineKeyboardMarkup(
-        [[InlineKeyboardButton("Back 🏡", callback_data="megoinhome")]])
+        [[InlineKeyboardButton("Back 🏡", callback_data="megoinhome")]]
+    )
 
-    SET_UPLOAD_MODE_BUTTONS = InlineKeyboardMarkup([
-        [InlineKeyboardButton("As document 📁", callback_data="set_mode|doc")],
-        [InlineKeyboardButton("As media 📺", callback_data="set_mode|media")],
-    ])
+    SET_UPLOAD_MODE_BUTTONS = InlineKeyboardMarkup(
+        [
+            [InlineKeyboardButton("As document 📁", callback_data="set_mode|doc")],
+            [InlineKeyboardButton("As media 📺", callback_data="set_mode|media")],
+        ]
+    )
 
     I_PREFER_STOP = InlineKeyboardMarkup(
-        [[InlineKeyboardButton("❌ Cancel", callback_data="canceldownload")]])
+        [[InlineKeyboardButton("❌ Cancel", callback_data="canceldownload")]]
+    )
 
-    MERGE_THEM_ALL = InlineKeyboardMarkup([[
-        InlineKeyboardButton("Merge 🛠️", callback_data="merge_this"),
-        InlineKeyboardButton("❌ Cancel", callback_data="nobully"),
-    ]])
-
-    THUMB_REPLACEMENT = InlineKeyboardMarkup([
+    MERGE_THEM_ALL = InlineKeyboardMarkup(
         [
-            InlineKeyboardButton("Check 👀", callback_data="check_thumb"),
-            InlineKeyboardButton("Replace ⏭",
-                                 callback_data="save_thumb|replace"),
-        ],
-        [InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")],
-    ])
+            [
+                InlineKeyboardButton("Merge 🛠️", callback_data="merge_this"),
+                InlineKeyboardButton("❌ Cancel", callback_data="nobully"),
+            ]
+        ]
+    )
 
-    THUMB_FINAL = InlineKeyboardMarkup([[
-        InlineKeyboardButton("Replace ⏭", callback_data="save_thumb|replace"),
-        InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb"),
-    ]])
+    THUMB_REPLACEMENT = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("Check 👀", callback_data="check_thumb"),
+                InlineKeyboardButton("Replace ⏭", callback_data="save_thumb|replace"),
+            ],
+            [InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")],
+        ]
+    )
 
-    THUMB_SAVE = InlineKeyboardMarkup([[
-        InlineKeyboardButton("Save 💾", callback_data="save_thumb|save"),
-        InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb"),
-    ]])
+    THUMB_FINAL = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("Replace ⏭", callback_data="save_thumb|replace"),
+                InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb"),
+            ]
+        ]
+    )
+
+    THUMB_SAVE = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("Save 💾", callback_data="save_thumb|save"),
+                InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb"),
+            ]
+        ]
+    )
 
 
 class Messages:
@@ -115,16 +149,20 @@ I can extract archives like `zip`, `rar`, `tar`, …
     **3.** If your archive have +95 files in it then bot can’t show all of extracted files to select from (yet). So in that case if you can’t see your file in the buttons just click on `Upload all 📤` button. It will send all extracted files to you !
 
 
+**• Got an error ?**
+    Visit edm115.eu.org/unzip#help
+
+
 **• I wanna have help 🥺**
 
     PM me at **@EDM115**
     """
 
     ABOUT_TXT = """
-**About Unarchiver bot [BETA | v5.1.2]**
+**About Unarchiver bot [BETA | v5.3.0]**
 
-• **Language :** [Python 3.10.6](https://www.python.org/)
-• **Framework :** [Pyrogram 2.0.57](https://pyrogram.org/)
+• **Language :** [Python 3.11.1](https://www.python.org/)
+• **Framework :** [Pyrogram 2.0.93](https://pyrogram.org/)
 • **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot/tree/beta)
 • **Developer :** [EDM115](https://github.com/EDM115)
 
@@ -191,6 +229,13 @@ An error happened for `{}` 😕
 Please report this at @EDM115 if you think this is a serious error
     """
 
+    REPORT_TEXT = """
+📢 --Report sent--
+
+**User :** `{}`
+**Message :** `{}`
+    """
+
     LOG_CAPTION = """
 **The file : ** `{}`
 
@@ -212,11 +257,11 @@ have been saved from the URL
 
 **What to do ?**
 
+   • **If you sent splitted archives (.001, .part1, .00001, …), then I can’t extract them 🙂** (for the moment)
    • Please make sure archive isn’t corrupted
    • Please make sure that you selected the right mode !
    • Also check if you sent the right password (it's case sensitive)
    • Maybe your archive format isn’t supported yet 😔
-   • **If you sent splitted archives (.001, .part1, .00001, …), then I can’t extract them 🙂** (for the moment)
 
 
 **⚠ IN ALL CASES ⚠**, please send **/clean**, else you couldn’t send any other task 🙂🔫 (may be fixed in the future)

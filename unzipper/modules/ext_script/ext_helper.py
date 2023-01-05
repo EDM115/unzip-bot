@@ -28,7 +28,7 @@ async def _extract_with_7z_helper(protected, path, archive_path, password=None):
     if password:
         command = f'7z x -o{path} -p"{password}" {archive_path} -y'
     else:
-        testcommand = f'7z t {archive_path} -p"IAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA" -y' # skipcq: FLK-E501
+        testcommand = f'7z t {archive_path} -p"IAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA" -y'  # skipcq: FLK-E501
         testoutput = await run_cmds_on_cr(__run_cmds_unzipper, cmd=testcommand)
         if "Everything is Ok" in testoutput:
             command = f"7z x -o{path} {archive_path} -y"
@@ -68,7 +68,7 @@ async def split_files(iinput, ooutput):
 
 # Get files in directory as a list
 async def get_files(path):
-    path_list = [val for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(path)] for val in sublist] # skipcq: FLK-E501
+    path_list = [val for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(path)] for val in sublist]  # skipcq: FLK-E501
     return sorted(path_list)
 
 
@@ -77,16 +77,14 @@ async def make_keyboard(paths, user_id, chat_id):
     num = 0
     i_kbd = InlineKeyboard(row_width=1)
     data = []
-    data.append(InlineKeyboardButton(
-        "Upload all 📤", f"ext_a|{user_id}|{chat_id}"))
+    data.append(InlineKeyboardButton("Upload all 📤", f"ext_a|{user_id}|{chat_id}"))
     data.append(InlineKeyboardButton("❌ Cancel", "cancel_dis"))
     for file in paths:
         if num > 96:
             break
         data.append(
             InlineKeyboardButton(
-                f"{num} - {os.path.basename(file)}".encode(
-                    "utf-8").decode("utf-8"),
+                f"{num} - {os.path.basename(file)}".encode("utf-8").decode("utf-8"),
                 f"ext_f|{user_id}|{chat_id}|{num}",
             )
         )
@@ -98,8 +96,7 @@ async def make_keyboard(paths, user_id, chat_id):
 async def make_keyboard_empty(user_id, chat_id):
     i_kbd = InlineKeyboard(row_width=2)
     data = []
-    data.append(InlineKeyboardButton(
-        "Upload all 📤", f"ext_a|{user_id}|{chat_id}"))
+    data.append(InlineKeyboardButton("Upload all 📤", f"ext_a|{user_id}|{chat_id}"))
     data.append(InlineKeyboardButton("❌ Cancel", "cancel_dis"))
     i_kbd.add(*data)
     return i_kbd

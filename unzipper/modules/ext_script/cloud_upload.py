@@ -3,10 +3,9 @@ import subprocess
 
 
 async def jsonized(command):
-    run = subprocess.Popen(command,
-                           stdout=subprocess.PIPE,
-                           stderr=subprocess.PIPE,
-                           shell=True)
+    run = subprocess.Popen(
+        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
+    )
     output = run.stdout.read()[:-1].decode("utf-8")
     shell_output = str(output)
     if "true" in shell_output:
