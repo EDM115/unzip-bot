@@ -103,6 +103,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     ),
                 )
             else:
+                """
                 thmb_pth = (
                     f"{Config.THUMB_LOCATION}/thumbnail_{os.path.basename(doc_f)}.jpg"
                 )
@@ -111,13 +112,14 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                 thumb = await run_cmds_on_cr(
                     f"ffmpeg -ss 00:00:01.00 -i {doc_f} -vf 'scale=320:320:force_original_aspect_ratio=decrease' -vframes 1 {thmb_pth}"
                 )
+                """
                 await unzip_bot.send_video(
                     chat_id=c_id,
                     video=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
                     duration=int(
                         vid_duration) if vid_duration.isnumeric() else 0,
-                    thumb=str(thumb),
+                    #thumb=str(thumb),
                     supports_streaming=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
@@ -126,7 +128,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         time(),
                     ),
                 )
-                os.remove(thmb_pth)
+                #os.remove(thmb_pth)
         else:
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
