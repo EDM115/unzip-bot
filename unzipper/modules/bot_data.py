@@ -123,9 +123,10 @@ class Buttons:
     THUMB_DEL = InlineKeyboardMarkup(
         [
             [
+                InlineKeyboardButton("Check 👀", callback_data="check_before_del"),
                 InlineKeyboardButton("Delete 🚮", callback_data="del_thumb"),
-                InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb"),
-            ]
+            ],
+            [InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb")],
         ]
     )
 
