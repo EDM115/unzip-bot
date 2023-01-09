@@ -120,6 +120,15 @@ class Buttons:
         ]
     )
 
+    THUMB_DEL = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("Delete 🚮", callback_data="del_thumb"),
+                InlineKeyboardButton("❌ Cancel", callback_data="nope_thumb"),
+            ]
+        ]
+    )
+
 
 class Messages:
     START_TEXT = """
