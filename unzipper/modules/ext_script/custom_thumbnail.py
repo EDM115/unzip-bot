@@ -106,16 +106,7 @@ async def save_thumb(_, message):
 async def del_thumb(_, message):
     id = message.from_user.id
     thumb_location = Config.THUMB_LOCATION + "/" + str(id)
-    await del_thumb_db(id)
-    try:
-        os.remove(thumb_location + ".jpg")
-    except:
-        pass
-    await _.send_message(
-        chat_id=message.chat.id,
-        text=Messages.DELETED_THUMB,
-        reply_to_message_id=message.id,
-    )
+    await message.reply(text=Messages.DEL_CONFIRM_THUMB, reply_markup=Buttons.THUMB_DEL)
 
 
 async def thumb_exists(chat_id):
