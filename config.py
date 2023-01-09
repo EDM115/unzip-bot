@@ -14,3 +14,4 @@ class Config:
     TG_MAX_SIZE = 2040108421
     # Default chunk size (0.005 MB → 1024*6) Increase if you need faster downloads
     CHUNK_SIZE = 1024 * 6
+    BOT_THUMB = f"{os.path.dirname(__file__)}/bot_thumb.jpg"
