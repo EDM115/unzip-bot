@@ -17,7 +17,15 @@ from unzipper.helpers.unzip_help import extentions_list
 from unzipper.helpers.unzip_help import progress_for_pyrogram
 from unzipper.modules.bot_data import Messages
 from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
-from unzipper.modules.ext_script.ext_helper import run_cmds_on_cr
+
+
+# To get video duration and thumbnail
+async def run_shell_cmds(command):
+    run = subprocess.Popen(
+        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
+    )
+    shell_output = run.stdout.read()[:-1].decode("utf-8")
+    return shell_output
 
 
 # Get file size
@@ -82,7 +90,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                 ),
             )
         elif ul_mode == "media" and fext in extentions_list["video"]:
-            vid_duration = await run_cmds_on_cr(
+            vid_duration = await run_shell_cmds(
                 f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}"
             )
             if thumbornot:
@@ -103,23 +111,21 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     ),
                 )
             else:
-                """
                 thmb_pth = (
                     f"{Config.THUMB_LOCATION}/thumbnail_{os.path.basename(doc_f)}.jpg"
                 )
                 if os.path.exists(thmb_pth):
                     os.remove(thmb_pth)
-                thumb = await run_cmds_on_cr(
+                thumb = await run_shell_cmds(
                     f"ffmpeg -ss 00:00:01.00 -i {doc_f} -vf 'scale=320:320:force_original_aspect_ratio=decrease' -vframes 1 {thmb_pth}"
                 )
-                """
                 await unzip_bot.send_video(
                     chat_id=c_id,
                     video=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
                     duration=int(
                         vid_duration) if vid_duration.isnumeric() else 0,
-                    #thumb=str(thumb),
+                    thumb=str(thumb),
                     supports_streaming=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
@@ -128,7 +134,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         time(),
                     ),
                 )
-                #os.remove(thmb_pth)
+                os.remove(thmb_pth)
         else:
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
