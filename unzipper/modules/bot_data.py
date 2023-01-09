@@ -330,6 +330,17 @@ Are you sure you want to save this thumbnail 🤔
 **Successfully saved this thumbnail ✅**
     """
 
+    DEL_CONFIRM_THUMB = """
+Do you really want to delete your thumbnail ?
+• Check the actual thumbnail
+• Delete it
+• Cancel
+"""
+
+    DEL_CONFIRM_THUMB_2 = """
+Do you really want to delete your thumbnail ?
+"""
+
     DELETED_THUMB = """
 **Successfully removed your thumbnail ✅**
     """
