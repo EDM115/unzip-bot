@@ -94,6 +94,20 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             reply_markup=Buttons.THUMB_FINAL,
         )
 
+    elif query.data == "check_before_del":
+        user_id = query.from_user.id
+        thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
+        await unzip_bot.send_photo(chat_id=user_id,
+                                   photo=thumb_location,
+                                   caption="Your actual thumbnail")
+        await unzip_bot.delete_messages(chat_id=user_id,
+                                        message_ids=query.message.id)
+        await unzip_bot.send_message(
+            chat_id=user_id,
+            text=Messages.DEL_CONFIRM_THUMB_2,
+            reply_markup=Buttons.THUMB_DEL_2,
+        )
+
     elif query.data.startswith("save_thumb"):
         user_id = query.from_user.id
         replace = query.data.split("|")[1]
@@ -112,6 +126,16 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         except:
             LOGGER.warning("Error on Telegra.ph upload")
         await answer_query(query, Messages.SAVED_THUMBNAIL)
+
+    elif query.data == "del_thumb":
+        user_id = query.from_user.id
+        thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
+        await del_thumb_db(id)
+        try:
+            os.remove(thumb_location + ".jpg")
+        except:
+            pass
+        await query.edit_message_text(text=Messages.DELETED_THUMB)
 
     elif query.data == "nope_thumb":
         user_id = query.from_user.id
