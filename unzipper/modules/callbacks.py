@@ -15,6 +15,7 @@ from pyrogram.types import CallbackQuery
 from config import Config
 from unzipper import LOGGER
 from unzipper.helpers.database import (
+    del_thumb_db,
     set_upload_mode,
     update_thumb,
     update_uploaded,
