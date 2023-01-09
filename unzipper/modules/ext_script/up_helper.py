@@ -99,10 +99,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     chat_id=c_id,
                     video=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
-                    duration=int(
-                        vid_duration) if vid_duration.isnumeric() else 0,
+                    duration=int(vid_duration) if vid_duration.isnumeric() else 0,
                     thumb=thumb_image,
-                    supports_streaming=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         f"**Trying to upload {fname}… Please wait** \n",
@@ -116,17 +114,18 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                 )
                 if os.path.exists(thmb_pth):
                     os.remove(thmb_pth)
-                thumb = await run_shell_cmds(
-                    f"ffmpeg -ss 00:00:01.00 -i {doc_f} -vf 'scale=320:320:force_original_aspect_ratio=decrease' -vframes 1 {thmb_pth}"
-                )
+                try:
+                    thumb = await run_shell_cmds(
+                        f"ffmpeg -ss 00:00:01.00 -i {doc_f} -vf 'scale=320:320:force_original_aspect_ratio=decrease' -vframes 1 {thmb_pth}"
+                    )
+                except:
+                    thumb = Config.BOT_THUMB
                 await unzip_bot.send_video(
                     chat_id=c_id,
                     video=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
-                    duration=int(
-                        vid_duration) if vid_duration.isnumeric() else 0,
+                    duration=int(vid_duration) if vid_duration.isnumeric() else 0,
                     thumb=str(thumb),
-                    supports_streaming=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         f"**Trying to upload {fname}… Please wait** \n",
