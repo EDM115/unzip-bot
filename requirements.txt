@@ -2,7 +2,7 @@ pyrogram==2.0.97
 TgCrypto==1.2.5
 pyromod==1.5
 motor==3.1.1
-dnspython==2.2.1
+dnspython==2.3.0
 psutil==5.9.4
 pykeyboard==0.1.5
 aiohttp==3.8.3
