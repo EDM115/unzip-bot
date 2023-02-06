@@ -115,6 +115,7 @@ extentions_list = {
         "xz",
         "z",
         "zip",
+        "zipx",
         "zpaq",
         "zstd",
     ],
