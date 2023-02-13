@@ -1,4 +1,4 @@
-# Copyright (c) 2022 EDM115
+# Copyright (c) 2023 EDM115
 import os
 import re
 import shutil
@@ -29,7 +29,7 @@ from unzipper.helpers.unzip_help import (
 )
 
 from .bot_data import ERROR_MSGS, Buttons, Messages
-from .commands import https_url_regex
+from .commands import https_url_regex, get_stats
 from .ext_script.custom_thumbnail import silent_del
 from .ext_script.ext_helper import (
     extr_files,
@@ -73,6 +73,13 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             text=Messages.ABOUT_TXT,
             reply_markup=Buttons.ME_GOIN_HOME,
             disable_web_page_preview=True,
+        )
+    
+    elif query.data == "statscallback":
+        text_stats = await get_stats(query.from_user.id)
+        await query.edit_message_text(
+            text=text_stats,
+            reply_markup=Buttons.REFRESH_BUTTON,
         )
 
     elif query.data == "canceldownload":

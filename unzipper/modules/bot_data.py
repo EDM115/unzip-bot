@@ -1,4 +1,4 @@
-# Copyright (c) 2022 EDM115
+# Copyright (c) 2023 EDM115
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 # Inline buttons
@@ -10,6 +10,17 @@ class Buttons:
             [
                 InlineKeyboardButton("Help 📜", callback_data="helpcallback"),
                 InlineKeyboardButton("About 👀", callback_data="aboutcallback"),
+            ],
+            [
+                InlineKeyboardButton("Stats 📊", callback_data="statscallback"),
+            ]
+        ]
+    )
+
+    REFRESH_BUTTON = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("Refresh ♻️", callback_data="refresh")
             ]
         ]
     )

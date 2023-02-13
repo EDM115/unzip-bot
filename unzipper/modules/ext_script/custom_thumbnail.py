@@ -1,4 +1,4 @@
-# Copyright (c) 2022 EDM115
+# Copyright (c) 2023 EDM115
 import os
 
 from PIL import Image
