@@ -37,7 +37,7 @@ https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){
 
 
 @Client.on_message(filters.private)
-async def _(message: Message):
+async def _(_, message: Message):
     await check_user(message)
 
 
@@ -343,7 +343,7 @@ async def info_user2(message: Message):
     except:
         return await user2_msg.edit("Give an user id 🙂")
     try:
-        infos = await _.get_users(user_id)
+        infos = await unzipperbot.get_users(user_id)
     except:
         return await user2_msg.edit("Error happened. The user ID is probably invalid")
     await user2_msg.edit(
