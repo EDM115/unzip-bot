@@ -139,7 +139,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         user_id = query.from_user.id
         thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
         try:
-            await del_thumb_db(id)
+            await del_thumb_db(user_id)
         except Exception as e:
             LOGGER.error(f"Error on thumb deletion in DB : {e}")
         try:

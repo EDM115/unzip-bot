@@ -437,7 +437,7 @@ async def thumb_add(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("delthumb"))
 async def thumb_del(_, message: Message):
-    await del_thumb(_, message)
+    await del_thumb(message)
 
 
 @Client.on_message(

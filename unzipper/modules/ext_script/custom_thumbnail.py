@@ -103,7 +103,7 @@ async def save_thumb(_, message):
 """
 
 
-async def del_thumb(_, message):
+async def del_thumb(message):
     id = message.from_user.id
     thumb_location = Config.THUMB_LOCATION + "/" + str(id) + ".jpg"
     if not os.path.exists(thumb_location):
