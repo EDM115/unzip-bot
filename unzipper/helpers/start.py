@@ -34,7 +34,6 @@ def dl_thumbs():
     loop = asyncio.get_event_loop()
     coroutine = get_thumb_users()
     thumbs = loop.run_until_complete(coroutine)
-    LOGGER.info(thumbs)
     for thumb in thumbs:
         loop2 = asyncio.get_event_loop()
         coroutine2 = download(

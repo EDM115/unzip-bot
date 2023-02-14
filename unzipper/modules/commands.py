@@ -141,6 +141,7 @@ async def get_stats(id):
     uptime = timeformat_sec(time.time() - boottime)
     total_users = await count_users()
     total_banned_users = await count_banned_users()
+
     if id == Config.BOT_OWNER:
         stats_string = f"""
 **💫 Current bot stats 💫**
