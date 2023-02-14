@@ -558,6 +558,7 @@ Here's all the commands that only the owner (you) can use :
 **/logs** : Send you the logs (all of them). Useful for bug tracking. Send them to **@EDM115** if you don't understand them/need help
 **/restart** : Does a basic restart, less intrusive as the `/redbutton` one
 **/dbexport** : Exports the whole database as CSV
+**/gitpull** : Pulls the latest changes from GitHub
 **/admincmd** : This message
         """,
         disable_web_page_preview=True,
