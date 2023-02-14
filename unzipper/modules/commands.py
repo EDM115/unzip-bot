@@ -494,12 +494,14 @@ async def restart(_, message: Message):
     filters.private & filters.command("gitpull") & filters.user(Config.BOT_OWNER)
 )
 async def pull_updates(_, message: Message):
+    git_reply = await message.reply("Pulling updates…")
     repo = git.Repo("/app")
     current = repo.head.commit
     repo.remotes.origin.pull()
+    time.sleep(8)
     if current != repo.head.commit:
-        return message.reply("Pulled changes")
-    return message.reply("No changes")
+        return await git_reply.edit("Pulled changes")
+    return await git_reply.edit("No changes")
 
 
 @Client.on_message(
