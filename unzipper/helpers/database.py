@@ -4,7 +4,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from requests import post
 
 from config import Config
-from unzipper import unzipperbot as Client
+from unzipper import LOGGER, unzipperbot as Client
 
 mongodb = AsyncIOMotorClient(Config.MONGODB_URL)
 unzipper_db = mongodb["Unzipper_Bot"]
@@ -234,7 +234,7 @@ async def count_thumb_users():
 async def del_thumb_db(user_id):
     del_thumb_id = int(user_id)
     is_exist = await thumb_db.find_one({"_id": del_thumb_id})
-    print(is_exist)
+    LOGGER.warning(is_exist)
     if is_exist:
         await user_db.delete_one({"_id": del_thumb_id})
     else:
