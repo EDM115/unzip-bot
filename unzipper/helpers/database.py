@@ -236,6 +236,6 @@ async def del_thumb_db(user_id):
     is_exist = await thumb_db.find_one({"_id": del_thumb_id})
     LOGGER.warning(is_exist)
     if is_exist is not None and is_exist:
-        await user_db.delete_one({"_id": del_thumb_id})
+        await thumb_db.delete_one({"_id": del_thumb_id})
     else:
         return
