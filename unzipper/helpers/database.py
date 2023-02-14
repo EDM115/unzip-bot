@@ -16,7 +16,7 @@ user_db = unzipper_db["users_db"]
 async def add_user(user_id):
     new_user_id = int(user_id)
     is_exist = await user_db.find_one({"user_id": new_user_id})
-    if is_exist is not None:
+    if is_exist is not None and is_exist:
         return -1
     await user_db.insert_one({"user_id": new_user_id})
 
@@ -24,7 +24,7 @@ async def add_user(user_id):
 async def del_user(user_id):
     del_user_id = int(user_id)
     is_exist = await user_db.find_one({"user_id": del_user_id})
-    if is_exist is not None:
+    if is_exist is not None and is_exist:
         await user_db.delete_one({"user_id": del_user_id})
     else:
         return -1
@@ -33,7 +33,7 @@ async def del_user(user_id):
 async def is_user_in_db(user_id):
     u_id = int(user_id)
     is_exist = await user_db.find_one({"user_id": u_id})
-    if is_exist is not None:
+    if is_exist is not None and is_exist:
         return True
     return False
 
@@ -54,7 +54,7 @@ b_user_db = unzipper_db["banned_users_db"]
 async def add_banned_user(user_id):
     new_user_id = int(user_id)
     is_exist = await b_user_db.find_one({"banned_user_id": new_user_id})
-    if is_exist is not None:
+    if is_exist is not None and is_exist:
         return -1
     await b_user_db.insert_one({"banned_user_id": new_user_id})
 
@@ -62,7 +62,7 @@ async def add_banned_user(user_id):
 async def del_banned_user(user_id):
     del_user_id = int(user_id)
     is_exist = await b_user_db.find_one({"banned_user_id": del_user_id})
-    if is_exist is not None:
+    if is_exist is not None and is_exist:
         await b_user_db.delete_one({"banned_user_id": del_user_id})
     else:
         return -1
@@ -71,7 +71,7 @@ async def del_banned_user(user_id):
 async def is_user_in_bdb(user_id):
     u_id = int(user_id)
     is_exist = await b_user_db.find_one({"banned_user_id": u_id})
-    if is_exist is not None:
+    if is_exist is not None and is_exist:
         return True
     return False
 
@@ -150,7 +150,7 @@ mode_db = unzipper_db["ulmode_db"]
 
 async def set_upload_mode(user_id, mode):
     is_exist = await mode_db.find_one({"_id": user_id})
-    if is_exist is not None:
+    if is_exist is not None and is_exist:
         await mode_db.update_one({"_id": user_id}, {"$set": {"mode": mode}})
     else:
         await mode_db.insert_one({"_id": user_id, "mode": mode})
@@ -158,7 +158,7 @@ async def set_upload_mode(user_id, mode):
 
 async def get_upload_mode(user_id):
     umode = await mode_db.find_one({"_id": user_id})
-    if umode is not None:
+    if umode is not None and umode:
         return umode["mode"]
     return "media"
 
@@ -169,14 +169,14 @@ uploaded_db = unzipper_db["uploaded_count_db"]
 
 async def get_uploaded(user_id):
     up_count = await uploaded_db.find_one({"_id": user_id})
-    if up_count is not None:
+    if up_count is not None and up_count:
         return up_count["uploaded_files"]
     return 0
 
 
 async def update_uploaded(user_id, upload_count):
     is_exist = await uploaded_db.find_one({"_id": user_id})
-    if is_exist is not None:
+    if is_exist is not None and is_exist:
         new_count = await get_uploaded(user_id) + upload_count
         await uploaded_db.update_one(
             {"_id": user_id}, {"$set": {"uploaded_files": new_count}}
@@ -199,14 +199,14 @@ thumb_db = unzipper_db["thumb_db"]
 
 async def get_thumb(user_id):
     existing = await thumb_db.find_one({"_id": user_id})
-    if existing is not None:
+    if existing is not None and existing:
         return existing["url"]
     return None
 
 
 async def update_thumb(user_id, thumb_url, force):
     existing = await thumb_db.find_one({"_id": user_id})
-    if existing is not None:
+    if existing is not None and existing:
         if not force:
             return existing["url"]
         await thumb_db.update_one({"_id": user_id}, {"$set": {"url": thumb_url}})
@@ -235,7 +235,7 @@ async def del_thumb_db(user_id):
     del_thumb_id = int(user_id)
     is_exist = await thumb_db.find_one({"_id": del_thumb_id})
     LOGGER.warning(is_exist)
-    if is_exist is not None:
+    if is_exist is not None and is_exist:
         await user_db.delete_one({"_id": del_thumb_id})
     else:
         return

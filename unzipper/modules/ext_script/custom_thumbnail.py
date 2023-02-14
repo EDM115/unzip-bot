@@ -105,9 +105,9 @@ async def save_thumb(_, message):
 
 async def del_thumb(message):
     id = message.from_user.id
-    #thumb_location = Config.THUMB_LOCATION + "/" + str(id) + ".jpg"
-    #if not os.path.exists(thumb_location):
-    #    return await message.reply(text="You already have no thumbnail 😅")
+    thumb_location = Config.THUMB_LOCATION + "/" + str(id) + ".jpg"
+    if not os.path.exists(thumb_location):
+        return await message.reply(text="You already have no thumbnail 😅")
     await message.reply(text=Messages.DEL_CONFIRM_THUMB, reply_markup=Buttons.THUMB_DEL)
 
 
