@@ -6,6 +6,7 @@ import time
 from asyncio import sleep
 from sys import executable
 
+import git
 import psutil
 from pyrogram import Client, enums, filters
 from pyrogram.errors import FloodWait, RPCError
@@ -488,6 +489,17 @@ async def restart(_, message: Message):
     await send_logs(message.from_user.id)
     LOGGER.info(f"{message.from_user.id} : Restarting…")
     os.execl(executable, executable, "-m", "unzipper")
+
+@Client.on_message(
+    filters.private & filters.command("gitpull") & filters.user(Config.BOT_OWNER)
+)
+async def pull_updates(_, message: Message):
+    repo = git.Repo("/app")
+    current = repo.head.commit
+    repo.remotes.origin.pull()
+    if current != repo.head.commit:
+        return message.reply("Pulled changes")
+    return message.reply("No changes")
 
 
 @Client.on_message(
