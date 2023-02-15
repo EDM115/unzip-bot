@@ -548,10 +548,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     elif query.data.startswith("ext_f"):
         user_id = query.from_user.id
         spl_data = query.data.split("|")
-        LOGGER.warning(spl_data)
+        LOGGER.warning("ext_f spl_data : " + str(spl_data))
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
         paths = await get_files(path=file_path)
-        LOGGER.warning(paths)
+        LOGGER.warning("ext_f paths : " + str(paths))
         if not paths:
             if os.path.isdir(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}"):
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
@@ -574,7 +574,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         # Refreshing Inline keyboard
         await query.message.edit("Refreshing… ⏳")
         rpaths = await get_files(path=file_path)
-        LOGGER.warning(rpaths)
+        LOGGER.warning("ext_f rpaths : " + str(rpaths))
         # There are no files let's die
         if not rpaths:
             try:
@@ -605,10 +605,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     elif query.data.startswith("ext_a"):
         user_id = query.from_user.id
         spl_data = query.data.split("|")
-        LOGGER.warning(spl_data)
+        LOGGER.warning("ext_a spl_data : " + str(spl_data))
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
         paths = await get_files(path=file_path)
-        LOGGER.warning(paths)
+        LOGGER.warning("ext_a paths : " + str(paths))
         if not paths:
             try:
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
@@ -618,6 +618,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 "I've already sent you those files 🙂")
         await query.answer("Trying to send all files to you… Please wait")
         for file in paths:
+            LOGGER.info("ext_a file in paths: " + file)
             sent_files += 1
             await send_file(
                 unzip_bot=unzip_bot,
