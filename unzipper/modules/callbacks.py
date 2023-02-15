@@ -75,7 +75,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             disable_web_page_preview=True,
         )
     
-    elif query.data == "statscallback":
+    elif query.data.startswith("statscallback"):
+        if query.data.endswith("refresh"):
+            await query.edit_message_text(text="Refreshing stats... ♻️")
         text_stats = await get_stats(query.from_user.id)
         await query.edit_message_text(
             text=text_stats,

@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Report any bug you found
-title: "[BUG]"
+title: "[BUG] "
 labels: bug
 assignees: EDM115
 
@@ -21,10 +21,6 @@ A clear and concise description of what you expected to happen.
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
-
-**Which bot version :**
- - Night or Day ? Or Beta ?
-- On which Telegram version ?
 
 **Additional context**
 Add any other context about the problem here.
