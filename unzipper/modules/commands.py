@@ -494,13 +494,13 @@ async def restart(_, message: Message):
     filters.private & filters.command("gitpull") & filters.user(Config.BOT_OWNER)
 )
 async def pull_updates(_, message: Message):
-    git_reply = await message.reply("Pulling updates…")
+    git_reply = await message.reply("Pulling updates… ⌛")
     repo = git.Repo("/app")
     current = repo.head.commit
     repo.remotes.origin.pull()
-    time.sleep(8)
+    time.sleep(2)
     if current != repo.head.commit:
-        await git_reply.edit("Pulled changes, restarting...")
+        await git_reply.edit("✅ Pulled changes, restarting...")
         return await restart(_, message)
     return await git_reply.edit("No changes")
 
