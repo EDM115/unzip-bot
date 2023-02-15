@@ -501,7 +501,7 @@ async def pull_updates(_, message: Message):
     time.sleep(8)
     if current != repo.head.commit:
         await git_reply.edit("Pulled changes, restarting...")
-        return restart(_, message)
+        return await restart(_, message)
     return await git_reply.edit("No changes")
 
 
