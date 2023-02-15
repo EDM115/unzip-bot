@@ -548,8 +548,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     elif query.data.startswith("ext_f"):
         user_id = query.from_user.id
         spl_data = query.data.split("|")
+        LOGGER.warning(spl_data)
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
         paths = await get_files(path=file_path)
+        LOGGER.warning(paths)
         if not paths:
             if os.path.isdir(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}"):
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
@@ -572,6 +574,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         # Refreshing Inline keyboard
         await query.message.edit("Refreshing… ⏳")
         rpaths = await get_files(path=file_path)
+        LOGGER.warning(rpaths)
         # There are no files let's die
         if not rpaths:
             try:
@@ -602,8 +605,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     elif query.data.startswith("ext_a"):
         user_id = query.from_user.id
         spl_data = query.data.split("|")
+        LOGGER.warning(spl_data)
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
         paths = await get_files(path=file_path)
+        LOGGER.warning(paths)
         if not paths:
             try:
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
