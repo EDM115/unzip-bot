@@ -39,7 +39,7 @@ async def get_size(doc_f):
 
 # Send file to a user
 async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
-    LOGGER.warning("send_file() : unzip_bot = " + str(unzip_bot) + ", c_id = " + str(c_id) + ", doc_f = " + str(doc_f) + ", query = " + str(query) + ", full_path = " + str(full_path) + ", log_msg = " + str(log_msg) + ", split = " + str(split))
+    LOGGER.warning("send_file() : unzip_bot = " + str(unzip_bot) + ", c_id = " + str(c_id) + ", doc_f = " + str(doc_f) + ", full_path = " + str(full_path) + ", split = " + str(split))
     try:
         ul_mode = await get_upload_mode(c_id)
         if split:
