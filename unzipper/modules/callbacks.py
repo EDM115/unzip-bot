@@ -145,7 +145,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         except Exception as e:
             LOGGER.error(f"Error on thumb deletion in DB : {e}")
         try:
-            os.remove(thumb_location + ".jpg")
+            os.remove(thumb_location)
         except:
             pass
         await query.edit_message_text(text=Messages.DELETED_THUMB)
