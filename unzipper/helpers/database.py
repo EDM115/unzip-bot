@@ -244,17 +244,17 @@ async def del_thumb_db(user_id):
 bot_data = unzipper_db["bot_data"]
 
 async def get_boot():
-    LOGGER.warning(bot_data.find_one({}))
-    LOGGER.warning(bot_data.find_one({})["boot"])
     text = "bot_data = " + str(bot_data) + "\ncontent = " + str(bot_data.find_one({}))
     return text
 
-async def set_boot(boottime):
-    is_exist = await bot_data.find_({}, {"boot":1, "_id":0})
-    if is_exist is not None and is_exist:    
-        await bot_data.update_one({"boot":1}, {"$set": {"boot": boottime}})
+async def set_boot(boottime):   
+    #await bot_data.update_one({"boot":1}, {"$set": {"boot": boottime}})
+    
+    is_exist = await mode_db.find_one({"_id":1})
+    if is_exist is not None and is_exist:
+        await mode_db.update_one({"_id":1}, {"$set": {"_id": boottime}})
     else:
-        await bot_data.insert_one({"boot": boottime})
+        await mode_db.insert_one({"_id": boottime})
 
 async def is_boot_different(boottime):
     is_exist = await bot_data.find_({}, {"boot":1, "_id":0})
