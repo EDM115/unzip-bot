@@ -468,6 +468,9 @@ async def send_logs(user_id):
         except RPCError as e:
             unzipperbot.send_message(chat_id=user_id, text=e)
 
+async def clear_logs():
+    with open("unzip-log.txt", "w") as f:
+        f.write("")
 
 @Client.on_message(
     filters.private & filters.command("logs") & filters.user(Config.BOT_OWNER)
@@ -489,6 +492,7 @@ async def restart(_, message: Message):
     )
     await send_logs(message.from_user.id)
     LOGGER.info(f"{message.from_user.id} : Restarting…")
+    await clear_logs()
     os.execl(executable, executable, "-m", "unzipper")
 
 @Client.on_message(
