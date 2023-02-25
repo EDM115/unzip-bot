@@ -244,7 +244,9 @@ async def del_thumb_db(user_id):
 bot_data = unzipper_db["bot_data"]
 
 async def get_boot():
-    text = str(bot_data) + str(bot_data.find_one({}))
+    LOGGER.warning(bot_data.find_one({}))
+    LOGGER.warning(bot_data.find_one({})["boot"])
+    text = "bot_data = " + str(bot_data) + "\ncontent = " + str(bot_data.find_one({}))
     return text
 
 async def set_boot(boottime):
