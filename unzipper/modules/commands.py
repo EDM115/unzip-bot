@@ -342,11 +342,13 @@ async def info_user2(_, message: Message):
     try:
         user_id = message.text.split(None, 1)[1]
     except:
-        return await user2_msg.edit("Give an user id 🙂")
+        return await user2_msg.edit("Give an user id/username 🙂")
     try:
         infos = await unzipperbot.get_users(user_id)
     except:
-        return await user2_msg.edit("Error happened. The user ID is probably invalid")
+        return await user2_msg.edit("Error happened. The user ID/username is probably invalid")
+    if not isinstance(user_id, int):
+        user_id = infos.id
     await user2_msg.edit(
         f"`{infos}`\n\n**Direct link to profile :** tg://user?id={user_id}"
     )

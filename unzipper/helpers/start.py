@@ -9,7 +9,7 @@ from unzipper import LOGGER, boottime
 from unzipper import unzipperbot as client
 from unzipper.modules.callbacks import download
 
-from .database import get_thumb_users, set_boot
+from .database import get_thumb_users, set_boot, get_boot, set_old_boot, get_old_boot, is_boot_different
 
 
 def check_logs():
