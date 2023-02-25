@@ -244,7 +244,8 @@ async def del_thumb_db(user_id):
 bot_data = unzipper_db["bot_data"]
 
 async def get_boot():
-    return bot_data
+    text = str(bot_data) + str(bot_data.find_one({}))
+    return text
 
 async def set_boot(boottime):
     is_exist = await bot_data.find_({}, {"boot":1, "_id":0})
