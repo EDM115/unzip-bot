@@ -9,7 +9,7 @@ from pyrogram import idle
 from config import Config
 
 from . import unzipperbot
-from .helpers.start import check_logs, dl_thumbs
+from .helpers.start import check_logs, dl_thumbs, set_boot_time
 from .modules.bot_data import Messages
 
 running = True
@@ -45,6 +45,7 @@ while running:
             chat_id=Config.LOGS_CHANNEL, text=Messages.START_TXT.format(starttime)
         )
         dl_thumbs()
+        set_boot_time()
         LOGGER.info("Checking Log channel…")
         if check_logs():
             LOGGER.info("Log channel alright")
