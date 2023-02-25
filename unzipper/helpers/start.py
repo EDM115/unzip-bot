@@ -56,6 +56,6 @@ async def check_boot():
     boot = await get_boot()
     old_boot = await get_old_boot()
 
-    if is_boot_different():
+    if await is_boot_different():
         await client.send_message(Config.BOT_OWNER, f"Bot restarted !\n\n**Old boot time** : `{old_boot}`\n**New boot time** : `{boot}`")
     
