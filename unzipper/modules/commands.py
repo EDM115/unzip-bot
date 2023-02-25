@@ -348,7 +348,10 @@ async def info_user2(_, message: Message):
     except:
         return await user2_msg.edit("Error happened. The user ID/username is probably invalid")
     if not isinstance(user_id, int):
-        user_id = infos.id
+        try:
+            user_id = infos.id
+        except:
+            pass
     await user2_msg.edit(
         f"`{infos}`\n\n**Direct link to profile :** tg://user?id={user_id}"
     )
@@ -571,6 +574,7 @@ Here's all the commands that only the owner (you) can use :
 **/restart** : Does a basic restart, less intrusive as the `/redbutton` one
 **/dbexport** : Exports the whole database as CSV
 **/gitpull** : Pulls the latest changes from GitHub
+**/boot** : Get the bot's boot time
 **/admincmd** : This message
         """,
         disable_web_page_preview=True,

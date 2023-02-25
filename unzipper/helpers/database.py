@@ -263,8 +263,11 @@ async def set_old_boot(boottime):
 async def get_old_boot():
     return await bot_data.find_one({"old_boot": True}).get("time")
 
-async def is_boot_different(boottime):
+async def is_boot_different():
+    different = True
     is_exist = await bot_data.find_one({"boot": True})
-    if is_exist["time"] == boottime:
-        return False
-    return True
+    is_exist_old = await bot_data.find_one({"old_boot": True})
+    if is_exist and is_exist_old:
+        if is_exist["time"] == is_exist_old["time"]:
+            different = False
+    return different

@@ -41,5 +41,21 @@ def dl_thumbs():
 
 def set_boot_time():
     loop = asyncio.get_event_loop()
-    coroutine = set_boot(boottime)
+    coroutine = check_boot()
     loop.run_until_complete(coroutine)
+
+async def check_boot():
+    # Put the previous boot time in old_boot
+    boot = await get_boot()
+    await set_old_boot(boot)
+
+    # Set the current boot time in boot
+    await set_boot(boottime)
+
+    # Get the newest values
+    boot = await get_boot()
+    old_boot = await get_old_boot()
+
+    if is_boot_different():
+        await client.send_message(Config.BOT_OWNER, f"Bot restarted !\n\n**Old boot time** : `{old_boot}`\n**New boot time** : `{boot}`")
+    
