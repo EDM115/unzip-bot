@@ -5,13 +5,11 @@ import sys
 from pyrogram import enums
 
 from config import Config
-from unzipper import LOGGER
+from unzipper import LOGGER, boottime
 from unzipper import unzipperbot as client
 from unzipper.modules.callbacks import download
 
-from .database import get_thumb_users
-
-# Checking log channel
+from .database import get_thumb_users, set_boot
 
 
 def check_logs():
@@ -40,3 +38,8 @@ def dl_thumbs():
             thumb["url"], (Config.THUMB_LOCATION + "/" + str(thumb["_id"]) + ".jpg")
         )
         loop2.run_until_complete(coroutine2)
+
+def set_boot_time():
+    loop = asyncio.get_event_loop()
+    coroutine = set_boot(boottime)
+    loop.run_until_complete(coroutine)

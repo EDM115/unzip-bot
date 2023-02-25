@@ -25,6 +25,7 @@ from unzipper.helpers.database import (
     get_upload_mode,
     get_uploaded,
     get_users_list,
+    get_boot,
 )
 from unzipper.helpers.unzip_help import humanbytes, timeformat_sec
 from unzipper.modules.ext_script.custom_thumbnail import add_thumb, del_thumb
@@ -512,6 +513,11 @@ async def export_db(_, message):
     await message.reply("🚧 WIP 🚧")
     # Will use https://www.mongodb.com/docs/database-tools/mongoexport/ on command to export as CSV
 
+@Client.on_message(
+    filters.private & filters.command("boot") & filters.user(Config.BOT_OWNER)
+)
+async def get_boottime_db(_, message: Message):
+    await message.reply(await get_boot())
 
 @Client.on_message(filters.command("commands"))
 async def getall_cmds(_, message):
