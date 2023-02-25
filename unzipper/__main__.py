@@ -44,8 +44,8 @@ while running:
         unzipperbot.send_message(
             chat_id=Config.LOGS_CHANNEL, text=Messages.START_TXT.format(starttime)
         )
-        dl_thumbs()
         set_boot_time()
+        dl_thumbs()
         LOGGER.info("Checking Log channel…")
         if check_logs():
             LOGGER.info("Log channel alright")

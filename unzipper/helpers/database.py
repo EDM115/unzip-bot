@@ -249,12 +249,12 @@ async def get_boot():
 async def set_boot(boottime):
     is_exist = await bot_data.find_one({"boot": True})
     if is_exist is not None and is_exist:
-        await bot_data.update_one({"boot": True}, {"$set": {"_id": boottime}})
+        await bot_data.update_one({"boot": True}, {"$set": {"time": boottime}})
     else:
-        await bot_data.insert_one({"_id": boottime, "boot": True})
+        await bot_data.insert_one({"boot": True, "time": boottime})
 
 async def is_boot_different(boottime):
     is_exist = await bot_data.find_one({"boot": True})
-    if is_exist["_id"] == boottime:
+    if is_exist["time"] == boottime:
         return False
     return True
