@@ -469,8 +469,7 @@ async def send_logs(user_id):
             unzipperbot.send_message(chat_id=user_id, text=e)
 
 async def clear_logs():
-    with open("unzip-log.txt", "w") as f:
-        f.write("")
+    open('file.txt', 'w').close()
 
 @Client.on_message(
     filters.private & filters.command("logs") & filters.user(Config.BOT_OWNER)
