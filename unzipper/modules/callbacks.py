@@ -20,6 +20,8 @@ from unzipper.helpers.database import (
     update_thumb,
     update_uploaded,
     upload_thumb,
+    add_ongoing_task,
+    del_ongoing_task,
 )
 from unzipper.helpers.unzip_help import (
     TimeFormatter,
@@ -174,6 +176,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
 
     elif query.data.startswith("extract_file"):
         user_id = query.from_user.id
+        await add_ongoing_task(user_id)
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
         ext_files_dir = f"{download_path}/extracted"
         r_message = query.message.reply_to_message
@@ -191,6 +194,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 url = r_message.text
                 # Double check
                 if not re.match(https_url_regex, url):
+                    await del_ongoing_task(user_id)
                     return await query.message.edit("That's not a valid url 💀")
                 s = ClientSession()
                 async with s as session:
@@ -205,6 +209,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     unzip_resp = await session.get(url, timeout=None)
                     if "application/" not in unzip_resp.headers.get(
                             "content-type"):
+                        await del_ongoing_task(user_id)
                         return await query.message.edit(
                             "That's not an archive 💀\n\n**Try to @transload it**"
                         )
@@ -217,6 +222,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         if splitted_data[2] != "thumb":
                             fext = fname.split(".")[-1].casefold()
                             if fext not in extentions_list["archive"]:
+                                await del_ongoing_task(user_id)
                                 return await query.message.edit(
                                     "This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**"
                                 )
@@ -241,12 +247,14 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             source=url,
                         )
                     else:
+                        await del_ongoing_task(user_id)
                         return await query.message.edit(
                             "**Sorry, I can't download that URL 😭 Try to @transload it**"
                         )
 
             elif splitted_data[1] == "tg_file":
                 if r_message.document is None:
+                    await del_ongoing_task(user_id)
                     return await query.message.edit(
                         "Give me an archive to extract 😐")
                 fname = r_message.document.file_name
@@ -263,9 +271,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     fext = fname.split(".")[-1].casefold()
                     if (fnmatch(fext, extentions_list["split"][0])
                             or fext in extentions_list["split"] or bool(re.search(split_file_pattern, fname))):
+                        await del_ongoing_task(user_id)
                         return await query.message.edit(
                             "Splitted archives can't be processed yet")
                     if fext not in extentions_list["archive"]:
+                        await del_ongoing_task(user_id)
                         return await query.message.edit(
                             "This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**"
                         )
@@ -284,6 +294,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 )
                 e_time = time()
             else:
+                await del_ongoing_task(user_id)
                 return await answer_query(
                     query,
                     "Fatal query parsing error 💀 Please contact @EDM115 with details and screenshots",
@@ -309,6 +320,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 try:
                     os.rename(location, renamed)
                 except OSError as e:
+                    await del_ongoing_task(user_id)
                     return LOGGER.error(e)
                 newfname = renamed.split("/")[-1]
                 LOGGER.info(newfname)
@@ -382,6 +394,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     except:
                         pass
                     LOGGER.info("no splittedfiles")
+                    await del_ongoing_task(user_id)
                     return await query.message.edit(
                         "An error occured while splitting a file above 2 Gb 😥")
                 LOGGER.info(splittedfiles)
@@ -399,6 +412,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         split=True,
                     )
                 shutil.rmtree(splitteddir)
+                await del_ongoing_task(user_id)
                 return shutil.rmtree(renamed.replace(newfname, ""))
 
             dltime = TimeFormatter(round(e_time - s_time) * 1000)
@@ -438,6 +452,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await query.message.edit(Messages.EXT_FAILED_TXT)
                     shutil.rmtree(ext_files_dir)
                     already_removed = True
+                    await del_ongoing_task(user_id)
                     return await log_msg.reply(Messages.EXT_FAILED_TXT)
                 except:
                     try:
@@ -448,8 +463,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                                                  text=Messages.EXT_FAILED_TXT)
                     shutil.rmtree(ext_files_dir)
                     already_removed = True
+                    await del_ongoing_task(user_id)
                     return await archive_msg.reply(Messages.EXT_FAILED_TXT)
-            # Check if user were dumb 😐
+            # Check if user was dumb 😐
             paths = await get_files(path=ext_files_dir)
             if not paths:
                 await archive_msg.reply("That archive is password protected 😡")
@@ -465,6 +481,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                                    unzip_client=unzip_bot)
                 shutil.rmtree(ext_files_dir)
                 already_removed = True
+                await del_ongoing_task(user_id)
                 return
 
             # Upload extracted files
@@ -523,9 +540,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         LOGGER.error("Fatal error : uncorrect archive format")
                         global err400
                         err400 = True
+                        await del_ongoing_task(user_id)
                         return
 
         except Exception as e:
+            await del_ongoing_task(user_id)
             try:
                 try:
                     await query.message.edit(Messages.ERROR_TXT.format(e))
@@ -555,6 +574,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         if not paths:
             if os.path.isdir(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}"):
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
+            await del_ongoing_task(user_id)
             return await query.message.edit(
                 "I've already sent you those files 🙂")
         await query.answer("Sending that file to you… Please wait")
@@ -581,6 +601,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
             except:
                 pass
+            await del_ongoing_task(user_id)
             return await query.message.edit(
                 "I've already sent you those files 🙂")
         try:
@@ -614,6 +635,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
             except:
                 pass
+            await del_ongoing_task(user_id)
             return await query.message.edit(
                 "I've already sent you those files 🙂")
         await query.answer("Trying to send all files to you… Please wait")
@@ -634,6 +656,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             "**Successfully uploaded ✅**\n\n**Join @EDM115bots ❤️**")
         await log_msg.reply(Messages.HOW_MANY_UPLOADED.format(sent_files))
         await update_uploaded(user_id, upload_count=sent_files)
+        await del_ongoing_task(user_id)
         try:
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
         except Exception as e:
@@ -641,6 +664,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             await archive_msg.reply(Messages.ERROR_TXT.format(e))
 
     elif query.data == "cancel_dis":
+        await del_ongoing_task(user_id)
         try:
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{query.from_user.id}")
             await query.message.edit(

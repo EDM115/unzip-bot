@@ -287,9 +287,8 @@ async def count_ongoing_tasks():
     tasks = await ongoing_tasks.count_documents({})
     return tasks
 
-async def add_ongoing_task(user_id, task_type):
-    task_id = await count_ongoing_tasks() + 1
-    await ongoing_tasks.insert_one({"user_id": user_id, "task_id": task_id, "task_type": task_type})
+async def add_ongoing_task(user_id):
+    await ongoing_tasks.insert_one({"user_id": user_id})
 
 async def del_ongoing_task(user_id):
     is_exist = await ongoing_tasks.find_one({"user_id": user_id})
