@@ -664,13 +664,14 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             await archive_msg.reply(Messages.ERROR_TXT.format(e))
 
     elif query.data == "cancel_dis":
-        await del_ongoing_task(user_id)
+        uid = query.from_user.id
+        await del_ongoing_task(uid)
         try:
-            shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{query.from_user.id}")
+            shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{uid}")
             await query.message.edit(
                 Messages.CANCELLED_TXT.format("❌ Process cancelled"))
             if single_up:
-                await update_uploaded(user_id=query.from_user.id,
+                await update_uploaded(user_id=uid,
                                       upload_count=sent_files)
                 try:
                     await log_msg.reply(
