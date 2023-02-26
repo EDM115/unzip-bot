@@ -9,7 +9,7 @@ from unzipper import LOGGER, boottime
 from unzipper import unzipperbot as client
 from unzipper.modules.callbacks import download
 
-from .database import get_thumb_users, set_boot, get_boot, set_old_boot, get_old_boot, is_boot_different
+from .database import get_thumb_users, set_boot, get_boot, set_old_boot, get_old_boot, is_boot_different, count_ongoing_tasks, get_ongoing_tasks, clear_ongoing_tasks
 
 
 def check_logs():
@@ -56,6 +56,15 @@ async def check_boot():
     boot = await get_boot()
     old_boot = await get_old_boot()
 
-    if await is_boot_different():
+    different = await is_boot_different()
+    LOGGER.info(f"Boot time is different ? : {different}")
+    if different:
         await client.send_message(Config.BOT_OWNER, f"Bot restarted !\n\n**Old boot time** : `{old_boot}`\n**New boot time** : `{boot}`")
-    
+        await warn_users()
+
+async def warn_users():
+    if await count_ongoing_tasks() > 0:
+        tasks = await get_ongoing_tasks()
+        for task in tasks:
+            await client.send_message(task["user_id"], "⚠️ **Warning** : the bot restarted while you were using it\nYour task was stopped, kindly send it again")
+        await clear_ongoing_tasks()

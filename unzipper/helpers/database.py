@@ -234,7 +234,6 @@ async def count_thumb_users():
 async def del_thumb_db(user_id):
     del_thumb_id = int(user_id)
     is_exist = await thumb_db.find_one({"_id": del_thumb_id})
-    LOGGER.warning(is_exist)
     if is_exist is not None and is_exist:
         await thumb_db.delete_one({"_id": del_thumb_id})
     else:
@@ -277,3 +276,27 @@ async def is_boot_different():
         if is_exist["time"] == is_exist_old["time"]:
             different = False
     return different
+
+# DB for ongoing tasks
+ongoing_tasks = unzipper_db["ongoing_tasks"]
+
+async def get_ongoing_tasks():
+    return [ongoing_list async for ongoing_list in ongoing_tasks.find({})]
+
+async def count_ongoing_tasks():
+    tasks = await ongoing_tasks.count_documents({})
+    return tasks
+
+async def add_ongoing_task(user_id, task_type):
+    task_id = await count_ongoing_tasks() + 1
+    await ongoing_tasks.insert_one({"user_id": user_id, "task_id": task_id, "task_type": task_type})
+
+async def del_ongoing_task(user_id):
+    is_exist = await ongoing_tasks.find_one({"user_id": user_id})
+    if is_exist is not None and is_exist:
+        await ongoing_tasks.delete_one({"user_id": user_id})
+    else:
+        return
+
+async def clear_ongoing_tasks():
+    await ongoing_tasks.delete_many({})
