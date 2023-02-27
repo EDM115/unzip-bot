@@ -66,5 +66,8 @@ async def warn_users():
     if await count_ongoing_tasks() > 0:
         tasks = await get_ongoing_tasks()
         for task in tasks:
-            await client.send_message(task["user_id"], "⚠️ **Warning** : the bot restarted while you were using it\nYour task was stopped, kindly send it again")
+            try:
+                await client.send_message(task["user_id"], "⚠️ **Warning** : the bot restarted while you were using it\nYour task was stopped, kindly send it again")
+            except:
+                pass
         await clear_ongoing_tasks()
