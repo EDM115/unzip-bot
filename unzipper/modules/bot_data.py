@@ -236,12 +236,6 @@ Select the extraction mode for that {} 👀
 **Status :** Processing the extracted files… Please wait
     """
 
-    EXT_CAPTION = """
-`{}`
-
-Successfully extracted by @unzip_edm115bot 🥰
-    """
-
     URL_UPLOAD = """
 `{}` is too huge to be uploaded to Telegram (`{}`)
 
