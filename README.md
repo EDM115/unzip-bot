@@ -62,7 +62,7 @@ Deploying is easy 🥰 You can deploy this bot in Heroku or in a VPS ♥️
 > Because arch’s p7zip package is the only maintained version of the [original p7zip](http://p7zip.sourceforge.net/) package with some additional features
 ---
 #### The lazy way 
-[![Deploy me 🥺](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot)  
+[![Deploy me 🥺](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/ymimal/unarchived-ziprar-bot/tree/yminmal)  
 (if you're in a fork, make sure to replace the template URL with your repo’s one)
 
 ---
