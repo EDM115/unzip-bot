@@ -231,7 +231,7 @@ async def broadcast_this(_, message: Message):
 
 
 @Client.on_message(filters.command("sendto") & filters.user(Config.BOT_OWNER))
-async def send_this(message: Message):
+async def send_this(_, message: Message):
     sd_msg = await message.reply("`Processing… ⏳`")
     r_msg = message.reply_to_message
     if not r_msg:
@@ -246,7 +246,7 @@ async def send_this(message: Message):
         await sd_msg.edit(f"Message successfully sent to `{user_id}`")
     else:
         await sd_msg.edit(
-            f"It failed 😣 Retry\n\nIf it fails again, it means that {user_id} haven't started the bot yet, or he's private/banned/whatever"
+            f"It failed 😣 Retry\n\nIf it fails again, it means that {user_id} haven't started the bot yet (or deleted the chat), or he's private/banned/whatever"
         )
 
 
@@ -262,7 +262,7 @@ async def report_this(_, message: Message):
         chat_id=Config.LOGS_CHANNEL,
         text=Messages.REPORT_TEXT.format(u_id, r_msg.text.markdown),
     )
-    await sd_msg.edit("Report sucessfully sent ! An answer will arrive soon")
+    await sd_msg.edit("Report sucessfully sent ! An answer will arrive soon\n\nNote : if you need to reply to replies, always use that /report command (or join **@EDM115_chat**)")
 
 
 @Client.on_message(filters.command("ban") & filters.user(Config.BOT_OWNER))
