@@ -59,7 +59,8 @@ while running:
                     text=f"Error : the provided **LOGS_CHANNEL** (`{Config.LOGS_CHANNEL}`) is incorrect. Bot crashed 😪",
                 )
             except:
-                unzipperbot.stop()
+                pass
+            unzipperbot.stop()
 
 LOGGER.info("Received SIGTERM")
 stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
