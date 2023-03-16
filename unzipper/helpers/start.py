@@ -59,7 +59,10 @@ async def check_boot():
     different = await is_boot_different()
     LOGGER.info(f"Boot time is different ? : {different}")
     if different:
-        await client.send_message(Config.BOT_OWNER, f"Bot restarted !\n\n**Old boot time** : `{old_boot}`\n**New boot time** : `{boot}`")
+        try:
+            await client.send_message(Config.BOT_OWNER, f"Bot restarted !\n\n**Old boot time** : `{old_boot}`\n**New boot time** : `{boot}`")
+        except:
+            pass # first start obviously 
         await warn_users()
 
 async def warn_users():
@@ -69,5 +72,5 @@ async def warn_users():
             try:
                 await client.send_message(task["user_id"], "⚠️ **Warning** : the bot restarted while you were using it\nYour task was stopped, kindly send it again")
             except:
-                pass
+                pass #user deleted chat
         await clear_ongoing_tasks()
