@@ -111,6 +111,7 @@ extentions_list = {
         "rar",
         "tar",
         "wim",
+        "x7",
         "xapk",
         "xz",
         "z",
