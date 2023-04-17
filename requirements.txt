@@ -3,7 +3,7 @@ TgCrypto==1.2.5
 pyromod==1.5
 motor==3.1.2
 dnspython==2.3.0
-psutil==5.9.4
+psutil==5.9.5
 pykeyboard==0.1.5
 aiohttp==3.8.4
 aiofiles==23.1.0
