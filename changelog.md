@@ -12,7 +12,56 @@
 
 ---
 
-### v5.1.2 **[LATEST STABLE RELEASE]** / **[LATEST BETA RELEASE]**
+### v6.0.0 *(soon)*
+
+- On the work, huge refactor, a lot of bug fixes and new features will come around the summer...
+
+### v5.3.1 **[LATEST STABLE RELEASE]**
+
+- Added /gitpull command to try the latest updates (removed at each restart)
+- /delthumb also works locally
+- Logs the boot time on database
+- Clears the logs on /restart (because in the end they're sent before actually restarting)
+- /user2 now correctly format the link when an username is provided
+- Users are warned when the bot have restarted
+- So the ongoing tasks are also stored in the DB
+- And so /stats shows how many tasks are ongoing
+- X7 archives are now supported
+
+### v5.3.0
+
+- Splitted archives are no longer processed (even .rar ones)
+- Sending videos as media worked but now instantly fails for an unknown reason
+- Heroku deployment file now complies to their drop of the free their
+- Added THUMB_DEL buttons
+- Added ZIPX support
+- Added a Refresh button on /stats (#143)
+
+### v5.2.2
+
+- Happy new year 2023 🎉
+- Avoids double ban/unban
+- Fixed extentions recognition
+- Added a "Processing task" message
+
+
+### v5.2.1
+
+- Added the website to /help
+- Python 3.10 -> 3.11
+- Added a new command : /report
+
+### v5.2.0
+
+- Removal of the personal_only and beta branches, only master remains
+- Added permalink to the profile on /user2
+- Half refactor, a lot of errors and misuse of functions gone
+- Added renovate[bot]
+- Better new user formatting
+- ban/unban also acts on main user_db
+- Added support for IPSW archives on request
+
+### v5.1.2
 
 - URL downloaded files finally have their original name
 - Split goes stonks (lie)

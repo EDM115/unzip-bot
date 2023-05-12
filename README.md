@@ -71,11 +71,12 @@ Deploying is easy 🥰 You can deploy this bot in Heroku or in a VPS ♥️
 git clone -b master https://github.com/EDM115/unzip-bot.git
 cd unzip-bot
 pip3 install -r requirements.txt
-# Arch linux only ↓
-sudo pacman -S p7zip
-# Edit config.py with your own values
-bash start.sh
 ```
++ Arch linux only ↓
+`sudo pacman -S p7zip`
+
+##### Edit config.py with your own values
+`start.sh`
 ---
 **DONE 🥳 enjoy the bot !** Be sure to follow me on [Github](https://github.com/EDM115) and Star 🌟 this repo to show some support 🥺
   
@@ -86,7 +87,7 @@ Same if you have any feature request 😉
   
 ## License & Copyright 👮‍♀️
 ```
-Copyright (c) 2022 EDM115
+Copyright (c) 2022 - 2023 EDM115
 
 This Unarchiver Bot repository is licensed under MIT License (https://github.com/EDM115/unzip-bot/blob/master/LICENSE)
 Enjoy copying and modifying, but always mention me
