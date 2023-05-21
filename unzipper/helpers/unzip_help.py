@@ -3,7 +3,6 @@ import math
 import time
 from typing import List, Union
 
-
 # Credits: SpEcHiDe's AnyDL-Bot for Progress bar + Time formatter
 async def progress_for_pyrogram(current, total, ud_type, message, start):
     now = time.time()
@@ -17,6 +16,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
         estimated_total_time = elapsed_time + time_to_completion
         elapsed_time = TimeFormatter(milliseconds=elapsed_time)
         """
+        # Bad attempt to fix the time remaining
         if ((int(estimated_total_time) > int(elapsed_time)) and (int(timenow) > int(elapsed_time))) or ((int(estimated_total_time) > int(elapsed_time)) and (int(percentage) > 50)):
             estimated_total_time -= elapsed_time / 10
         """
@@ -42,7 +42,6 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
         except:
             pass
 
-
 def humanbytes(size):
     if not size:
         return ""
@@ -53,7 +52,6 @@ def humanbytes(size):
         size /= power
         n += 1
     return str(round(size, 2)) + " " + Dic_powerN[n] + "B"
-
 
 def TimeFormatter(milliseconds: int) -> str:
     seconds, milliseconds = divmod(int(milliseconds), 1000)
@@ -69,7 +67,6 @@ def TimeFormatter(milliseconds: int) -> str:
     )
     return tmp[:-2]
 
-
 def timeformat_sec(seconds: int) -> str:
     minutes, seconds = divmod(int(seconds), 60)
     hours, minutes = divmod(minutes, 60)
@@ -81,7 +78,6 @@ def timeformat_sec(seconds: int) -> str:
         + ((str(seconds) + "s, ") if seconds else "")
     )
     return tmp[:-2]
-
 
 # List of common extentions
 extentions_list = {

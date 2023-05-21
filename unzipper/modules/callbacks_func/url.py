@@ -1,0 +1,2 @@
+def url(query):
+    pass

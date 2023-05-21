@@ -1,0 +1,2 @@
+def cancel(query):
+    pass

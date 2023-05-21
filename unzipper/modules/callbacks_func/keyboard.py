@@ -1,0 +1,2 @@
+def keyboard(query):
+    pass

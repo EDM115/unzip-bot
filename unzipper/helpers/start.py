@@ -5,8 +5,7 @@ import sys
 from pyrogram import enums
 
 from config import Config
-from unzipper import LOGGER, boottime
-from unzipper import unzipperbot as client
+from unzipper import LOGGER, boottime, unzipperbot as client
 from unzipper.modules.callbacks import download
 
 from .database import get_thumb_users, set_boot, get_boot, set_old_boot, get_old_boot, is_boot_different, count_ongoing_tasks, get_ongoing_tasks, clear_ongoing_tasks
@@ -20,13 +19,12 @@ def check_logs():
                 LOGGER.warn("A private chat can't be used 😐")
                 return False
             return True
-        LOGGER.warn("No Log channel ID is given !")
+        LOGGER.warn("No log channel ID have been provided !")
         sys.exit()
     except:
         print(
-            "Error happened while checking Log channel 💀 Make sure you're not dumb enough to provide a wrong Log channel ID 🧐"
+            "An error happened while checking Log channel 💀 Make sure haven't provided a wrong Log channel ID 🧐"
         )
-
 
 def dl_thumbs():
     loop = asyncio.get_event_loop()
@@ -45,19 +43,12 @@ def set_boot_time():
     loop.run_until_complete(coroutine)
 
 async def check_boot():
-    # Put the previous boot time in old_boot
     boot = await get_boot()
     await set_old_boot(boot)
-
-    # Set the current boot time in boot
     await set_boot(boottime)
-
-    # Get the newest values
     boot = await get_boot()
     old_boot = await get_old_boot()
-
     different = await is_boot_different()
-    LOGGER.info(f"Boot time is different ? : {different}")
     if different:
         try:
             await client.send_message(Config.BOT_OWNER, f"Bot restarted !\n\n**Old boot time** : `{old_boot}`\n**New boot time** : `{boot}`")
@@ -72,5 +63,5 @@ async def warn_users():
             try:
                 await client.send_message(task["user_id"], "⚠️ **Warning** : the bot restarted while you were using it\nYour task was stopped, kindly send it again")
             except:
-                pass #user deleted chat
+                pass # user deleted chat
         await clear_ongoing_tasks()

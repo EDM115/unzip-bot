@@ -1,0 +1,2 @@
+def file(query):
+	pass
