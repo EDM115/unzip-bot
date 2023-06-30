@@ -1,4 +1,4 @@
-enabled: true
+enabled: false
 exclude:
   - "unzipper/modules/ext_script/ext_helper.py"
   - "unzipper/modules/ext_script/up_helper.py"

@@ -9,9 +9,9 @@ from unzipper import LOGGER, unzipperbot as Client
 mongodb = AsyncIOMotorClient(Config.MONGODB_URL)
 unzipper_db = mongodb["Unzipper_Bot"]
 
+
 # Users Database
 user_db = unzipper_db["users_db"]
-
 
 async def add_user(user_id):
     new_user_id = int(user_id)
@@ -19,7 +19,6 @@ async def add_user(user_id):
     if is_exist is not None and is_exist:
         return -1
     await user_db.insert_one({"user_id": new_user_id})
-
 
 async def del_user(user_id):
     del_user_id = int(user_id)
@@ -29,7 +28,6 @@ async def del_user(user_id):
     else:
         return -1
 
-
 async def is_user_in_db(user_id):
     u_id = int(user_id)
     is_exist = await user_db.find_one({"user_id": u_id})
@@ -37,11 +35,9 @@ async def is_user_in_db(user_id):
         return True
     return False
 
-
 async def count_users():
     users = await user_db.count_documents({})
     return users
-
 
 async def get_users_list():
     return [users_list async for users_list in user_db.find({})]
@@ -50,14 +46,12 @@ async def get_users_list():
 # Banned users database
 b_user_db = unzipper_db["banned_users_db"]
 
-
 async def add_banned_user(user_id):
     new_user_id = int(user_id)
     is_exist = await b_user_db.find_one({"banned_user_id": new_user_id})
     if is_exist is not None and is_exist:
         return -1
     await b_user_db.insert_one({"banned_user_id": new_user_id})
-
 
 async def del_banned_user(user_id):
     del_user_id = int(user_id)
@@ -67,7 +61,6 @@ async def del_banned_user(user_id):
     else:
         return -1
 
-
 async def is_user_in_bdb(user_id):
     u_id = int(user_id)
     is_exist = await b_user_db.find_one({"banned_user_id": u_id})
@@ -75,26 +68,23 @@ async def is_user_in_bdb(user_id):
         return True
     return False
 
-
 async def count_banned_users():
     users = await b_user_db.count_documents({})
     return users
 
-
 async def get_banned_users_list():
     return [banned_users_list async for banned_users_list in b_user_db.find({})]
-
 
 async def check_user(message):
     # Checking if user is banned
     is_banned = await is_user_in_bdb(message.from_user.id)
     if is_banned:
         await message.reply(
-            "**Sorry you're banned 💀**\n\nReport this at @EDM115 if you think this is a mistake, I can unban you"
+            "**Sorry you're banned 💀**\n\nReport this at @EDM115_chat if you think this is a mistake, I may unban you"
         )
         await message.stop_propagation()
         return
-    # Cheking if user already in db
+    # Checking if user already in db
     is_in_db = await is_user_in_db(message.from_user.id)
     if not is_in_db:
         await add_user(message.from_user.id)
@@ -135,18 +125,18 @@ async def check_user(message):
             )
     await message.continue_propagation()
 
-
-"""
-    async def all_users():
+async def get_all_users():
     users = []
     banned = []
-    for i in range(count_users()):
-        users.append(
-"""
+    for i in range(await count_users()):
+        users.append((await get_users_list())[i]["user_id"])
+    for j in range(await count_banned_users()):
+        banned.append((await get_banned_users_list())[j]["banned_user_id"])
+    return users, banned
+
 
 # Upload mode
 mode_db = unzipper_db["ulmode_db"]
-
 
 async def set_upload_mode(user_id, mode):
     is_exist = await mode_db.find_one({"_id": user_id})
@@ -154,7 +144,6 @@ async def set_upload_mode(user_id, mode):
         await mode_db.update_one({"_id": user_id}, {"$set": {"mode": mode}})
     else:
         await mode_db.insert_one({"_id": user_id, "mode": mode})
-
 
 async def get_upload_mode(user_id):
     umode = await mode_db.find_one({"_id": user_id})
@@ -166,13 +155,11 @@ async def get_upload_mode(user_id):
 # Db for how many files user uploaded
 uploaded_db = unzipper_db["uploaded_count_db"]
 
-
 async def get_uploaded(user_id):
     up_count = await uploaded_db.find_one({"_id": user_id})
     if up_count is not None and up_count:
         return up_count["uploaded_files"]
     return 0
-
 
 async def update_uploaded(user_id, upload_count):
     is_exist = await uploaded_db.find_one({"_id": user_id})
@@ -188,7 +175,6 @@ async def update_uploaded(user_id, upload_count):
 # Db for cloud_upload
 cloud_db = unzipper_db["cloud_db"]
 
-
 async def get_cloud(user_id):
     return "https://api.bayfiles.com/upload"
 
@@ -196,13 +182,11 @@ async def get_cloud(user_id):
 # DB for thumbnails
 thumb_db = unzipper_db["thumb_db"]
 
-
 async def get_thumb(user_id):
     existing = await thumb_db.find_one({"_id": user_id})
     if existing is not None and existing:
         return existing["url"]
     return None
-
 
 async def update_thumb(user_id, thumb_url, force):
     existing = await thumb_db.find_one({"_id": user_id})
@@ -213,7 +197,6 @@ async def update_thumb(user_id, thumb_url, force):
     else:
         await thumb_db.insert_one({"_id": user_id, "url": thumb_url})
 
-
 async def upload_thumb(image):
     with open(image, "rb") as file:
         request = post(
@@ -221,15 +204,12 @@ async def upload_thumb(image):
         ).json()[0]
         return f"https://telegra.ph{request['src']}"
 
-
 async def get_thumb_users():
     return [thumb_list async for thumb_list in thumb_db.find({})]
-
 
 async def count_thumb_users():
     users = await thumb_db.count_documents({})
     return users
-
 
 async def del_thumb_db(user_id):
     del_thumb_id = int(user_id)
@@ -238,6 +218,7 @@ async def del_thumb_db(user_id):
         await thumb_db.delete_one({"_id": del_thumb_id})
     else:
         return
+
 
 # DB for bot data
 bot_data = unzipper_db["bot_data"]
@@ -276,6 +257,7 @@ async def is_boot_different():
         if is_exist["time"] == is_exist_old["time"]:
             different = False
     return different
+
 
 # DB for ongoing tasks
 ongoing_tasks = unzipper_db["ongoing_tasks"]
