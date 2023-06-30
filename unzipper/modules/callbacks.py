@@ -348,6 +348,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         split=False,
                     )
                     await query.message.delete()
+                    await del_ongoing_task(user_id)
                     return shutil.rmtree(
                         f"{Config.DOWNLOAD_LOCATION}/{user_id}")
                 LOGGER.info("File too large")

@@ -24,7 +24,8 @@ async def run_shell_cmds(command):
     run = subprocess.Popen(
         command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
     )
-    shell_output = run.stdout.read()[:-1].decode("utf-8")
+    shell_output, _ = run.communicate()
+    shell_output = shell_output.decode("utf-8").rstrip('\n')
     return shell_output
 
 
@@ -48,7 +49,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
             fname = os.path.basename(doc_f)
             fext = ((pathlib.Path(os.path.abspath(doc_f)).suffix).casefold().replace(".", ""))
         thumbornot = await thumb_exists(c_id)
-        upmsg = await unzip_bot.send_message(c_id, "`Processing… ⏳`\n\nUploading videos as media without thumbnail set will fail. Sorry, will be fixed later 😥")
+        upmsg = await unzip_bot.send_message(c_id, "`Processing… ⏳`")
         if ul_mode == "media" and fext in extentions_list["audio"]:
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
@@ -93,7 +94,6 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
             vid_duration = await run_shell_cmds(
                 f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}"
             )
-            LOGGER.warning(vid_duration)
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
                 await unzip_bot.send_video(
@@ -119,7 +119,6 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     thumb = await run_shell_cmds(
                         f"ffmpeg -ss 00:00:01.00 -i {doc_f} -vf 'scale=320:320:force_original_aspect_ratio=decrease' -vframes 1 {thmb_pth}"
                     )
-                    LOGGER.warning(thumb)
                 except Exception as e:
                     LOGGER.warning(e)
                     thumb = Config.BOT_THUMB
@@ -128,7 +127,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     video=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
                     duration=int(vid_duration) if vid_duration.isnumeric() else 0,
-                    thumb=str(thumb),
+                    thumb=str(thmb_pth),
                     progress=progress_for_pyrogram,
                     progress_args=(
                         f"**Trying to upload {fname}… Please wait** \n",
