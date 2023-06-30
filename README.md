@@ -68,7 +68,7 @@ Deploying is easy 🥰 You can deploy this bot in Heroku or in a VPS ♥️
 ---
 #### The easy way
 + Install [Docker](https://www.docker.com/) then restart your computer
-+ ```bash
+```bash
 git clone -b master https://github.com/EDM115/unzip-bot.git
 cd unzip-bot
 docker build -t unzip-bot .
@@ -94,6 +94,32 @@ start.sh
 ---
 **DONE 🥳 enjoy the bot !** Be sure to follow me on [Github](https://github.com/EDM115) and Star 🌟 this repo to show some support 🥺
   
+## How to Build after changes ?
+#### Trust GitHub Actions
++ Add new Actions secrets to the repo :
+  + `DOCKER_USERNAME` : all in lowercase
+  + `DOCKER_TOKEN` : one with all rights, here : https://hub.docker.com/settings/security
++ Go in Actions tab, 2 workflows are here for ya :
+  + `Build Docker Image` : Check if it builds without errors
+  + `Publish Docker Image` : Rebuild && publish
+#### Do it manually
++ Go in the repo's folder
+```bash
+docker build -t unzip-bot .
+```
++ If you wanna publish :
+```bash
+docker tag unzip-bot edm115/unzip-bot:latest
+```
+*(replace `edm115` with your docker hub username, `unzip-bot` with the repo's name and `latest` whith whatever you want)*
+```bash
+docker login
+```
+*login and don't mind the errors*
+```bash
+docker push edm115/unzip-bot:latest
+```
+*(same, replace accordingly)*
   
 ## Found a bug 🐞
 If you found a bug in this bot please open an [issue](https://github.com/EDM115/unzip-bot/issues) or report it on Telegram : [@EDM115](https://t.me/EDM115)  
