@@ -37,11 +37,9 @@ from .bot_data import Buttons, Messages
 # Regex for urls
 https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"
 
-
 @Client.on_message(filters.private)
 async def _(_, message: Message):
     await check_user(message)
-
 
 @Client.on_message(filters.command("start"))
 async def start_bot(_, message: Message):
@@ -51,16 +49,13 @@ async def start_bot(_, message: Message):
         disable_web_page_preview=True,
     )
 
-
 @Client.on_message(filters.private & filters.command("clean"))
 async def clean_my_files(_, message: Message):
     await message.reply_text(text=Messages.CLEAN_TXT, reply_markup=Buttons.CLN_BTNS)
 
-
 @Client.on_message(filters.command("help"))
 async def help_me(_, message: Message):
     await message.reply_text(text=Messages.HELP_TXT, reply_markup=Buttons.ME_GOIN_HOME)
-
 
 @Client.on_message(filters.command("about"))
 async def about_me(_, message: Message):
@@ -69,7 +64,6 @@ async def about_me(_, message: Message):
         reply_markup=Buttons.ME_GOIN_HOME,
         disable_web_page_preview=True,
     )
-
 
 @Client.on_message(
     filters.incoming & filters.private & filters.document
@@ -98,7 +92,6 @@ async def extract_archive(_, message: Message):
     else:
         await unzip_msg.edit("Send a valid archive/URL 🙄")
 
-
 # Waiting for implementing CallbackQuery button for cancel
 @Client.on_message(filters.private & filters.command("cancel"))
 async def cancel_task_by_user(_, message):
@@ -110,7 +103,6 @@ async def cancel_task_by_user(_, message):
     await unzipperbot.stop_transmission()
     await message.reply("Your task have successfully been canceled ❌")
 
-
 # For splitted archives
 @Client.on_message(filters.private & filters.command("merge"))
 async def merging(_, message: Message):
@@ -120,7 +112,6 @@ async def merging(_, message: Message):
     )
     startid = merge_msg.id + 1
     # Catch the files id + download + send to callbacks + cat + prompt dialog
-
 
 # Database Commands
 @Client.on_message(filters.private & filters.command("mode"))
@@ -193,7 +184,6 @@ async def send_stats(_, message: Message):
     stats_txt = await get_stats(message.from_user.id)
     await stats_msg.edit(text=stats_txt, reply_markup=Buttons.REFRESH_BUTTON)
 
-
 async def _do_broadcast(message, user):
     try:
         await message.copy(chat_id=int(user))
@@ -203,7 +193,6 @@ async def _do_broadcast(message, user):
         return _do_broadcast(message, user)
     except Exception:
         await del_user(user)
-
 
 @Client.on_message(filters.command("broadcast") & filters.user(Config.BOT_OWNER))
 async def broadcast_this(_, message: Message):
@@ -233,7 +222,6 @@ async def broadcast_this(_, message: Message):
     """
     )
 
-
 @Client.on_message(filters.command("sendto") & filters.user(Config.BOT_OWNER))
 async def send_this(_, message: Message):
     sd_msg = await message.reply("`Processing… ⏳`")
@@ -253,7 +241,6 @@ async def send_this(_, message: Message):
             f"It failed 😣 Retry\n\nIf it fails again, it means that {user_id} haven't started the bot yet (or deleted the chat), or he's private/banned/whatever"
         )
 
-
 @Client.on_message(filters.command("report"))
 async def report_this(_, message: Message):
     sd_msg = await message.reply("`Processing… ⏳`")
@@ -267,7 +254,6 @@ async def report_this(_, message: Message):
         text=Messages.REPORT_TEXT.format(u_id, r_msg.text.markdown),
     )
     await sd_msg.edit("Report sucessfully sent ! An answer will arrive soon\n\nNote : if you need to reply to replies, always use that /report command (or join **@EDM115_chat**)")
-
 
 @Client.on_message(filters.command("ban") & filters.user(Config.BOT_OWNER))
 async def ban_user(_, message: Message):
@@ -290,7 +276,6 @@ async def ban_user(_, message: Message):
             f"**Successfully banned that user ✅** \n\n**User ID :** `{user_id}`"
         )
 
-
 @Client.on_message(filters.command("unban") & filters.user(Config.BOT_OWNER))
 async def unban_user(_, message: Message):
     unban_msg = await message.reply("`Processing… ⏳`")
@@ -312,7 +297,6 @@ async def unban_user(_, message: Message):
             f"**Successfully unbanned that user ✅** \n\n**User ID :** `{user_id}`"
         )
 
-
 @Client.on_message(filters.private & filters.command("info"))
 async def me_stats(_, message: Message):
     me_info = await unzipperbot.ask(
@@ -320,7 +304,6 @@ async def me_stats(_, message: Message):
         text="Send a text (shorter possible) from any user/chat. And you will have infos about it 👀",
     )
     await unzipperbot.send_message(chat_id=message.chat.id, text=f"`{me_info}`")
-
 
 @Client.on_message(filters.command("user") & filters.user(Config.BOT_OWNER))
 async def info_user(_, message: Message):
@@ -338,7 +321,6 @@ async def info_user(_, message: Message):
     await info_user_msg.edit(
         f"**User ID :** `{user_id}`\n`{up_count}` files uploaded\n…\n\nWIP"
     )
-
 
 @Client.on_message(filters.command("user2") & filters.user(Config.BOT_OWNER))
 async def info_user2(_, message: Message):
@@ -360,33 +342,10 @@ async def info_user2(_, message: Message):
         f"`{infos}`\n\n**Direct link to profile :** tg://user?id={user_id}"
     )
 
-
 @Client.on_message(filters.command("self") & filters.user(Config.BOT_OWNER))
 async def info_self(_, message: Message):
     self_infos = await unzipperbot.get_me()
     await message.reply(f"`{self_infos}`")
-
-
-@Client.on_message(
-    filters.private & filters.command("db") & filters.user(Config.BOT_OWNER)
-)
-async def db_info(_, message: Message):
-    users_list = await get_users_list()
-    try:
-        await message.reply(f"🚧 There you go :\n\n`{users_list}`")
-    except:
-        await message.reply("too much users, don't fit into 1 message")
-
-
-@Client.on_message(
-    filters.private & filters.command("dbdive") & filters.user(Config.BOT_OWNER)
-)
-async def db_dive(_, message: Message):
-    dburl = Config.MONGODB_URL
-    await message.reply(
-        f"🚧 Go on [MongoDB.com](https://account.mongodb.com/account/login?nds=true), u stupid 😐\n\nCreds here : `{dburl}`"
-    )
-
 
 @Client.on_message(
     filters.private & filters.command("getthumbs") & filters.user(Config.BOT_OWNER)
@@ -410,28 +369,6 @@ async def get_all_thumbs(_, message: Message):
         except RPCError as e:
             message.reply_text(e, quote=True)
 
-
-@Client.on_message(
-    filters.private & filters.command("listdir") & filters.user(Config.BOT_OWNER)
-)
-async def list_server_directories(_, message: Message):
-    try:
-        dirs = await get_files(message.text.split(None, 1)[1])
-    except:
-        dirs = await get_files("/app")
-    for file in dirs:
-        if (
-            file.endswith(".py")
-            or file.endswith(".pyc")
-            or file.endswith(".yml")
-            or file.endswith(".toml")
-            or file.endswith(".md")
-        ):
-            dirs.remove(file)
-    LOGGER.info(dirs)
-    await message.reply(dirs)
-
-
 @Client.on_message(
     filters.private & filters.command("redbutton") & filters.user(Config.BOT_OWNER)
 )
@@ -440,16 +377,13 @@ async def red_alert(_, message: Message):
     # restart the whole bot, maybe using execl
     # but also need to stop currently ongoing processes…
 
-
 @Client.on_message(filters.private & filters.command("addthumb"))
 async def thumb_add(_, message: Message):
     await add_thumb(unzipperbot, message)
 
-
 @Client.on_message(filters.private & filters.command("delthumb"))
 async def thumb_del(_, message: Message):
     await del_thumb(message)
-
 
 @Client.on_message(
     filters.private & filters.command("cleanall") & filters.user(Config.BOT_OWNER)
@@ -461,7 +395,6 @@ async def del_everything(_, message: Message):
         await cleaner.edit("The whole server have been cleaned 😌")
     except:
         await cleaner.edit("An error happened 😕 probably because command is unstable")
-
 
 async def send_logs(user_id):
     with open("unzip-log.txt", "rb") as doc_f:
@@ -485,7 +418,6 @@ def clear_logs():
 )
 async def logz(_, message: Message):
     await send_logs(message.from_user.id)
-
 
 @Client.on_message(
     filters.private & filters.command("restart") & filters.user(Config.BOT_OWNER)
@@ -516,7 +448,6 @@ async def pull_updates(_, message: Message):
         await git_reply.edit("✅ Pulled changes, restarting...")
         return await restart(_, message)
     return await git_reply.edit("No changes")
-
 
 @Client.on_message(
     filters.private & filters.command("dbexport") & filters.user(Config.BOT_OWNER)
@@ -564,8 +495,6 @@ Here's all the commands that only the owner (you) can use :
 **/user {user_id}** : Know more about the use of your bot by a single user
 **/user2 {user_id}** : Get full info about an [User](https://docs.pyrogram.org/api/types/User) (info returned by Pyrogram)
 **/self** : Get full info about me (info returned by Pyrogram)
-**/db** : Sends an unorganized list of all the user's id. I need to sort that
-**/dbdive** : Useless. Will provide a way to see it online, but MongoDB already does it
 **/redbutton** : Will fully restart bot + server
 **/cleanall** : Same as `/clean`, but for the whole server
 **/logs** : Send you the logs (all of them). Useful for bug tracking. Send them to **@EDM115** if you don't understand them/need help

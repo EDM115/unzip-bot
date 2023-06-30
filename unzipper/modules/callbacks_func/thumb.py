@@ -1,0 +1,2 @@
+def thumb(query):
+    pass

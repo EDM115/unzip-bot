@@ -42,12 +42,22 @@ from .ext_script.ext_helper import (
 )
 from .ext_script.up_helper import answer_query, get_size, send_file, send_url_logs
 
+# We avoid having a 700 lines long file that way
+from .callbacks_func.cancel import cancel
+from .callbacks_func.ext_a import ext_a
+from .callbacks_func.ext_f import ext_f
+from .callbacks_func.file import file
+from .callbacks_func.keyboard import keyboard
+from .callbacks_func.password import password
+from .callbacks_func.rename import rename
+from .callbacks_func.thumb import thumb
+from .callbacks_func.url import url
+
 split_file_pattern = r"\.(?:[0-9]+|part[0-9]+\.rar|z[0-9]+)$"
 
 # Function to download files from direct link using aiohttp
 async def download(url, path):
-    async with ClientSession() as session, session.get(
-            url, timeout=None) as resp, openfile(path, mode="wb") as file:
+    async with ClientSession() as session, session.get(url, timeout=None) as resp, openfile(path, mode="wb") as file:
         async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
             await file.write(chunk)
     await session.close()
@@ -60,6 +70,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     sent_files = 0
     global already_removed
     already_removed = False
+    
     if query.data == "megoinhome":
         await query.edit_message_text(
             text=Messages.START_TEXT.format(query.from_user.mention),
@@ -343,35 +354,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 LOGGER.info("File too large")
                 await query.message.edit("**Splitting your file… Please wait**"
                                          )
-                """
-                    Way to upload to bayfiles (it actually happens but fails to get link)
-                    uptocloud = await unzip_bot.send_message(
-                        chat_id=c_id,
-                        text=
-                        f"`{fname}` is too huge to be sent to Telegram directly (`{u_file_size}`).\nUploading to Bayfiles, please wait some minutes…",
-                    )
-                    upurl = await get_cloud(c_id)
-                    bfup = await bayfiles(os.path.abspath(doc_f), upurl)
-                    if "Error happened on BayFiles upload" in bfup:
-                        await uptocloud.edit(bfup)
-                    elif bfup["status"] == "True":
-                        fsize = bfup["data"]["file"]["metadata"]["size"]["readable"]
-                        furl = bfup["data"]["file"]["url"]["full"]
-                        await uptocloud.edit(
-                            Messages.URL_UPLOAD.format(fname, fsize, furl))
-                    elif bfup["status"] == "False":
-                        etype = bfup["error"]["message"]
-                        emess = bfup["error"]["type"]
-                        ecode = bfup["error"]["code"]
-                        await uptocloud.edit(
-                            Messages.URL_ERROR.format(fname, ecode, etypr, emess))
-                        await log_msg.reply(
-                            Messages.URL_ERROR.format(fname, ecode, etypr, emess))
-                    else:
-                        await uptocloud.edit(bfup)
-                        await log_msg.reply(bfup)
-                    return os.remove(doc_f)
-                """
                 splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
                 os.makedirs(splitteddir)
                 LOGGER.info(splitteddir)

@@ -38,7 +38,7 @@
 - `BOT_OWNER` - Your Telegram Account ID. Get it from [@MissRose_bot](https://t.me/MissRose_bot) (Start the bot and send <samp>/info</samp> command).
 - `BOT_TOKEN` - Bot Token of Your Telegram Bot. Get it from [@BotFather](https://t.me/BotFather)
 - `MONGODB_URL` - Your MongoDB URL ([**tutorial here**](./CreateMongoDB.md))
-- `LOGS_CHANNEL` - Make a private channel and get its ID (search on Google if you don't know how to do). Using a group works as well, just add [`Rose`](https://t.me/MissRose_bot?startgroup=startbot), then send `/id` (In both cases, make sure to add your bot to the channel/group as an admin !)
+- `LOGS_CHANNEL` - Make a private channel and get its ID (search on Google if you don't know how to do). Using a group works as well, just add [`Rose`](https://t.me/MissRose_bot?startgroup=startbot), then send `/id` (In both cases, **make sure to add your bot to the channel/group as an admin !**)
 
 ## Commands ✍️
 Copy-paste those to BotFather when he asks you for them  
@@ -87,7 +87,10 @@ pip3 install -r requirements.txt
 `sudo pacman -S p7zip`
 
 ##### Edit config.py with your own values
-`start.sh`
+```bash
+start.sh
+```
+
 ---
 **DONE 🥳 enjoy the bot !** Be sure to follow me on [Github](https://github.com/EDM115) and Star 🌟 this repo to show some support 🥺
   
