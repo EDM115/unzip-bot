@@ -66,6 +66,17 @@ Deploying is easy 🥰 You can deploy this bot in Heroku or in a VPS ♥️
 (if you're in a fork, make sure to replace the template URL with your repo’s one)
 
 ---
+#### The easy way
++ Install [Docker](https://www.docker.com/) then restart your computer
++ ```bash
+git clone -b master https://github.com/EDM115/unzip-bot.git
+cd unzip-bot
+docker build -t unzip-bot .
+```
++ Open Docker Desktop, go on the Images tab, click on the Run button
++ On Optional settings, fill the env variables
+
+---
 #### The legacy way
 ```bash
 git clone -b master https://github.com/EDM115/unzip-bot.git
