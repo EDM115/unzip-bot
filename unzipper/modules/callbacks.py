@@ -43,15 +43,15 @@ from .ext_script.ext_helper import (
 from .ext_script.up_helper import answer_query, get_size, send_file, send_url_logs
 
 # We avoid having a 700 lines long file that way
-from .callbacks_func.cancel import cancel
-from .callbacks_func.ext_a import ext_a
-from .callbacks_func.ext_f import ext_f
-from .callbacks_func.file import file
-from .callbacks_func.keyboard import keyboard
-from .callbacks_func.password import password
-from .callbacks_func.rename import rename
-from .callbacks_func.thumb import thumb
-from .callbacks_func.url import url
+# from .callbacks_func.cancel import cancel
+# from .callbacks_func.ext_a import ext_a
+# from .callbacks_func.ext_f import ext_f
+# from .callbacks_func.file import file
+# from .callbacks_func.keyboard import keyboard
+# from .callbacks_func.password import password
+# from .callbacks_func.rename import rename
+# from .callbacks_func.thumb import thumb
+# from .callbacks_func.url import url
 
 split_file_pattern = r"\.(?:[0-9]+|part[0-9]+\.rar|z[0-9]+)$"
 
