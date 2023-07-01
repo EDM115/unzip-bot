@@ -557,6 +557,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             os.makedirs(splitteddir)
             ooutput = f"{splitteddir}/{fname}"
             splittedfiles = await split_files(file, ooutput)
+            LOGGER.info(splittedfiles)
             if not splittedfiles:
                 try:
                     shutil.rmtree(splitteddir)
@@ -654,6 +655,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 os.makedirs(splitteddir)
                 ooutput = f"{splitteddir}/{fname}"
                 splittedfiles = await split_files(file, ooutput)
+                LOGGER.info(splittedfiles)
                 if not splittedfiles:
                     try:
                         shutil.rmtree(splitteddir)
