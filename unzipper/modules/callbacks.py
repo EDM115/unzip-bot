@@ -650,14 +650,14 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await update_uploaded(user_id=uid,
                                       upload_count=sent_files)
                 try:
-                    await log_msg.reply(
-                        Messages.HOW_MANY_UPLOADED.format(sent_files))
+                    await log_msg.reply(Messages.HOW_MANY_UPLOADED.format(sent_files))
                 except:
                     return
         except:
             await unzip_bot.send_message(
                 chat_id=uid,
                 text=Messages.CANCELLED_TXT.format("❌ Process cancelled")
+            )
             return
 
     elif query.data == "nobully":
