@@ -354,8 +354,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     return shutil.rmtree(
                         f"{Config.DOWNLOAD_LOCATION}/{user_id}")
                 LOGGER.info("File too large")
-                await query.message.edit("**Splitting your file… Please wait**"
-                                         )
+                await query.message.edit("**Splitting your file… Please wait**")
                 splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
                 os.makedirs(splitteddir)
                 LOGGER.info(splitteddir)
@@ -389,9 +388,24 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         log_msg=log_msg,
                         split=True,
                     )
-                shutil.rmtree(splitteddir)
+                try:
+                    shutil.rmtree(splitteddir)
+                    shutil.rmtree(renamed.replace(newfname, ""))
+                except:
+                    pass
                 await del_ongoing_task(user_id)
-                return shutil.rmtree(renamed.replace(newfname, ""))
+                try:
+                    await query.message.edit(
+                        text="**Successfully uploaded ✅**\n\n**Join @EDM115bots ❤️**",
+                        reply_markup=Buttons.RATE_ME
+                    )
+                except:
+                    await unzip_bot.send_message(
+                        chat_id=user_id,
+                        text="**Successfully uploaded ✅**\n\n**Join @EDM115bots ❤️**",
+                        reply_markup=Buttons.RATE_ME
+                    )
+                return
 
             dltime = TimeFormatter(round(e_time - s_time) * 1000)
             if dltime == "":
