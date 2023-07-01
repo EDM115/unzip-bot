@@ -339,7 +339,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 LOGGER.info(newfname)
                 fsize = await get_size(renamed)
                 LOGGER.info(fsize)
-                if fsize <= Config.TG_MAX_SIZE:
+                if fsize <= (Config.TG_MAX_SIZE / 2):
                     await send_file(
                         unzip_bot=unzip_bot,
                         c_id=user_id,
