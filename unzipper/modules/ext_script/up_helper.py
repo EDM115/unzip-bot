@@ -121,7 +121,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     )
                 except Exception as e:
                     LOGGER.warning(e)
-                    thumb = Config.BOT_THUMB
+                    shutil.copyfile(Config.BOT_THUMB, thmb_pth)
                 await unzip_bot.send_video(
                     chat_id=c_id,
                     video=doc_f,
@@ -144,6 +144,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     document=doc_f,
                     thumb=thumb_image,
                     caption=Messages.EXT_CAPTION.format(fname),
+                    force_document=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         f"**Trying to upload {fname}… Please wait** \n",
@@ -156,6 +157,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     chat_id=c_id,
                     document=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
+                    force_document=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         f"**Trying to upload {fname}… Please wait** \n",

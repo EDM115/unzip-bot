@@ -449,6 +449,10 @@ async def pull_updates(_, message: Message):
         return await restart(_, message)
     return await git_reply.edit("No changes")
 
+@Client.on_message(filters.command("donate"))
+async def donate_help(_, message: Message):
+    await message.reply(Messages.DONATE_TEXT)
+
 @Client.on_message(
     filters.private & filters.command("dbexport") & filters.user(Config.BOT_OWNER)
 )
@@ -466,6 +470,7 @@ Here is the list of the commands you can use (only in private btw) :
 **/start** : To know if I'm online
 **/help** : Gives a simple help
 **/about** : Know more about me
+**/donate** : Know how you can contribute to this bot
 **/clean** : Remove your files from my server. Also useful if a task failed
 **/mode** : Change your upload mode (either `doc` or `media`)
 **/stats** : Know all the current stats about me. If you're running on Heroku, it's reset every day

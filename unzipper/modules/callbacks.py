@@ -87,6 +87,13 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             reply_markup=Buttons.ME_GOIN_HOME,
             disable_web_page_preview=True,
         )
+
+    elif query.data == "donatecallback":
+        await query.edit_message_text(
+            text=Messages.DONATE_TEXT,
+            reply_markup=Buttons.ME_GOIN_HOME,
+            disable_web_page_preview=True,
+        )
     
     elif query.data.startswith("statscallback"):
         if query.data.endswith("refresh"):
@@ -559,7 +566,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
             await del_ongoing_task(user_id)
             return await query.message.edit(
-                "I've already sent you those files 🙂")
+                text="There's no file left to upload",
+                reply_markup=Buttons.RATE_ME
+            )
         await query.answer("Sending that file to you… Please wait")
         sent_files += 1
         await send_file(
@@ -572,9 +581,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             split=False,
         )
 
-        # if not err400:
-        # theorically, err400 shouldn't be here because only ext_a can be used
-        # Refreshing Inline keyboard
         await query.message.edit("Refreshing… ⏳")
         rpaths = await get_files(path=file_path)
         LOGGER.warning("ext_f rpaths : " + str(rpaths))
@@ -586,7 +592,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 pass
             await del_ongoing_task(user_id)
             return await query.message.edit(
-                "I've already sent you those files 🙂")
+                text="There's no file left to upload",
+                reply_markup=Buttons.RATE_ME
+            )
         try:
             i_e_buttons = await make_keyboard(paths=rpaths,
                                               user_id=query.from_user.id,
@@ -620,7 +628,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 pass
             await del_ongoing_task(user_id)
             return await query.message.edit(
-                "I've already sent you those files 🙂")
+                text="There's no file left to upload",
+                reply_markup=Buttons.RATE_ME
+            )
         await query.answer("Trying to send all files to you… Please wait")
         for file in paths:
             LOGGER.info("ext_a file in paths: " + file)
@@ -636,7 +646,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             )
 
         await query.message.edit(
-            "**Successfully uploaded ✅**\n\n**Join @EDM115bots ❤️**")
+            text="**Successfully uploaded ✅**\n\n**Join @EDM115bots ❤️**",
+            reply_markup=Buttons.RATE_ME
+        )
         await log_msg.reply(Messages.HOW_MANY_UPLOADED.format(sent_files))
         await update_uploaded(user_id, upload_count=sent_files)
         await del_ongoing_task(user_id)
@@ -650,9 +662,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         uid = query.from_user.id
         await del_ongoing_task(uid)
         try:
+            await query.message.edit(Messages.CANCELLED_TXT.format("❌ Process cancelled"))
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{uid}")
-            await query.message.edit(
-                Messages.CANCELLED_TXT.format("❌ Process cancelled"))
             if single_up:
                 await update_uploaded(user_id=uid,
                                       upload_count=sent_files)
@@ -662,9 +673,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 except:
                     return
         except:
-            if not already_removed:
-                return await query.answer("There is nothing to remove 💀",
-                                          show_alert=True)
+            await unzip_bot.send_message(
+                chat_id=uid,
+                text=Messages.CANCELLED_TXT.format("❌ Process cancelled")
+            return
 
     elif query.data == "nobully":
         await query.message.edit("**Cancelled successfully ✅**")
