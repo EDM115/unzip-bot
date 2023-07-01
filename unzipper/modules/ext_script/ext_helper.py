@@ -57,7 +57,7 @@ async def extr_files(path, archive_path, password=None):
 
 # Split files
 async def split_files(iinput, ooutput):
-    command = f'7z a -tzip -mx=0 "{ooutput}" "{iinput}" -v2g'
+    command = f'7z a -tzip -mx=0 "{ooutput}" "{iinput}" -v2000000000b'
     logs = await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
     spdir = ooutput.replace("/" + ooutput.split("/")[-1], "")
     splittedfiles = await get_files(spdir)
