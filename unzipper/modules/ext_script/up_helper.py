@@ -64,6 +64,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         f"**Trying to upload {fname}… Please wait** \n",
                         upmsg,
                         time(),
+                        unzip_bot,
                     ),
                 )
             else:
@@ -76,6 +77,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         f"**Trying to upload {fname}… Please wait** \n",
                         upmsg,
                         time(),
+                        unzip_bot,
                     ),
                 )
         elif ul_mode == "media" and fext in extentions_list["photo"]:
@@ -89,6 +91,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     f"**Trying to upload {fname}… Please wait** \n",
                     upmsg,
                     time(),
+                    unzip_bot,
                 ),
             )
         elif ul_mode == "media" and fext in extentions_list["video"]:
@@ -108,6 +111,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         f"**Trying to upload {fname}… Please wait** \n",
                         upmsg,
                         time(),
+                        unzip_bot,
                     ),
                 )
             else:
@@ -134,6 +138,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         f"**Trying to upload {fname}… Please wait** \n",
                         upmsg,
                         time(),
+                        unzip_bot,
                     ),
                 )
                 os.remove(thmb_pth)
@@ -151,6 +156,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         f"**Trying to upload {fname}… Please wait** \n",
                         upmsg,
                         time(),
+                        unzip_bot,
                     ),
                 )
             else:
@@ -164,6 +170,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         f"**Trying to upload {fname}… Please wait** \n",
                         upmsg,
                         time(),
+                        unzip_bot,
                     ),
                 )
         await upmsg.delete()
