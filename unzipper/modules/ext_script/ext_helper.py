@@ -57,7 +57,6 @@ async def extr_files(path, archive_path, password=None):
 
 # Split files
 async def split_files(iinput, ooutput):
-    command = f"split -a 3 --numeric-suffixes=001 -b 1GB {iinput} {ooutput}"
     command = f'7z a -tzip -mx=0 "{ooutput}" "{iinput}" -v1g'
     logs = await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
     LOGGER.info("logs: " + logs)
