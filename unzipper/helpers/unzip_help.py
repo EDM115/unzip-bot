@@ -2,22 +2,25 @@
 import math
 import time
 from typing import List, Union
+from unzipper.helpers.database import del_cancel_task, get_cancel_task
 
-from unzipper.modules.bot_data import Buttons
+from unzipper.modules.bot_data import Buttons, Messages
 
 # Credits: SpEcHiDe's AnyDL-Bot for Progress bar + Time formatter
-async def progress_for_pyrogram(current, total, ud_type, message, start):
+async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_bot):
+    if (await get_cancel_task(message.from_user.id)):
+        unzip_bot.stop_transmission()
+        await message.edit(text=Messages.DL_STOPPED)
+        await del_cancel_task(message.from_user.id)
     now = time.time()
     diff = now - start
     if round(diff % 10.00) == 0 or current == total:
-        timenow = round(time.time() - start) * 1000
         percentage = current * 100 / total
         speed = current / diff
         elapsed_time = round(diff) * 1000
         time_to_completion = round((total - current) / speed) * 1000
         estimated_total_time = time_to_completion
         elapsed_time = TimeFormatter(milliseconds=elapsed_time)
-        
         estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
         progress = "[{0}{1}] \n**Processing…** : `{2}%`\n".format(
             "".join(["⬢" for i in range(math.floor(percentage / 5))]),

@@ -15,6 +15,7 @@ from pyrogram.types import CallbackQuery
 from config import Config
 from unzipper import LOGGER
 from unzipper.helpers.database import (
+    add_cancel_task,
     del_thumb_db,
     set_upload_mode,
     update_thumb,
@@ -102,10 +103,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         )
 
     elif query.data == "canceldownload":
-        unzip_bot.stop_transmission()
-        await query.edit_message_text(text=Messages.DL_STOPPED)
-        # Add maybe a .format() with URL or Filename
-        # Idk if server needds to be cleaned
+        await add_cancel_task(query.from_user.id)
 
     elif query.data == "check_thumb":
         user_id = query.from_user.id
@@ -305,6 +303,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         "**Trying to download… Please wait** \n",
                         query.message,
                         s_time,
+                        unzip_bot,
                     ),
                 )
                 e_time = time()

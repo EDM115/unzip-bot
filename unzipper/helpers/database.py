@@ -281,3 +281,33 @@ async def del_ongoing_task(user_id):
 
 async def clear_ongoing_tasks():
     await ongoing_tasks.delete_many({})
+
+# DB for cancel tasks (that's stupid)
+cancel_tasks = unzipper_db["cancel_tasks"]
+
+async def get_cancel_tasks():
+    return [cancel_list async for cancel_list in cancel_tasks.find({})]
+
+async def count_cancel_tasks():
+    tasks = await cancel_tasks.count_documents({})
+    return tasks
+
+async def add_cancel_task(user_id):
+    await cancel_tasks.insert_one({"user_id": user_id})
+
+async def del_cancel_task(user_id):
+    is_exist = await cancel_tasks.find_one({"user_id": user_id})
+    if is_exist is not None and is_exist:
+        await cancel_tasks.delete_one({"user_id": user_id})
+    else:
+        return
+
+async def get_cancel_task(user_id):
+    is_exist = await cancel_tasks.find_one({"user_id": user_id})
+    if is_exist is not None and is_exist:
+        return True
+    else:
+        return False
+    
+async def clear_cancel_tasks():
+    await cancel_tasks.delete_many({})
