@@ -3,6 +3,8 @@ import math
 import time
 from typing import List, Union
 
+from unzipper.modules.bot_data import Buttons
+
 # Credits: SpEcHiDe's AnyDL-Bot for Progress bar + Time formatter
 async def progress_for_pyrogram(current, total, ud_type, message, start):
     now = time.time()
@@ -13,13 +15,9 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
         speed = current / diff
         elapsed_time = round(diff) * 1000
         time_to_completion = round((total - current) / speed) * 1000
-        estimated_total_time = elapsed_time + time_to_completion
+        estimated_total_time = time_to_completion
         elapsed_time = TimeFormatter(milliseconds=elapsed_time)
-        """
-        # Bad attempt to fix the time remaining
-        if ((int(estimated_total_time) > int(elapsed_time)) and (int(timenow) > int(elapsed_time))) or ((int(estimated_total_time) > int(elapsed_time)) and (int(percentage) > 50)):
-            estimated_total_time -= elapsed_time / 10
-        """
+        
         estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
         progress = "[{0}{1}] \n**Processing…** : `{2}%`\n".format(
             "".join(["⬢" for i in range(math.floor(percentage / 5))]),
@@ -37,10 +35,12 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
         )
         try:
             await message.edit(
-                text="{}\n {} \n\n**Powered by @EDM115bots**".format(ud_type, tmp)
+                text="{}\n {} \n\n**Powered by @EDM115bots**".format(ud_type, tmp),
+                reply_markup=Buttons.I_PREFER_STOP,
             )
         except:
             pass
+
 
 def humanbytes(size):
     if not size:

@@ -26,6 +26,7 @@ async def run_shell_cmds(command):
     )
     shell_output, _ = run.communicate()
     shell_output = shell_output.decode("utf-8").rstrip('\n')
+    run.stdout.close()
     return shell_output
 
 

@@ -2,8 +2,7 @@
 import os
 from asyncio import get_running_loop
 from functools import partial
-from subprocess import PIPE
-from subprocess import Popen
+import subprocess
 
 from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
@@ -12,9 +11,11 @@ from unzipper import LOGGER
 
 
 def __run_cmds_unzipper(command):
-    ext_cmd = Popen(command["cmd"], stdout=PIPE, stderr=PIPE, shell=True)
-    ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8")
+    ext_cmd = subprocess.Popen(command["cmd"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    ext_out, _ = ext_cmd.communicate()
+    ext_out = ext_out.decode("utf-8").rstrip('\n')
     LOGGER.info(ext_out)
+    ext_cmd.stdout.close()
     return ext_out
 
 
@@ -24,7 +25,7 @@ async def run_cmds_on_cr(func, **kwargs):
 
 
 # Extract with 7z
-async def _extract_with_7z_helper(protected, path, archive_path, password=None):
+async def _extract_with_7z_helper(path, archive_path, password=None):
     if password:
         command = f'7z x -o{path} -p"{password}" {archive_path} -y'
     else:
@@ -34,7 +35,6 @@ async def _extract_with_7z_helper(protected, path, archive_path, password=None):
             command = f"7z x -o{path} {archive_path} -y"
         else:
             command = "echo 'This archive is password protected'"
-            protected = True
     return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
 
@@ -45,13 +45,13 @@ async def _extract_with_zstd(path, archive_path):
 
 
 # Main function to extract files
-async def extr_files(protected, path, archive_path, password=None):
+async def extr_files(path, archive_path, password=None):
     file_path = os.path.splitext(archive_path)[1]
     if file_path == ".zst":
         os.mkdir(path)
         ex = await _extract_with_zstd(path, archive_path)
         return ex
-    ex = await _extract_with_7z_helper(protected, path, archive_path, password)
+    ex = await _extract_with_7z_helper(path, archive_path, password)
     return ex
 
 
