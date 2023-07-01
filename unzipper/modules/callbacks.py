@@ -362,12 +362,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 ooutput = f"{splitteddir}/{newfname}"
                 LOGGER.info(ooutput)
                 LOGGER.info(renamed)
-                """
-                try:
-                    os.rename(renamed, ooutput)
-                except OSError as e:
-                    return LOGGER.error(e)
-                """
                 ex1 = os.path.exists(splitteddir)
                 ex2 = os.path.exists(renamed)
                 ex4 = str(ex1) + " " + str(ex2)
@@ -383,8 +377,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     return await query.message.edit(
                         "An error occured while splitting a file above 2 Gb 😥")
                 LOGGER.info(splittedfiles)
-                await query.answer(
-                    "Trying to send all parts of the file to you… Please wait")
+                await query.message.edit("Trying to send all parts of the file to you… Please wait")
                 for file in splittedfiles:
                     sent_files += 1
                     await send_file(

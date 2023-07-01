@@ -67,4 +67,5 @@ stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
 unzipperbot.send_message(
     chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime)
 )
+unzipperbot.stop()
 LOGGER.info("Bot stopped 😪")
