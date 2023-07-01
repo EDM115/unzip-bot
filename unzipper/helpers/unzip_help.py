@@ -8,10 +8,11 @@ from unzipper.modules.bot_data import Buttons, Messages
 
 # Credits: SpEcHiDe's AnyDL-Bot for Progress bar + Time formatter
 async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_bot):
-    if (await get_cancel_task(message.from_user.id)):
-        unzip_bot.stop_transmission()
-        await message.edit(text=Messages.DL_STOPPED)
-        await del_cancel_task(message.from_user.id)
+    if message.from_user is not None:
+        if (await get_cancel_task(message.from_user.id)):
+            unzip_bot.stop_transmission()
+            await message.edit(text=Messages.DL_STOPPED)
+            await del_cancel_task(message.from_user.id)
     else:
         now = time.time()
         diff = now - start
