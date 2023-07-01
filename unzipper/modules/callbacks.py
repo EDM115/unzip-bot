@@ -197,11 +197,12 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         r_message = query.message.reply_to_message
         splitted_data = query.data.split("|")
         await query.message.edit("**✅ Processing your task… Please wait**")
+        global log_msg 
         log_msg = await unzip_bot.send_message(
             chat_id=Config.LOGS_CHANNEL,
             text=f"Processing an user query…\n\nUser ID : {user_id}",
         )
-        archive_msg
+        global archive_msg
 
         try:
             if splitted_data[1] == "url":
