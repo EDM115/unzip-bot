@@ -7,8 +7,9 @@ async def jsonized(command):
     run = subprocess.Popen(
         command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
     )
-    output = run.stdout.read()[:-1].decode("utf-8")
-    shell_output = str(output)
+    shell_output, _ = run.communicate()
+    shell_output = shell_output.decode("utf-8").rstrip('\n')
+    run.stdout.close()
     if "true" in shell_output:
         shell_output.replace("true", "True")
     elif "false" in shell_output:

@@ -25,7 +25,6 @@ from unzipper.helpers.database import (
     get_upload_mode,
     get_uploaded,
     get_users_list,
-    get_boot,
     count_ongoing_tasks,
 )
 from unzipper.helpers.unzip_help import humanbytes, timeformat_sec
@@ -100,7 +99,6 @@ async def cancel_task_by_user(_, message):
         await unzipperbot.delete_messages(chat_id=message.from_user.id, message_ids=idtodel)
     except:
         pass
-    await unzipperbot.stop_transmission()
     await message.reply("Your task have successfully been canceled ❌")
 
 # For splitted archives
@@ -354,7 +352,6 @@ async def get_all_thumbs(_, message: Message):
     paths = await get_files(path=Config.THUMB_LOCATION)
     if not paths:
         await message.reply("No thumbnails on the server yet")
-    LOGGER.info(paths)
     for doc_f in paths:
         try:
             await unzipperbot.send_document(
@@ -367,7 +364,7 @@ async def get_all_thumbs(_, message: Message):
         except FloodWait as f:
             await sleep(f.value)
         except RPCError as e:
-            message.reply_text(e, quote=True)
+            await message.reply_text(e, quote=True)
 
 @Client.on_message(
     filters.private & filters.command("redbutton") & filters.user(Config.BOT_OWNER)
@@ -408,7 +405,7 @@ async def send_logs(user_id):
         except FloodWait as f:
             await sleep(f.value)
         except RPCError as e:
-            unzipperbot.send_message(chat_id=user_id, text=e)
+            await unzipperbot.send_message(chat_id=user_id, text=e)
 
 def clear_logs():
     open('file.txt', 'w').close()

@@ -21,11 +21,6 @@ unzipperbot = Client(
 
 logging.basicConfig(
     level=logging.INFO,
-    # Can't be done due to https://github.com/EDM115/unzip-bot/blob/3f951a29cd2a19d592bbc3e65bbbbb678fa5cee3/unzipper/modules/commands.py#L242
-    # Reference for future implementation : https://stackoverflow.com/questions/5013532/open-file-by-filename-wildcard
-    # actualtime=time.strftime(%d-%m-%Y)
-    # logfilename=actualtime+"unzip-log.txt"
-    # handlers=[logging.FileHandler(logfilename), logging.StreamHandler()],
     handlers=[logging.FileHandler("unzip-log.txt"), logging.StreamHandler()],
     format="%(asctime)s - %(levelname)s - %(name)s - %(threadName)s - %(message)s",
 )

@@ -13,7 +13,6 @@ from .helpers.start import check_logs, dl_thumbs, set_boot_time
 from .modules.bot_data import Messages
 
 running = True
-# https://stackoverflow.com/questions/18499497/how-to-process-sigterm-signal-gracefully
 
 
 def handler_stop_signals(signum, frame):

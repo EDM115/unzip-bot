@@ -43,17 +43,6 @@ from .ext_script.ext_helper import (
 )
 from .ext_script.up_helper import answer_query, get_size, send_file, send_url_logs
 
-# We avoid having a 700 lines long file that way
-# from .callbacks_func.cancel import cancel
-# from .callbacks_func.ext_a import ext_a
-# from .callbacks_func.ext_f import ext_f
-# from .callbacks_func.file import file
-# from .callbacks_func.keyboard import keyboard
-# from .callbacks_func.password import password
-# from .callbacks_func.rename import rename
-# from .callbacks_func.thumb import thumb
-# from .callbacks_func.url import url
-
 split_file_pattern = r"\.(?:[0-9]+|part[0-9]+\.rar|z[0-9]+)$"
 
 # Function to download files from direct link using aiohttp
@@ -141,7 +130,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
         final_thumb = Config.THUMB_LOCATION + "/waiting_" + str(
             user_id) + ".jpg"
-        os.rename(final_thumb, thumb_location)
+        try:
+            os.rename(final_thumb, thumb_location)
+        except:
+            pass
         try:
             thumb_url = await upload_thumb(thumb_location)
             try:
@@ -588,8 +580,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
 
         await query.message.edit("Refreshing… ⏳")
         rpaths = await get_files(path=file_path)
-        LOGGER.warning("ext_f rpaths : " + str(rpaths))
-        # There are no files let's die
+        LOGGER.info("ext_f rpaths : " + str(rpaths))
         if not rpaths:
             try:
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
@@ -614,16 +605,14 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 reply_markup=empty_buttons,
             )
 
-        # Now theorically it refreshes normally
         await update_uploaded(user_id, upload_count=sent_files)
-        single_up = True
 
     elif query.data.startswith("ext_a"):
         user_id = query.from_user.id
         spl_data = query.data.split("|")
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
         paths = await get_files(path=file_path)
-        LOGGER.warning("ext_a paths : " + str(paths))
+        LOGGER.info("ext_a paths : " + str(paths))
         if not paths:
             try:
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
@@ -698,13 +687,12 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         try:
             await query.message.edit(Messages.CANCELLED_TXT.format("❌ Process cancelled"))
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{uid}")
-            if single_up:
-                await update_uploaded(user_id=uid,
-                                      upload_count=sent_files)
-                try:
-                    await log_msg.reply(Messages.HOW_MANY_UPLOADED.format(sent_files))
-                except:
-                    return
+            await update_uploaded(user_id=uid,
+                                    upload_count=sent_files)
+            try:
+                await log_msg.reply(Messages.HOW_MANY_UPLOADED.format(sent_files))
+            except:
+                return
         except:
             await unzip_bot.send_message(
                 chat_id=uid,

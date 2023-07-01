@@ -6,16 +6,6 @@ from PIL import Image
 from config import Config
 from unzipper import LOGGER
 from unzipper.modules.bot_data import Buttons, Messages
-from unzipper.helpers.database import del_thumb_db
-
-"""
-async def thumb_keyboard():
-    keyboard = InlineKeyboard(row_width=2)
-    keyboard.add(
-        InlineButton(Buttons.BROKEN, 'callback:1'),
-    )
-"""
-
 
 async def silent_del(user_id):
     try:
@@ -38,7 +28,6 @@ async def add_thumb(_, message):
         pre_thumb = Config.THUMB_LOCATION + "/not_resized_" + user_id + ".jpg"
         final_thumb = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
         if os.path.exists(thumb_location) and os.path.isfile(thumb_location):
-            LOGGER.warning(f"Thumb exists for {user_id}")
             await message.reply(
                 text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_REPLACEMENT
             )
@@ -72,35 +61,6 @@ async def add_thumb(_, message):
             text=Messages.PLS_REPLY,
             reply_to_message_id=message.id,
         )
-        LOGGER.warning("pls reply to an image")
-
-
-"""
-@pyrogram.Client.on_message(pyrogram.Filters.photo)
-async def save_thumb(_, message):
-    if message.media_group_id is not None:
-        # album is sent
-        download_location = Config.DOWNLOAD_LOCATION + "/" + str(message.from_user.id) + "/" + str(message.media_group_id) + "/"
-        # create download directory, if not exist
-        if not os.path.isdir(download_location):
-            os.makedirs(download_location)
-        await _.download_media(
-            message=message,
-            file_name=download_location
-        )
-    else:
-        # received single photo
-        download_location = Config.DOWNLOAD_LOCATION + "/" + str(message.from_user.id) + ".jpg"
-        await _.download_media(
-            message=message,
-            file_name=download_location
-        )
-        await _.send_message(
-            chat_id=message.chat.id,
-            text=Messages.SAVED_THUMBNAIL,
-            reply_to_message_id=message.id
-        )
-"""
 
 
 async def del_thumb(message):

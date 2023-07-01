@@ -30,12 +30,18 @@ def dl_thumbs():
     loop = asyncio.get_event_loop()
     coroutine = get_thumb_users()
     thumbs = loop.run_until_complete(coroutine)
+    i = 0
+    maxthumbs = len(thumbs)
+    LOGGER.info(f"Downloading {maxthumbs} thumbs")
     for thumb in thumbs:
+        i += 1
         loop2 = asyncio.get_event_loop()
         coroutine2 = download(
             thumb["url"], (Config.THUMB_LOCATION + "/" + str(thumb["_id"]) + ".jpg")
         )
         loop2.run_until_complete(coroutine2)
+        if i % 10 == 0 or i == maxthumbs:
+            LOGGER.info(f"Downloaded {i} of {maxthumbs} thumbs")
 
 def set_boot_time():
     loop = asyncio.get_event_loop()

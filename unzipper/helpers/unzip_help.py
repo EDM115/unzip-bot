@@ -1,7 +1,6 @@
 # Copyright (c) 2023 EDM115
 import math
 import time
-from typing import List, Union
 from unzipper.helpers.database import del_cancel_task, get_cancel_task
 
 from unzipper.modules.bot_data import Buttons, Messages
