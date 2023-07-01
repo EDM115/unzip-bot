@@ -318,8 +318,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             if splitted_data[2].startswith("thumb"):
                 await query.message.edit("`Processing… ⏳`")
                 archive_name = location.split("/")[-1]
-                LOGGER.info(archive_name)
-                LOGGER.info(rfnamebro)
                 if "rename" in splitted_data[2]:
                     newname = await unzip_bot.ask(
                         chat_id=user_id,
@@ -329,17 +327,14 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     renamed = location.replace(archive_name, newname.text)
                 else:
                     renamed = location.replace(archive_name, rfnamebro)
-                LOGGER.info(renamed)
                 try:
                     os.rename(location, renamed)
                 except OSError as e:
                     await del_ongoing_task(user_id)
                     return LOGGER.error(e)
                 newfname = renamed.split("/")[-1]
-                LOGGER.info(newfname)
                 fsize = await get_size(renamed)
-                LOGGER.info(fsize)
-                if fsize <= (Config.TG_MAX_SIZE / 2):
+                if fsize <= Config.TG_MAX_SIZE:
                     await send_file(
                         unzip_bot=unzip_bot,
                         c_id=user_id,
@@ -353,30 +348,20 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await del_ongoing_task(user_id)
                     return shutil.rmtree(
                         f"{Config.DOWNLOAD_LOCATION}/{user_id}")
-                LOGGER.info("File too large")
-                await query.message.edit("**Splitting your file… Please wait**")
+                await query.message.edit(f"**Splitting {newfname}… Please wait**")
                 splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
                 os.makedirs(splitteddir)
-                LOGGER.info(splitteddir)
                 ooutput = f"{splitteddir}/{newfname}"
-                LOGGER.info(ooutput)
-                LOGGER.info(renamed)
-                ex1 = os.path.exists(splitteddir)
-                ex2 = os.path.exists(renamed)
-                ex4 = str(ex1) + " " + str(ex2)
-                LOGGER.info(ex4)
                 splittedfiles = await split_files(renamed, ooutput)
                 if not splittedfiles:
                     try:
                         shutil.rmtree(splitteddir)
                     except:
                         pass
-                    LOGGER.info("no splittedfiles")
                     await del_ongoing_task(user_id)
                     return await query.message.edit(
                         "An error occured while splitting a file above 2 Gb 😥")
-                LOGGER.info(splittedfiles)
-                await query.message.edit("Trying to send all parts of the file to you… Please wait")
+                await query.message.edit(f"Trying to send all parts of {newfname} to you… Please wait")
                 for file in splittedfiles:
                     sent_files += 1
                     await send_file(
@@ -546,10 +531,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     elif query.data.startswith("ext_f"):
         user_id = query.from_user.id
         spl_data = query.data.split("|")
-        LOGGER.warning("ext_f spl_data : " + str(spl_data))
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
         paths = await get_files(path=file_path)
-        LOGGER.warning("ext_f paths : " + str(paths))
         if not paths:
             if os.path.isdir(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}"):
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
@@ -560,15 +543,48 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             )
         await query.answer("Sending that file to you… Please wait")
         sent_files += 1
-        await send_file(
-            unzip_bot=unzip_bot,
-            c_id=spl_data[2],
-            doc_f=paths[int(spl_data[3])],
-            query=query,
-            full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
-            log_msg=log_msg,
-            split=False,
-        )
+        file = paths[int(spl_data[3])]
+        fsize = await get_size(file)
+        if fsize <= Config.TG_MAX_SIZE:
+            await send_file(
+                unzip_bot=unzip_bot,
+                c_id=spl_data[2],
+                doc_f=paths[int(spl_data[3])],
+                query=query,
+                full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
+                log_msg=log_msg,
+                split=False,
+            )
+        else:
+            fname = file.split('/')[-1]
+            await query.message.edit(f"**Splitting {fname}… Please wait**")
+            splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
+            os.makedirs(splitteddir)
+            ooutput = f"{splitteddir}/{fname}"
+            splittedfiles = await split_files(file, ooutput)
+            if not splittedfiles:
+                try:
+                    shutil.rmtree(splitteddir)
+                except:
+                    pass
+                await del_ongoing_task(user_id)
+                return await query.message.edit("An error occured while splitting a file above 2 Gb 😥")
+            await query.message.edit(f"Trying to send all parts of {fname} to you… Please wait")
+            for file in splittedfiles:
+                sent_files += 1
+                await send_file(
+                    unzip_bot=unzip_bot,
+                    c_id=user_id,
+                    doc_f=file,
+                    query=query,
+                    full_path=splitteddir,
+                    log_msg=log_msg,
+                    split=True,
+                )
+            try:
+                shutil.rmtree(splitteddir)
+            except:
+                pass
 
         await query.message.edit("Refreshing… ⏳")
         rpaths = await get_files(path=file_path)
@@ -605,7 +621,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     elif query.data.startswith("ext_a"):
         user_id = query.from_user.id
         spl_data = query.data.split("|")
-        LOGGER.warning("ext_a spl_data : " + str(spl_data))
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
         paths = await get_files(path=file_path)
         LOGGER.warning("ext_a paths : " + str(paths))
@@ -621,17 +636,48 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             )
         await query.answer("Trying to send all files to you… Please wait")
         for file in paths:
-            LOGGER.info("ext_a file in paths: " + file)
             sent_files += 1
-            await send_file(
-                unzip_bot=unzip_bot,
-                c_id=spl_data[2],
-                doc_f=file,
-                query=query,
-                full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
-                log_msg=log_msg,
-                split=False,
-            )
+            fsize = await get_size(file)
+            if fsize <= Config.TG_MAX_SIZE:
+                await send_file(
+                    unzip_bot=unzip_bot,
+                    c_id=spl_data[2],
+                    doc_f=file,
+                    query=query,
+                    full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
+                    log_msg=log_msg,
+                    split=False,
+                )
+            else:
+                fname = file.split('/')[-1]
+                await query.message.edit(f"**Splitting {fname}… Please wait**")
+                splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
+                os.makedirs(splitteddir)
+                ooutput = f"{splitteddir}/{fname}"
+                splittedfiles = await split_files(file, ooutput)
+                if not splittedfiles:
+                    try:
+                        shutil.rmtree(splitteddir)
+                    except:
+                        pass
+                    await del_ongoing_task(user_id)
+                    return await query.message.edit("An error occured while splitting a file above 2 Gb 😥")
+                await query.message.edit(f"Trying to send all parts of {fname} to you… Please wait")
+                for file in splittedfiles:
+                    sent_files += 1
+                    await send_file(
+                        unzip_bot=unzip_bot,
+                        c_id=user_id,
+                        doc_f=file,
+                        query=query,
+                        full_path=splitteddir,
+                        log_msg=log_msg,
+                        split=True,
+                    )
+                try:
+                    shutil.rmtree(splitteddir)
+                except:
+                    pass
 
         await query.message.edit(
             text="**Successfully uploaded ✅**\n\n**Join @EDM115bots ❤️**",
