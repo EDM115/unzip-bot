@@ -61,6 +61,7 @@ async def split_files(iinput, ooutput):
     command = f"split -a 3 --numeric-suffixes=001 -b 2GB {iinput} {ooutput}"
     await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
     spdir = ooutput.replace("/" + ooutput.split("/")[-1], "")
+    LOGGER.info(spdir)
     splittedfiles = await get_files(spdir)
     LOGGER.info(splittedfiles)
     return splittedfiles
