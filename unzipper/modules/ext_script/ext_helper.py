@@ -58,7 +58,7 @@ async def extr_files(path, archive_path, password=None):
 # Split files
 async def split_files(iinput, ooutput):
     # Workaround : https://ccm.net/computing/linux/4327-split-a-file-into-several-parts-in-linux/
-    command = f"split -a 3 -e --numeric-suffixes=001 -b 2GB {iinput} {ooutput}"
+    command = f"split -a 3 --numeric-suffixes=001 -b 2GB {iinput} {ooutput}"
     await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
     spdir = ooutput.replace("/" + ooutput.split("/")[-1], "")
     splittedfiles = await get_files(spdir)

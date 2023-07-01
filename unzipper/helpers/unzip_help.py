@@ -12,37 +12,38 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
         unzip_bot.stop_transmission()
         await message.edit(text=Messages.DL_STOPPED)
         await del_cancel_task(message.from_user.id)
-    now = time.time()
-    diff = now - start
-    if round(diff % 10.00) == 0 or current == total:
-        percentage = current * 100 / total
-        speed = current / diff
-        elapsed_time = round(diff) * 1000
-        time_to_completion = round((total - current) / speed) * 1000
-        estimated_total_time = time_to_completion
-        elapsed_time = TimeFormatter(milliseconds=elapsed_time)
-        estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
-        progress = "[{0}{1}] \n**Processing…** : `{2}%`\n".format(
-            "".join(["⬢" for i in range(math.floor(percentage / 5))]),
-            "".join(["⬡" for i in range(20 - math.floor(percentage / 5))]),
-            round(percentage, 2),
-        )
-
-        tmp = progress + "`{0} of {1}`\n**Speed :** `{2}/s`\n**ETA :** `{3}`\n".format(
-            humanbytes(current),
-            humanbytes(total),
-            humanbytes(speed),
-            estimated_total_time
-            if estimated_total_time != "" or percentage != "100"
-            else "0 s",
-        )
-        try:
-            await message.edit(
-                text="{}\n {} \n\n**Powered by @EDM115bots**".format(ud_type, tmp),
-                reply_markup=Buttons.I_PREFER_STOP,
+    else:
+        now = time.time()
+        diff = now - start
+        if round(diff % 10.00) == 0 or current == total:
+            percentage = current * 100 / total
+            speed = current / diff
+            elapsed_time = round(diff) * 1000
+            time_to_completion = round((total - current) / speed) * 1000
+            estimated_total_time = time_to_completion
+            elapsed_time = TimeFormatter(milliseconds=elapsed_time)
+            estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
+            progress = "[{0}{1}] \n**Processing…** : `{2}%`\n".format(
+                "".join(["⬢" for i in range(math.floor(percentage / 5))]),
+                "".join(["⬡" for i in range(20 - math.floor(percentage / 5))]),
+                round(percentage, 2),
             )
-        except:
-            pass
+
+            tmp = progress + "`{0} of {1}`\n**Speed :** `{2}/s`\n**ETA :** `{3}`\n".format(
+                humanbytes(current),
+                humanbytes(total),
+                humanbytes(speed),
+                estimated_total_time
+                if estimated_total_time != "" or percentage != "100"
+                else "0 s",
+            )
+            try:
+                await message.edit(
+                    text="{}\n {} \n\n**Powered by @EDM115bots**".format(ud_type, tmp),
+                    reply_markup=Buttons.I_PREFER_STOP,
+                )
+            except:
+                pass
 
 
 def humanbytes(size):

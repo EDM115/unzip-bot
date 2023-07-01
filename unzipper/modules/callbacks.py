@@ -220,8 +220,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     archive_msg = log_msg
                     # Checks if file is an archive using content-type header
                     unzip_resp = await session.get(url, timeout=None)
-                    if "application/" not in unzip_resp.headers.get(
-                            "content-type"):
+                    if "application/" not in unzip_resp.headers.get("content-type"):
                         await del_ongoing_task(user_id)
                         return await query.message.edit(
                             "That's not an archive 💀\n\n**Try to @transload it**"
