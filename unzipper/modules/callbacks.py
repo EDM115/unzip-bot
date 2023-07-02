@@ -18,6 +18,7 @@ from unzipper.helpers.database import (
     add_cancel_task,
     del_cancel_task,
     del_thumb_db,
+    get_cancel_task,
     set_upload_mode,
     update_thumb,
     update_uploaded,
