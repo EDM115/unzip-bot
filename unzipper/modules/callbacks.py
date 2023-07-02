@@ -11,6 +11,7 @@ from aiohttp import ClientSession
 from pyrogram import Client
 from pyrogram.errors import ReplyMarkupTooLong
 from pyrogram.types import CallbackQuery
+import unzip_http
 
 from config import Config
 from unzipper import LOGGER
@@ -246,8 +247,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         os.makedirs(download_path)
                         s_time = time()
                         fname = unquote(os.path.splitext(url)[1])
+                        fext = fname.split(".")[-1].casefold()
                         if splitted_data[2] != "thumb":
-                            fext = fname.split(".")[-1].casefold()
                             if fext not in extentions_list["archive"]:
                                 await del_ongoing_task(user_id)
                                 return await query.message.edit(
@@ -258,6 +259,65 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         await answer_query(query,
                                            "`Processing… ⏳`",
                                            unzip_client=unzip_bot)
+                        # HTTP server must send Accept-Ranges: bytes and Content-Length in headers
+                        if fext == "zip" and "accept-ranges" in unzip_resp.headers and "content-length" in unzip_resp.headers:
+                            try:
+                                rzf = unzip_http.RemoteZipFile(url)
+                                paths = rzf.namelist()
+                                try:
+                                    i_e_buttons = await make_keyboard(
+                                        paths=paths,
+                                        user_id=user_id,
+                                        chat_id=query.message.chat.id,
+                                        unziphttp=True,
+                                        rzfile=rzf,
+                                    )
+                                    try:
+                                        await query.message.edit("Select files to upload 👇",
+                                                                reply_markup=i_e_buttons)
+                                    except ReplyMarkupTooLong:
+                                        empty_buttons = await make_keyboard_empty(
+                                            user_id=user_id, chat_id=query.message.chat.id, unziphttp=True, rzfile=rzf)
+                                        await query.message.edit(
+                                            "Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process",
+                                            reply_markup=empty_buttons,
+                                        )
+                                except:
+                                    try:
+                                        await query.message.delete()
+                                        i_e_buttons = await make_keyboard(
+                                            paths=paths,
+                                            user_id=user_id,
+                                            chat_id=query.message.chat.id,
+                                            unziphttp=True,
+                                            rzfile=rzf,
+                                        )
+                                        await unzip_bot.send_message(
+                                            chat_id=query.message.chat.id,
+                                            text="Select files to upload 👇",
+                                            reply_markup=i_e_buttons,
+                                        )
+                                    except:
+                                        try:
+                                            await query.message.delete()
+                                            empty_buttons = await make_keyboard_empty(
+                                                user_id=user_id, chat_id=query.message.chat.id, unziphttp=True, rzfile=rzf)
+                                            await unzip_bot.send_message(
+                                                chat_id=query.message.chat.id,
+                                                text="Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process",
+                                                reply_markup=empty_buttons,
+                                            )
+                                        except:
+                                            await answer_query(query,
+                                                            Messages.EXT_FAILED_TXT,
+                                                            unzip_client=unzip_bot)
+                                            await archive_msg.reply(Messages.EXT_FAILED_TXT)
+                                            shutil.rmtree(ext_files_dir)
+                                            LOGGER.error("Fatal error : uncorrect archive format")
+                                            await del_ongoing_task(user_id)
+                                            return
+                            except Exception as e:
+                                LOGGER.error(f"Can't use unzip_http on {url} : {e}")
                         try:
                             dled = await download_with_progress(url, archive, query.message, unzip_bot)
                         except Exception as e:
@@ -427,8 +487,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     password=password.text,
                 )
                 ext_e_time = time()
-                await archive_msg.reply(Messages.PASS_TXT.format(password.text)
-                                        )
+                await archive_msg.reply(Messages.PASS_TXT.format(password.text))
             else:
                 ext_s_time = time()
                 tested = await _test_with_7z_helper(archive)
@@ -491,13 +550,15 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 i_e_buttons = await make_keyboard(
                     paths=paths,
                     user_id=user_id,
-                    chat_id=query.message.chat.id)
+                    chat_id=query.message.chat.id,
+                    unziphttp=False
+                )
                 try:
                     await query.message.edit("Select files to upload 👇",
                                              reply_markup=i_e_buttons)
                 except ReplyMarkupTooLong:
                     empty_buttons = await make_keyboard_empty(
-                        user_id=user_id, chat_id=query.message.chat.id)
+                        user_id=user_id, chat_id=query.message.chat.id, unziphttp=False)
                     await query.message.edit(
                         "Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process",
                         reply_markup=empty_buttons,
@@ -508,7 +569,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     i_e_buttons = await make_keyboard(
                         paths=paths,
                         user_id=user_id,
-                        chat_id=query.message.chat.id)
+                        chat_id=query.message.chat.id,
+                        unziphttp=False
+                    )
                     await unzip_bot.send_message(
                         chat_id=query.message.chat.id,
                         text="Select files to upload 👇",
@@ -518,7 +581,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     try:
                         await query.message.delete()
                         empty_buttons = await make_keyboard_empty(
-                            user_id=user_id, chat_id=query.message.chat.id)
+                            user_id=user_id, chat_id=query.message.chat.id, unziphttp=False)
                         await unzip_bot.send_message(
                             chat_id=query.message.chat.id,
                             text="Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process",
@@ -558,8 +621,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         user_id = query.from_user.id
         spl_data = query.data.split("|")
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
-        paths = await get_files(path=file_path)
-        if not paths:
+        if spl_data[4]:
+            paths = spl_data[5].namelist()
+        else:
+            paths = await get_files(path=file_path)
+        if not paths and not spl_data[4]:
             if os.path.isdir(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}"):
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
             await del_ongoing_task(user_id)
@@ -569,13 +635,16 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             )
         await query.answer("Sending that file to you… Please wait")
         sent_files += 1
-        file = paths[int(spl_data[3])]
+        if spl_data[4]:
+            file = spl_data[5].open(paths[int(spl_data[3])])
+        else:
+            file = paths[int(spl_data[3])]
         fsize = await get_size(file)
         if fsize <= Config.TG_MAX_SIZE:
             await send_file(
                 unzip_bot=unzip_bot,
                 c_id=spl_data[2],
-                doc_f=paths[int(spl_data[3])],
+                doc_f=file,
                 query=query,
                 full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
                 log_msg=log_msg,
@@ -622,7 +691,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 pass
 
         await query.message.edit("Refreshing… ⏳")
-        rpaths = await get_files(path=file_path)
+        if spl_data[4]:
+            rpaths = paths.remove(paths[int(spl_data[3])])
+        else:
+            rpaths = await get_files(path=file_path)
         LOGGER.info("ext_f rpaths : " + str(rpaths))
         if not rpaths:
             try:
@@ -634,29 +706,51 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 text="There's no file left to upload",
                 reply_markup=Buttons.RATE_ME
             )
-        try:
-            i_e_buttons = await make_keyboard(paths=rpaths,
-                                              user_id=query.from_user.id,
-                                              chat_id=query.message.chat.id)
-            await query.message.edit("Select files to upload 👇",
-                                     reply_markup=i_e_buttons)
-        except ReplyMarkupTooLong:
-            empty_buttons = await make_keyboard_empty(
-                user_id=user_id, chat_id=query.message.chat.id)
-            await query.message.edit(
-                "Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process",
-                reply_markup=empty_buttons,
-            )
-
+        if spl_data[4]:
+            try:
+                i_e_buttons = await make_keyboard(paths=rpaths,
+                                                user_id=query.from_user.id,
+                                                chat_id=query.message.chat.id,
+                                                unziphttp=True,
+                                                rzfile=spl_data[5],
+                )
+                await query.message.edit("Select files to upload 👇",
+                                        reply_markup=i_e_buttons)
+            except ReplyMarkupTooLong:
+                empty_buttons = await make_keyboard_empty(
+                    user_id=user_id, chat_id=query.message.chat.id, unziphttp=True, rzfile=spl_data[5])
+                await query.message.edit(
+                    "Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process",
+                    reply_markup=empty_buttons,
+                )
+        else:
+            try:
+                i_e_buttons = await make_keyboard(paths=rpaths,
+                                                user_id=query.from_user.id,
+                                                chat_id=query.message.chat.id,
+                                                unziphttp=False
+                )
+                await query.message.edit("Select files to upload 👇",
+                                        reply_markup=i_e_buttons)
+            except ReplyMarkupTooLong:
+                empty_buttons = await make_keyboard_empty(
+                    user_id=user_id, chat_id=query.message.chat.id, unziphttp=False)
+                await query.message.edit(
+                    "Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process",
+                    reply_markup=empty_buttons,
+                )
         await update_uploaded(user_id, upload_count=sent_files)
 
     elif query.data.startswith("ext_a"):
         user_id = query.from_user.id
         spl_data = query.data.split("|")
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
-        paths = await get_files(path=file_path)
+        if spl_data[4]:
+            paths = spl_data[5].namelist()
+        else:
+            paths = await get_files(path=file_path)
         LOGGER.info("ext_a paths : " + str(paths))
-        if not paths:
+        if not paths and not spl_data[4]:
             try:
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
             except:
@@ -668,8 +762,14 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             )
         await query.message.edit("Trying to send all files to you… Please wait")
         for file in paths:
+            if spl_data[4]:
+                file = spl_data[5].open(file)
             sent_files += 1
-            fsize = await get_size(file)
+            if spl_data[4]:
+                fsize = Config.TG_MAX_SIZE + 1
+                # secutity as we can't retrieve the file size from URL
+            else:
+                fsize = await get_size(file)
             if fsize <= Config.TG_MAX_SIZE:
                 await send_file(
                     unzip_bot=unzip_bot,
