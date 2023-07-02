@@ -1,2 +1,0 @@
-def rename(query):
-    pass

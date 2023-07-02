@@ -35,6 +35,7 @@ from .bot_data import ERROR_MSGS, Buttons, Messages
 from .commands import https_url_regex, get_stats
 from .ext_script.custom_thumbnail import silent_del
 from .ext_script.ext_helper import (
+    _test_with_7z_helper,
     extr_files,
     get_files,
     make_keyboard,
@@ -408,9 +409,22 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                                         )
             else:
                 ext_s_time = time()
-                extractor = await extr_files(path=ext_files_dir,
+                tested = await _test_with_7z_helper(archive)
+                ext_t_time = time()
+                testtime = TimeFormatter(round(ext_t_time - ext_s_time) * 1000)
+                if testtime == "":
+                    testtime = "1s"
+                await answer_query(query,
+                    Messages.AFTER_OK_TEST_TXT.format(testtime),
+                    unzip_client=unzip_bot
+                )
+                if tested:
+                    extractor = await extr_files(path=ext_files_dir,
                                              archive_path=archive)
-                ext_e_time = time()
+                    ext_e_time = time()
+                else:
+                    extractor = "Error"
+                    ext_e_time = time()
             # Checks if there is an error happened while extracting the archive
             if any(err in extractor for err in ERROR_MSGS):
                 try:
@@ -579,6 +593,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 )
             try:
                 shutil.rmtree(splitteddir)
+                os.remove(file)
             except:
                 pass
             try:

@@ -1,2 +1,0 @@
-def password(query):
-    pass
