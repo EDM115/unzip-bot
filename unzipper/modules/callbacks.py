@@ -62,7 +62,7 @@ async def download_with_progress(url, path, message, unzip_bot):
         async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
             await file.write(chunk)
             current_size += len(chunk)
-            await progress_for_pyrogram(current_size, total_size, "**Trying to download… Please wait** \n", message, start_time, unzip_bot)
+            await progress_for_pyrogram(current_size, total_size, f"Trying to download… Please wait** \n\n**URL :** `{url}` \n", message, start_time, unzip_bot)
 
     await session.close()
 
@@ -249,13 +249,12 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         await answer_query(query,
                                            "`Processing… ⏳`",
                                            unzip_client=unzip_bot)
-                        await query.edit_message_text(
-                            text=
-                            f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️",
-                            reply_markup=Buttons.I_PREFER_STOP,
-                        )
+                        #await query.edit_message_text(text=f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️",reply_markup=Buttons.I_PREFER_STOP,)
                         #await download(url, archive)
-                        await download_with_progress(url, archive, query, unzip_bot)
+                        try:
+                            await download_with_progress(url, archive, query.message, unzip_bot)
+                        except Exception as e:
+                            LOGGER.error(f"Error on download : {e}")
                         e_time = time()
                         # Send copy in logs in case url has gone
                         # paths = await get_files(path=archive)
