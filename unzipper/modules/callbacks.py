@@ -53,6 +53,19 @@ async def download(url, path):
             await file.write(chunk)
     await session.close()
 
+async def download_with_progress(url, path, message, unzip_bot):
+    async with ClientSession() as session, session.get(url, timeout=None) as resp, openfile(path, mode="wb") as file:
+        total_size = int(resp.headers.get("Content-Length", 0))
+        current_size = 0
+        start_time = time.time()
+
+        async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
+            await file.write(chunk)
+            current_size += len(chunk)
+            await progress_for_pyrogram(current_size, total_size, "**Trying to download… Please wait** \n", message, start_time, unzip_bot)
+
+    await session.close()
+
 
 # Callbacks
 @Client.on_callback_query()
@@ -241,7 +254,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️",
                             reply_markup=Buttons.I_PREFER_STOP,
                         )
-                        await download(url, archive)
+                        #await download(url, archive)
+                        await download_with_progress(url, archive, query, unzip_bot)
                         e_time = time()
                         # Send copy in logs in case url has gone
                         # paths = await get_files(path=archive)
