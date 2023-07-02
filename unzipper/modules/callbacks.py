@@ -264,7 +264,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         except Exception as e:
                             dled = False
                             LOGGER.error(f"Error on download : {e}")
-                        if dled.isinstance(bool) and not dled:
+                        if isinstance(dled, bool) and not dled:
                                 return
                         e_time = time()
                         # Send copy in logs in case url has gone
