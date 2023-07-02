@@ -16,6 +16,7 @@ from config import Config
 from unzipper import LOGGER
 from unzipper.helpers.database import (
     add_cancel_task,
+    del_cancel_task,
     del_thumb_db,
     set_upload_mode,
     update_thumb,
@@ -60,11 +61,18 @@ async def download_with_progress(url, path, message, unzip_bot):
         start_time = time()
 
         async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
+            if message.from_user is not None and await get_cancel_task(message.from_user.id):
+                await session.close()
+                await message.edit(text=Messages.DL_STOPPED)
+                await del_cancel_task(message.from_user.id)
+                return False
+
             await file.write(chunk)
             current_size += len(chunk)
             await progress_for_pyrogram(current_size, total_size, f"Trying to download… Please wait** \n\n**URL :** `{url}` \n", message, start_time, unzip_bot)
 
     await session.close()
+
 
 
 # Callbacks
@@ -252,9 +260,12 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         #await query.edit_message_text(text=f"**Trying to download… Please wait** \n\n**URL :** `{url}` \n\nThis may take a while, go grab a coffee ☕️",reply_markup=Buttons.I_PREFER_STOP,)
                         #await download(url, archive)
                         try:
-                            await download_with_progress(url, archive, query.message, unzip_bot)
+                            dled = await download_with_progress(url, archive, query.message, unzip_bot)
                         except Exception as e:
+                            dled = False
                             LOGGER.error(f"Error on download : {e}")
+                        if dled.isinstance(bool) and not dled:
+                                return
                         e_time = time()
                         # Send copy in logs in case url has gone
                         # paths = await get_files(path=archive)
