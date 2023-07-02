@@ -308,14 +308,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                                                 reply_markup=empty_buttons,
                                             )
                                         except:
-                                            await answer_query(query,
-                                                            Messages.EXT_FAILED_TXT,
-                                                            unzip_client=unzip_bot)
-                                            await archive_msg.reply(Messages.EXT_FAILED_TXT)
-                                            shutil.rmtree(ext_files_dir)
-                                            LOGGER.error("Fatal error : uncorrect archive format")
-                                            await del_ongoing_task(user_id)
-                                            return
+                                            pass
                             except Exception as e:
                                 LOGGER.error(f"Can't use unzip_http on {url} : {e}")
                         try:
@@ -621,11 +614,12 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         user_id = query.from_user.id
         spl_data = query.data.split("|")
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
-        if spl_data[4]:
+        urled = spl_data[4] if isinstance(spl_data[4], bool) else False
+        if urled:
             paths = spl_data[5].namelist()
         else:
             paths = await get_files(path=file_path)
-        if not paths and not spl_data[4]:
+        if not paths and not urled:
             if os.path.isdir(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}"):
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
             await del_ongoing_task(user_id)
@@ -635,7 +629,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             )
         await query.answer("Sending that file to you… Please wait")
         sent_files += 1
-        if spl_data[4]:
+        if urled:
             file = spl_data[5].open(paths[int(spl_data[3])])
         else:
             file = paths[int(spl_data[3])]
@@ -691,7 +685,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 pass
 
         await query.message.edit("Refreshing… ⏳")
-        if spl_data[4]:
+        if urled:
             rpaths = paths.remove(paths[int(spl_data[3])])
         else:
             rpaths = await get_files(path=file_path)
@@ -706,7 +700,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 text="There's no file left to upload",
                 reply_markup=Buttons.RATE_ME
             )
-        if spl_data[4]:
+        if urled:
             try:
                 i_e_buttons = await make_keyboard(paths=rpaths,
                                                 user_id=query.from_user.id,
@@ -745,12 +739,13 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         user_id = query.from_user.id
         spl_data = query.data.split("|")
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
-        if spl_data[4]:
-            paths = spl_data[5].namelist()
+        urled = spl_data[4] if isinstance(spl_data[3], bool) else False
+        if urled:
+            paths = spl_data[4].namelist()
         else:
             paths = await get_files(path=file_path)
         LOGGER.info("ext_a paths : " + str(paths))
-        if not paths and not spl_data[4]:
+        if not paths and not urled:
             try:
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
             except:
@@ -762,10 +757,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             )
         await query.message.edit("Trying to send all files to you… Please wait")
         for file in paths:
-            if spl_data[4]:
-                file = spl_data[5].open(file)
             sent_files += 1
-            if spl_data[4]:
+            if urled:
+                file = spl_data[4].open(file)
                 fsize = Config.TG_MAX_SIZE + 1
                 # secutity as we can't retrieve the file size from URL
             else:
