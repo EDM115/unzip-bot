@@ -34,9 +34,9 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
                 pass
         else:
             try:
-                tmp = f"**Size : Unknown** \n\nThis may take a while, go grab a coffee ☕️"
+                tmp = "**Size : Unknown** \n\nThis may take a while, go grab a coffee ☕️"
                 await message.edit(
-                    text="{ud_type}\n {tmp} \n\n**Powered by @EDM115bots**",
+                    text=f"{ud_type}\n {tmp} \n\n**Powered by @EDM115bots**",
                     reply_markup=Buttons.I_PREFER_STOP,
                 )
             except:
