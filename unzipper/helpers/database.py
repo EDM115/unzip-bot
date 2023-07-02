@@ -293,7 +293,8 @@ async def count_cancel_tasks():
     return tasks
 
 async def add_cancel_task(user_id):
-    await cancel_tasks.insert_one({"user_id": user_id})
+    if not await get_cancel_task(user_id):
+        await cancel_tasks.insert_one({"user_id": user_id})
 
 async def del_cancel_task(user_id):
     is_exist = await cancel_tasks.find_one({"user_id": user_id})
