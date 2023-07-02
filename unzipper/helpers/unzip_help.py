@@ -14,7 +14,16 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
     else:
         now = time.time()
         diff = now - start
-        if total != 0 and (round(diff % 10.00) == 0 or current == total):
+        if total == 0:
+            try:
+                tmp = "**Size : Unknown** \n\nThis may take a while, go grab a coffee ☕️"
+                await message.edit(
+                    text=f"{ud_type}\n {tmp} \n\n**Powered by @EDM115bots**",
+                    reply_markup=Buttons.I_PREFER_STOP,
+                )
+            except:
+                pass
+        elif round(diff % 10.00) == 0 or current == total:
             percentage = current * 100 / total
             speed = current / diff
             elapsed_time = round(diff) * 1000
@@ -23,18 +32,8 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
             elapsed_time = TimeFormatter(milliseconds=elapsed_time)
             estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
             progress = f'[{"".join(["⬢" for i in range(math.floor(percentage / 5))])}{"".join(["⬡" for i in range(20 - math.floor(percentage / 5))])}] \n**Processing…** : `{round(percentage, 2)}%`\n'
-
             tmp = progress + f'`{humanbytes(current)} of {humanbytes(total)}`\n**Speed :** `{humanbytes(speed)}/s`\n**ETA :** `{estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"}`\n'
             try:
-                await message.edit(
-                    text=f"{ud_type}\n {tmp} \n\n**Powered by @EDM115bots**",
-                    reply_markup=Buttons.I_PREFER_STOP,
-                )
-            except:
-                pass
-        else:
-            try:
-                tmp = "**Size : Unknown** \n\nThis may take a while, go grab a coffee ☕️"
                 await message.edit(
                     text=f"{ud_type}\n {tmp} \n\n**Powered by @EDM115bots**",
                     reply_markup=Buttons.I_PREFER_STOP,
