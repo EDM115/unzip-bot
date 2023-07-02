@@ -14,7 +14,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
     else:
         now = time.time()
         diff = now - start
-        if round(diff % 10.00) == 0 or current == total or total != 0:
+        if total != 0 and (round(diff % 10.00) == 0 or current == total):
             percentage = current * 100 / total
             speed = current / diff
             elapsed_time = round(diff) * 1000

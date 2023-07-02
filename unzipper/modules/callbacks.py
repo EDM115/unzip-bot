@@ -56,7 +56,7 @@ async def download(url, path):
     await session.close()
 
 async def download_with_progress(url, path, message, unzip_bot):
-    async with ClientSession() as session, session.get(url, timeout=None) as resp, openfile(path, mode="wb") as file:
+    async with ClientSession() as session, session.get(url, timeout=None, allow_redirects=True) as resp, openfile(path, mode="wb") as file:
         total_size = int(resp.headers.get("Content-Length", 0))
         current_size = 0
         start_time = time()
