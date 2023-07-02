@@ -22,23 +22,12 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
             estimated_total_time = time_to_completion
             elapsed_time = TimeFormatter(milliseconds=elapsed_time)
             estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
-            progress = "[{0}{1}] \n**Processing…** : `{2}%`\n".format(
-                "".join(["⬢" for i in range(math.floor(percentage / 5))]),
-                "".join(["⬡" for i in range(20 - math.floor(percentage / 5))]),
-                round(percentage, 2),
-            )
+            progress = f'[{"".join(["⬢" for i in range(math.floor(percentage / 5))])}{"".join(["⬡" for i in range(20 - math.floor(percentage / 5))])}] \n**Processing…** : `{round(percentage, 2)}%`\n'
 
-            tmp = progress + "`{0} of {1}`\n**Speed :** `{2}/s`\n**ETA :** `{3}`\n".format(
-                humanbytes(current),
-                humanbytes(total),
-                humanbytes(speed),
-                estimated_total_time
-                if estimated_total_time != "" or percentage != "100"
-                else "0 s",
-            )
+            tmp = progress + f'`{humanbytes(current)} of {humanbytes(total)}`\n**Speed :** `{humanbytes(speed)}/s`\n**ETA :** `{estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"}`\n'
             try:
                 await message.edit(
-                    text="{}\n {} \n\n**Powered by @EDM115bots**".format(ud_type, tmp),
+                    text=f"{ud_type}\n {tmp} \n\n**Powered by @EDM115bots**",
                     reply_markup=Buttons.I_PREFER_STOP,
                 )
             except:
@@ -47,7 +36,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
             try:
                 tmp = f"**Size : Unknown** \n\nThis may take a while, go grab a coffee ☕️"
                 await message.edit(
-                    text="{}\n {} \n\n**Powered by @EDM115bots**".format(ud_type, tmp),
+                    text="{ud_type}\n {tmp} \n\n**Powered by @EDM115bots**",
                     reply_markup=Buttons.I_PREFER_STOP,
                 )
             except:
