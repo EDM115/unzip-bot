@@ -819,7 +819,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         user_id = query.from_user.id
         spl_data = query.data.split("|")
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
-        urled = spl_data[4] if isinstance(spl_data[4], bool) else False
+        try:
+            urled = spl_data[4] if isinstance(spl_data[4], bool) else False
+        except:
+            urled = False
         if urled:
             paths = spl_data[5].namelist()
         else:
@@ -944,7 +947,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         user_id = query.from_user.id
         spl_data = query.data.split("|")
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
-        urled = spl_data[4] if isinstance(spl_data[3], bool) else False
+        try:
+            urled = spl_data[4] if isinstance(spl_data[3], bool) else False
+        except:
+            urled = False
         if urled:
             paths = spl_data[4].namelist()
         else:

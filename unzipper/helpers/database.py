@@ -354,3 +354,8 @@ async def get_merge_task_message_id(user_id):
     
 async def clear_merge_tasks():
     await merge_tasks.delete_many({})
+
+
+# DB for maintenance mode
+
+maintenance_mode = unzipper_db["maintenance_mode"]
