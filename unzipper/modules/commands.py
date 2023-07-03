@@ -430,8 +430,8 @@ async def logz(_, message: Message):
     filters.private & filters.command("restart") & filters.user(Config.BOT_OWNER)
 )
 async def restart(_, message: Message):
-    folder_to_del = os.path.dirname(os.path.abspath(Config.DOWNLOAD_LOCATION))
     try:
+        folder_to_del = os.path.dirname(os.path.abspath(Config.DOWNLOAD_LOCATION))
         shutil.rmtree(Config.DOWNLOAD_LOCATION)
         LOGGER.info(f"Deleted {folder_to_del} folder successfully")
     except:
