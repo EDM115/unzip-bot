@@ -270,6 +270,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         user_id = query.from_user.id
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merge"
         ext_files_dir = f"{download_path}/extracted"
+        os.makedirs(ext_files_dir)
         files = await get_files(download_path)
         LOGGER.info("files = ", files)
         file = files[0]
