@@ -19,6 +19,7 @@ from unzipper import LOGGER
 from unzipper.helpers.database import (
     add_cancel_task,
     del_cancel_task,
+    del_merge_task,
     del_thumb_db,
     get_cancel_task,
     get_merge_task_message_id,
@@ -218,26 +219,27 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             messages_array = await unzip_bot.get_messages(user_id, files_array)
             i = 0
             length = len(messages_array)
+            os.makedirs(download_path)
             rs_time = time()
             for message in messages_array:
                 if message.document is None:
                     pass
-                i += 1
-                os.makedirs(download_path)
-                fname = message.document.file_name
-                await message.forward(chat_id=Config.LOGS_CHANNEL)
-                location = f"{download_path}/archive_from_{user_id}{os.path.splitext(fname)[1]}"
-                s_time = time()
-                await message.download(
-                    file_name=location,
-                    progress=progress_for_pyrogram,
-                    progress_args=(
-                        f"**Trying to download file {i}/{length}… Please wait** \n",
-                        merge_msg,
-                        s_time,
-                        unzip_bot,
-                    ),
-                )
+                else:
+                    i += 1
+                    fname = message.document.file_name
+                    await message.forward(chat_id=Config.LOGS_CHANNEL)
+                    location = f"{download_path}/archive_from_{user_id}{os.path.splitext(fname)[1]}"
+                    s_time = time()
+                    await message.download(
+                        file_name=location,
+                        progress=progress_for_pyrogram,
+                        progress_args=(
+                            f"**Trying to download file {i}/{length}… Please wait** \n",
+                            merge_msg,
+                            s_time,
+                            unzip_bot,
+                        ),
+                    )
             e_time = time()
             dltime = TimeFormatter(round(e_time - rs_time) * 1000)
             if dltime == "":
@@ -255,6 +257,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 text=Messages.CHOOSE_EXT_MODE_MERGE,
                 reply_markup=Buttons.CHOOSE_E_F_M__BTNS,
             )
+            await del_merge_task(user_id)
             try:
                 shutil.rmtree(download_path)
             except:
@@ -262,6 +265,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         else:
             await answer_query(query, Messages.NO_MERGE_TASK)
             await del_ongoing_task(user_id)
+            await del_merge_task(user_id)
 
     elif query.data.startswith("merged"):
         user_id = query.from_user.id

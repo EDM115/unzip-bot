@@ -23,6 +23,7 @@ from unzipper.helpers.database import (
     count_users,
     del_banned_user,
     del_user,
+    get_merge_task,
     get_upload_mode,
     get_uploaded,
     get_users_list,
@@ -79,6 +80,8 @@ async def extract_archive(_, message: Message):
         return await unzip_msg.edit(
             "Already one process is running, don't spam 😐\n\nWanna clear your files from my server ? Then just send **/clean** command"
         )
+    if get_merge_task(user_id):
+        return
     if message.text and (re.match(https_url_regex, message.text)):
         await unzip_msg.edit(
             text=Messages.CHOOSE_EXT_MODE.format("URL", "🔗"),
