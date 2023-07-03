@@ -246,14 +246,17 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             if dltime == "":
                 dltime = "1 s"
             await merge_msg.edit(Messages.AFTER_OK_MERGE_DL_TXT.format(i, dltime))
-            newfiles = await get_files(download_path)
+            """ newfiles = await get_files(download_path)
             basename = ".".join(newfiles[0].split("/")[-1].split(".")[:-1])
-            LOGGER.info("newfiles = " + str(newfiles), "basename = " + basename)
-            output = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merged/{basename}"
+            LOGGER.info("newfiles = " + str(newfiles), "basename = ", basename)
+            output = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merged"
             m_time = time()
             await merge_files(newfiles[0], output)
-            await merge_msg.edit(Messages.AFTER_OK_MERGE_TXT.format(TimeFormatter(round(time() - m_time) * 1000)))
-            await asyncio.sleep(5)
+            mergetime = TimeFormatter(round(time() - m_time) * 1000)
+            if mergetime == "":
+                mergetime = "1 s"
+            await merge_msg.edit(Messages.AFTER_OK_MERGE_TXT.format(mergetime))
+            await asyncio.sleep(5) """
             await merge_msg.edit(
                 text=Messages.CHOOSE_EXT_MODE_MERGE,
                 reply_markup=Buttons.CHOOSE_E_F_M__BTNS,
@@ -270,7 +273,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
 
     elif query.data.startswith("merged"):
         user_id = query.from_user.id
-        download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merged"
+        download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merge"
         ext_files_dir = f"{download_path}/extracted"
         files = await get_files(download_path)
         LOGGER.info("files = ", files)

@@ -65,7 +65,7 @@ async def split_files(iinput, ooutput):
     return splittedfiles
 
 # Merge files
-async def merge_files(iinput, ooutput):
+async def merge_files(iinput, ooutput, password=None):
     command = f'7z x -o"{ooutput}" "{iinput}" -y'
     await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 

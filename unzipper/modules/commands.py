@@ -80,7 +80,7 @@ async def extract_archive(_, message: Message):
         return await unzip_msg.edit(
             "Already one process is running, don't spam 😐\n\nWanna clear your files from my server ? Then just send **/clean** command"
         )
-    if get_merge_task(user_id):
+    if await get_merge_task(user_id):
         return await unzip_msg.delete()
     if message.text and (re.match(https_url_regex, message.text)):
         await unzip_msg.edit(
