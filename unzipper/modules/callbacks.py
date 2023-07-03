@@ -157,11 +157,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         if replace == "replace":
             await silent_del(user_id)
         thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
-        final_thumb = Config.THUMB_LOCATION + "/waiting_" + str(
-            user_id) + ".jpg"
+        final_thumb = Config.THUMB_LOCATION + "/waiting_" + str(user_id) + ".jpg"
         try:
             os.rename(final_thumb, thumb_location)
         except:
+            LOGGER.warning("Error on thumb rename")
             pass
         try:
             thumb_url = await upload_thumb(thumb_location)

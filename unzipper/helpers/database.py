@@ -1,7 +1,7 @@
 # Copyright (c) 2023 EDM115
 
 from motor.motor_asyncio import AsyncIOMotorClient
-from requests import post
+import requests
 
 from config import Config
 from unzipper import LOGGER, unzipperbot as Client
@@ -198,11 +198,17 @@ async def update_thumb(user_id, thumb_url, force):
         await thumb_db.insert_one({"_id": user_id, "url": thumb_url})
 
 async def upload_thumb(image):
-    with open(image, "rb") as file:
-        request = post(
-            "https://telegra.ph/upload", files={"file": ("file", file, "image/jpeg")}
-        ).json()[0]
-        return f"https://telegra.ph{request['src']}"
+    try:
+        with open(image, "rb") as file:
+            response = requests.post(
+                "https://telegra.ph/upload", files={"file": ("file", file, "image/jpeg")}
+            )
+            response.raise_for_status()  # Raise an exception if the request was not successful
+            request = response.json()[0]
+            return f"https://telegra.ph{request['src']}"
+    except requests.exceptions.RequestException as err:
+        LOGGER.warning(err)
+        return f"Error occurred during upload: {err}"
 
 async def get_thumb_users():
     return [thumb_list async for thumb_list in thumb_db.find({})]
