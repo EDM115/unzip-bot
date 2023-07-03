@@ -290,6 +290,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             ext_e_time = time()
         else:
             # Can't test the archive apparently
+            ext_s_time = time()
             extractor = await extr_files(path=ext_files_dir,
                                         archive_path=file)
             ext_e_time = time()
@@ -312,6 +313,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                                                 text=Messages.EXT_FAILED_TXT)
                 shutil.rmtree(ext_files_dir)
                 await del_ongoing_task(user_id)
+            return
         # Check if user was dumb 😐
         paths = await get_files(path=ext_files_dir)
         if not paths:
