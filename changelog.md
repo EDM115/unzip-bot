@@ -12,11 +12,38 @@
 
 ---
 
-### v6.0.0 *(soon)*
+### v6.2.0 **[LATEST STABLE RELEASE]**
 
-- On the work, huge refactor, a lot of bug fixes and new features will come around the summer...
+- Added a new command : /merge (and /done)
+- Allows to merge splitted archives in .XXX format
+- Upload of thumbnails on telegra.ph now handles errors
 
-### v5.3.1 **[LATEST STABLE RELEASE]**
+### v6.1.0
+
+- URL's also shows a progressbar + ETA when possible
+- Downloads are 28 times faster
+- Some databases are cleared upon restart
+- Attempt to implement #137
+- New boot sequence
+
+### v6.0.0 
+
+- Dependencies update
+- tgz and zst archives are now supported
+- Thumbnail change tasks are now removed from DB after completion
+- Dockerfile have been updated : Add of ffmpeg and venv
+- Uploading videos as media is fixed ! #133
+- Added Docker instructions on the README
+- Added GitHub Actions for Docker publishing and deployment
+- Updated the FUNDING.yml
+- New command : /donate, plus donate button appears on /start and after a task is processed
+- Tell users that they can rate the bot after a task is processed
+- #33 is gone (no longer useless alerts)
+- ETA is now correct
+- Tried to add a way to cancel tasks, but it's not working
+- Files above 2 GB are now splitted
+
+### v5.3.1
 
 - Added /gitpull command to try the latest updates (removed at each restart)
 - /delthumb also works locally
