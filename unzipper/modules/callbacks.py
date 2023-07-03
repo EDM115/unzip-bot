@@ -225,7 +225,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await del_ongoing_task(user_id)
                 await del_merge_task(user_id)
                 return
-            i = 0
             length = len(messages_array)
             if not os.path.isdir(download_path):
                 os.makedirs(download_path)
@@ -238,7 +237,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 if message.document is None:
                     pass
                 else:
-                    i += 1
                     newarray.append(message)
             length = len(newarray)
             if length == 0:
@@ -246,7 +244,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await del_ongoing_task(user_id)
                 await del_merge_task(user_id)
                 return
+            i = 0
             for message in newarray:
+                i += 1
                 fname = message.document.file_name
                 await message.forward(chat_id=Config.LOGS_CHANNEL)
                 location = f"{download_path}/{fname}"
