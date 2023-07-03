@@ -275,6 +275,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         LOGGER.info("files = %s", files)
         file = files[0]
         splitted_data = query.data.split("|")
+        global log_msg 
+        log_msg = await unzip_bot.send_message(
+            chat_id=Config.LOGS_CHANNEL,
+            text=f'Processing an user query…\n\nUser ID : {user_id}\nTask : Merge\n\nFile : {".".join(file.split("/")[-1].split(".")[:-1])}',
+        )
         await query.message.edit("**✅ Processing your task… Please wait**")
         if splitted_data[1] == "with_pass":
             password = await unzip_bot.ask(
@@ -329,7 +334,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             shutil.rmtree(download_path)
         except:
             pass
-        
+
         # Upload extracted files
         extrtime = TimeFormatter(round(ext_e_time - ext_s_time) * 1000)
         if extrtime == "":
