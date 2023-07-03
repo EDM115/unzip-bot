@@ -83,7 +83,7 @@ async def extract_archive(_, message: Message):
             "Already one process is running, don't spam 😐\n\nWanna clear your files from my server ? Then just send **/clean** command"
         )
     if await get_merge_task(user_id):
-        if message.document and re.search(r"\.(?:[0-9]+|part[0-9]+\.rar|z[0-9]+|r[0-9]{2})$", message.document.file_name):
+        if message.document and re.search(r"\.(?:part\d+\.rar|z\d+|r\d{2})$", message.document.file_name):
             await del_merge_task(user_id)
             await del_ongoing_task(user_id)
             return await unzip_msg.edit("Those type of splitted files can't be processed yet")

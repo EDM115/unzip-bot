@@ -51,7 +51,7 @@ from .ext_script.ext_helper import (
 )
 from .ext_script.up_helper import answer_query, get_size, send_file, send_url_logs
 
-split_file_pattern = r"\.(?:[0-9]+|part[0-9]+\.rar|z[0-9]+|r[0-9]{2})$"
+split_file_pattern = r"\.(?:part\d+\.rar|z\d+|r\d{2})$"
 
 # Function to download files from direct link using aiohttp
 async def download(url, path):
