@@ -230,10 +230,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 os.makedirs(download_path)
             rs_time = time()
             newarray = []
-            j = 0
+            await merge_msg.edit(f"**Processing {length} messages… Please wait** \n")
             for message in messages_array:
-                j += 1
-                await merge_msg.edit(f"**Processing message {j}/{length}… Please wait** \n")
                 if message.document is None:
                     pass
                 else:
