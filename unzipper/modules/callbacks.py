@@ -51,7 +51,7 @@ from .ext_script.ext_helper import (
 )
 from .ext_script.up_helper import answer_query, get_size, send_file, send_url_logs
 
-split_file_pattern = r"\.(?:[0-9]+|part[0-9]+\.rar|z[0-9]+)$"
+split_file_pattern = r"\.(?:[0-9]+|part[0-9]+\.rar|z[0-9]+|r[0-9]{2})$"
 
 # Function to download files from direct link using aiohttp
 async def download(url, path):
@@ -215,33 +215,52 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         s_id = await get_merge_task_message_id(user_id)
         merge_msg = await query.message.edit("**✅ Processing your task… Please wait**")
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merge"
-        if s_id:
+        if s_id and (m_id - s_id) > 1:
             files_array = list(range(s_id, m_id))
-            LOGGER.info(files_array)
-            messages_array = await unzip_bot.get_messages(user_id, files_array)
+            try:
+                messages_array = await unzip_bot.get_messages(user_id, files_array)
+            except Exception as e:
+                LOGGER.error(f"Error on getting messages from user : {e}")
+                await answer_query(query, Messages.ERROR_TXT.format(e))
+                await del_ongoing_task(user_id)
+                await del_merge_task(user_id)
+                return
             i = 0
             length = len(messages_array)
-            os.makedirs(download_path)
+            if not os.path.isdir(download_path):
+                os.makedirs(download_path)
             rs_time = time()
+            newarray = []
+            j = 0
             for message in messages_array:
+                j += 1
+                await merge_msg.edit(f"**Processing message {j}/{length}… Please wait** \n")
                 if message.document is None:
                     pass
                 else:
                     i += 1
-                    fname = message.document.file_name
-                    await message.forward(chat_id=Config.LOGS_CHANNEL)
-                    location = f"{download_path}/{fname}"
-                    s_time = time()
-                    await message.download(
-                        file_name=location,
-                        progress=progress_for_pyrogram,
-                        progress_args=(
-                            f"**Trying to download file {i}/{length}… Please wait** \n",
-                            merge_msg,
-                            s_time,
-                            unzip_bot,
-                        ),
-                    )
+                    newarray.append(message)
+            length = len(newarray)
+            if length == 0:
+                await answer_query(query, Messages.NO_MERGE_TASK)
+                await del_ongoing_task(user_id)
+                await del_merge_task(user_id)
+                return
+            for message in newarray:
+                fname = message.document.file_name
+                await message.forward(chat_id=Config.LOGS_CHANNEL)
+                location = f"{download_path}/{fname}"
+                s_time = time()
+                await message.download(
+                    file_name=location,
+                    progress=progress_for_pyrogram,
+                    progress_args=(
+                        f"**Trying to download file {i}/{length}… Please wait** \n",
+                        merge_msg,
+                        s_time,
+                        unzip_bot,
+                    ),
+                )
             e_time = time()
             dltime = TimeFormatter(round(e_time - rs_time) * 1000)
             if dltime == "":
@@ -262,9 +281,14 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merge"
         ext_files_dir = f"{Config.DOWNLOAD_LOCATION}/{user_id}/extracted"
         os.makedirs(ext_files_dir)
-        files = await get_files(download_path)
-        LOGGER.info("files = %s", files)
-        file = files[0]
+        try:
+            files = await get_files(download_path)
+            file = files[0]
+        except IndexError:
+            await answer_query(query, Messages.NO_MERGE_TASK)
+            await del_ongoing_task(user_id)
+            await del_merge_task(user_id)
+            return
         splitted_data = query.data.split("|")
         log_msg = await unzip_bot.send_message(
             chat_id=Config.LOGS_CHANNEL,
