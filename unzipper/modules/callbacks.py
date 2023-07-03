@@ -216,7 +216,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merge"
         if s_id:
             files_array = list(range(s_id, m_id))
+            LOGGER.info(files_array)
             messages_array = await unzip_bot.get_messages(user_id, files_array)
+            LOGGER.info(messages_array)
             i = 0
             length = len(messages_array)
             os.makedirs(download_path)

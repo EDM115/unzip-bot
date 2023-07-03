@@ -81,7 +81,7 @@ async def extract_archive(_, message: Message):
             "Already one process is running, don't spam 😐\n\nWanna clear your files from my server ? Then just send **/clean** command"
         )
     if get_merge_task(user_id):
-        return
+        return await unzip_msg.delete()
     if message.text and (re.match(https_url_regex, message.text)):
         await unzip_msg.edit(
             text=Messages.CHOOSE_EXT_MODE.format("URL", "🔗"),
@@ -112,7 +112,6 @@ async def merging(_, message: Message):
         "You have splitted archives to process ?\nSend me **all** the splitted files (.001, .002, .00×, …)\n\n**AFTER** you sent them all, send **/done** and click on the `Merge 🛠️` button"
     )
     await add_merge_task(message.from_user.id, merge_msg.id)
-    # Catch the files id + download + send to callbacks + cat + prompt dialog
 
 @Client.on_message(filters.private & filters.command("done"))
 async def done_merge(_, message: Message):
