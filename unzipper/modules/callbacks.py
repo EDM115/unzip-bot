@@ -272,7 +272,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         user_id = query.from_user.id
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merged"
         ext_files_dir = f"{download_path}/extracted"
-        file = await get_files(download_path)[0]
+        files = await get_files(download_path)
+        file = files[0]
         splitted_data = query.data.split("|")
         await query.message.edit("**✅ Processing your task… Please wait**")
         if splitted_data[1] == "with_pass":

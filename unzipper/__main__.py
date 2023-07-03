@@ -38,6 +38,7 @@ while running:
             os.makedirs(Config.DOWNLOAD_LOCATION)
         if not os.path.isdir(Config.THUMB_LOCATION):
             os.makedirs(Config.THUMB_LOCATION)
+        LOGGER.info("Starting bot…")
         unzipperbot.start()
         starttime = time.strftime("%Y/%m/%d - %H:%M:%S")
         unzipperbot.send_message(
@@ -48,7 +49,6 @@ while running:
         LOGGER.info("Checking Log channel…")
         if check_logs():
             LOGGER.info("Log channel alright")
-            LOGGER.info("Starting bot…")
             LOGGER.info("Bot is running now ! Join @EDM115bots")
             idle()
         else:
