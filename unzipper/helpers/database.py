@@ -328,6 +328,8 @@ async def count_merge_tasks():
 async def add_merge_task(user_id, message_id):
     if not await get_merge_task(user_id):
         await merge_tasks.insert_one({"user_id": user_id, "message_id": message_id})
+    else:
+        await merge_tasks.update_one({"user_id": user_id}, {"$set": {"message_id": message_id}})
 
 async def del_merge_task(user_id):
     is_exist = await merge_tasks.find_one({"user_id": user_id})

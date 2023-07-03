@@ -218,7 +218,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             files_array = list(range(s_id, m_id))
             LOGGER.info(files_array)
             messages_array = await unzip_bot.get_messages(user_id, files_array)
-            LOGGER.info(messages_array)
             i = 0
             length = len(messages_array)
             os.makedirs(download_path)
@@ -230,7 +229,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     i += 1
                     fname = message.document.file_name
                     await message.forward(chat_id=Config.LOGS_CHANNEL)
-                    location = f"{download_path}/archive_from_{user_id}{os.path.splitext(fname)[1]}"
+                    location = f"{download_path}/{fname}"
                     s_time = time()
                     await message.download(
                         file_name=location,
@@ -248,8 +247,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 dltime = "1 s"
             await merge_msg.edit(Messages.AFTER_OK_MERGE_DL_TXT.format(i, dltime))
             newfiles = await get_files(download_path)
-            basename = os.path.splitext(newfiles[0])[0]
-            LOGGER.info("newfiles = " + str(newfiles), "basename = " + str(basename))
+            basename = ".".join(newfiles[0].split("/")[-1].split(".")[:-1])
+            LOGGER.info("newfiles = " + str(newfiles), "basename = " + basename)
             output = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merged/{basename}"
             m_time = time()
             await merge_files(newfiles[0], output)
