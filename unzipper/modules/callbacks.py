@@ -282,27 +282,23 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 text="**Please send me the password 🔑**",
             )
             ext_s_time = time()
-            extractor = await extr_files(
-                path=ext_files_dir,
-                archive_path=file,
+            extractor = await merge_files(
+                iinput=file,
+                ooutput=ext_files_dir,
                 password=password.text,
             )
             ext_e_time = time()
         else:
             # Can't test the archive apparently
             ext_s_time = time()
-            extractor = await extr_files(path=ext_files_dir,
-                                        archive_path=file)
+            extractor = await merge_files(iinput=file, ooutput=ext_files_dir)
             ext_e_time = time()
-        try:
-            shutil.rmtree(download_path)
-        except:
-            pass
         # Checks if there is an error happened while extracting the archive
         if any(err in extractor for err in ERROR_MSGS):
             try:
                 await query.message.edit(Messages.EXT_FAILED_TXT)
                 shutil.rmtree(ext_files_dir)
+                shutil.rmtree(download_path)
                 await del_ongoing_task(user_id)
             except:
                 try:
@@ -325,9 +321,15 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                                 Messages.EXT_FAILED_TXT,
                                 unzip_client=unzip_bot)
             shutil.rmtree(ext_files_dir)
+            shutil.rmtree(download_path)
             await del_ongoing_task(user_id)
             return
 
+        try:
+            shutil.rmtree(download_path)
+        except:
+            pass
+        
         # Upload extracted files
         extrtime = TimeFormatter(round(ext_e_time - ext_s_time) * 1000)
         if extrtime == "":

@@ -66,8 +66,11 @@ async def split_files(iinput, ooutput):
 
 # Merge files
 async def merge_files(iinput, ooutput, password=None):
-    command = f'7z x -o"{ooutput}" "{iinput}" -y'
-    await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
+    if password:
+        command = f'7z x -o"{ooutput}" -p"{password}" "{iinput}" -y'
+    else:
+        command = f'7z x -o"{ooutput}" "{iinput}" -y'
+    return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
 # Get files in directory as a list
 async def get_files(path):
