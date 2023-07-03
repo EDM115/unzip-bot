@@ -235,7 +235,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 if message.document is None:
                     pass
                 else:
-                    newarray.append(message)
+                    if message.from_user.id == user_id:
+                        newarray.append(message)
             length = len(newarray)
             if length == 0:
                 await answer_query(query, Messages.NO_MERGE_TASK)
