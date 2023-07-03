@@ -247,16 +247,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             if dltime == "":
                 dltime = "1 s"
             await merge_msg.edit(Messages.AFTER_OK_MERGE_DL_TXT.format(i, dltime))
-            """ newfiles = await get_files(download_path)
-            basename = ".".join(newfiles[0].split("/")[-1].split(".")[:-1])
-            LOGGER.info("newfiles = " + str(newfiles), "basename = ", basename)
-            output = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merged"
-            m_time = time()
-            await merge_files(newfiles[0], output)
-            mergetime = TimeFormatter(round(time() - m_time) * 1000)
-            if mergetime == "":
-                mergetime = "1 s"
-            await merge_msg.edit(Messages.AFTER_OK_MERGE_TXT.format(mergetime)) """
             await merge_msg.edit(
                 text=Messages.CHOOSE_EXT_MODE_MERGE,
                 reply_markup=Buttons.CHOOSE_E_F_M__BTNS,
@@ -540,10 +530,12 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 if splitted_data[2] != "thumb":
                     fext = fname.split(".")[-1].casefold()
                     if (fnmatch(fext, extentions_list["split"][0])
-                            or fext in extentions_list["split"] or bool(re.search(split_file_pattern, fname))):
-                        await del_ongoing_task(user_id)
+                            or fext in extentions_list["split"]):
                         return await query.message.edit(
-                            "Splitted archives can't be processed yet")
+                            "This file is splitted\nUse the **/merge** command")
+                    if bool(re.search(split_file_pattern, fname)):
+                        await del_ongoing_task(user_id)
+                        return await query.message.edit("Splitted RAR files can't be processed yet")
                     if fext not in extentions_list["archive"]:
                         await del_ongoing_task(user_id)
                         return await query.message.edit(
