@@ -45,6 +45,20 @@ class Buttons:
         ]
     )
 
+    CHOOSE_E_F_M__BTNS = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    "🗂️", callback_data="merged|no_pass"
+                ),
+                InlineKeyboardButton(
+                    "🔐", callback_data="merged|with_pass"
+                ),
+            ],
+            [InlineKeyboardButton("❌", callback_data="cancel_dis")],
+        ]
+    )
+
     CHOOSE_E_U__BTNS = InlineKeyboardMarkup(
         [
             [
@@ -100,7 +114,7 @@ class Buttons:
         [
             [
                 InlineKeyboardButton("Merge 🛠️", callback_data="merge_this"),
-                InlineKeyboardButton("❌ Cancel", callback_data="nobully"),
+                InlineKeyboardButton("❌ Cancel", callback_data="cancel_dis"),
             ]
         ]
     )
@@ -253,11 +267,33 @@ Select the extraction mode for that {} 👀
 ❌ : **Cancel your task**
     """
 
+    CHOOSE_EXT_MODE_MERGE = """
+Select the extraction mode for that merged file 👀
+
+🗂️ : **Normal mode**
+🔐 : **Password protected**
+❌ : **Cancel your task**
+    """
+
     AFTER_OK_DL_TXT = """
 **Successfully downloaded ✅**
 
 **Download time :** `{}`
 **Status :** Testing the archive… Please wait
+    """
+
+    AFTER_OK_MERGE_DL_TXT = """
+**Successfully downloaded all {} files ✅**
+
+**Download time :** `{}`
+**Status :** Merging the archive… Please wait
+    """
+
+    AFTER_OK_MERGE_TXT = """
+**Successfully merged ✅**
+
+**Merge time :** `{}`
+**Status :** Processing the archive… Please wait
     """
 
     AFTER_OK_TEST_TXT = """
@@ -406,6 +442,11 @@ Do you really want to delete your thumbnail ?
 
     PLS_REPLY = """
 You need to reply to a picture for saving it as custom thumbnail 🤓
+    """
+
+    NO_MERGE_TASK = """
+Bruh there's no merge task ongoing 🗿
+Use **/merge** to start one
     """
 
 # List of error messages from p7zip

@@ -15,6 +15,7 @@ from pyrogram.types import Message
 from config import Config
 from unzipper import LOGGER, boottime, unzipperbot
 from unzipper.helpers.database import (
+    add_merge_task,
     add_user,
     add_banned_user,
     check_user,
@@ -105,11 +106,17 @@ async def cancel_task_by_user(_, message):
 @Client.on_message(filters.private & filters.command("merge"))
 async def merging(_, message: Message):
     merge_msg = await message.reply(
-        "Send me **all** the splitted files (.001, .002, .00×, …)\n\nOnce you sent them all, click on the `Merge 🛠️` button",
-        reply_markup=Buttons.MERGE_THEM_ALL,
+        "You have splitted archives to process ?\nSend me **all** the splitted files (.001, .002, .00×, …)\n\n**AFTER** you sent them all, send **/done** and click on the `Merge 🛠️` button"
     )
-    startid = merge_msg.id + 1
+    await add_merge_task(message.from_user.id, merge_msg.id)
     # Catch the files id + download + send to callbacks + cat + prompt dialog
+
+@Client.on_message(filters.private & filters.command("done"))
+async def done_merge(_, message: Message):
+    done_msg = await message.reply(
+        "If you have sent **ALL** the files, you can click on the `Merge 🛠️` button below\n\nIf you sent /done by mistake and haven't sent all the files yet, just ignore this message and re-send **/done** when ALL the files are sent",
+        reply_markup=Buttons.MERGE_THEM_ALL
+    )
 
 # Database Commands
 @Client.on_message(filters.private & filters.command("mode"))
@@ -471,6 +478,8 @@ Here is the list of the commands you can use (only in private btw) :
 **/clean** : Remove your files from my server. Also useful if a task failed
 **/mode** : Change your upload mode (either `doc` or `media`)
 **/stats** : Know all the current stats about me. If you're running on Heroku, it's reset every day
+**/merge** : Merge splitted archives together
+**/done** : After you sent all the splitted archives, use this to merge them
 **/info** : Get full info about a [Message](https://docs.pyrogram.org/api/types/Message) (info returned by Pyrogram)
 **/addthumb** : Upload with a custom thumbnail (not permanant yet)
 **/delthumb** : Removes your thumbnail

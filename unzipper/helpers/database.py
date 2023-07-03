@@ -312,3 +312,43 @@ async def get_cancel_task(user_id):
     
 async def clear_cancel_tasks():
     await cancel_tasks.delete_many({})
+
+
+# DB for merge tasks
+
+merge_tasks = unzipper_db["merge_tasks"]
+
+async def get_merge_tasks():
+    return [merge_list async for merge_list in merge_tasks.find({})]
+
+async def count_merge_tasks():
+    tasks = await merge_tasks.count_documents({})
+    return tasks
+
+async def add_merge_task(user_id, message_id):
+    if not await get_merge_task(user_id):
+        await merge_tasks.insert_one({"user_id": user_id, "message_id": message_id})
+
+async def del_merge_task(user_id):
+    is_exist = await merge_tasks.find_one({"user_id": user_id})
+    if is_exist is not None and is_exist:
+        await merge_tasks.delete_one({"user_id": user_id})
+    else:
+        return
+
+async def get_merge_task(user_id):
+    is_exist = await merge_tasks.find_one({"user_id": user_id})
+    if is_exist is not None and is_exist:
+        return True
+    else:
+        return False
+
+async def get_merge_task_message_id(user_id):
+    is_exist = await merge_tasks.find_one({"user_id": user_id})
+    if is_exist is not None and is_exist:
+        return is_exist["message_id"]
+    else:
+        return False
+    
+async def clear_merge_tasks():
+    await merge_tasks.delete_many({})

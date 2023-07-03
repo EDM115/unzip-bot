@@ -64,6 +64,10 @@ async def split_files(iinput, ooutput):
     splittedfiles = await get_files(spdir)
     return splittedfiles
 
+# Merge files
+async def merge_files(iinput, ooutput):
+    command = f'7z x -o"{ooutput}" "{iinput}" -y'
+    await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
 # Get files in directory as a list
 async def get_files(path):

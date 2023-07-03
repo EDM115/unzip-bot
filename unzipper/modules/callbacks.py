@@ -1,4 +1,5 @@
 # Copyright (c) 2023 EDM115
+import asyncio
 import os
 import re
 import shutil
@@ -20,6 +21,7 @@ from unzipper.helpers.database import (
     del_cancel_task,
     del_thumb_db,
     get_cancel_task,
+    get_merge_task_message_id,
     set_upload_mode,
     update_thumb,
     update_uploaded,
@@ -43,6 +45,7 @@ from .ext_script.ext_helper import (
     get_files,
     make_keyboard,
     make_keyboard_empty,
+    merge_files,
     split_files,
 )
 from .ext_script.up_helper import answer_query, get_size, send_file, send_url_logs
@@ -202,6 +205,187 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         await set_upload_mode(user_id, mode)
         await answer_query(query,
                            Messages.CHANGED_UPLOAD_MODE_TXT.format(mode))
+    
+    elif query.data == "merge_this":
+        user_id = query.from_user.id
+        m_id = query.message.id
+        await add_ongoing_task(user_id)
+        s_id = await get_merge_task_message_id(user_id)
+        merge_msg = await query.message.edit("**✅ Processing your task… Please wait**")
+        download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merge"
+        if s_id:
+            files_array = list(range(s_id, m_id))
+            messages_array = await unzip_bot.get_messages(user_id, files_array)
+            i = 0
+            length = len(messages_array)
+            rs_time = time()
+            for message in messages_array:
+                if message.document is None:
+                    pass
+                i += 1
+                os.makedirs(download_path)
+                fname = message.document.file_name
+                await message.forward(chat_id=Config.LOGS_CHANNEL)
+                location = f"{download_path}/archive_from_{user_id}{os.path.splitext(fname)[1]}"
+                s_time = time()
+                await message.download(
+                    file_name=location,
+                    progress=progress_for_pyrogram,
+                    progress_args=(
+                        f"**Trying to download file {i}/{length}… Please wait** \n",
+                        merge_msg,
+                        s_time,
+                        unzip_bot,
+                    ),
+                )
+            e_time = time()
+            dltime = TimeFormatter(round(e_time - rs_time) * 1000)
+            if dltime == "":
+                dltime = "1 s"
+            await merge_msg.edit(Messages.AFTER_OK_MERGE_DL_TXT.format(i, dltime))
+            newfiles = await get_files(download_path)
+            basename = os.path.splitext(newfiles[0])[0]
+            LOGGER.info("newfiles = " + str(newfiles), "basename = " + str(basename))
+            output = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merged/{basename}"
+            m_time = time()
+            await merge_files(newfiles[0], output)
+            await merge_msg.edit(Messages.AFTER_OK_MERGE_TXT.format(TimeFormatter(round(time() - m_time) * 1000)))
+            await asyncio.sleep(5)
+            await merge_msg.edit(
+                text=Messages.CHOOSE_EXT_MODE_MERGE,
+                reply_markup=Buttons.CHOOSE_E_F_M__BTNS,
+            )
+            try:
+                shutil.rmtree(download_path)
+            except:
+                pass
+        else:
+            await answer_query(query, Messages.NO_MERGE_TASK)
+            await del_ongoing_task(user_id)
+
+    elif query.data.startswith("merged"):
+        user_id = query.from_user.id
+        download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merged"
+        ext_files_dir = f"{download_path}/extracted"
+        file = await get_files(download_path)[0]
+        splitted_data = query.data.split("|")
+        await query.message.edit("**✅ Processing your task… Please wait**")
+        if splitted_data[1] == "with_pass":
+            password = await unzip_bot.ask(
+                chat_id=query.message.chat.id,
+                text="**Please send me the password 🔑**",
+            )
+            ext_s_time = time()
+            extractor = await extr_files(
+                path=ext_files_dir,
+                archive_path=file,
+                password=password.text,
+            )
+            ext_e_time = time()
+        else:
+            ext_s_time = time()
+            tested = await _test_with_7z_helper(file)
+            ext_t_time = time()
+            testtime = TimeFormatter(round(ext_t_time - ext_s_time) * 1000)
+            if testtime == "":
+                testtime = "1s"
+            await answer_query(query,
+                Messages.AFTER_OK_TEST_TXT.format(testtime),
+                unzip_client=unzip_bot
+            )
+            if tested:
+                extractor = await extr_files(path=ext_files_dir,
+                                            archive_path=file)
+                ext_e_time = time()
+            else:
+                extractor = "Error"
+                ext_e_time = time()
+        # Checks if there is an error happened while extracting the archive
+        if any(err in extractor for err in ERROR_MSGS):
+            try:
+                await query.message.edit(Messages.EXT_FAILED_TXT)
+                shutil.rmtree(ext_files_dir)
+                await del_ongoing_task(user_id)
+            except:
+                try:
+                    await query.message.delete()
+                except:
+                    pass
+                await unzip_bot.send_message(chat_id=query.message.chat.id,
+                                                text=Messages.EXT_FAILED_TXT)
+                shutil.rmtree(ext_files_dir)
+                await del_ongoing_task(user_id)
+        # Check if user was dumb 😐
+        paths = await get_files(path=ext_files_dir)
+        if not paths:
+            await unzip_bot.send_message(
+                chat_id=query.message.chat.id,
+                text="That archive is password protected 😡 **Don't fool me !**",
+            )
+            await answer_query(query,
+                                Messages.EXT_FAILED_TXT,
+                                unzip_client=unzip_bot)
+            shutil.rmtree(ext_files_dir)
+            await del_ongoing_task(user_id)
+            return
+
+        # Upload extracted files
+        extrtime = TimeFormatter(round(ext_e_time - ext_s_time) * 1000)
+        if extrtime == "":
+            extrtime = "1s"
+        await answer_query(query,
+                            Messages.EXT_OK_TXT.format(extrtime),
+                            unzip_client=unzip_bot)
+
+        try:
+            i_e_buttons = await make_keyboard(
+                paths=paths,
+                user_id=user_id,
+                chat_id=query.message.chat.id,
+                unziphttp=False
+            )
+            try:
+                await query.message.edit("Select files to upload 👇",
+                                            reply_markup=i_e_buttons)
+            except ReplyMarkupTooLong:
+                empty_buttons = await make_keyboard_empty(
+                    user_id=user_id, chat_id=query.message.chat.id, unziphttp=False)
+                await query.message.edit(
+                    "Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process",
+                    reply_markup=empty_buttons,
+                )
+        except:
+            try:
+                await query.message.delete()
+                i_e_buttons = await make_keyboard(
+                    paths=paths,
+                    user_id=user_id,
+                    chat_id=query.message.chat.id,
+                    unziphttp=False
+                )
+                await unzip_bot.send_message(
+                    chat_id=query.message.chat.id,
+                    text="Select files to upload 👇",
+                    reply_markup=i_e_buttons,
+                )
+            except:
+                try:
+                    await query.message.delete()
+                    empty_buttons = await make_keyboard_empty(
+                        user_id=user_id, chat_id=query.message.chat.id, unziphttp=False)
+                    await unzip_bot.send_message(
+                        chat_id=query.message.chat.id,
+                        text="Unable to gather the files to upload 😥\nChoose either to upload everything, or cancel the process",
+                        reply_markup=empty_buttons,
+                    )
+                except:
+                    await answer_query(query,
+                                        Messages.EXT_FAILED_TXT,
+                                        unzip_client=unzip_bot)
+                    shutil.rmtree(ext_files_dir)
+                    LOGGER.error("Fatal error : uncorrect archive format")
+                    await del_ongoing_task(user_id)
+                    return
 
     elif query.data.startswith("extract_file"):
         user_id = query.from_user.id
@@ -829,6 +1013,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     elif query.data == "cancel_dis":
         uid = query.from_user.id
         await del_ongoing_task(uid)
+        await del_merge_task(uid)
         try:
             await query.message.edit(Messages.CANCELLED_TXT.format("❌ Process cancelled"))
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{uid}")
