@@ -272,7 +272,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         ext_files_dir = f"{Config.DOWNLOAD_LOCATION}/{user_id}/extracted"
         os.makedirs(ext_files_dir)
         files = await get_files(download_path)
-        LOGGER.info("files = ", files)
+        LOGGER.info("files = %s", files)
         file = files[0]
         splitted_data = query.data.split("|")
         await query.message.edit("**✅ Processing your task… Please wait**")
@@ -289,23 +289,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             )
             ext_e_time = time()
         else:
-            ext_s_time = time()
-            tested = await _test_with_7z_helper(file)
-            ext_t_time = time()
-            testtime = TimeFormatter(round(ext_t_time - ext_s_time) * 1000)
-            if testtime == "":
-                testtime = "1s"
-            await answer_query(query,
-                Messages.AFTER_OK_TEST_TXT.format(testtime),
-                unzip_client=unzip_bot
-            )
-            if tested:
-                extractor = await extr_files(path=ext_files_dir,
-                                            archive_path=file)
-                ext_e_time = time()
-            else:
-                extractor = "Error"
-                ext_e_time = time()
+            # Can't test the archive apparently
+            extractor = await extr_files(path=ext_files_dir,
+                                        archive_path=file)
+            ext_e_time = time()
         try:
             shutil.rmtree(download_path)
         except:
