@@ -85,6 +85,7 @@ async def download_with_progress(url, path, message, unzip_bot):
 @Client.on_callback_query()
 async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     sent_files = 0
+    global log_msg
     
     if query.data == "megoinhome":
         await query.edit_message_text(
@@ -275,7 +276,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         LOGGER.info("files = %s", files)
         file = files[0]
         splitted_data = query.data.split("|")
-        global log_msg 
         log_msg = await unzip_bot.send_message(
             chat_id=Config.LOGS_CHANNEL,
             text=f'Processing an user query…\n\nUser ID : {user_id}\nTask : Merge\n\nFile : {".".join(file.split("/")[-1].split(".")[:-1])}',
@@ -401,7 +401,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         r_message = query.message.reply_to_message
         splitted_data = query.data.split("|")
         await query.message.edit("**✅ Processing your task… Please wait**")
-        global log_msg 
         log_msg = await unzip_bot.send_message(
             chat_id=Config.LOGS_CHANNEL,
             text=f"Processing an user query…\n\nUser ID : {user_id}",
