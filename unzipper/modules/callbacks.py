@@ -255,17 +255,12 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             mergetime = TimeFormatter(round(time() - m_time) * 1000)
             if mergetime == "":
                 mergetime = "1 s"
-            await merge_msg.edit(Messages.AFTER_OK_MERGE_TXT.format(mergetime))
-            await asyncio.sleep(5) """
+            await merge_msg.edit(Messages.AFTER_OK_MERGE_TXT.format(mergetime)) """
             await merge_msg.edit(
                 text=Messages.CHOOSE_EXT_MODE_MERGE,
                 reply_markup=Buttons.CHOOSE_E_F_M__BTNS,
             )
             await del_merge_task(user_id)
-            try:
-                shutil.rmtree(download_path)
-            except:
-                pass
         else:
             await answer_query(query, Messages.NO_MERGE_TASK)
             await del_ongoing_task(user_id)
@@ -310,6 +305,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             else:
                 extractor = "Error"
                 ext_e_time = time()
+        try:
+            shutil.rmtree(download_path)
+        except:
+            pass
         # Checks if there is an error happened while extracting the archive
         if any(err in extractor for err in ERROR_MSGS):
             try:
