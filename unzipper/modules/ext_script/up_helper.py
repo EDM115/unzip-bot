@@ -43,15 +43,15 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
     fsize = await get_size(doc_f)
     if fsize == -1: # File not found
         try:
-            await query.answer(Messages.CANT_FIND, show_alert=False)
+            await unzip_bot.send_message(c_id, Messages.EMPTY_FILE.format(os.path.basename(doc_f)))
         except:
-            await unzip_bot.send_message(c_id, Messages.CANT_FIND)
+            pass
         return
     if fsize == 0: # Empty file
         try:
-            await query.answer(Messages.CANT_FIND, show_alert=False)
+            await unzip_bot.send_message(c_id, Messages.EMPTY_FILE.format(os.path.basename(doc_f)))
         except:
-            await unzip_bot.send_message(c_id, Messages.CANT_FIND)
+            pass
         return
     try:
         ul_mode = await get_upload_mode(c_id)
@@ -129,7 +129,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                 if os.path.exists(thmb_pth):
                     os.remove(thmb_pth)
                 try:
-                    thumb = await run_shell_cmds(
+                    await run_shell_cmds(
                         f"ffmpeg -ss 00:00:01.00 -i {doc_f} -vf 'scale=320:320:force_original_aspect_ratio=decrease' -vframes 1 {thmb_pth}"
                     )
                 except Exception as e:
@@ -189,9 +189,9 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         return
     except FileNotFoundError:
         try:
-            await query.answer(Messages.CANT_FIND, show_alert=True)
+            await unzip_bot.send_message(c_id, Messages.CANT_FIND.format(os.path.basename(doc_f)))
         except:
-            await unzip_bot.send_message(c_id, Messages.CANT_FIND)
+            pass
         return
     except BaseException as e:
         LOGGER.warning(e)

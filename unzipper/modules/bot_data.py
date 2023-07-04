@@ -757,11 +757,13 @@ Here's all the commands that only the owner (you) can use :
 
     """
 
-    CANT_FIND = "Sorry ! I can't find that file 💀"
+    CANT_FIND = "Sorry ! I can't find that file {} 💀"
 
     TOO_LARGE = "URL file is too large to send in telegram 😥"
 
     ARCHIVE_GONE = "Archive has gone from servers before uploading 😥"
+
+    EMPTY_FILE = "The file {} is empty/unreachable"
 
 # List of error messages from p7zip
 ERROR_MSGS = ["Error", "Can't open as archive"]
