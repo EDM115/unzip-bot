@@ -17,13 +17,13 @@ def check_logs():
         if Config.LOGS_CHANNEL:
             c_info = client.get_chat(chat_id=Config.LOGS_CHANNEL)
             if c_info.type in (enums.ChatType.PRIVATE, enums.ChatType.BOT):
-                LOGGER.warn(Messages.PRIVATE_CHAT)
+                LOGGER.warning(Messages.PRIVATE_CHAT)
                 return False
             return True
-        LOGGER.warn(Messages.NO_LOG_ID)
+        LOGGER.warning(Messages.NO_LOG_ID)
         sys.exit()
     except:
-        LOGGER.warn(Messages.ERROR_LOG_CHECK)
+        LOGGER.warning(Messages.ERROR_LOG_CHECK)
 
 def dl_thumbs():
     loop = asyncio.get_event_loop()

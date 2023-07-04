@@ -1,6 +1,6 @@
 <div align="center">
 
-  <h1><a href="https://github.com/EDM115/unzip-bot" target="_blank" rel="noreferrer"><img src="https://telegra.ph/file/426207477776ffa00519f.png" alt="unzip-bot" width="40" height="40"/></a> Unarchiver Bot • Changelog</h1>
+  <h1><a href="https://github.com/EDM115/unzip-bot" target="_blank" rel="noreferrer"><img src="https://telegra.ph/file/d4ba24682e030fc58613f.jpg" alt="unzip-bot" width="40" height="40"/></a> Unarchiver Bot • Changelog</h1>
 
 ## You will find here all the changes made with each version, in antichronological order
 
