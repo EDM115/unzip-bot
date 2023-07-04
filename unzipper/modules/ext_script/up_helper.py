@@ -175,7 +175,10 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         await send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split)
         return
     except FileNotFoundError:
-        await query.answer(Messages.CANT_FIND, show_alert=True)
+        try:
+            await query.answer(Messages.CANT_FIND, show_alert=True)
+        except:
+            await unzip_bot.send_message(c_id, Messages.CANT_FIND)
         return
     except BaseException as e:
         LOGGER.warning(e)
@@ -228,11 +231,14 @@ async def answer_query(
         else:
             await query.message.edit(message_text, reply_markup=buttons)
     except:
-        if unzip_client:
-            await unzip_client.send_message(
-                chat_id=query.message.chat.id, text=message_text, reply_markup=buttons
-            )
-        else:
-            await unzipperbot.send_message(
-                chat_id=query.message.chat.id, text=message_text, reply_markup=buttons
-            )
+        try:
+            if unzip_client:
+                await unzip_client.send_message(
+                    chat_id=query.message.chat.id, text=message_text, reply_markup=buttons
+                )
+            else:
+                await unzipperbot.send_message(
+                    chat_id=query.message.chat.id, text=message_text, reply_markup=buttons
+                )
+        except:
+            pass

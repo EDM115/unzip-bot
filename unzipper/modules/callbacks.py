@@ -842,7 +842,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 reply_markup=Buttons.RATE_ME
             )
             return
-        await query.answer(Messages.SENDING_FILE)
+        try:
+            await query.answer(Messages.SENDING_FILE)
+        except:
+            pass
         sent_files += 1
         if urled:
             file = spl_data[5].open(paths[int(spl_data[3])])
