@@ -507,8 +507,7 @@ async def getadmin_cmds(_, message):
     )
 
 
-'''
-async def exec_message_f(client, message):
+""" async def exec_message_f(client, message):
     if message.from_user.id in AUTH_CHANNEL:
         DELAY_BETWEEN_EDITS = 0.3
         PROCESS_RUN_TIME = 100
@@ -608,5 +607,4 @@ async def aexec(code, client, message):
         f"async def __aexec(client, message): "
         + "".join(f"\n {l}" for l in code.split("\n"))
     )
-    return await locals()["__aexec"](client, message)
-'''
+    return await locals()["__aexec"](client, message) """
