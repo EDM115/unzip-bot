@@ -10,9 +10,18 @@
 
 ---
 
----
+### v6.2.2 **[LATEST STABLE RELEASE]**
 
-### v6.2.0 **[LATEST STABLE RELEASE]**
+- Bugfix : No longer use of `subprocess.communicate()`, as it's thread blocking
+- All strings are in `bot_data.py`, hope this hsould ease #179
+- Even less thread block : use of `async for` and `yield`
+- Any file unreachable/with a size of 0B is skipped, thus avoiding the bot being stuck on an impossible task
+
+### v6.2.1
+
+- Security fix : Merging files could lead to paths being swapped between users. It's now fixed
+
+### v6.2.0
 
 - Added a new command : /merge (and /done)
 - Allows to merge splitted archives in .XXX format

@@ -846,6 +846,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 reply_markup=Buttons.RATE_ME
             )
             return
+        LOGGER.info("ext_f paths : " + str(paths))
         try:
             await query.answer(Messages.SENDING_FILE)
         except:
@@ -913,7 +914,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             rpaths = paths.remove(paths[int(spl_data[3])])
         else:
             rpaths = await get_files(path=file_path)
-        LOGGER.info("ext_f rpaths : " + str(rpaths))
         if not rpaths:
             try:
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
