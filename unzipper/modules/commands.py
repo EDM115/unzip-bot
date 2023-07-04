@@ -130,7 +130,7 @@ async def merging(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("done"))
 async def done_merge(_, message: Message):
-    done_msg = await message.reply(
+    await message.reply(
         Messages.DONE,
         reply_markup=Buttons.MERGE_THEM_ALL
     )
