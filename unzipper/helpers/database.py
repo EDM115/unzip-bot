@@ -309,7 +309,7 @@ async def del_cancel_task(user_id):
 async def get_cancel_task(user_id):
     is_exist = await cancel_tasks.find_one({"user_id": user_id})
     return bool(is_exist is not None and is_exist)
-    
+
 async def clear_cancel_tasks():
     await cancel_tasks.delete_many({})
 
