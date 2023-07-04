@@ -346,8 +346,7 @@ async def get_merge_task_message_id(user_id):
     is_exist = await merge_tasks.find_one({"user_id": user_id})
     if is_exist is not None and is_exist:
         return is_exist["message_id"]
-    else:
-        return False
+    return False
 
 async def clear_merge_tasks():
     await merge_tasks.delete_many({})
