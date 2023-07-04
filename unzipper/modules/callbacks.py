@@ -163,7 +163,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             os.rename(final_thumb, thumb_location)
         except:
             LOGGER.warning(Messages.ERROR_THUMB_RENAME)
-            pass
         try:
             thumb_url = await upload_thumb(thumb_location)
             try:
