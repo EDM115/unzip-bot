@@ -40,9 +40,11 @@ from .bot_data import Buttons, Messages
 # Regex for urls
 https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"
 
+
 @Client.on_message(filters.private)
 async def _(_, message: Message):
     await check_user(message)
+
 
 @Client.on_message(filters.command("start"))
 async def start_bot(_, message: Message):
@@ -52,13 +54,16 @@ async def start_bot(_, message: Message):
         disable_web_page_preview=True,
     )
 
+
 @Client.on_message(filters.private & filters.command("clean"))
 async def clean_my_files(_, message: Message):
     await message.reply_text(text=Messages.CLEAN_TXT, reply_markup=Buttons.CLN_BTNS)
 
+
 @Client.on_message(filters.command("help"))
 async def help_me(_, message: Message):
     await message.reply_text(text=Messages.HELP_TXT, reply_markup=Buttons.ME_GOIN_HOME)
+
 
 @Client.on_message(filters.command("about"))
 async def about_me(_, message: Message):
@@ -67,6 +72,7 @@ async def about_me(_, message: Message):
         reply_markup=Buttons.ME_GOIN_HOME,
         disable_web_page_preview=True,
     )
+
 
 @Client.on_message(
     filters.incoming & filters.private & filters.document
@@ -105,7 +111,7 @@ async def extract_archive(_, message: Message):
     else:
         await unzip_msg.edit(Messages.UNVALID)
 
-# Waiting for implementing CallbackQuery button for cancel
+
 @Client.on_message(filters.private & filters.command("cancel"))
 async def cancel_task_by_user(_, message):
     idtodel = message.id - 1
@@ -115,11 +121,12 @@ async def cancel_task_by_user(_, message):
         pass
     await message.reply(Messages.CANCELLED)
 
-# For splitted archives
+
 @Client.on_message(filters.private & filters.command("merge"))
 async def merging(_, message: Message):
     merge_msg = await message.reply(Messages.MERGE)
     await add_merge_task(message.from_user.id, merge_msg.id)
+
 
 @Client.on_message(filters.private & filters.command("done"))
 async def done_merge(_, message: Message):
@@ -128,7 +135,7 @@ async def done_merge(_, message: Message):
         reply_markup=Buttons.MERGE_THEM_ALL
     )
 
-# Database Commands
+
 @Client.on_message(filters.private & filters.command("mode"))
 async def set_mode_for_user(_, message: Message):
     upload_mode = await get_upload_mode(message.from_user.id)
@@ -136,6 +143,7 @@ async def set_mode_for_user(_, message: Message):
         text=Messages.SELECT_UPLOAD_MODE_TXT.format(upload_mode),
         reply_markup=Buttons.SET_UPLOAD_MODE_BUTTONS,
     )
+
 
 async def get_stats(id):
     total, used, free = shutil.disk_usage(".")
@@ -181,11 +189,13 @@ async def get_stats(id):
 
     return stats_string
 
+
 @Client.on_message(filters.command("stats"))
 async def send_stats(_, message: Message):
     stats_msg = await message.reply(Messages.PROCESSING2)
     stats_txt = await get_stats(message.from_user.id)
     await stats_msg.edit(text=stats_txt, reply_markup=Buttons.REFRESH_BUTTON)
+
 
 async def _do_broadcast(message, user):
     try:
@@ -196,6 +206,7 @@ async def _do_broadcast(message, user):
         return _do_broadcast(message, user)
     except Exception:
         await del_user(user)
+
 
 @Client.on_message(filters.command("broadcast") & filters.user(Config.BOT_OWNER))
 async def broadcast_this(_, message: Message):
@@ -221,6 +232,7 @@ async def broadcast_this(_, message: Message):
             failed_no,
         ))
 
+
 @Client.on_message(filters.command("sendto") & filters.user(Config.BOT_OWNER))
 async def send_this(_, message: Message):
     sd_msg = await message.reply(Messages.PROCESSING2)
@@ -240,6 +252,7 @@ async def send_this(_, message: Message):
     else:
         await sd_msg.edit(Messages.SEND_FAILED.format(user_id))
 
+
 @Client.on_message(filters.command("report"))
 async def report_this(_, message: Message):
     sd_msg = await message.reply(Messages.PROCESSING2)
@@ -254,6 +267,7 @@ async def report_this(_, message: Message):
         text=Messages.REPORT_TEXT.format(u_id, r_msg.text.markdown),
     )
     await sd_msg.edit(Messages.REPORT_DONE)
+
 
 @Client.on_message(filters.command("ban") & filters.user(Config.BOT_OWNER))
 async def ban_user(_, message: Message):
@@ -275,6 +289,7 @@ async def ban_user(_, message: Message):
     else:
         await ban_msg.edit(Messages.BANNED.format(user_id))
 
+
 @Client.on_message(filters.command("unban") & filters.user(Config.BOT_OWNER))
 async def unban_user(_, message: Message):
     unban_msg = await message.reply(Messages.PROCESSING2)
@@ -295,6 +310,7 @@ async def unban_user(_, message: Message):
     else:
         await unban_msg.edit(Messages.UNBANNED.format(user_id))
 
+
 @Client.on_message(filters.private & filters.command("info"))
 async def me_stats(_, message: Message):
     me_info = await unzipperbot.ask(
@@ -302,6 +318,7 @@ async def me_stats(_, message: Message):
         text=Messages.INFO,
     )
     await unzipperbot.send_message(chat_id=message.chat.id, text=f"`{me_info}`")
+
 
 @Client.on_message(filters.command("user") & filters.user(Config.BOT_OWNER))
 async def info_user(_, message: Message):
@@ -316,6 +333,7 @@ async def info_user(_, message: Message):
     if up_count == "":
         up_count = Messages.UNABLE_FETCH
     await info_user_msg.edit(Messages.USER_INFO.format(user_id, up_count))
+
 
 @Client.on_message(filters.command("user2") & filters.user(Config.BOT_OWNER))
 async def info_user2(_, message: Message):
@@ -337,10 +355,12 @@ async def info_user2(_, message: Message):
             pass
     await user2_msg.edit(Messages.USER2_INFO.format(infos, user_id))
 
+
 @Client.on_message(filters.command("self") & filters.user(Config.BOT_OWNER))
 async def info_self(_, message: Message):
     self_infos = await unzipperbot.get_me()
     await message.reply(f"`{self_infos}`")
+
 
 @Client.on_message(
     filters.private & filters.command("getthumbs") & filters.user(Config.BOT_OWNER)
@@ -363,6 +383,7 @@ async def get_all_thumbs(_, message: Message):
         except RPCError as e:
             await message.reply_text(e, quote=True)
 
+
 @Client.on_message(
     filters.private & filters.command("redbutton") & filters.user(Config.BOT_OWNER)
 )
@@ -371,13 +392,16 @@ async def red_alert(_, message: Message):
     # restart the whole bot, maybe using execl
     # but also need to stop currently ongoing processes…
 
+
 @Client.on_message(filters.private & filters.command("addthumb"))
 async def thumb_add(_, message: Message):
     await add_thumb(unzipperbot, message)
 
+
 @Client.on_message(filters.private & filters.command("delthumb"))
 async def thumb_del(_, message: Message):
     await del_thumb(message)
+
 
 @Client.on_message(
     filters.private & filters.command("cleanall") & filters.user(Config.BOT_OWNER)
@@ -390,6 +414,7 @@ async def del_everything(_, message: Message):
         os.mkdir(Config.DOWNLOAD_LOCATION)
     except:
         await cleaner.edit(Messages.NOT_CLEANED)
+
 
 async def send_logs(user_id):
     with open("unzip-log.txt", "rb") as doc_f:
@@ -405,14 +430,17 @@ async def send_logs(user_id):
         except RPCError as e:
             await unzipperbot.send_message(chat_id=user_id, text=e)
 
+
 def clear_logs():
     open('file.txt', 'w').close()
+
 
 @Client.on_message(
     filters.private & filters.command("logs") & filters.user(Config.BOT_OWNER)
 )
 async def logz(_, message: Message):
     await send_logs(message.from_user.id)
+
 
 @Client.on_message(
     filters.private & filters.command("restart") & filters.user(Config.BOT_OWNER)
@@ -432,6 +460,7 @@ async def restart(_, message: Message):
     LOGGER.info(Messages.RESTARTING.format(message.from_user.id))
     clear_logs()
     os.execl(executable, executable, "-m", "unzipper")
+
 
 @Client.on_message(
     filters.private & filters.command("gitpull") & filters.user(Config.BOT_OWNER)
@@ -453,12 +482,14 @@ async def pull_updates(_, message: Message):
 async def donate_help(_, message: Message):
     await message.reply(Messages.DONATE_TEXT)
 
+
 @Client.on_message(
     filters.private & filters.command("dbexport") & filters.user(Config.BOT_OWNER)
 )
 async def export_db(_, message):
     await message.reply("🚧 WIP 🚧")
     # Will use https://www.mongodb.com/docs/database-tools/mongoexport/ on command to export as CSV
+
 
 @Client.on_message(filters.command("commands"))
 async def getall_cmds(_, message):
@@ -476,7 +507,7 @@ async def getadmin_cmds(_, message):
     )
 
 
-"""
+'''
 async def exec_message_f(client, message):
     if message.from_user.id in AUTH_CHANNEL:
         DELAY_BETWEEN_EDITS = 0.3
@@ -578,4 +609,4 @@ async def aexec(code, client, message):
         + "".join(f"\n {l}" for l in code.split("\n"))
     )
     return await locals()["__aexec"](client, message)
-"""
+'''

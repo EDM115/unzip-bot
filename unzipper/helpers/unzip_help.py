@@ -5,7 +5,7 @@ from unzipper.helpers.database import del_cancel_task, get_cancel_task
 
 from unzipper.modules.bot_data import Buttons, Messages
 
-# Credits: SpEcHiDe's AnyDL-Bot for Progress bar + Time formatter
+
 async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_bot):
     if message.from_user is not None and await get_cancel_task(message.from_user.id):
         unzip_bot.stop_transmission()
@@ -53,6 +53,7 @@ def humanbytes(size):
         n += 1
     return str(round(size, 2)) + " " + Dic_powerN[n] + "B"
 
+
 def TimeFormatter(milliseconds: int) -> str:
     seconds, milliseconds = divmod(int(milliseconds), 1000)
     minutes, seconds = divmod(seconds, 60)
@@ -67,6 +68,7 @@ def TimeFormatter(milliseconds: int) -> str:
     )
     return tmp[:-2]
 
+
 def timeformat_sec(seconds: int) -> str:
     minutes, seconds = divmod(int(seconds), 60)
     hours, minutes = divmod(minutes, 60)
@@ -78,6 +80,7 @@ def timeformat_sec(seconds: int) -> str:
         + ((str(seconds) + "s, ") if seconds else "")
     )
     return tmp[:-2]
+
 
 # List of common extentions
 extentions_list = {

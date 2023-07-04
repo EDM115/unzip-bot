@@ -25,6 +25,7 @@ def check_logs():
     except:
         LOGGER.warning(Messages.ERROR_LOG_CHECK)
 
+
 def dl_thumbs():
     loop = asyncio.get_event_loop()
     coroutine = get_thumb_users()
@@ -42,10 +43,12 @@ def dl_thumbs():
         if i % 10 == 0 or i == maxthumbs:
             LOGGER.info(Messages.DOWNLOADED_THUMBS.format(i, maxthumbs))
 
+
 def set_boot_time():
     loop = asyncio.get_event_loop()
     coroutine = check_boot()
     loop.run_until_complete(coroutine)
+
 
 async def check_boot():
     boot = await get_boot()
@@ -60,6 +63,7 @@ async def check_boot():
         except:
             pass # first start obviously 
         await warn_users()
+
 
 async def warn_users():
     await clear_cancel_tasks()

@@ -34,12 +34,14 @@ async def _extract_with_7z_helper(path, archive_path, password=None):
     x = await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
     return x
 
+
 async def _test_with_7z_helper(archive_path):
     command = f'7z t {archive_path} -p"IAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA" -y' # skipcq: FLK-E501
     testoutput = await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
     if "Everything is Ok" in testoutput:
         return True
     return False
+
 
 # Extract with zstd (for .zst files)
 async def _extract_with_zstd(path, archive_path):
@@ -67,6 +69,7 @@ async def split_files(iinput, ooutput):
     splittedfiles = await get_files(spdir)
     return splittedfiles
 
+
 # Merge files
 async def merge_files(iinput, ooutput, password=None):
     if password:
@@ -75,6 +78,7 @@ async def merge_files(iinput, ooutput, password=None):
         command = f'7z x -o"{ooutput}" "{iinput}" -y'
     x = await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
     return x
+
 
 # Get files in directory as a list
 async def get_files(path):

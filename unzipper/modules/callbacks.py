@@ -52,12 +52,14 @@ from .ext_script.up_helper import answer_query, get_size, send_file, send_url_lo
 
 split_file_pattern = r"\.(?:part\d+\.rar|z\d+|r\d{2})$"
 
+
 # Function to download files from direct link using aiohttp
 async def download(url, path):
     async with ClientSession() as session, session.get(url, timeout=None, allow_redirects=True) as resp, openfile(path, mode="wb") as file:
         async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
             await file.write(chunk)
     await session.close()
+
 
 async def download_with_progress(url, path, message, unzip_bot):
     async with ClientSession() as session, session.get(url, timeout=None, allow_redirects=True) as resp, openfile(path, mode="wb") as file:
@@ -78,9 +80,11 @@ async def download_with_progress(url, path, message, unzip_bot):
 
     await session.close()
 
+
 async def async_generator(iterable):
     for item in iterable:
         yield item
+
 
 # Callbacks
 @Client.on_callback_query()

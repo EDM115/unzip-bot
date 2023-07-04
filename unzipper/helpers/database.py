@@ -14,12 +14,14 @@ unzipper_db = mongodb["Unzipper_Bot"]
 # Users Database
 user_db = unzipper_db["users_db"]
 
+
 async def add_user(user_id):
     new_user_id = int(user_id)
     is_exist = await user_db.find_one({"user_id": new_user_id})
     if is_exist is not None and is_exist:
         return -1
     await user_db.insert_one({"user_id": new_user_id})
+
 
 async def del_user(user_id):
     del_user_id = int(user_id)
@@ -29,6 +31,7 @@ async def del_user(user_id):
     else:
         return -1
 
+
 async def is_user_in_db(user_id):
     u_id = int(user_id)
     is_exist = await user_db.find_one({"user_id": u_id})
@@ -36,9 +39,11 @@ async def is_user_in_db(user_id):
         return True
     return False
 
+
 async def count_users():
     users = await user_db.count_documents({})
     return users
+
 
 async def get_users_list():
     return [users_list async for users_list in user_db.find({})]
@@ -47,12 +52,14 @@ async def get_users_list():
 # Banned users database
 b_user_db = unzipper_db["banned_users_db"]
 
+
 async def add_banned_user(user_id):
     new_user_id = int(user_id)
     is_exist = await b_user_db.find_one({"banned_user_id": new_user_id})
     if is_exist is not None and is_exist:
         return -1
     await b_user_db.insert_one({"banned_user_id": new_user_id})
+
 
 async def del_banned_user(user_id):
     del_user_id = int(user_id)
@@ -62,6 +69,7 @@ async def del_banned_user(user_id):
     else:
         return -1
 
+
 async def is_user_in_bdb(user_id):
     u_id = int(user_id)
     is_exist = await b_user_db.find_one({"banned_user_id": u_id})
@@ -69,12 +77,15 @@ async def is_user_in_bdb(user_id):
         return True
     return False
 
+
 async def count_banned_users():
     users = await b_user_db.count_documents({})
     return users
 
+
 async def get_banned_users_list():
     return [banned_users_list async for banned_users_list in b_user_db.find({})]
+
 
 async def check_user(message):
     # Checking if user is banned
@@ -122,6 +133,7 @@ async def check_user(message):
             )
     await message.continue_propagation()
 
+
 async def get_all_users():
     users = []
     banned = []
@@ -135,12 +147,14 @@ async def get_all_users():
 # Upload mode
 mode_db = unzipper_db["ulmode_db"]
 
+
 async def set_upload_mode(user_id, mode):
     is_exist = await mode_db.find_one({"_id": user_id})
     if is_exist is not None and is_exist:
         await mode_db.update_one({"_id": user_id}, {"$set": {"mode": mode}})
     else:
         await mode_db.insert_one({"_id": user_id, "mode": mode})
+
 
 async def get_upload_mode(user_id):
     umode = await mode_db.find_one({"_id": user_id})
@@ -152,11 +166,13 @@ async def get_upload_mode(user_id):
 # Db for how many files user uploaded
 uploaded_db = unzipper_db["uploaded_count_db"]
 
+
 async def get_uploaded(user_id):
     up_count = await uploaded_db.find_one({"_id": user_id})
     if up_count is not None and up_count:
         return up_count["uploaded_files"]
     return 0
+
 
 async def update_uploaded(user_id, upload_count):
     is_exist = await uploaded_db.find_one({"_id": user_id})
@@ -172,6 +188,7 @@ async def update_uploaded(user_id, upload_count):
 # Db for cloud_upload
 cloud_db = unzipper_db["cloud_db"]
 
+
 async def get_cloud(user_id):
     return "https://api.bayfiles.com/upload"
 
@@ -179,11 +196,13 @@ async def get_cloud(user_id):
 # DB for thumbnails
 thumb_db = unzipper_db["thumb_db"]
 
+
 async def get_thumb(user_id):
     existing = await thumb_db.find_one({"_id": user_id})
     if existing is not None and existing:
         return existing["url"]
     return None
+
 
 async def update_thumb(user_id, thumb_url, force):
     existing = await thumb_db.find_one({"_id": user_id})
@@ -193,6 +212,7 @@ async def update_thumb(user_id, thumb_url, force):
         await thumb_db.update_one({"_id": user_id}, {"$set": {"url": thumb_url}})
     else:
         await thumb_db.insert_one({"_id": user_id, "url": thumb_url})
+
 
 async def upload_thumb(image):
     try:
@@ -207,12 +227,15 @@ async def upload_thumb(image):
         LOGGER.warning(err)
         return f"Error occurred during telegra.ph upload : {err}"
 
+
 async def get_thumb_users():
     return [thumb_list async for thumb_list in thumb_db.find({})]
+
 
 async def count_thumb_users():
     users = await thumb_db.count_documents({})
     return users
+
 
 async def del_thumb_db(user_id):
     del_thumb_id = int(user_id)
@@ -226,11 +249,13 @@ async def del_thumb_db(user_id):
 # DB for bot data
 bot_data = unzipper_db["bot_data"]
 
+
 async def get_boot():
     boot = await bot_data.find_one({"boot": True})
     if boot is not None and boot:
         return boot["time"]
     return boot
+
 
 async def set_boot(boottime):
     is_exist = await bot_data.find_one({"boot": True})
@@ -239,6 +264,7 @@ async def set_boot(boottime):
     else:
         await bot_data.insert_one({"boot": True, "time": boottime})
 
+
 async def set_old_boot(boottime):
     is_exist = await bot_data.find_one({"old_boot": True})
     if is_exist is not None and is_exist:
@@ -246,11 +272,13 @@ async def set_old_boot(boottime):
     else:
         await bot_data.insert_one({"old_boot": True, "time": boottime})
 
+
 async def get_old_boot():
     old_boot = await bot_data.find_one({"old_boot": True})
     if old_boot is not None and old_boot:
         return old_boot["time"]
     return old_boot
+
 
 async def is_boot_different():
     different = True
@@ -268,15 +296,19 @@ async def is_boot_different():
 # DB for ongoing tasks
 ongoing_tasks = unzipper_db["ongoing_tasks"]
 
+
 async def get_ongoing_tasks():
     return [ongoing_list async for ongoing_list in ongoing_tasks.find({})]
+
 
 async def count_ongoing_tasks():
     tasks = await ongoing_tasks.count_documents({})
     return tasks
 
+
 async def add_ongoing_task(user_id):
     await ongoing_tasks.insert_one({"user_id": user_id})
+
 
 async def del_ongoing_task(user_id):
     is_exist = await ongoing_tasks.find_one({"user_id": user_id})
@@ -285,22 +317,28 @@ async def del_ongoing_task(user_id):
     else:
         return
 
+
 async def clear_ongoing_tasks():
     await ongoing_tasks.delete_many({})
+
 
 # DB for cancel tasks (that's stupid)
 cancel_tasks = unzipper_db["cancel_tasks"]
 
+
 async def get_cancel_tasks():
     return [cancel_list async for cancel_list in cancel_tasks.find({})]
+
 
 async def count_cancel_tasks():
     tasks = await cancel_tasks.count_documents({})
     return tasks
 
+
 async def add_cancel_task(user_id):
     if not await get_cancel_task(user_id):
         await cancel_tasks.insert_one({"user_id": user_id})
+
 
 async def del_cancel_task(user_id):
     is_exist = await cancel_tasks.find_one({"user_id": user_id})
@@ -309,9 +347,11 @@ async def del_cancel_task(user_id):
     else:
         return
 
+
 async def get_cancel_task(user_id):
     is_exist = await cancel_tasks.find_one({"user_id": user_id})
     return bool(is_exist is not None and is_exist)
+
 
 async def clear_cancel_tasks():
     await cancel_tasks.delete_many({})
@@ -321,18 +361,22 @@ async def clear_cancel_tasks():
 
 merge_tasks = unzipper_db["merge_tasks"]
 
+
 async def get_merge_tasks():
     return [merge_list async for merge_list in merge_tasks.find({})]
+
 
 async def count_merge_tasks():
     tasks = await merge_tasks.count_documents({})
     return tasks
+
 
 async def add_merge_task(user_id, message_id):
     if not await get_merge_task(user_id):
         await merge_tasks.insert_one({"user_id": user_id, "message_id": message_id})
     else:
         await merge_tasks.update_one({"user_id": user_id}, {"$set": {"message_id": message_id}})
+
 
 async def del_merge_task(user_id):
     is_exist = await merge_tasks.find_one({"user_id": user_id})
@@ -341,15 +385,18 @@ async def del_merge_task(user_id):
     else:
         return
 
+
 async def get_merge_task(user_id):
     is_exist = await merge_tasks.find_one({"user_id": user_id})
     return bool(is_exist is not None and is_exist)
+
 
 async def get_merge_task_message_id(user_id):
     is_exist = await merge_tasks.find_one({"user_id": user_id})
     if is_exist is not None and is_exist:
         return is_exist["message_id"]
     return False
+
 
 async def clear_merge_tasks():
     await merge_tasks.delete_many({})
