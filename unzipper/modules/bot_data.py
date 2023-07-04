@@ -143,7 +143,6 @@ Select the extraction mode for that merged file 👀
 ❌ : **Cancel your task**
     """
 
-
     EXT_CAPTION = """
 `{}`
 
@@ -183,7 +182,6 @@ have been saved from the URL
 `{}`
     """
 
-
     EXT_FAILED_TXT = """
 **Extraction failed 😕**
 
@@ -201,7 +199,6 @@ Please report this at @EDM115_chat if you think this is a serious error
     """
 
     HOW_MANY_UPLOADED = "`{}` files were extracted from that archive"
-
 
     PLS_REPLY = "You need to reply to a picture for saving it as custom thumbnail 🤓"
 
