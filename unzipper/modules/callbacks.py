@@ -99,8 +99,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         )
 
     elif query.data == "helpcallback":
-        await query.edit_message_text(text=Messages.HELP_TXT,
-                                      reply_markup=Buttons.ME_GOIN_HOME)
+        await query.edit_message_text(
+            text=Messages.HELP_TXT,
+            reply_markup=Buttons.ME_GOIN_HOME
+        )
 
     elif query.data == "aboutcallback":
         await query.edit_message_text(
@@ -131,11 +133,15 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     elif query.data == "check_thumb":
         user_id = query.from_user.id
         thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
-        await unzip_bot.send_photo(chat_id=user_id,
-                                   photo=thumb_location,
-                                   caption=Messages.ACTUAL_THUMB)
-        await unzip_bot.delete_messages(chat_id=user_id,
-                                        message_ids=query.message.id)
+        await unzip_bot.send_photo(
+            chat_id=user_id,
+            photo=thumb_location,
+            caption=Messages.ACTUAL_THUMB
+        )
+        await unzip_bot.delete_messages(
+            chat_id=user_id,
+            message_ids=query.message.id
+        )
         await unzip_bot.send_message(
             chat_id=user_id,
             text=Messages.EXISTING_THUMB,
@@ -145,11 +151,15 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     elif query.data == "check_before_del":
         user_id = query.from_user.id
         thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
-        await unzip_bot.send_photo(chat_id=user_id,
-                                   photo=thumb_location,
-                                   caption=Messages.ACTUAL_THUMB)
-        await unzip_bot.delete_messages(chat_id=user_id,
-                                        message_ids=query.message.id)
+        await unzip_bot.send_photo(
+            chat_id=user_id,
+            photo=thumb_location,
+            caption=Messages.ACTUAL_THUMB
+        )
+        await unzip_bot.delete_messages(
+            chat_id=user_id,
+            message_ids=query.message.id
+        )
         await unzip_bot.send_message(
             chat_id=user_id,
             text=Messages.DEL_CONFIRM_THUMB_2,
@@ -209,8 +219,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         user_id = query.from_user.id
         mode = query.data.split("|")[1]
         await set_upload_mode(user_id, mode)
-        await answer_query(query,
-                           Messages.CHANGED_UPLOAD_MODE_TXT.format(mode))
+        await answer_query(
+            query,
+            Messages.CHANGED_UPLOAD_MODE_TXT.format(mode)
+        )
 
     elif query.data == "merge_this":
         user_id = query.from_user.id
@@ -331,8 +343,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await query.message.delete()
                 except:
                     pass
-                await unzip_bot.send_message(chat_id=query.message.chat.id,
-                                                text=Messages.EXT_FAILED_TXT)
+                await unzip_bot.send_message(
+                    chat_id=query.message.chat.id,
+                    text=Messages.EXT_FAILED_TXT
+                )
                 shutil.rmtree(ext_files_dir)
                 await del_ongoing_task(user_id)
             return
@@ -343,9 +357,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 chat_id=query.message.chat.id,
                 text=Messages.PASSWORD_PROTECTED,
             )
-            await answer_query(query,
-                                Messages.EXT_FAILED_TXT,
-                                unzip_client=unzip_bot)
+            await answer_query(
+                query,
+                Messages.EXT_FAILED_TXT,
+                unzip_client=unzip_bot
+            )
             shutil.rmtree(ext_files_dir)
             shutil.rmtree(download_path)
             await del_ongoing_task(user_id)
@@ -360,9 +376,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         extrtime = TimeFormatter(round(ext_e_time - ext_s_time) * 1000)
         if extrtime == "":
             extrtime = "1s"
-        await answer_query(query,
-                            Messages.EXT_OK_TXT.format(extrtime),
-                            unzip_client=unzip_bot)
+        await answer_query(
+            query,
+            Messages.EXT_OK_TXT.format(extrtime),
+            unzip_client=unzip_bot
+        )
 
         try:
             i_e_buttons = await make_keyboard(
@@ -372,11 +390,13 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 unziphttp=False
             )
             try:
-                await query.message.edit(Messages.SELECT_FILES,
-                                            reply_markup=i_e_buttons)
+                await query.message.edit(Messages.SELECT_FILES, reply_markup=i_e_buttons)
             except ReplyMarkupTooLong:
                 empty_buttons = await make_keyboard_empty(
-                    user_id=user_id, chat_id=query.message.chat.id, unziphttp=False)
+                    user_id=user_id,
+                    chat_id=query.message.chat.id,
+                    unziphttp=False
+                )
                 await query.message.edit(
                     Messages.UNABLE_GATHER_FILES,
                     reply_markup=empty_buttons,
@@ -399,16 +419,21 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 try:
                     await query.message.delete()
                     empty_buttons = await make_keyboard_empty(
-                        user_id=user_id, chat_id=query.message.chat.id, unziphttp=False)
+                        user_id=user_id,
+                        chat_id=query.message.chat.id,
+                        unziphttp=False
+                    )
                     await unzip_bot.send_message(
                         chat_id=query.message.chat.id,
                         text=Messages.UNABLE_GATHER_FILES,
                         reply_markup=empty_buttons,
                     )
                 except:
-                    await answer_query(query,
-                                        Messages.EXT_FAILED_TXT,
-                                        unzip_client=unzip_bot)
+                    await answer_query(
+                        query,
+                        Messages.EXT_FAILED_TXT,
+                        unzip_client=unzip_bot
+                    )
                     shutil.rmtree(ext_files_dir)
                     LOGGER.error(Messages.FATAL_ERROR)
                     await del_ongoing_task(user_id)
@@ -445,8 +470,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     unzip_head = await session.head(url, allow_redirects=True)
                     f_size = unzip_head.headers.get("content-length")
                     u_file_size = f_size if f_size else "undefined"
-                    await log_msg.edit(
-                        Messages.LOG_TXT.format(user_id, url, u_file_size))
+                    await log_msg.edit(Messages.LOG_TXT.format(user_id, url, u_file_size))
                     archive_msg = log_msg
                     # Checks if file is an archive using content-type header
                     unzip_resp = await session.get(url, timeout=None, allow_redirects=True)
@@ -470,9 +494,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             return
                         archive = f"{download_path}/archive_from_{user_id}{fname}"
                         location = archive
-                        await answer_query(query,
-                                           Messages.PROCESSING2,
-                                           unzip_client=unzip_bot)
+                        await answer_query(
+                            query,
+                            Messages.PROCESSING2,
+                            unzip_client=unzip_bot
+                        )
                         # HTTP server must send Accept-Ranges: bytes and Content-Length in headers
                         if fext == "zip" and "accept-ranges" in unzip_resp.headers and "content-length" in unzip_resp.headers:
                             try:
@@ -487,8 +513,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                                         rzfile=rzf,
                                     )
                                     try:
-                                        await query.message.edit(Messages.SELECT_FILES,
-                                                                reply_markup=i_e_buttons)
+                                        await query.message.edit(
+                                            Messages.SELECT_FILES,
+                                            reply_markup=i_e_buttons
+                                        )
                                     except ReplyMarkupTooLong:
                                         empty_buttons = await make_keyboard_empty(
                                             user_id=user_id, chat_id=query.message.chat.id, unziphttp=True, rzfile=rzf)
@@ -515,7 +543,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                                         try:
                                             await query.message.delete()
                                             empty_buttons = await make_keyboard_empty(
-                                                user_id=user_id, chat_id=query.message.chat.id, unziphttp=True, rzfile=rzf)
+                                                user_id=user_id,
+                                                chat_id=query.message.chat.id,
+                                                unziphttp=True,
+                                                rzfile=rzf
+                                            )
                                             await unzip_bot.send_message(
                                                 chat_id=query.message.chat.id,
                                                 text=Messages.UNABLE_GATHER_FILES,
@@ -531,7 +563,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             dled = False
                             LOGGER.error(Messages.ERR_DL.format(e))
                         if isinstance(dled, bool) and not dled:
-                                return
+                            return
                         e_time = time()
                         # Send copy in logs in case url has gone
                         # paths = await get_files(path=archive)
@@ -553,18 +585,20 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     return
                 fname = r_message.document.file_name
                 rfnamebro = fname
-                archive_msg = await r_message.forward(
-                    chat_id=Config.LOGS_CHANNEL)
-                await log_msg.edit(
-                    Messages.LOG_TXT.format(
-                        user_id, fname,
-                        humanbytes(r_message.document.file_size)))
+                archive_msg = await r_message.forward(chat_id=Config.LOGS_CHANNEL)
+                await log_msg.edit(Messages.LOG_TXT.format(
+                    user_id,
+                    fname,
+                    humanbytes(r_message.document.file_size)
+                ))
                 # Checks if it's actually an archive
                 # fext = (pathlib.Path(fname).suffix).casefold()
                 if splitted_data[2] != "thumb":
                     fext = fname.split(".")[-1].casefold()
-                    if (fnmatch(fext, extentions_list["split"][0])
-                            or fext in extentions_list["split"]):
+                    if (
+                        fnmatch(fext, extentions_list["split"][0])
+                        or fext in extentions_list["split"]
+                    ):
                         await query.message.edit(Messages.ITS_SPLITTED)
                         return
                     if bool(re.search(split_file_pattern, fname)):
@@ -630,8 +664,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     )
                     await query.message.delete()
                     await del_ongoing_task(user_id)
-                    return shutil.rmtree(
-                        f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                    return shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
                 await query.message.edit(Messages.SPLITTING.format(newfname))
                 splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
                 os.makedirs(splitteddir)
@@ -680,9 +713,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             dltime = TimeFormatter(round(e_time - s_time) * 1000)
             if dltime == "":
                 dltime = "1s"
-            await answer_query(query,
-                               Messages.AFTER_OK_DL_TXT.format(dltime),
-                               unzip_client=unzip_bot)
+            await answer_query(
+                query,
+                Messages.AFTER_OK_DL_TXT.format(dltime),
+                unzip_client=unzip_bot
+            )
 
             # Attempt to fetch password protected archives
             if splitted_data[2] == "with_pass":
@@ -705,13 +740,16 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 testtime = TimeFormatter(round(ext_t_time - ext_s_time) * 1000)
                 if testtime == "":
                     testtime = "1s"
-                await answer_query(query,
+                await answer_query(
+                    query,
                     Messages.AFTER_OK_TEST_TXT.format(testtime),
                     unzip_client=unzip_bot
                 )
                 if tested:
-                    extractor = await extr_files(path=ext_files_dir,
-                                             archive_path=archive)
+                    extractor = await extr_files(
+                        path=ext_files_dir,
+                        archive_path=archive
+                    )
                     ext_e_time = time()
                 else:
                     extractor = "Error"
@@ -729,8 +767,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         await query.message.delete()
                     except:
                         pass
-                    await unzip_bot.send_message(chat_id=query.message.chat.id,
-                                                 text=Messages.EXT_FAILED_TXT)
+                    await unzip_bot.send_message(
+                        chat_id=query.message.chat.id,
+                        text=Messages.EXT_FAILED_TXT
+                    )
                     shutil.rmtree(ext_files_dir)
                     await del_ongoing_task(user_id)
                     await archive_msg.reply(Messages.EXT_FAILED_TXT)
@@ -743,9 +783,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     chat_id=query.message.chat.id,
                     text=Messages.PASSWORD_PROTECTED,
                 )
-                await answer_query(query,
-                                   Messages.EXT_FAILED_TXT,
-                                   unzip_client=unzip_bot)
+                await answer_query(
+                    query,
+                    Messages.EXT_FAILED_TXT,
+                    unzip_client=unzip_bot
+                )
                 shutil.rmtree(ext_files_dir)
                 await del_ongoing_task(user_id)
                 return
@@ -754,9 +796,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             extrtime = TimeFormatter(round(ext_e_time - ext_s_time) * 1000)
             if extrtime == "":
                 extrtime = "1s"
-            await answer_query(query,
-                               Messages.EXT_OK_TXT.format(extrtime),
-                               unzip_client=unzip_bot)
+            await answer_query(
+                query,
+                Messages.EXT_OK_TXT.format(extrtime),
+                unzip_client=unzip_bot
+            )
 
             try:
                 i_e_buttons = await make_keyboard(
@@ -766,11 +810,13 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     unziphttp=False
                 )
                 try:
-                    await query.message.edit(Messages.SELECT_FILES,
-                                             reply_markup=i_e_buttons)
+                    await query.message.edit(Messages.SELECT_FILES, reply_markup=i_e_buttons)
                 except ReplyMarkupTooLong:
                     empty_buttons = await make_keyboard_empty(
-                        user_id=user_id, chat_id=query.message.chat.id, unziphttp=False)
+                        user_id=user_id,
+                        chat_id=query.message.chat.id,
+                        unziphttp=False
+                    )
                     await query.message.edit(
                         Messages.UNABLE_GATHER_FILES,
                         reply_markup=empty_buttons,
@@ -793,16 +839,21 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     try:
                         await query.message.delete()
                         empty_buttons = await make_keyboard_empty(
-                            user_id=user_id, chat_id=query.message.chat.id, unziphttp=False)
+                            user_id=user_id,
+                            chat_id=query.message.chat.id,
+                            unziphttp=False
+                        )
                         await unzip_bot.send_message(
                             chat_id=query.message.chat.id,
                             text=Messages.UNABLE_GATHER_FILES,
                             reply_markup=empty_buttons,
                         )
                     except:
-                        await answer_query(query,
-                                           Messages.EXT_FAILED_TXT,
-                                           unzip_client=unzip_bot)
+                        await answer_query(
+                            query,
+                            Messages.EXT_FAILED_TXT,
+                            unzip_client=unzip_bot
+                        )
                         await archive_msg.reply(Messages.EXT_FAILED_TXT)
                         shutil.rmtree(ext_files_dir)
                         LOGGER.error(Messages.FATAL_ERROR)
@@ -931,33 +982,40 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             return
         if urled:
             try:
-                i_e_buttons = await make_keyboard(paths=rpaths,
-                                                user_id=query.from_user.id,
-                                                chat_id=query.message.chat.id,
-                                                unziphttp=True,
-                                                rzfile=spl_data[5],
+                i_e_buttons = await make_keyboard(
+                    paths=rpaths,
+                    user_id=query.from_user.id,
+                    chat_id=query.message.chat.id,
+                    unziphttp=True,
+                    rzfile=spl_data[5],
                 )
-                await query.message.edit(Messages.SELECT_FILES,
-                                        reply_markup=i_e_buttons)
+                await query.message.edit(Messages.SELECT_FILES, reply_markup=i_e_buttons)
             except ReplyMarkupTooLong:
                 empty_buttons = await make_keyboard_empty(
-                    user_id=user_id, chat_id=query.message.chat.id, unziphttp=True, rzfile=spl_data[5])
+                    user_id=user_id,
+                    chat_id=query.message.chat.id,
+                    unziphttp=True,
+                    rzfile=spl_data[5]
+                )
                 await query.message.edit(
                     Messages.UNABLE_GATHER_FILES,
                     reply_markup=empty_buttons,
                 )
         else:
             try:
-                i_e_buttons = await make_keyboard(paths=rpaths,
-                                                user_id=query.from_user.id,
-                                                chat_id=query.message.chat.id,
-                                                unziphttp=False
+                i_e_buttons = await make_keyboard(
+                    paths=rpaths,
+                    user_id=query.from_user.id,
+                    chat_id=query.message.chat.id,
+                    unziphttp=False
                 )
-                await query.message.edit(Messages.SELECT_FILES,
-                                        reply_markup=i_e_buttons)
+                await query.message.edit(Messages.SELECT_FILES, reply_markup=i_e_buttons)
             except ReplyMarkupTooLong:
                 empty_buttons = await make_keyboard_empty(
-                    user_id=user_id, chat_id=query.message.chat.id, unziphttp=False)
+                    user_id=user_id,
+                    chat_id=query.message.chat.id,
+                    unziphttp=False
+                )
                 await query.message.edit(
                     Messages.UNABLE_GATHER_FILES,
                     reply_markup=empty_buttons,
@@ -1069,8 +1127,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         try:
             await query.message.edit(Messages.CANCELLED_TXT.format(Messages.PROCESS_CANCELLED))
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{uid}")
-            await update_uploaded(user_id=uid,
-                                    upload_count=sent_files)
+            await update_uploaded(
+                user_id=uid,
+                upload_count=sent_files
+            )
             try:
                 await log_msg.reply(Messages.HOW_MANY_UPLOADED.format(sent_files))
             except:
