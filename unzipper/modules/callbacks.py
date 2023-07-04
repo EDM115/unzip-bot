@@ -1,5 +1,4 @@
 # Copyright (c) 2023 EDM115
-import asyncio
 import os
 import re
 import shutil
