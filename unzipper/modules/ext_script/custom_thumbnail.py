@@ -20,10 +20,9 @@ async def add_thumb(_, message):
     if message.reply_to_message is not None:
         reply_message = message.reply_to_message
         if reply_message.media_group_id is not None:  # album sent
-            LOGGER.warning(f"{user_id} tried to save a thumbnail from an album")
-            return message.reply(
-                "You can't use an album. Reply to a single picture sent as photo (not as document)"
-            )
+            LOGGER.warning(Messages.ALBUM.format(user_id))
+            await message.reply(Messages.ALBUM_NOPE)
+            return
         thumb_location = Config.THUMB_LOCATION + "/" + user_id + ".jpg"
         pre_thumb = Config.THUMB_LOCATION + "/not_resized_" + user_id + ".jpg"
         final_thumb = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
@@ -35,17 +34,16 @@ async def add_thumb(_, message):
             await message.reply(
                 text=Messages.SAVING_THUMB, reply_markup=Buttons.THUMB_SAVE
             )
-        LOGGER.warning(f"Downloading thumbnail of {user_id}…")
+        LOGGER.warning(Messages.DL_THUMB.format(user_id))
         await _.download_media(message=reply_message, file_name=pre_thumb)
-        LOGGER.warning("Thumbnail downloaded")
         size = 320, 320
         try:
             previous = Image.open(pre_thumb)
             previous.thumbnail(size, Image.ANTIALIAS)
             previous.save(final_thumb, "JPEG")
-            LOGGER.warning("Thumbnail saved")
+            LOGGER.warning(Messages.THUMB_SAVED)
         except:
-            LOGGER.warning("Failed to generate thumb")
+            LOGGER.warning(Messages.THUMB_FAILED)
             try:
                 os.remove(pre_thumb)
             except:
@@ -54,7 +52,7 @@ async def add_thumb(_, message):
                 os.remove(final_thumb)
             except:
                 pass
-            await message.reply("Error happened 😕 Try again later")
+            await message.reply(Messages.THUMB_ERROR)
     else:
         await _.send_message(
             chat_id=message.chat.id,
@@ -67,7 +65,7 @@ async def del_thumb(message):
     id = message.from_user.id
     thumb_location = Config.THUMB_LOCATION + "/" + str(id) + ".jpg"
     if not os.path.exists(thumb_location):
-        await message.reply(text="You already have no thumbnail 😅")
+        await message.reply(text=Messages.NO_THUMB)
     else:
         await message.reply(text=Messages.DEL_CONFIRM_THUMB, reply_markup=Buttons.THUMB_DEL)
 

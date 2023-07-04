@@ -8,6 +8,7 @@ from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
 
 from unzipper import LOGGER
+from unzipper.modules.bot_data import Messages
 
 
 def __run_cmds_unzipper(command):
@@ -88,11 +89,11 @@ async def make_keyboard(paths, user_id, chat_id, unziphttp, rzfile=None):
     data = []
     if unziphttp:
         data.append(InlineKeyboardButton(
-        "Upload all 📤", f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}"))
+        Messages.UP_ALL, f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}"))
     else:
         data.append(InlineKeyboardButton(
-        "Upload all 📤", f"ext_a|{user_id}|{chat_id}|{unziphttp}"))
-    data.append(InlineKeyboardButton("❌ Cancel", "cancel_dis"))
+        Messages.UP_ALL, f"ext_a|{user_id}|{chat_id}|{unziphttp}"))
+    data.append(InlineKeyboardButton(Messages.CANCEL_IT, "cancel_dis"))
     for file in paths:
         if num > 96:
             break
@@ -122,10 +123,10 @@ async def make_keyboard_empty(user_id, chat_id, unziphttp, rzfile=None):
     data = []
     if unziphttp:
         data.append(InlineKeyboardButton(
-            "Upload all 📤", f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}"))
+            Messages.UP_ALL, f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}"))
     else:
         data.append(InlineKeyboardButton(
-            "Upload all 📤", f"ext_a|{user_id}|{chat_id}|{unziphttp}"))
-    data.append(InlineKeyboardButton("❌ Cancel", "cancel_dis"))
+            Messages.UP_ALL, f"ext_a|{user_id}|{chat_id}|{unziphttp}"))
+    data.append(InlineKeyboardButton(Messages.CANCEL_IT, "cancel_dis"))
     i_kbd.add(*data)
     return i_kbd

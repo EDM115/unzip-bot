@@ -38,7 +38,7 @@ while running:
             os.makedirs(Config.DOWNLOAD_LOCATION)
         if not os.path.isdir(Config.THUMB_LOCATION):
             os.makedirs(Config.THUMB_LOCATION)
-        LOGGER.info("Starting bot…")
+        LOGGER.info(Messages.STARTING_BOT)
         unzipperbot.start()
         starttime = time.strftime("%Y/%m/%d - %H:%M:%S")
         unzipperbot.send_message(
@@ -46,16 +46,16 @@ while running:
         )
         set_boot_time()
         dl_thumbs()
-        LOGGER.info("Checking Log channel…")
+        LOGGER.info(Messages.CHECK_LOG)
         if check_logs():
-            LOGGER.info("Log channel alright")
-            LOGGER.info("Bot is running now ! Join @EDM115bots")
+            LOGGER.info(Messages.LOG_CHECKED)
+            LOGGER.info(Messages.BOT_RUNNING)
             idle()
         else:
             try:
                 unzipperbot.send_message(
                     chat_id=Config.BOT_OWNER,
-                    text=f"Error : the provided **LOGS_CHANNEL** (`{Config.LOGS_CHANNEL}`) is incorrect. Bot crashed 😪",
+                    text=Messages.WRONG_LOG.format(Config.LOGS_CHANNEL),
                 )
             except:
                 pass

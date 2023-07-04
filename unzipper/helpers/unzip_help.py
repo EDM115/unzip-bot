@@ -16,9 +16,9 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
         diff = now - start
         if total == 0:
             try:
-                tmp = "**Size : Unknown** \n\nThis may take a while, go grab a coffee ☕️"
+                tmp = Messages.UNKNOWN_SIZE
                 await message.edit(
-                    text=f"{ud_type}\n {tmp} \n\n**Powered by @EDM115bots**",
+                    text=Messages.PROGRESS_MSG.format(ud_type, tmp),
                     reply_markup=Buttons.I_PREFER_STOP,
                 )
             except:
@@ -31,11 +31,11 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
             estimated_total_time = time_to_completion
             elapsed_time = TimeFormatter(milliseconds=elapsed_time)
             estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
-            progress = f'[{"".join(["⬢" for i in range(math.floor(percentage / 5))])}{"".join(["⬡" for i in range(20 - math.floor(percentage / 5))])}] \n**Processing…** : `{round(percentage, 2)}%`\n'
-            tmp = progress + f'`{humanbytes(current)} of {humanbytes(total)}`\n**Speed :** `{humanbytes(speed)}/s`\n**ETA :** `{estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"}`\n'
+            progress = f'[{"".join(["⬢" for i in range(math.floor(percentage / 5))])}{"".join(["⬡" for i in range(20 - math.floor(percentage / 5))])}] \n{Messages.PROCESSING} : `{round(percentage, 2)}%`\n'
+            tmp = progress + f'`{humanbytes(current)} of {humanbytes(total)}`\n{Messages.SPEED} `{humanbytes(speed)}/s`\n{Messages.ETA} `{estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"}`\n'
             try:
                 await message.edit(
-                    text=f"{ud_type}\n {tmp} \n\n**Powered by @EDM115bots**",
+                    text=Messages.PROGRESS_MSG.format(ud_type, tmp),
                     reply_markup=Buttons.I_PREFER_STOP,
                 )
             except:

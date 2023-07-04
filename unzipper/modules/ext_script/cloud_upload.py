@@ -2,6 +2,8 @@
 import json
 import subprocess
 
+from unzipper.modules.bot_data import Messages
+
 
 async def jsonized(command):
     run = subprocess.Popen(
@@ -25,7 +27,5 @@ async def bayfiles(file, url):
     try:
         uploaded = await jsonized(f"curl -F 'file=@{file}' {url}")
     except:
-        uploaded = (
-            "Error happened on BayFiles upload (check connection, or retry later)"
-        )
+        uploaded = (Messages.ERROR_UP_BAYFILES)
     return uploaded

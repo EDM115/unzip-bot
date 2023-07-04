@@ -5,6 +5,7 @@ import requests
 
 from config import Config
 from unzipper import LOGGER, unzipperbot as Client
+from unzipper.modules.bot_data import Messages
 
 mongodb = AsyncIOMotorClient(Config.MONGODB_URL)
 unzipper_db = mongodb["Unzipper_Bot"]
@@ -79,9 +80,7 @@ async def check_user(message):
     # Checking if user is banned
     is_banned = await is_user_in_bdb(message.from_user.id)
     if is_banned:
-        await message.reply(
-            "**Sorry you're banned 💀**\n\nReport this at @EDM115_chat if you think this is a mistake, I may unban you"
-        )
+        await message.reply(Messages.BANNED)
         await message.stop_propagation()
         return
     # Checking if user already in db
@@ -102,6 +101,11 @@ async def check_user(message):
             username = " "
         if firstname == " " and lastname == " " and username == " ":
             uname = message.from_user.mention
+            await Client.send_message(
+                chat_id=Config.LOGS_CHANNEL,
+                text=Messages.NEW_USER_BAD.format(uname),
+                disable_web_page_preview=False,
+            )
         else:
             if firstname is None:
                 firstname = " "
@@ -111,16 +115,9 @@ async def check_user(message):
                 username = " "
             uname = firstname + " " + lastname
             umention = " | @" + username
-        try:
             await Client.send_message(
                 chat_id=Config.LOGS_CHANNEL,
-                text=f"**#NEW_USER** 🎙 \n\n**User profile :** `{uname}` {umention} \n**User ID :** `{message.from_user.id}` \n**Profile URL :** [tg://user?id={message.from_user.id}](tg://user?id={message.from_user.id})",
-                disable_web_page_preview=False,
-            )
-        except AttributeError:
-            await Client.send_message(
-                chat_id=Config.LOGS_CHANNEL,
-                text=f"**#NEW_USER** 🎙 \n\n**User profile :** `{uname}` \n**User ID :** `[AttributeError] Can't get it` \n**Profile URL :** Can't get it",
+                text=Messages.NEW_USER.format(uname, umention, message.from_user.id, message.from_user.id, message.from_user.id),
                 disable_web_page_preview=False,
             )
     await message.continue_propagation()
@@ -208,7 +205,7 @@ async def upload_thumb(image):
             return f"https://telegra.ph{request['src']}"
     except requests.exceptions.RequestException as err:
         LOGGER.warning(err)
-        return f"Error occurred during upload: {err}"
+        return f"Error occurred during telegra.ph upload : {err}"
 
 async def get_thumb_users():
     return [thumb_list async for thumb_list in thumb_db.find({})]

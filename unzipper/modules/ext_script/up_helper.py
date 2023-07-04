@@ -45,7 +45,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         fname = os.path.basename(doc_f)
         fext = ((pathlib.Path(os.path.abspath(doc_f)).suffix).casefold().replace(".", ""))
         thumbornot = await thumb_exists(c_id)
-        upmsg = await unzip_bot.send_message(c_id, "`Processing… ⏳`")
+        upmsg = await unzip_bot.send_message(c_id, Messages.PROCESSING2)
         if ul_mode == "media" and fext in extentions_list["audio"]:
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
@@ -56,7 +56,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     thumb=thumb_image,
                     progress=progress_for_pyrogram,
                     progress_args=(
-                        f"**Trying to upload {fname}… Please wait** \n",
+                        Messages.TRY_UP.format(fname),
                         upmsg,
                         time(),
                         unzip_bot,
@@ -69,7 +69,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     caption=Messages.EXT_CAPTION.format(fname),
                     progress=progress_for_pyrogram,
                     progress_args=(
-                        f"**Trying to upload {fname}… Please wait** \n",
+                        Messages.TRY_UP.format(fname),
                         upmsg,
                         time(),
                         unzip_bot,
@@ -83,7 +83,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                 caption=Messages.EXT_CAPTION.format(fname),
                 progress=progress_for_pyrogram,
                 progress_args=(
-                    f"**Trying to upload {fname}… Please wait** \n",
+                    Messages.TRY_UP.format(fname),
                     upmsg,
                     time(),
                     unzip_bot,
@@ -103,7 +103,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     thumb=thumb_image,
                     progress=progress_for_pyrogram,
                     progress_args=(
-                        f"**Trying to upload {fname}… Please wait** \n",
+                        Messages.TRY_UP.format(fname),
                         upmsg,
                         time(),
                         unzip_bot,
@@ -130,7 +130,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     thumb=str(thmb_pth),
                     progress=progress_for_pyrogram,
                     progress_args=(
-                        f"**Trying to upload {fname}… Please wait** \n",
+                        Messages.TRY_UP.format(fname),
                         upmsg,
                         time(),
                         unzip_bot,
@@ -148,7 +148,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     force_document=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
-                        f"**Trying to upload {fname}… Please wait** \n",
+                        Messages.TRY_UP.format(fname),
                         upmsg,
                         time(),
                         unzip_bot,
@@ -162,7 +162,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     force_document=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
-                        f"**Trying to upload {fname}… Please wait** \n",
+                        Messages.TRY_UP.format(fname),
                         upmsg,
                         time(),
                         unzip_bot,
@@ -175,7 +175,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         await send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split)
         return
     except FileNotFoundError:
-        await query.answer("Sorry ! I can't find that file 💀", show_alert=True)
+        await query.answer(Messages.CANT_FIND, show_alert=True)
         return
     except BaseException as e:
         LOGGER.warning(e)
@@ -187,7 +187,7 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source):
         u_file_size = os.stat(doc_f).st_size
         if Config.TG_MAX_SIZE < int(u_file_size):
             await unzip_bot.send_message(
-                chat_id=c_id, text="URL file is too large to send in telegram 😥"
+                chat_id=c_id, text=Messages.TOO_LARGE
             )
             return
         fname = os.path.basename(doc_f)
@@ -202,7 +202,7 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source):
     except FileNotFoundError:
         await unzip_bot.send_message(
             chat_id=Config.LOGS_CHANNEL,
-            text="Archive has gone from servers before uploading 😥",
+            text=Messages.ARCHIVE_GONE,
         )
     except BaseException:
         pass
