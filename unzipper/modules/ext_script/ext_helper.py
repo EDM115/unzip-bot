@@ -93,30 +93,28 @@ async def make_keyboard(paths, user_id, chat_id, unziphttp, rzfile=None):
     data = []
     if unziphttp:
         data.append(InlineKeyboardButton(
-        Messages.UP_ALL, f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}"))
+            Messages.UP_ALL,
+            f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}"
+        ))
     else:
         data.append(InlineKeyboardButton(
-        Messages.UP_ALL, f"ext_a|{user_id}|{chat_id}|{unziphttp}"))
+            Messages.UP_ALL,
+            f"ext_a|{user_id}|{chat_id}|{unziphttp}"
+        ))
     data.append(InlineKeyboardButton(Messages.CANCEL_IT, "cancel_dis"))
     for file in paths:
         if num > 96:
             break
         if unziphttp:
-            data.append(
-                InlineKeyboardButton(
-                    f"{num} - {os.path.basename(file)}".encode(
-                        "utf-8").decode("utf-8"),
-                    f"ext_f|{user_id}|{chat_id}|{num}|{unziphttp}|{rzfile}",
-                )
-            )
+            data.append(InlineKeyboardButton(
+                f"{num} - {os.path.basename(file)}".encode("utf-8").decode("utf-8"),
+                f"ext_f|{user_id}|{chat_id}|{num}|{unziphttp}|{rzfile}",
+            ))
         else:
-            data.append(
-                InlineKeyboardButton(
-                    f"{num} - {os.path.basename(file)}".encode(
-                        "utf-8").decode("utf-8"),
-                    f"ext_f|{user_id}|{chat_id}|{num}|{unziphttp}",
-                )
-            )
+            data.append(InlineKeyboardButton(
+                f"{num} - {os.path.basename(file)}".encode("utf-8").decode("utf-8"),
+                f"ext_f|{user_id}|{chat_id}|{num}|{unziphttp}",
+            ))
         num += 1
     i_kbd.add(*data)
     return i_kbd
@@ -126,9 +124,15 @@ async def make_keyboard_empty(user_id, chat_id, unziphttp, rzfile=None):
     i_kbd = InlineKeyboard(row_width=2)
     data = []
     if unziphttp:
-        data.append(InlineKeyboardButton(Messages.UP_ALL, f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}"))
+        data.append(InlineKeyboardButton(
+            Messages.UP_ALL,
+            f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}"
+        ))
     else:
-        data.append(InlineKeyboardButton(Messages.UP_ALL, f"ext_a|{user_id}|{chat_id}|{unziphttp}"))
+        data.append(InlineKeyboardButton(
+            Messages.UP_ALL,
+            f"ext_a|{user_id}|{chat_id}|{unziphttp}"
+        ))
     data.append(InlineKeyboardButton(Messages.CANCEL_IT, "cancel_dis"))
     i_kbd.add(*data)
     return i_kbd
