@@ -12,6 +12,7 @@ from aiohttp import ClientSession
 from pyrogram import Client
 from pyrogram.errors import ReplyMarkupTooLong
 from pyrogram.types import CallbackQuery
+from asyncstdlib import aiter
 import unzip_http
 
 from config import Config
@@ -244,7 +245,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await del_merge_task(user_id)
                 return
             i = 0
-            for message in newarray:
+            async_newarray = aiter(newarray)
+            async for message in async_newarray:
                 i += 1
                 fname = message.document.file_name
                 await message.forward(chat_id=Config.LOGS_CHANNEL)
@@ -639,7 +641,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await query.message.edit(Messages.ERR_SPLIT)
                     return
                 await query.message.edit(Messages.SEND_ALL_PARTS.format(newfname))
-                for file in splittedfiles:
+                async_splittedfiles = aiter(splittedfiles)
+                async for file in async_splittedfiles:
                     sent_files += 1
                     await send_file(
                         unzip_bot=unzip_bot,
@@ -882,7 +885,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await smessage.edit(Messages.ERR_SPLIT)
                 return
             await smessage.edit(Messages.SEND_ALL_PARTS.format(fname))
-            for file in splittedfiles:
+            async_splittedfiles = aiter(splittedfiles)
+            async for file in async_splittedfiles:
                 sent_files += 1
                 await send_file(
                     unzip_bot=unzip_bot,
@@ -980,7 +984,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             )
             return
         await query.message.edit(Messages.SEND_ALL_FILES)
-        for file in paths:
+        async_paths = aiter(paths)
+        async for file in async_paths:
             sent_files += 1
             if urled:
                 file = spl_data[4].open(file)
@@ -1018,7 +1023,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await smessage.edit(Messages.ERR_SPLIT)
                     return
                 await smessage.edit(Messages.SEND_ALL_PARTS.format(fname))
-                for file in splittedfiles:
+                async_splittedfiles = aiter(splittedfiles)
+                async for file in async_splittedfiles:
                     sent_files += 1
                     await send_file(
                         unzip_bot=unzip_bot,
