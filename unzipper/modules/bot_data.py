@@ -668,9 +668,7 @@ WIP
 
     NOT_CLEANED = "An error happened during /cleanall 😕"
 
-    LOG_SENT = """
-Log file sent to {}
-    """
+    LOG_SENT = "Log file sent to {}"
 
     DELETED_FOLDER = "Deleted {} folder successfully"
 
