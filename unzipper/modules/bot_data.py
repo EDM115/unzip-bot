@@ -777,7 +777,7 @@ class Buttons:
                 InlineKeyboardButton(Messages.ABOUT, callback_data="aboutcallback"),
             ],
             [
-                InlineKeyboardButton(Messages.STATS, callback_data="statscallback"),
+                InlineKeyboardButton(Messages.STATS_BTN, callback_data="statscallback"),
                 InlineKeyboardButton(Messages.DONATE, callback_data="donatecallback"),
             ]
         ]
