@@ -11,9 +11,8 @@ from unzipper import LOGGER
 
 
 def __run_cmds_unzipper(command):
-    ext_cmd = subprocess.Popen(command["cmd"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-    ext_out, _ = ext_cmd.communicate()
-    ext_out = ext_out.decode("utf-8").rstrip('\n')
+    ext_cmd = subprocess.Popen(command["cmd"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8").rstrip('\n')
     LOGGER.info(ext_out)
     ext_cmd.stdout.close()
     return ext_out
