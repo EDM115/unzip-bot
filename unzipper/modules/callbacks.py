@@ -88,7 +88,7 @@ async def async_generator(iterable):
 async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     sent_files = 0
     global log_msg
-    
+
     if query.data == "megoinhome":
         await query.edit_message_text(
             text=Messages.START_TEXT.format(query.from_user.mention),
@@ -112,7 +112,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             reply_markup=Buttons.ME_GOIN_HOME,
             disable_web_page_preview=True,
         )
-    
+
     elif query.data.startswith("statscallback"):
         if query.data.endswith("refresh"):
             await query.edit_message_text(text=Messages.REFRESH_STATS)
@@ -209,7 +209,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         await set_upload_mode(user_id, mode)
         await answer_query(query,
                            Messages.CHANGED_UPLOAD_MODE_TXT.format(mode))
-    
+
     elif query.data == "merge_this":
         user_id = query.from_user.id
         m_id = query.message.id

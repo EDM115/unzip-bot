@@ -312,7 +312,7 @@ async def get_cancel_task(user_id):
         return True
     else:
         return False
-    
+
 async def clear_cancel_tasks():
     await cancel_tasks.delete_many({})
 
@@ -354,7 +354,7 @@ async def get_merge_task_message_id(user_id):
         return is_exist["message_id"]
     else:
         return False
-    
+
 async def clear_merge_tasks():
     await merge_tasks.delete_many({})
 
