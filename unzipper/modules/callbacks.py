@@ -458,11 +458,13 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         s_time = time()
                         fname = unquote(os.path.splitext(url)[1])
                         fext = fname.split(".")[-1].casefold()
-                        if splitted_data[2] != "thumb":
-                            if fext not in extentions_list["archive"]:
-                                await del_ongoing_task(user_id)
-                                await query.message.edit(Messages.DEF_NOT_AN_ARCHIVE)
-                                return
+                        if (
+                            splitted_data[2] != "thumb"
+                            and fext not in extentions_list["archive"]
+                        ):
+                            await del_ongoing_task(user_id)
+                            await query.message.edit(Messages.DEF_NOT_AN_ARCHIVE)
+                            return
                         archive = f"{download_path}/archive_from_{user_id}{fname}"
                         location = archive
                         await answer_query(query,
