@@ -181,7 +181,7 @@ async def get_stats(id):
             used,
             disk_usage,
             free,
-            ongoing_tasks,  
+            ongoing_tasks,
             cpu_usage,
             ram_usage,
             uptime,

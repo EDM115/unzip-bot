@@ -762,8 +762,10 @@ Here's all the commands that only the owner (you) can use :
 
     EMPTY_FILE = "The file {} is empty/unreachable"
 
+
 # List of error messages from p7zip
 ERROR_MSGS = ["Error", "Can't open as archive"]
+
 
 # Inline buttons
 class Buttons:

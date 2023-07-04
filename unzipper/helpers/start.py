@@ -61,7 +61,7 @@ async def check_boot():
         try:
             await client.send_message(Config.BOT_OWNER, Messages.BOT_RESTARTED.format(old_boot, boot))
         except:
-            pass # first start obviously 
+            pass # first start obviously
         await warn_users()
 
 
