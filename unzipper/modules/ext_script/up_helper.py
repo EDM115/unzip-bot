@@ -22,7 +22,7 @@ from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
 # To get video duration and thumbnail
 async def run_shell_cmds(command):
     run = subprocess.Popen(
-        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
     )
     shell_output = run.stdout.read()[:-1].decode("utf-8").rstrip('\n')
     run.stdout.close()
@@ -172,9 +172,11 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         os.remove(doc_f)
     except FloodWait as f:
         await sleep(f.value)
-        return await send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split)
+        await send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split)
+        return
     except FileNotFoundError:
-        return await query.answer("Sorry ! I can't find that file 💀", show_alert=True)
+        await query.answer("Sorry ! I can't find that file 💀", show_alert=True)
+        return
     except BaseException as e:
         LOGGER.warning(e)
         shutil.rmtree(full_path)
@@ -184,9 +186,10 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source):
     try:
         u_file_size = os.stat(doc_f).st_size
         if Config.TG_MAX_SIZE < int(u_file_size):
-            return await unzip_bot.send_message(
+            await unzip_bot.send_message(
                 chat_id=c_id, text="URL file is too large to send in telegram 😥"
             )
+            return
         fname = os.path.basename(doc_f)
         await unzip_bot.send_document(
             chat_id=c_id,

@@ -55,7 +55,7 @@ split_file_pattern = r"\.(?:part\d+\.rar|z\d+|r\d{2})$"
 
 # Function to download files from direct link using aiohttp
 async def download(url, path):
-    async with ClientSession() as session, session.get(url, timeout=None) as resp, openfile(path, mode="wb") as file:
+    async with ClientSession() as session, session.get(url, timeout=None, allow_redirects=True) as resp, openfile(path, mode="wb") as file:
         async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
             await file.write(chunk)
     await session.close()
@@ -426,7 +426,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 # Double check
                 if not re.match(https_url_regex, url):
                     await del_ongoing_task(user_id)
-                    return await query.message.edit("That's not a valid url 💀")
+                    await query.message.edit("That's not a valid url 💀")
+                    return
                 s = ClientSession()
                 async with s as session:
                     # Get the file size
@@ -440,9 +441,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     unzip_resp = await session.get(url, timeout=None, allow_redirects=True)
                     if "application/" not in unzip_resp.headers.get("content-type"):
                         await del_ongoing_task(user_id)
-                        return await query.message.edit(
+                        await query.message.edit(
                             "That's not an archive 💀\n\n**Try to @transload it**"
                         )
+                        return
                     rfnamebro = unquote(url.split("/")[-1])
                     if unzip_resp.status == 200:
                         # Makes download dir
@@ -453,9 +455,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         if splitted_data[2] != "thumb":
                             if fext not in extentions_list["archive"]:
                                 await del_ongoing_task(user_id)
-                                return await query.message.edit(
+                                await query.message.edit(
                                     "This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**"
                                 )
+                                return
                         archive = f"{download_path}/archive_from_{user_id}{fname}"
                         location = archive
                         await answer_query(query,
@@ -531,15 +534,16 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         )
                     else:
                         await del_ongoing_task(user_id)
-                        return await query.message.edit(
+                        await query.message.edit(
                             "**Sorry, I can't download that URL 😭 Try to @transload it**"
                         )
+                        return
 
             elif splitted_data[1] == "tg_file":
                 if r_message.document is None:
                     await del_ongoing_task(user_id)
-                    return await query.message.edit(
-                        "Give me an archive to extract 😐")
+                    await query.message.edit("Give me an archive to extract 😐")
+                    return
                 fname = r_message.document.file_name
                 rfnamebro = fname
                 archive_msg = await r_message.forward(
@@ -554,16 +558,16 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     fext = fname.split(".")[-1].casefold()
                     if (fnmatch(fext, extentions_list["split"][0])
                             or fext in extentions_list["split"]):
-                        return await query.message.edit(
-                            "This file is splitted\nUse the **/merge** command")
+                        await query.message.edit("This file is splitted\nUse the **/merge** command")
+                        return
                     if bool(re.search(split_file_pattern, fname)):
                         await del_ongoing_task(user_id)
-                        return await query.message.edit("Splitted RAR files can't be processed yet")
+                        await query.message.edit("Splitted RAR files can't be processed yet")
+                        return
                     if fext not in extentions_list["archive"]:
                         await del_ongoing_task(user_id)
-                        return await query.message.edit(
-                            "This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**"
-                        )
+                        await query.message.edit("This file is NOT an archive 😐\nIf you believe it's an error, send the file to **@EDM115**")
+                        return
                 # Makes download dir
                 os.makedirs(download_path)
                 s_time = time()
@@ -581,12 +585,13 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 e_time = time()
             else:
                 await del_ongoing_task(user_id)
-                return await answer_query(
+                await answer_query(
                     query,
                     "Fatal query parsing error 💀 Please contact @EDM115 with details and screenshots",
                     answer_only=True,
                     unzip_client=unzip_bot,
                 )
+                return
 
             if splitted_data[2].startswith("thumb"):
                 await query.message.edit("`Processing… ⏳`")
@@ -631,8 +636,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     except:
                         pass
                     await del_ongoing_task(user_id)
-                    return await query.message.edit(
-                        "An error occured while splitting a file above 2 Gb 😥")
+                    await query.message.edit("An error occured while splitting a file above 2 Gb 😥")
+                    return
                 await query.message.edit(f"Trying to send all parts of {newfname} to you… Please wait")
                 for file in splittedfiles:
                     sent_files += 1
@@ -709,7 +714,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await query.message.edit(Messages.EXT_FAILED_TXT)
                     shutil.rmtree(ext_files_dir)
                     await del_ongoing_task(user_id)
-                    return await log_msg.reply(Messages.EXT_FAILED_TXT)
+                    await log_msg.reply(Messages.EXT_FAILED_TXT)
+                    return
                 except:
                     try:
                         await query.message.delete()
@@ -719,7 +725,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                                                  text=Messages.EXT_FAILED_TXT)
                     shutil.rmtree(ext_files_dir)
                     await del_ongoing_task(user_id)
-                    return await archive_msg.reply(Messages.EXT_FAILED_TXT)
+                    await archive_msg.reply(Messages.EXT_FAILED_TXT)
+                    return
             # Check if user was dumb 😐
             paths = await get_files(path=ext_files_dir)
             if not paths:
@@ -830,10 +837,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             if os.path.isdir(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}"):
                 shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
             await del_ongoing_task(user_id)
-            return await query.message.edit(
+            await query.message.edit(
                 text="There's no file left to upload",
                 reply_markup=Buttons.RATE_ME
             )
+            return
         await query.answer("Sending that file to you… Please wait")
         sent_files += 1
         if urled:
@@ -868,7 +876,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 except:
                     pass
                 await del_ongoing_task(user_id)
-                return await smessage.edit("An error occured while splitting a file above 2 Gb 😥")
+                await smessage.edit("An error occured while splitting a file above 2 Gb 😥")
+                return
             await smessage.edit(f"Trying to send all parts of {fname} to you… Please wait")
             for file in splittedfiles:
                 sent_files += 1
@@ -903,10 +912,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             except:
                 pass
             await del_ongoing_task(user_id)
-            return await query.message.edit(
+            await query.message.edit(
                 text="There's no file left to upload",
                 reply_markup=Buttons.RATE_ME
             )
+            return
         if urled:
             try:
                 i_e_buttons = await make_keyboard(paths=rpaths,
@@ -961,10 +971,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             except:
                 pass
             await del_ongoing_task(user_id)
-            return await query.message.edit(
+            await query.message.edit(
                 text="There's no file left to upload",
                 reply_markup=Buttons.RATE_ME
             )
+            return
         await query.message.edit("Trying to send all files to you… Please wait")
         for file in paths:
             sent_files += 1
@@ -1001,7 +1012,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     except:
                         pass
                     await del_ongoing_task(user_id)
-                    return await smessage.edit("An error occured while splitting a file above 2 Gb 😥")
+                    await smessage.edit("An error occured while splitting a file above 2 Gb 😥")
+                    return
                 await smessage.edit(f"Trying to send all parts of {fname} to you… Please wait")
                 for file in splittedfiles:
                     sent_files += 1

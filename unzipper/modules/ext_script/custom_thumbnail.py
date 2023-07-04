@@ -54,7 +54,7 @@ async def add_thumb(_, message):
                 os.remove(final_thumb)
             except:
                 pass
-            return await message.reply("Error happened 😕 Try again later")
+            await message.reply("Error happened 😕 Try again later")
     else:
         await _.send_message(
             chat_id=message.chat.id,
@@ -67,8 +67,9 @@ async def del_thumb(message):
     id = message.from_user.id
     thumb_location = Config.THUMB_LOCATION + "/" + str(id) + ".jpg"
     if not os.path.exists(thumb_location):
-        return await message.reply(text="You already have no thumbnail 😅")
-    await message.reply(text=Messages.DEL_CONFIRM_THUMB, reply_markup=Buttons.THUMB_DEL)
+        await message.reply(text="You already have no thumbnail 😅")
+    else:
+        await message.reply(text=Messages.DEL_CONFIRM_THUMB, reply_markup=Buttons.THUMB_DEL)
 
 
 async def thumb_exists(chat_id):

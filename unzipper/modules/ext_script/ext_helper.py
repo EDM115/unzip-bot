@@ -11,7 +11,7 @@ from unzipper import LOGGER
 
 
 def __run_cmds_unzipper(command):
-    ext_cmd = subprocess.Popen(command["cmd"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    ext_cmd = subprocess.Popen(command["cmd"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8").rstrip('\n')
     LOGGER.info(ext_out)
     ext_cmd.stdout.close()
@@ -20,7 +20,8 @@ def __run_cmds_unzipper(command):
 
 async def run_cmds_on_cr(func, **kwargs):
     loop = get_running_loop()
-    return await loop.run_in_executor(None, partial(func, kwargs))
+    x = await loop.run_in_executor(None, partial(func, kwargs))
+    return x
 
 
 # Extract with 7z
@@ -29,7 +30,8 @@ async def _extract_with_7z_helper(path, archive_path, password=None):
         command = f'7z x -o{path} -p"{password}" {archive_path} -y'
     else:
         command = f"7z x -o{path} {archive_path} -y"
-    return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
+    x = await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
+    return x
 
 async def _test_with_7z_helper(archive_path):
     command = f'7z t {archive_path} -p"IAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA" -y' # skipcq: FLK-E501
@@ -41,7 +43,8 @@ async def _test_with_7z_helper(archive_path):
 # Extract with zstd (for .zst files)
 async def _extract_with_zstd(path, archive_path):
     command = f"zstd -f --output-dir-flat {path} -d {archive_path}"
-    return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
+    x = await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
+    return x
 
 
 # Main function to extract files
@@ -69,7 +72,8 @@ async def merge_files(iinput, ooutput, password=None):
         command = f'7z x -o"{ooutput}" -p"{password}" "{iinput}" -y'
     else:
         command = f'7z x -o"{ooutput}" "{iinput}" -y'
-    return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
+    x = await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
+    return x
 
 # Get files in directory as a list
 async def get_files(path):
