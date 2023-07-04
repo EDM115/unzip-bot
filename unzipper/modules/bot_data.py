@@ -5,87 +5,47 @@ class Messages:
 
 # here
 
-    HELP = """
-Help 📜
-    """
+    HELP = "Help 📜"
 
-    ABOUT = """
-About 👀
-    """
+    ABOUT = "About 👀"
 
-    STATS_BTN = """
-Stats 📊
-    """
+    STATS_BTN = "Stats 📊"
 
-    DONATE = """
-Donate 💸
-    """
+    DONATE = "Donate 💸"
 
-    REFRESH = """
-Refresh ♻️
-    """
+    REFRESH = "Refresh ♻️"
 
-    BACK = """
-Back 🏡
-    """
+    BACK = "Back 🏡"
 
-    CLEAN = """
-Clean my files 🚮
-    """
+    CLEAN = "Clean my files 🚮"
 
-    AS_DOC = """
-As document 📁
-    """
+    AS_DOC = "As document 📁"
 
-    AS_MEDIA = """
-As media 📺
-    """
+    AS_MEDIA = "As media 📺"
 
-    MERGE_BTN = """
-Merge 🛠️
-    """
+    MERGE_BTN = "Merge 🛠️"
 
-    CHECK = """
-Check 👀
-    """
+    CHECK = "Check 👀"
 
-    REPLACE = """
-Replace ⏭
-    """
+    REPLACE = "Replace ⏭"
 
-    SAVE = """
-Save 💾
-    """
+    SAVE = "Save 💾"
 
-    DELETE = """
-Delete 🚮
-    """
+    DELETE = "Delete 🚮"
 
-    RATE = """
-Rate me ⭐
-    """
+    RATE = "Rate me ⭐"
 
 # start.py
 
-    PRIVATE_CHAT = """
-A private chat can't be used 😐
-    """
+    PRIVATE_CHAT = "A private chat can't be used 😐"
 
-    NO_LOG_ID = """
-No log channel ID have been provided !
-    """
+    NO_LOG_ID = "No log channel ID have been provided !"
 
-    ERROR_LOG_CHECK = """
-An error happened while checking Log channel 💀 Make sure haven't provided a wrong Log channel ID 🧐
-    """
+    ERROR_LOG_CHECK = "An error happened while checking Log channel 💀 Make sure haven't provided a wrong Log channel ID 🧐"
 
-    DL_THUMBS = """
-Downloading {} thumbs
-    """
+    DL_THUMBS = "Downloading {} thumbs"
 
-    DOWNLOADED_THUMBS = """
-Downloaded {} of {} thumbs
-    """
+    DOWNLOADED_THUMBS = "Downloaded {} of {} thumbs"
 
     BOT_RESTARTED = """
 Bot restarted !
@@ -138,43 +98,25 @@ This may take a while, go grab a coffee ☕️
 **Powered by @EDM115bots**
     """
 
-    PROCESSING = """
-**Processing…**
-    """
+    PROCESSING = "**Processing…**"
 
-    SPEED = """
-**Speed :**
-    """
+    SPEED = "**Speed :**"
 
-    ETA = """
-**ETA :**
-    """
+    ETA = "**ETA :**"
 
 # __main__.py
 
-    START_TXT = """
-ℹ️ The bot have successfully started at `{}` 💪
-    """
+    START_TXT = "ℹ️ The bot have successfully started at `{}` 💪"
 
-    STOP_TXT = """
-ℹ️ The bot goes sleeping at `{}` 😴
-    """
+    STOP_TXT = "ℹ️ The bot goes sleeping at `{}` 😴"
 
-    STARTING_BOT = """
-Starting bot…
-    """
+    STARTING_BOT = "Starting bot…"
 
-    CHECK_LOG = """
-Checking Log channel…
-    """
+    CHECK_LOG = "Checking Log channel…"
 
-    LOG_CHECKED = """
-Log channel alright
-    """
+    LOG_CHECKED = "Log channel alright"
 
-    BOT_RUNNING = """
-Bot is running now ! Join @EDM115bots
-    """
+    BOT_RUNNING = "Bot is running now ! Join @EDM115bots"
 
     WRONG_LOG = """
 Error : the provided **LOGS_CHANNEL** (`{}`) is incorrect
@@ -258,14 +200,10 @@ have been saved from the URL
 Please report this at @EDM115_chat if you think this is a serious error
     """
 
-    HOW_MANY_UPLOADED = """
-`{}` files were extracted from that archive
-    """
+    HOW_MANY_UPLOADED = "`{}` files were extracted from that archive"
 
 
-    PLS_REPLY = """
-You need to reply to a picture for saving it as custom thumbnail 🤓
-    """
+    PLS_REPLY = "You need to reply to a picture for saving it as custom thumbnail 🤓"
 
     NO_MERGE_TASK = """
 Bruh there's no merge task ongoing 🗿
@@ -293,13 +231,9 @@ Use **/merge** to start one
 
     """
 
-    REFRESH_STATS = """
-Refreshing stats… ♻️
-    """
+    REFRESH_STATS = "Refreshing stats… ♻️"
 
-    ACTUAL_THUMB = """
-Your actual thumbnail
-    """
+    ACTUAL_THUMB = "Your actual thumbnail"
 
     START_TEXT = """
 Hi **{}** 👋, I'm **Unarchiver bot** 🥰
@@ -380,9 +314,7 @@ Select your upload mode 👇
 **Current upload mode is :** `{}`
     """
 
-    CHANGED_UPLOAD_MODE_TXT = """
-**Successfully changed upload mode to** `{}` ✅
-    """
+    CHANGED_UPLOAD_MODE_TXT = "**Successfully changed upload mode to** `{}` ✅"
 
     EXISTING_THUMB = """
 A thumbnail already have been saved 😅 What you wanna do ?
@@ -391,13 +323,9 @@ A thumbnail already have been saved 😅 What you wanna do ?
 • Cancel
     """
 
-    SAVING_THUMB = """
-Are you sure you want to save this thumbnail 🤔
-    """
+    SAVING_THUMB = "Are you sure you want to save this thumbnail 🤔"
 
-    SAVED_THUMBNAIL = """
-**Successfully saved this thumbnail ✅**
-    """
+    SAVED_THUMBNAIL = "**Successfully saved this thumbnail ✅**"
 
     DEL_CONFIRM_THUMB = """
 Do you really want to delete your thumbnail ?
@@ -406,29 +334,17 @@ Do you really want to delete your thumbnail ?
 • Cancel
 """
 
-    DEL_CONFIRM_THUMB_2 = """
-Do you really want to delete your thumbnail ?
-"""
+    DEL_CONFIRM_THUMB_2 = "Do you really want to delete your thumbnail ?"
 
-    DELETED_THUMB = """
-**Successfully removed your thumbnail ✅**
-    """
+    DELETED_THUMB = "**Successfully removed your thumbnail ✅**"
 
-    ERROR_THUMB_RENAME = """
-Error on thumb rename
-    """
+    ERROR_THUMB_RENAME = "Error on thumb rename"
 
-    ERROR_THUMB_UPDATE = """
-Error while updating thumb URL on DB
-    """
+    ERROR_THUMB_UPDATE = "Error while updating thumb URL on DB"
 
-    ERROR_TELEGRAPH_UPLOAD = """
-Error on Telegra.ph upload
-    """
+    ERROR_TELEGRAPH_UPLOAD = "Error on Telegra.ph upload"
 
-    ERROR_THUMB_DEL = """
-Error on thumb deletion in DB : {}
-    """
+    ERROR_THUMB_DEL = "Error on thumb deletion in DB : {}"
 
     AFTER_OK_DL_TXT = """
 **Successfully downloaded ✅**
@@ -473,25 +389,15 @@ Error on thumb deletion in DB : {}
 Please report this at @EDM115_chat if you think this is a serious error
     """
 
-    CANCELLED_TXT = """
-**{} ✅**
-    """
+    CANCELLED_TXT = "**{} ✅**"
 
-    DL_STOPPED = """
-✅ The download of your file have successfully been cancelled 😌
-    """
+    DL_STOPPED = "✅ The download of your file have successfully been cancelled 😌"
 
-    PROCESSING_TASK = """
-**✅ Processing your task… Please wait**
-    """
+    PROCESSING_TASK = "**✅ Processing your task… Please wait**"
 
-    ERROR_GET_MSG = """
-Error on getting messages from user : {}
-    """
+    ERROR_GET_MSG = "Error on getting messages from user : {}"
 
-    PROCESS_MSGS = """
-**Processing {} messages… Please wait**
-    """
+    PROCESS_MSGS = "**Processing {} messages… Please wait**"
 
     DL_FILES = """
 **Trying to download file {}/{}… Please wait**
@@ -507,26 +413,18 @@ Task : #Merge
 File : {}
     """
 
-    PLS_SEND_PASSWORD = """
-**Please send me the password 🔑**
-    """
+    PLS_SEND_PASSWORD = "**Please send me the password 🔑**"
 
-    PASSWORD_PROTECTED = """
-That archive is password protected 😡 **Don't fool me !**    
-    """
+    PASSWORD_PROTECTED = "That archive is password protected 😡 **Don't fool me !**    "
 
-    SELECT_FILES = """
-Select files to upload 👇
-    """
+    SELECT_FILES = "Select files to upload 👇"
 
     UNABLE_GATHER_FILES = """
 Unable to gather the files to upload 😥
 Choose either to upload everything, or cancel the process
     """
 
-    FATAL_ERROR = """
-Fatal error : uncorrect archive format
-    """
+    FATAL_ERROR = "Fatal error : uncorrect archive format"
 
     USER_QUERY = """
 Processing an user query…
@@ -534,9 +432,7 @@ Processing an user query…
 User ID : {}
     """
 
-    INVALID_URL = """
-That's not a valid url 💀
-    """
+    INVALID_URL = "That's not a valid url 💀"
 
     NOT_AN_ARCHIVE = """
 That's not an archive 💀
@@ -549,34 +445,22 @@ This file is NOT an archive 😐
 If you believe it's an error, send the file to **@EDM115**
     """
 
-    PROCESSING2 = """
-`Processing… ⏳`
-    """
+    PROCESSING2 = "`Processing… ⏳`"
 
-    UNZIP_HTTP = """
-Can't use unzip_http on {} : {}
-    """
+    UNZIP_HTTP = "Can't use unzip_http on {} : {}"
 
-    ERR_DL = """
-Error on download : {}
-    """
+    ERR_DL = "Error on download : {}"
 
-    CANT_DL_URL = """
-**Sorry, I can't download that URL 😭 Try to @transload it**
-    """
+    CANT_DL_URL = "**Sorry, I can't download that URL 😭 Try to @transload it**"
 
-    GIVE_ARCHIVE = """
-Give me an archive to extract 😐
-    """
+    GIVE_ARCHIVE = "Give me an archive to extract 😐"
 
     ITS_SPLITTED = """
 This file is splitted
 Use the **/merge** command
     """
 
-    SPL_RZ = """
-Splitted RAR/ZIP files can't be processed yet
-    """
+    SPL_RZ = "Splitted RAR/ZIP files can't be processed yet"
 
     TRY_DL = """
 **Trying to download… Please wait**
@@ -595,17 +479,11 @@ Current file name : `{}`
 Please send the new file name (**--INCLUDE THE FILE EXTENTION !--**)
     """
 
-    SPLITTING = """
-**Splitting {}… Please wait**
-    """
+    SPLITTING = "**Splitting {}… Please wait**"
 
-    ERR_SPLIT = """
-An error occured while splitting a file above 2 Gb 😥
-    """
+    ERR_SPLIT = "An error occured while splitting a file above 2 Gb 😥"
 
-    SEND_ALL_PARTS = """
-Trying to send all parts of {} to you… Please wait
-    """
+    SEND_ALL_PARTS = "Trying to send all parts of {} to you… Please wait"
 
     UPLOADED = """
 **Successfully uploaded ✅**
@@ -613,29 +491,17 @@ Trying to send all parts of {} to you… Please wait
 **Join @EDM115bots ❤️**
     """
 
-    NO_FILE_LEFT = """
-There's no file left to upload
-    """
+    NO_FILE_LEFT = "There's no file left to upload"
 
-    SENDING_FILE = """
-Sending that file to you… Please wait
-    """
+    SENDING_FILE = "Sending that file to you… Please wait"
 
-    SEND_ALL_FILES = """
-Trying to send all files to you… Please wait
-    """
+    SEND_ALL_FILES = "Trying to send all files to you… Please wait"
 
-    REFRESHING = """
-Refreshing… ⏳
-    """
+    REFRESHING = "Refreshing… ⏳"
 
-    CANCELLED = """
-**Cancelled successfully ✅**
-    """
+    CANCELLED = "**Cancelled successfully ✅**"
 
-    PROCESS_CANCELLED = """
-❌ Process cancelled
-    """
+    PROCESS_CANCELLED = "❌ Process cancelled"
 
 # commands.py
 
@@ -645,13 +511,9 @@ Already one process is running, don't spam 😐
 Wanna clear your files from my server ? Then just send **/clean** command
     """
 
-    SPLIT_NOPE = """
-Those type of splitted files can't be processed yet
-    """
+    SPLIT_NOPE = "Those type of splitted files can't be processed yet"
 
-    UNVALID = """
-Send a valid archive/URL
-    """
+    UNVALID = "Send a valid archive/URL"
 
     MERGE = """
 You have splitted archives to process ?
@@ -704,13 +566,9 @@ If you sent /done by mistake and haven't sent all the files yet, just ignore thi
  ↳ **Uptime :** `{}`
     """
 
-    BC_REPLY = """
-Reply to a message to broadcast it 📡
-    """
+    BC_REPLY = "Reply to a message to broadcast it 📡"
 
-    BC_START = """
-Broadcasting has started, this may take a while 😪
-    """
+    BC_START = "Broadcasting has started, this may take a while 😪"
 
     BC_DONE = """
 **Broadcast completed ✅**
@@ -720,25 +578,15 @@ Broadcasting has started, this may take a while 😪
 **Failed responses :** `{}`
     """
 
-    SEND_REPLY = """
-Reply to a message to send it 📡
-    """
+    SEND_REPLY = "Reply to a message to send it 📡"
 
-    PROVIDE_UID = """
-Please provide an user ID
-    """
+    PROVIDE_UID = "Please provide an user ID"
 
-    PROVIDE_UID2 = """
-Please provide an user ID/username
-    """
+    PROVIDE_UID2 = "Please provide an user ID/username"
 
-    SENDING = """
-Sending it, please wait… 😪
-    """
+    SENDING = "Sending it, please wait… 😪"
 
-    SEND_SUCCESS = """
-Message successfully sent to `{}`
-    """
+    SEND_SUCCESS = "Message successfully sent to `{}`"
 
     SEND_FAILED = """
 It failed 😣 Retry
@@ -746,9 +594,7 @@ It failed 😣 Retry
 If it fails again, it means that {} haven't started the bot yet (or deleted the chat), or he's private/banned/whatever
     """
 
-    REPORT_REPLY = """
-Reply to a message to report it to @EDM115
-    """
+    REPORT_REPLY = "Reply to a message to report it to @EDM115"
 
     REPORT_DONE = """
 Report sucessfully sent ! An answer will arrive soon
@@ -756,9 +602,7 @@ Report sucessfully sent ! An answer will arrive soon
 Note : if you need to reply to replies, always use that /report command (or join **@EDM115_chat**)
     """
 
-    BAN_ID = """
-Give an user id to ban 😈
-    """
+    BAN_ID = "Give an user id to ban 😈"
 
     ALREADY_BANNED = """
 {} have already been banned
@@ -766,9 +610,7 @@ Give an user id to ban 😈
 
     """
 
-    ALREADY_REMOVED = """
-{} have already been removed from the user database
-    """
+    ALREADY_REMOVED = "{} have already been removed from the user database"
 
     BANNED = """
 **Successfully banned that user ✅**
@@ -776,17 +618,15 @@ Give an user id to ban 😈
 **User ID :** `{}`
     """
 
-    UNBAN_ID = """
-Give an user id to unban 😇
-    """
+    UNBAN_ID = "Give an user id to unban 😇"
 
     ALREADY_ADDED = """
 {} is already in the user database
+
+
     """
 
-    ALREADY_UNBANNED = """
-{} have already been deleted from banned users database
-    """
+    ALREADY_UNBANNED = "{} have already been deleted from banned users database"
 
     UNBANNED = """
 **Successfully unbanned that user ✅**
@@ -794,17 +634,11 @@ Give an user id to unban 😇
 **User ID :** `{}`
     """
 
-    INFO = """
-Send a text (shorter possible) from any user/chat. And you will have infos about it 👀
-    """
+    INFO = "Send a text (shorter possible) from any user/chat. And you will have infos about it 👀"
 
-    USER = """
-This is a WIP command that would allow you to get more stats about your utilisation of me 🤓
-    """
+    USER = "This is a WIP command that would allow you to get more stats about your utilisation of me 🤓"
 
-    UNABLE_FETCH = """
-Unable to fetch
-    """
+    UNABLE_FETCH = "Unable to fetch"
 
     USER_INFO = """
 **User ID :** `{}`
@@ -814,9 +648,7 @@ Unable to fetch
 WIP
     """
 
-    UID_UNAME_INVALID = """
-Error happened, The user ID/username is probably invalid
-    """
+    UID_UNAME_INVALID = "Error happened, The user ID/username is probably invalid"
 
     USER2_INFO = """
 `{}`
@@ -824,9 +656,7 @@ Error happened, The user ID/username is probably invalid
 **Direct link to profile :** tg://user?id={}
     """
 
-    NO_THUMBS = """
-No thumbnails on the server yet
-    """
+    NO_THUMBS = "No thumbnails on the server yet"
 
     ERASE_ALL = """
 🚧 WIP 🚧
@@ -834,41 +664,25 @@ No thumbnails on the server yet
 **Cleaning…**
     """
 
-    CLEANED = """
-The whole server have been cleaned 😌
-    """
+    CLEANED = "The whole server have been cleaned 😌"
 
-    NOT_CLEANED = """
-An error happened during /cleanall 😕
-    """
+    NOT_CLEANED = "An error happened during /cleanall 😕"
 
     LOG_SENT = """
 Log file sent to {}
     """
 
-    DELETED_FOLDER = """
-Deleted {} folder successfully
-    """
+    DELETED_FOLDER = "Deleted {} folder successfully"
 
-    RESTARTED_AT = """
-**ℹ️ Bot restarted successfully at **`{}`
-    """
+    RESTARTED_AT = "**ℹ️ Bot restarted successfully at **`{}`"
 
-    RESTARTING = """
-{} : Restarting…
-    """
+    RESTARTING = "{} : Restarting…"
 
-    PULLING = """
-Pulling updates… ⌛
-    """
+    PULLING = "Pulling updates… ⌛"
 
-    PULLED = """
-✅ Pulled changes, restarting…
-    """
+    PULLED = "✅ Pulled changes, restarting…"
 
-    NO_PULL = """
-Nothing to pull 😅
-    """
+    NO_PULL = "Nothing to pull 😅"
 
     COMMANDS_LIST = """
 Here is the list of the commands you can use (only in private btw) :
@@ -914,49 +728,29 @@ Here's all the commands that only the owner (you) can use :
 
 # cloud_upload.py
 
-    ERROR_UP_BAYFILES = """
-Error happened on BayFiles upload (check connection, or retry later)
-    """
+    ERROR_UP_BAYFILES = "Error happened on BayFiles upload (check connection, or retry later)"
 
 # custom_thumbnail.py
 
-    ALBUM = """
-{} tried to save a thumbnail from an album
-    """
+    ALBUM = "{} tried to save a thumbnail from an album"
 
-    ALBUM_NOPE = """
-You can't use an album. Reply to a single picture sent as photo (not as document)
-    """
+    ALBUM_NOPE = "You can't use an album. Reply to a single picture sent as photo (not as document)"
 
-    DL_THUMB = """
-Downloading thumbnail of {}…
-    """
+    DL_THUMB = "Downloading thumbnail of {}…"
 
-    THUMB_SAVED = """
-Thumbnail saved
-    """
+    THUMB_SAVED = "Thumbnail saved"
 
-    THUMB_FAILED = """
-Failed to generate thumb
-    """
+    THUMB_FAILED = "Failed to generate thumb"
 
-    THUMB_ERROR = """
-Error happened 😕 Try again later
-    """
+    THUMB_ERROR = "Error happened 😕 Try again later"
 
-    NO_THUMB = """
-You already have no thumbnail 😅
-    """
+    NO_THUMB = "You already have no thumbnail 😅"
 
 # ext_helper.py
 
-    UP_ALL = """
-Upload all 📤
-    """
+    UP_ALL = "Upload all 📤"
 
-    CANCEL_IT = """
-❌ Cancel
-    """
+    CANCEL_IT = "❌ Cancel"
 
 # up_helper.py
 
@@ -965,17 +759,11 @@ Upload all 📤
 
     """
 
-    CANT_FIND = """
-Sorry ! I can't find that file 💀
-    """
+    CANT_FIND = "Sorry ! I can't find that file 💀"
 
-    TOO_LARGE = """
-URL file is too large to send in telegram 😥
-    """
+    TOO_LARGE = "URL file is too large to send in telegram 😥"
 
-    ARCHIVE_GONE = """
-Archive has gone from servers before uploading 😥
-    """
+    ARCHIVE_GONE = "Archive has gone from servers before uploading 😥"
 
 # List of error messages from p7zip
 ERROR_MSGS = ["Error", "Can't open as archive"]
