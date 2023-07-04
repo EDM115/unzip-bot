@@ -7,6 +7,7 @@ from config import Config
 from unzipper import LOGGER
 from unzipper.modules.bot_data import Buttons, Messages
 
+
 async def silent_del(user_id):
     try:
         thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
