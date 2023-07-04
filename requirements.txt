@@ -12,4 +12,3 @@ requests==2.31.0
 GitPython==3.1.31
 gitdb==4.0.10
 unzip-http==0.4
-asyncstdlib==3.10.8
