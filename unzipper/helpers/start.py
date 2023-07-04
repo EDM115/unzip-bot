@@ -21,9 +21,10 @@ def check_logs():
                 return False
             return True
         LOGGER.warning(Messages.NO_LOG_ID)
-        sys.exit()
+        return sys.exit()
     except:
         LOGGER.warning(Messages.ERROR_LOG_CHECK)
+        return False
 
 
 def dl_thumbs():
