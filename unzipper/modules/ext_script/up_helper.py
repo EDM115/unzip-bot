@@ -41,13 +41,13 @@ async def get_size(doc_f):
 # Send file to a user
 async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
     fsize = await get_size(doc_f)
-    if fsize == -1: # File not found
+    if fsize == -1:  # File not found
         try:
             await unzip_bot.send_message(c_id, Messages.EMPTY_FILE.format(os.path.basename(doc_f)))
         except:
             pass
         return
-    if fsize == 0: # Empty file
+    if fsize == 0:  # Empty file
         try:
             await unzip_bot.send_message(c_id, Messages.EMPTY_FILE.format(os.path.basename(doc_f)))
         except:

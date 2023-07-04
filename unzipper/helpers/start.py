@@ -61,7 +61,7 @@ async def check_boot():
         try:
             await client.send_message(Config.BOT_OWNER, Messages.BOT_RESTARTED.format(old_boot, boot))
         except:
-            pass # first start obviously
+            pass  # first start obviously
         await warn_users()
 
 
@@ -74,5 +74,5 @@ async def warn_users():
             try:
                 await client.send_message(task["user_id"], Messages.RESEND_TASK)
             except:
-                pass # user deleted chat
+                pass  # user deleted chat
         await clear_ongoing_tasks()

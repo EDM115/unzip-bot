@@ -251,7 +251,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 if message.document is None:
                     pass
                 else:
-                    if message.from_user.id == user_id: # avoid getting files from other users, tho idk why this could happen
+                    if message.from_user.id == user_id:  # avoid getting files from other users, tho idk why this could happen
                         newarray.append(message)
             length = len(newarray)
             if length == 0:

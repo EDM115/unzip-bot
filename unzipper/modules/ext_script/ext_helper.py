@@ -36,7 +36,7 @@ async def _extract_with_7z_helper(path, archive_path, password=None):
 
 
 async def _test_with_7z_helper(archive_path):
-    command = f'7z t {archive_path} -p"IAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA" -y' # skipcq: FLK-E501
+    command = f'7z t {archive_path} -p"IAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA" -y'  # skipcq: FLK-E501
     testoutput = await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
     if "Everything is Ok" in testoutput:
         return True
@@ -82,7 +82,7 @@ async def merge_files(iinput, ooutput, password=None):
 
 # Get files in directory as a list
 async def get_files(path):
-    path_list = [val for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(path)] for val in sublist] # skipcq: FLK-E501
+    path_list = [val for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(path)] for val in sublist]  # skipcq: FLK-E501
     return sorted(path_list)
 
 
