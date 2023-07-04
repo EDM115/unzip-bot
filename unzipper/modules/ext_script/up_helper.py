@@ -22,10 +22,9 @@ from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
 # To get video duration and thumbnail
 async def run_shell_cmds(command):
     run = subprocess.Popen(
-        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
+        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
-    shell_output, _ = run.communicate()
-    shell_output = shell_output.decode("utf-8").rstrip('\n')
+    shell_output = run.stdout.read()[:-1].decode("utf-8").rstrip('\n')
     run.stdout.close()
     return shell_output
 
