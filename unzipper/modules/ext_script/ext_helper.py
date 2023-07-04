@@ -126,11 +126,9 @@ async def make_keyboard_empty(user_id, chat_id, unziphttp, rzfile=None):
     i_kbd = InlineKeyboard(row_width=2)
     data = []
     if unziphttp:
-        data.append(InlineKeyboardButton(
-            Messages.UP_ALL, f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}"))
+        data.append(InlineKeyboardButton(Messages.UP_ALL, f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}"))
     else:
-        data.append(InlineKeyboardButton(
-            Messages.UP_ALL, f"ext_a|{user_id}|{chat_id}|{unziphttp}"))
+        data.append(InlineKeyboardButton(Messages.UP_ALL, f"ext_a|{user_id}|{chat_id}|{unziphttp}"))
     data.append(InlineKeyboardButton(Messages.CANCEL_IT, "cancel_dis"))
     i_kbd.add(*data)
     return i_kbd
