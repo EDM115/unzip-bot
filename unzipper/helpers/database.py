@@ -256,9 +256,12 @@ async def is_boot_different():
     different = True
     is_exist = await bot_data.find_one({"boot": True})
     is_exist_old = await bot_data.find_one({"old_boot": True})
-    if is_exist and is_exist_old:
-        if is_exist["time"] == is_exist_old["time"]:
-            different = False
+    if (
+        is_exist
+        and is_exist_old
+        and is_exist["time"] == is_exist_old["time"]
+    ):
+        different = False
     return different
 
 
