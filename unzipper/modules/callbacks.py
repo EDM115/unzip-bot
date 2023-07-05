@@ -321,9 +321,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             await del_ongoing_task(user_id)
             await del_merge_task(user_id)
             try:
-                    shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
-                except:
-                    pass
+                shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+            except:
+                pass
 
     elif query.data.startswith("merged"):
         user_id = query.from_user.id
