@@ -15,3 +15,4 @@ class Config:
     # Default chunk size (0.005 MB → 1024*6) Increase if you need faster downloads
     CHUNK_SIZE = 1024 * 1024 * 5  # 5 MB
     BOT_THUMB = f"{os.path.dirname(__file__)}/bot_thumb.jpg"
+    MAX_CONCURRENT_TASKS = 25

@@ -30,6 +30,7 @@ from unzipper.helpers.database import (
     upload_thumb,
     add_ongoing_task,
     del_ongoing_task,
+    count_ongoing_tasks,
 )
 from unzipper.helpers.unzip_help import (
     TimeFormatter,
@@ -55,7 +56,6 @@ from .ext_script.up_helper import answer_query, get_size, send_file, send_url_lo
 split_file_pattern = r"\.(?:part\d+\.rar|z\d+|r\d{2})$"
 
 
-# Function to download files from direct link using aiohttp
 async def download(url, path):
     async with ClientSession() as session, session.get(url, timeout=None, allow_redirects=True) as resp, openfile(path, mode="wb") as file:
         async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
@@ -88,6 +88,7 @@ def get_zip_http(url):
     paths = rzf.namelist()
     return rzf, paths
 
+
 async def async_generator(iterable):
     for item in iterable:
         yield item
@@ -96,6 +97,18 @@ async def async_generator(iterable):
 # Callbacks
 @Client.on_callback_query()
 async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
+    if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
+        try:
+            await query.answer(
+                text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
+            )
+        except:
+            await unzip_bot.send_message(
+                chat_id=query.from_user.id,
+                text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
+            )
+        return
+
     sent_files = 0
     global log_msg
 

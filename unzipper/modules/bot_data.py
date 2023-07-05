@@ -126,6 +126,12 @@ Bot crashed 😪
 
 # callbacks.py
 
+    MAX_TASKS = """
+Sorry, the bot is currently full 🥺
+
+{} tasks are already running, please wait few minutes
+    """
+
     CHOOSE_EXT_MODE = """
 Select the extraction mode for that {} 👀
 
