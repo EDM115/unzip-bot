@@ -247,7 +247,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     elif query.data == "merge_this":
         user_id = query.from_user.id
         m_id = query.message.id
-        await add_ongoing_task(user_id)
+        start_time = time()
+        await add_ongoing_task(user_id, start_time)
         s_id = await get_merge_task_message_id(user_id)
         merge_msg = await query.message.edit(Messages.PROCESSING_TASK)
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merge"
@@ -461,7 +462,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
 
     elif query.data.startswith("extract_file"):
         user_id = query.from_user.id
-        await add_ongoing_task(user_id)
+        start_time = time()
+        await add_ongoing_task(user_id, start_time)
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
         ext_files_dir = f"{download_path}/extracted"
         r_message = query.message.reply_to_message

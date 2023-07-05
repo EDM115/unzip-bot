@@ -9,7 +9,7 @@ from pyrogram import idle
 from config import Config
 
 from . import unzipperbot
-from .helpers.start import check_logs, dl_thumbs, set_boot_time
+from .helpers.start import check_logs, dl_thumbs, set_boot_time, removal
 from .modules.bot_data import Messages
 
 running = True
@@ -50,6 +50,7 @@ while running:
         if check_logs():
             LOGGER.info(Messages.LOG_CHECKED)
             LOGGER.info(Messages.BOT_RUNNING)
+            removal()
             idle()
         else:
             try:

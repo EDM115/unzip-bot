@@ -60,6 +60,8 @@ Bot restarted !
 Your task was stopped, kindly send it again
     """
 
+    TASK_EXPIRED = "Your task was running for more than {} minutes, it has been stopped"
+
 # database.py
 
     BANNED = """

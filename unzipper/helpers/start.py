@@ -3,13 +3,14 @@ import asyncio
 import sys
 
 from pyrogram import enums
+from time import time
 
 from config import Config
 from unzipper import LOGGER, boottime, unzipperbot as client
 from unzipper.modules.bot_data import Messages
 from unzipper.modules.callbacks import download
 
-from .database import clear_cancel_tasks, clear_merge_tasks, get_thumb_users, set_boot, get_boot, set_old_boot, get_old_boot, is_boot_different, count_ongoing_tasks, get_ongoing_tasks, clear_ongoing_tasks
+from .database import clear_cancel_tasks, clear_merge_tasks, del_ongoing_task, get_thumb_users, set_boot, get_boot, set_old_boot, get_old_boot, is_boot_different, count_ongoing_tasks, get_ongoing_tasks, clear_ongoing_tasks
 
 
 def check_logs():
@@ -77,3 +78,26 @@ async def warn_users():
             except:
                 pass  # user deleted chat
         await clear_ongoing_tasks()
+
+
+def removal():
+    loop = asyncio.get_event_loop()
+    loop.create_task(remove_expired_tasks())
+    loop.run_until_complete(asyncio.sleep(0))
+
+
+async def remove_expired_tasks():
+    while True:
+        ongoing_tasks = await get_ongoing_tasks()
+        current_time = time()
+
+        for task in ongoing_tasks:
+            start_time = task['start_time']
+            time_gap = current_time - start_time
+
+            if time_gap > Config.MAX_TASK_LENGTH:
+                user_id = task['user_id']
+                await del_ongoing_task(user_id)
+                await client.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_LENGTH // 60))
+
+        await asyncio.sleep(10 * 60)  # Sleep for 10 minutes
