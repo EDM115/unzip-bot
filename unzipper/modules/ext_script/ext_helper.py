@@ -43,7 +43,7 @@ async def _extract_with_7z_helper(path, archive_path, password=None):
 
 async def _test_with_7z_helper(archive_path):
     command = f'7z t {archive_path} -p"IAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA" -y'  # skipcq: FLK-E501
-    return True if "Everything is Ok" in await run_cmds_on_cr(__run_cmds_unzipper, cmd=command) else False 
+    return "Everything is Ok" in await run_cmds_on_cr(__run_cmds_unzipper, cmd=command) 
 
 
 # Extract with zstd (for .zst files)
