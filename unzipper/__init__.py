@@ -17,6 +17,7 @@ unzipperbot = Client(
     api_hash=Config.API_HASH,
     plugins=plugins,
     sleep_threshold=10,
+    max_concurrent_transmissions=3,
 )
 
 logging.basicConfig(
