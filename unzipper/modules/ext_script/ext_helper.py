@@ -12,17 +12,24 @@ from unzipper.modules.bot_data import Messages
 
 
 def __run_cmds_unzipper(command):
-    ext_cmd = subprocess.Popen(command["cmd"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    ext_cmd = subprocess.Popen(
+        command["cmd"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        shell=True
+    )
     ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8").rstrip('\n')
     LOGGER.info(ext_out)
-    ext_cmd.stdout.close()
+    if ext_cmd.stderr:
+        ext_cmd.stderr.close()
+    if ext_cmd.stdout:
+        ext_cmd.stdout.close()
     return ext_out
 
 
 async def run_cmds_on_cr(func, **kwargs):
     loop = get_running_loop()
-    x = await loop.run_in_executor(None, partial(func, kwargs))
-    return x
+    return await loop.run_in_executor(None, partial(func, kwargs))
 
 
 # Extract with 7z
@@ -31,23 +38,18 @@ async def _extract_with_7z_helper(path, archive_path, password=None):
         command = f'7z x -o{path} -p"{password}" {archive_path} -y'
     else:
         command = f"7z x -o{path} {archive_path} -y"
-    x = await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
-    return x
+    return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
 
 async def _test_with_7z_helper(archive_path):
     command = f'7z t {archive_path} -p"IAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA" -y'  # skipcq: FLK-E501
-    testoutput = await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
-    if "Everything is Ok" in testoutput:
-        return True
-    return False
+    return True if "Everything is Ok" in await run_cmds_on_cr(__run_cmds_unzipper, cmd=command) else False 
 
 
 # Extract with zstd (for .zst files)
 async def _extract_with_zstd(path, archive_path):
     command = f"zstd -f --output-dir-flat {path} -d {archive_path}"
-    x = await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
-    return x
+    return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
 
 # Main function to extract files
@@ -55,10 +57,8 @@ async def extr_files(path, archive_path, password=None):
     file_path = os.path.splitext(archive_path)[1]
     if file_path == ".zst":
         os.mkdir(path)
-        ex = await _extract_with_zstd(path, archive_path)
-        return ex
-    ex = await _extract_with_7z_helper(path, archive_path, password)
-    return ex
+        return await _extract_with_zstd(path, archive_path)
+    return await _extract_with_7z_helper(path, archive_path, password)
 
 
 # Split files
@@ -66,8 +66,7 @@ async def split_files(iinput, ooutput):
     command = f'7z a -tzip -mx=0 "{ooutput}" "{iinput}" -v2097152000b'
     await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
     spdir = ooutput.replace("/" + ooutput.split("/")[-1], "")
-    splittedfiles = await get_files(spdir)
-    return splittedfiles
+    return await get_files(spdir)
 
 
 # Merge files
@@ -76,8 +75,7 @@ async def merge_files(iinput, ooutput, password=None):
         command = f'7z x -o"{ooutput}" -p"{password}" "{iinput}" -y'
     else:
         command = f'7z x -o"{ooutput}" "{iinput}" -y'
-    x = await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
-    return x
+    return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
 
 # Get files in directory as a list

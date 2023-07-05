@@ -22,11 +22,38 @@ from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
 # To get video duration and thumbnail
 async def run_shell_cmds(command):
     run = subprocess.Popen(
-        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
+        command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        shell=True
     )
     shell_output = run.stdout.read()[:-1].decode("utf-8").rstrip('\n')
-    run.stdout.close()
+    LOGGER.info(shell_output)
+    if run.stderr:
+        run.stderr.close()
+    if run.stdout:
+        run.stdout.close()
     return shell_output
+
+disabled = """
+async def run_shell_command(command, timeout=None):
+    process = await asyncio.create_subprocess_shell(
+        command,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE
+    )
+
+    try:
+        stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=timeout)
+    except asyncio.TimeoutError:
+        process.kill()
+        raise Exception(f"Command '{command}' timed out after {timeout} seconds")
+
+    if process.returncode != 0:
+        raise Exception(f"Command '{command}' failed with error code {process.returncode}: {stderr.decode().strip()}")
+
+    return stdout.decode().strip()
+"""
 
 
 # Get file size
@@ -185,8 +212,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         os.remove(doc_f)
     except FloodWait as f:
         await sleep(f.value)
-        await send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split)
-        return
+        return await send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split)
     except FileNotFoundError:
         try:
             await unzip_bot.send_message(c_id, Messages.CANT_FIND.format(os.path.basename(doc_f)))

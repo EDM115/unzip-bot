@@ -696,7 +696,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     os.rename(location, renamed)
                 except OSError as e:
                     await del_ongoing_task(user_id)
-                    return LOGGER.error(e)
+                    LOGGER.error(e)
+                    return
                 newfname = renamed.split("/")[-1]
                 fsize = await get_size(renamed)
                 if fsize <= Config.TG_MAX_SIZE:
