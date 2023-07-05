@@ -1,4 +1,6 @@
 # Copyright (c) 2023 EDM115
+import asyncio
+import concurrent.futures
 import os
 import re
 import shutil
@@ -80,6 +82,11 @@ async def download_with_progress(url, path, message, unzip_bot):
 
     await session.close()
 
+
+def get_zip_http(url):
+    rzf = unzip_http.RemoteZipFile(url)
+    paths = rzf.namelist()
+    return rzf, paths
 
 async def async_generator(iterable):
     for item in iterable:
@@ -502,8 +509,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         # HTTP server must send Accept-Ranges: bytes and Content-Length in headers
                         if fext == "zip" and "accept-ranges" in unzip_resp.headers and "content-length" in unzip_resp.headers:
                             try:
-                                rzf = unzip_http.RemoteZipFile(url)
-                                paths = rzf.namelist()
+                                loop = asyncio.get_event_loop()
+                                with concurrent.futures.ThreadPoolExecutor() as pool:
+                                    rzf, paths = await loop.run_in_executor(pool, get_zip_http, url)
                                 try:
                                     i_e_buttons = await make_keyboard(
                                         paths=paths,
