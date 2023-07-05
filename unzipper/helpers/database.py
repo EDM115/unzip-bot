@@ -4,6 +4,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import requests
 
 from config import Config
+from asyncio import sleep
+from pyrogram.errors import FloodWait
 from unzipper import LOGGER, unzipperbot as Client
 from unzipper.modules.bot_data import Messages
 
@@ -112,11 +114,19 @@ async def check_user(message):
             username = " "
         if firstname == " " and lastname == " " and username == " ":
             uname = message.from_user.mention
-            await Client.send_message(
-                chat_id=Config.LOGS_CHANNEL,
-                text=Messages.NEW_USER_BAD.format(uname),
-                disable_web_page_preview=False,
-            )
+            try:
+                await Client.send_message(
+                    chat_id=Config.LOGS_CHANNEL,
+                    text=Messages.NEW_USER_BAD.format(uname),
+                    disable_web_page_preview=False,
+                )
+            except FloodWait as f:
+                await sleep(f.value)
+                await Client.send_message(
+                    chat_id=Config.LOGS_CHANNEL,
+                    text=Messages.NEW_USER_BAD.format(uname),
+                    disable_web_page_preview=False,
+                )
         else:
             if firstname is None:
                 firstname = " "
@@ -126,11 +136,19 @@ async def check_user(message):
                 username = " "
             uname = firstname + " " + lastname
             umention = " | @" + username
-            await Client.send_message(
-                chat_id=Config.LOGS_CHANNEL,
-                text=Messages.NEW_USER.format(uname, umention, message.from_user.id, message.from_user.id, message.from_user.id),
-                disable_web_page_preview=False,
-            )
+            try:
+                await Client.send_message(
+                    chat_id=Config.LOGS_CHANNEL,
+                    text=Messages.NEW_USER.format(uname, umention, message.from_user.id, message.from_user.id, message.from_user.id),
+                    disable_web_page_preview=False,
+                )
+            except FloodWait as f:
+                await sleep(f.value)
+                await Client.send_message(
+                    chat_id=Config.LOGS_CHANNEL,
+                    text=Messages.NEW_USER.format(uname, umention, message.from_user.id, message.from_user.id, message.from_user.id),
+                    disable_web_page_preview=False,
+                )
     await message.continue_propagation()
 
 
@@ -222,6 +240,7 @@ async def upload_thumb(image):
             )
             response.raise_for_status()  # Raise an exception if the request was not successful
             request = response.json()[0]
+            LOGGER.info(response.json())
             return f"https://telegra.ph{request['src']}"
     except requests.exceptions.RequestException as err:
         LOGGER.warning(err)

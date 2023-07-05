@@ -44,34 +44,61 @@ https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){
 @Client.on_message(filters.private)
 async def _(_, message: Message):
     await check_user(message)
+    if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
+        try:
+            await message.reply(
+                text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
+            )
+        except:
+            await _.send_message(
+                chat_id=message.from_user.id,
+                text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
+            )
+        return
 
 
 @Client.on_message(filters.command("start"))
 async def start_bot(_, message: Message):
-    await message.reply_text(
-        text=Messages.START_TEXT.format(message.from_user.mention),
-        reply_markup=Buttons.START_BUTTON,
-        disable_web_page_preview=True,
-    )
+    try:
+        await message.reply_text(
+            text=Messages.START_TEXT.format(message.from_user.mention),
+            reply_markup=Buttons.START_BUTTON,
+            disable_web_page_preview=True,
+        )
+    except FloodWait as f:
+        await sleep(f.value)
+        await start_bot(_, message)
 
 
 @Client.on_message(filters.private & filters.command("clean"))
 async def clean_my_files(_, message: Message):
-    await message.reply_text(text=Messages.CLEAN_TXT, reply_markup=Buttons.CLN_BTNS)
+    try:
+        await message.reply_text(text=Messages.CLEAN_TXT, reply_markup=Buttons.CLN_BTNS)
+    except FloodWait as f:
+        await sleep(f.value)
+        await clean_my_files(_, message)
 
 
 @Client.on_message(filters.command("help"))
 async def help_me(_, message: Message):
-    await message.reply_text(text=Messages.HELP_TXT, reply_markup=Buttons.ME_GOIN_HOME)
+    try:
+        await message.reply_text(text=Messages.HELP_TXT, reply_markup=Buttons.ME_GOIN_HOME)
+    except FloodWait as f:
+        await sleep(f.value)
+        await help_me(_, message)
 
 
 @Client.on_message(filters.command("about"))
 async def about_me(_, message: Message):
-    await message.reply_text(
-        text=Messages.ABOUT_TXT,
-        reply_markup=Buttons.ME_GOIN_HOME,
-        disable_web_page_preview=True,
-    )
+    try:
+        await message.reply_text(
+            text=Messages.ABOUT_TXT,
+            reply_markup=Buttons.ME_GOIN_HOME,
+            disable_web_page_preview=True,
+        )
+    except FloodWait as f:
+        await sleep(f.value)
+        await about_me(_, message)
 
 
 @Client.on_message(
@@ -79,37 +106,41 @@ async def about_me(_, message: Message):
     | filters.regex(https_url_regex)
 )
 async def extract_archive(_, message: Message):
-    if message.chat.type != enums.ChatType.PRIVATE:
-        return
-    unzip_msg = await message.reply(Messages.PROCESSING2, reply_to_message_id=message.id)
-    user_id = message.from_user.id
-    download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
-    if os.path.isdir(download_path):
-        await unzip_msg.edit(Messages.PROCESS_RUNNING)
-        return
-    if await get_merge_task(user_id):
-        if message.document and re.search(r"\.(?:part\d+\.rar|z\d+|r\d{2})$", message.document.file_name):
-            await del_merge_task(user_id)
-            await del_ongoing_task(user_id)
-            await unzip_msg.edit(Messages.SPLIT_NOPE)
+    try:
+        if message.chat.type != enums.ChatType.PRIVATE:
             return
-        await unzip_msg.delete()
-        return
-    if message.text and (re.match(https_url_regex, message.text)):
-        await unzip_msg.edit(
-            text=Messages.CHOOSE_EXT_MODE.format("URL", "🔗"),
-            reply_markup=Buttons.CHOOSE_E_U__BTNS,
-        )
-    elif message.document:
-        if re.search(r"\.\d{3}$", message.document.file_name):
-            await unzip_msg.edit(Messages.ITS_SPLITTED)
-        else:
+        unzip_msg = await message.reply(Messages.PROCESSING2, reply_to_message_id=message.id)
+        user_id = message.from_user.id
+        download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
+        if os.path.isdir(download_path):
+            await unzip_msg.edit(Messages.PROCESS_RUNNING)
+            return
+        if await get_merge_task(user_id):
+            if message.document and re.search(r"\.(?:part\d+\.rar|z\d+|r\d{2})$", message.document.file_name):
+                await del_merge_task(user_id)
+                await del_ongoing_task(user_id)
+                await unzip_msg.edit(Messages.SPLIT_NOPE)
+                return
+            await unzip_msg.delete()
+            return
+        if message.text and (re.match(https_url_regex, message.text)):
             await unzip_msg.edit(
-                text=Messages.CHOOSE_EXT_MODE.format("file", "🗂️"),
-                reply_markup=Buttons.CHOOSE_E_F__BTNS,
+                text=Messages.CHOOSE_EXT_MODE.format("URL", "🔗"),
+                reply_markup=Buttons.CHOOSE_E_U__BTNS,
             )
-    else:
-        await unzip_msg.edit(Messages.UNVALID)
+        elif message.document:
+            if re.search(r"\.\d{3}$", message.document.file_name):
+                await unzip_msg.edit(Messages.ITS_SPLITTED)
+            else:
+                await unzip_msg.edit(
+                    text=Messages.CHOOSE_EXT_MODE.format("file", "🗂️"),
+                    reply_markup=Buttons.CHOOSE_E_F__BTNS,
+                )
+        else:
+            await unzip_msg.edit(Messages.UNVALID)
+    except FloodWait as f:
+        await sleep(f.value)
+        await extract_archive(_, message)
 
 
 @Client.on_message(filters.private & filters.command("cancel"))
@@ -124,25 +155,37 @@ async def cancel_task_by_user(_, message):
 
 @Client.on_message(filters.private & filters.command("merge"))
 async def merging(_, message: Message):
-    merge_msg = await message.reply(Messages.MERGE)
-    await add_merge_task(message.from_user.id, merge_msg.id)
+    try:
+        merge_msg = await message.reply(Messages.MERGE)
+        await add_merge_task(message.from_user.id, merge_msg.id)
+    except FloodWait as f:
+        await sleep(f.value)
+        await merging(_, message)
 
 
 @Client.on_message(filters.private & filters.command("done"))
 async def done_merge(_, message: Message):
-    await message.reply(
-        Messages.DONE,
-        reply_markup=Buttons.MERGE_THEM_ALL
-    )
+    try:
+        await message.reply(
+            Messages.DONE,
+            reply_markup=Buttons.MERGE_THEM_ALL
+        )
+    except FloodWait as f:
+        await sleep(f.value)
+        await done_merge(_, message)
 
 
 @Client.on_message(filters.private & filters.command("mode"))
 async def set_mode_for_user(_, message: Message):
-    upload_mode = await get_upload_mode(message.from_user.id)
-    await message.reply(
-        text=Messages.SELECT_UPLOAD_MODE_TXT.format(upload_mode),
-        reply_markup=Buttons.SET_UPLOAD_MODE_BUTTONS,
-    )
+    try:
+        upload_mode = await get_upload_mode(message.from_user.id)
+        await message.reply(
+            text=Messages.SELECT_UPLOAD_MODE_TXT.format(upload_mode),
+            reply_markup=Buttons.SET_UPLOAD_MODE_BUTTONS,
+        )
+    except FloodWait as f:
+        await sleep(f.value)
+        await set_mode_for_user(_, message)
 
 
 async def get_stats(id):
@@ -192,9 +235,13 @@ async def get_stats(id):
 
 @Client.on_message(filters.command("stats"))
 async def send_stats(_, message: Message):
-    stats_msg = await message.reply(Messages.PROCESSING2)
-    stats_txt = await get_stats(message.from_user.id)
-    await stats_msg.edit(text=stats_txt, reply_markup=Buttons.REFRESH_BUTTON)
+    try:
+        stats_msg = await message.reply(Messages.PROCESSING2)
+        stats_txt = await get_stats(message.from_user.id)
+        await stats_msg.edit(text=stats_txt, reply_markup=Buttons.REFRESH_BUTTON)
+    except FloodWait as f:
+        await sleep(f.value)
+        await send_stats(_, message)
 
 
 async def _do_broadcast(message, user):
@@ -226,7 +273,15 @@ async def broadcast_this(_, message: Message):
             success_no += 1
         else:
             failed_no += 1
-    await bc_msg.edit(Messages.BC_DONE.format(
+    try:
+        await bc_msg.edit(Messages.BC_DONE.format(
+            total_users,
+            success_no,
+            failed_no,
+        ))
+    except FloodWait as f:
+        await sleep(f.value)
+        await bc_msg.edit(Messages.BC_DONE.format(
             total_users,
             success_no,
             failed_no,
@@ -380,8 +435,15 @@ async def get_all_thumbs(_, message: Message):
             )
         except FloodWait as f:
             await sleep(f.value)
+            await unzipperbot.send_document(
+                chat_id=message.chat.id,
+                document=doc_f,
+                file_name=doc_f.split("/")[-1],
+                reply_to_message_id=message.id,
+                caption=Messages.EXT_CAPTION.format(doc_f),
+            )
         except RPCError as e:
-            await message.reply_text(e, quote=True)
+            LOGGER.error(e)
 
 
 @Client.on_message(
@@ -427,6 +489,11 @@ async def send_logs(user_id):
             LOGGER.info(Messages.LOG_SENT.format(user_id))
         except FloodWait as f:
             await sleep(f.value)
+            await unzipperbot.send_document(
+                chat_id=user_id,
+                document=doc_f,
+                file_name=doc_f.name,
+            )
         except RPCError as e:
             await unzipperbot.send_message(chat_id=user_id, text=e)
 
@@ -507,7 +574,7 @@ async def getadmin_cmds(_, message):
     )
 
 
-""" async def exec_message_f(client, message):
+disabled = """ async def exec_message_f(client, message):
     if message.from_user.id in AUTH_CHANNEL:
         DELAY_BETWEEN_EDITS = 0.3
         PROCESS_RUN_TIME = 100

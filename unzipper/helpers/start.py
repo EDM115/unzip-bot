@@ -3,6 +3,7 @@ import asyncio
 import sys
 
 from pyrogram import enums
+from pyrogram.errors import FloodWait
 from time import time
 
 from config import Config
@@ -74,6 +75,9 @@ async def warn_users():
         tasks = await get_ongoing_tasks()
         for task in tasks:
             try:
+                await client.send_message(task["user_id"], Messages.RESEND_TASK)
+            except FloodWait as f:
+                await asyncio.sleep(f.value)
                 await client.send_message(task["user_id"], Messages.RESEND_TASK)
             except:
                 pass  # user deleted chat

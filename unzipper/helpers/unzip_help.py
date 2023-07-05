@@ -1,8 +1,10 @@
 # Copyright (c) 2023 EDM115
 import math
 import time
-from unzipper.helpers.database import del_cancel_task, get_cancel_task
 
+from asyncio import sleep
+from pyrogram.errors import FloodWait
+from unzipper.helpers.database import del_cancel_task, get_cancel_task
 from unzipper.modules.bot_data import Buttons, Messages
 
 
@@ -15,8 +17,14 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
         now = time.time()
         diff = now - start
         if total == 0:
+            tmp = Messages.UNKNOWN_SIZE
             try:
-                tmp = Messages.UNKNOWN_SIZE
+                await message.edit(
+                    text=Messages.PROGRESS_MSG.format(ud_type, tmp),
+                    reply_markup=Buttons.I_PREFER_STOP,
+                )
+            except FloodWait as f:
+                await sleep(f.value)
                 await message.edit(
                     text=Messages.PROGRESS_MSG.format(ud_type, tmp),
                     reply_markup=Buttons.I_PREFER_STOP,
@@ -34,6 +42,12 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
             progress = f'[{"".join(["⬢" for i in range(math.floor(percentage / 5))])}{"".join(["⬡" for i in range(20 - math.floor(percentage / 5))])}] \n{Messages.PROCESSING} : `{round(percentage, 2)}%`\n'
             tmp = progress + f'`{humanbytes(current)} of {humanbytes(total)}`\n{Messages.SPEED} `{humanbytes(speed)}/s`\n{Messages.ETA} `{estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"}`\n'
             try:
+                await message.edit(
+                    text=Messages.PROGRESS_MSG.format(ud_type, tmp),
+                    reply_markup=Buttons.I_PREFER_STOP,
+                )
+            except FloodWait as f:
+                await sleep(f.value)
                 await message.edit(
                     text=Messages.PROGRESS_MSG.format(ud_type, tmp),
                     reply_markup=Buttons.I_PREFER_STOP,
