@@ -261,6 +261,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await answer_query(query, Messages.ERROR_TXT.format(e))
                 await del_ongoing_task(user_id)
                 await del_merge_task(user_id)
+                try:
+                    shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                except:
+                    pass
                 return
             length = len(messages_array)
             if not os.path.isdir(download_path):
@@ -279,6 +283,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await answer_query(query, Messages.NO_MERGE_TASK)
                 await del_ongoing_task(user_id)
                 await del_merge_task(user_id)
+                try:
+                    shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                except:
+                    pass
                 return
             i = 0
             async_newarray = async_generator(newarray)
@@ -312,6 +320,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             await answer_query(query, Messages.NO_MERGE_TASK)
             await del_ongoing_task(user_id)
             await del_merge_task(user_id)
+            try:
+                    shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                except:
+                    pass
 
     elif query.data.startswith("merged"):
         user_id = query.from_user.id
@@ -325,6 +337,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             await answer_query(query, Messages.NO_MERGE_TASK)
             await del_ongoing_task(user_id)
             await del_merge_task(user_id)
+            try:
+                shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+            except:
+                pass
             return
         splitted_data = query.data.split("|")
         log_msg = await unzip_bot.send_message(
@@ -513,6 +529,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         ):
                             await del_ongoing_task(user_id)
                             await query.message.edit(Messages.DEF_NOT_AN_ARCHIVE)
+                            try:
+                                shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                            except:
+                                pass
                             return
                         archive = f"{download_path}/archive_from_{user_id}{fname}"
                         location = archive
@@ -599,6 +619,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     else:
                         await del_ongoing_task(user_id)
                         await query.message.edit(Messages.CANT_DL_URL)
+                        try:
+                            shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                        except:
+                            pass
                         return
 
             elif splitted_data[1] == "tg_file":

@@ -1,5 +1,6 @@
 # Copyright (c) 2023 EDM115
 import asyncio
+import shutil
 import sys
 
 from pyrogram import enums
@@ -102,6 +103,10 @@ async def remove_expired_tasks():
             if time_gap > Config.MAX_TASK_LENGTH:
                 user_id = task['user_id']
                 await del_ongoing_task(user_id)
+                try:
+                    shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                except:
+                    pass
                 await client.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_LENGTH // 60))
 
         await asyncio.sleep(10 * 60)  # Sleep for 10 minutes
