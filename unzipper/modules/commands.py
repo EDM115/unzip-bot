@@ -26,6 +26,7 @@ from unzipper.helpers.database import (
     del_ongoing_task,
     del_user,
     get_merge_task,
+    get_ongoing_tasks,
     get_upload_mode,
     get_uploaded,
     get_users_list,
@@ -44,17 +45,20 @@ https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){
 @Client.on_message(filters.private)
 async def _(_, message: Message):
     await check_user(message)
-    if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
-        try:
-            await message.reply(
-                text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
-            )
-        except:
-            await _.send_message(
-                chat_id=message.from_user.id,
-                text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
-            )
-        return
+    uid = message.from_user.id
+    if (await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS) and (uid != Config.BOT_OWNER):
+        ogtasks = await get_ongoing_tasks()
+        if not any(uid == task["user_id"] for task in ogtasks):
+            try:
+                await message.reply(
+                    text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
+                )
+            except:
+                await _.send_message(
+                    chat_id=uid,
+                    text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
+                )
+            return
 
 
 @Client.on_message(filters.command("start"))

@@ -325,8 +325,8 @@ async def count_ongoing_tasks():
     return tasks
 
 
-async def add_ongoing_task(user_id, start_time):
-    await ongoing_tasks.insert_one({"user_id": user_id, "start_time": start_time})
+async def add_ongoing_task(user_id, start_time, type):
+    await ongoing_tasks.insert_one({"user_id": user_id, "start_time": start_time, "type": type})
 
 
 async def del_ongoing_task(user_id):

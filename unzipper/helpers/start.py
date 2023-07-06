@@ -97,16 +97,27 @@ async def remove_expired_tasks():
         current_time = time()
 
         for task in ongoing_tasks:
-            start_time = task['start_time']
+            start_time = task["start_time"]
+            type = task["type"]
             time_gap = current_time - start_time
 
-            if time_gap > Config.MAX_TASK_LENGTH:
-                user_id = task['user_id']
-                await del_ongoing_task(user_id)
-                try:
-                    shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
-                except:
-                    pass
-                await client.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_LENGTH // 60))
+            if type == "extract":
+                if time_gap > Config.MAX_TASK_DURATION_EXTRACT:
+                    user_id = task["user_id"]
+                    await del_ongoing_task(user_id)
+                    try:
+                        shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                    except:
+                        pass
+                    await client.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_EXTRACT // 60))
+            elif type == "merge":
+                if time_gap > Config.MAX_TASK_DURATION_MERGE:
+                    user_id = task["user_id"]
+                    await del_ongoing_task(user_id)
+                    try:
+                        shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                    except:
+                        pass
+                    await client.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_MERGE // 60))
 
         await asyncio.sleep(10 * 60)  # Sleep for 10 minutes

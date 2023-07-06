@@ -24,6 +24,7 @@ from unzipper.helpers.database import (
     del_thumb_db,
     get_cancel_task,
     get_merge_task_message_id,
+    get_ongoing_tasks,
     set_upload_mode,
     update_thumb,
     update_uploaded,
@@ -97,17 +98,15 @@ async def async_generator(iterable):
 # Callbacks
 @Client.on_callback_query()
 async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
-    if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
-        try:
-            await query.answer(
-                text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
-            )
-        except:
+    uid = query.from_user.id
+    if (await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS) and (uid != Config.BOT_OWNER):
+        ogtasks = await get_ongoing_tasks()
+        if not any(ogtask["user_id"] == uid for ogtask in ogtasks):
             await unzip_bot.send_message(
-                chat_id=query.from_user.id,
+                chat_id=uid,
                 text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
             )
-        return
+            return
 
     sent_files = 0
     global log_msg
@@ -248,7 +247,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         user_id = query.from_user.id
         m_id = query.message.id
         start_time = time()
-        await add_ongoing_task(user_id, start_time)
+        await add_ongoing_task(user_id, start_time, "merge")
         s_id = await get_merge_task_message_id(user_id)
         merge_msg = await query.message.edit(Messages.PROCESSING_TASK)
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merge"
@@ -479,7 +478,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     elif query.data.startswith("extract_file"):
         user_id = query.from_user.id
         start_time = time()
-        await add_ongoing_task(user_id, start_time)
+        await add_ongoing_task(user_id, start_time, "extract")
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
         ext_files_dir = f"{download_path}/extracted"
         r_message = query.message.reply_to_message
