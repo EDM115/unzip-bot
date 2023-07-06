@@ -53,6 +53,7 @@ from .ext_script.ext_helper import (
     split_files,
 )
 from .ext_script.up_helper import answer_query, get_size, send_file, send_url_logs
+from .ext_script.url_parser import gdrive_dl
 
 split_file_pattern = r"\.(?:part\d+\.rar|z\d+|r\d{2})$"
 
@@ -502,6 +503,12 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await query.message.edit(Messages.INVALID_URL)
                     return
                 s = ClientSession()
+                if "drive.google.com" in url:
+                    url = await gdrive_dl(url)
+                    if url is None:
+                        await del_ongoing_task(user_id)
+                        await query.message.edit(Messages.INVALID_URL)
+                        return
                 async with s as session:
                     # Get the file size
                     unzip_head = await session.head(url, allow_redirects=True)
