@@ -15,24 +15,24 @@ async def get_gdrive_id(gdrive_url):
             file_id = gdrive_url[start_index:end_index]
             return file_id
 
-        elif "/open?id=" in gdrive_url:
+        if "/open?id=" in gdrive_url:
             start_index = gdrive_url.find("/open?id=") + len("/open?id=")
             file_id = gdrive_url[start_index:]
             return file_id
 
-        elif "/file/d/" in gdrive_url and "/view" in gdrive_url:
+        if "/file/d/" in gdrive_url and "/view" in gdrive_url:
             start_index = gdrive_url.find("/file/d/") + len("/file/d/")
             end_index = gdrive_url.find("/view", start_index)
             file_id = gdrive_url[start_index:end_index]
             return file_id
 
-        elif "/uc?id=" in gdrive_url:
+        if "/uc?id=" in gdrive_url:
             start_index = gdrive_url.find("/uc?id=") + len("/uc?id=")
             end_index = gdrive_url.find("&", start_index)
             file_id = gdrive_url[start_index:end_index]
             return file_id
         
-        elif "/uc?export=download&id=" in gdrive_url:
+        if "/uc?export=download&id=" in gdrive_url:
             start_index = gdrive_url.find("/uc?export=download&id=") + len("/uc?export=download&id=")
             end_index = gdrive_url.find("&", start_index)
             file_id = gdrive_url[start_index:end_index]
