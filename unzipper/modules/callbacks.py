@@ -531,7 +531,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         fname = unquote(os.path.splitext(url)[1])
                         fext = fname.split(".")[-1].casefold()
                         if (
-                            splitted_data[2] != "thumb"
+                            splitted_data[2] not in ["thumb", "thumbrename"]
                             and fext not in extentions_list["archive"]
                         ):
                             await del_ongoing_task(user_id)
@@ -648,7 +648,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 ))
                 # Checks if it's actually an archive
                 # fext = (pathlib.Path(fname).suffix).casefold()
-                if splitted_data[2] != "thumb":
+                if splitted_data[2] not in ["thumb", "thumbrename"]:
                     fext = fname.split(".")[-1].casefold()
                     if (
                         fnmatch(fext, extentions_list["split"][0])
