@@ -775,6 +775,11 @@ Here's all the commands that only the owner (you) can use :
 
     EMPTY_FILE = "The file {} is empty/unreachable"
 
+    CHECK_MSG = """
+**Verifying the file… Please wait**
+
+    """
+
 
 # List of error messages from p7zip
 ERROR_MSGS = ["Error", "Can't open as archive"]

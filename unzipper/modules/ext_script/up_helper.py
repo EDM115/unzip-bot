@@ -13,7 +13,7 @@ from config import Config
 from unzipper import LOGGER
 from unzipper import unzipperbot
 from unzipper.helpers.database import get_upload_mode
-from unzipper.helpers.unzip_help import extentions_list
+from unzipper.helpers.unzip_help import extentions_list, progress_urls
 from unzipper.helpers.unzip_help import progress_for_pyrogram
 from unzipper.modules.bot_data import Messages
 from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
@@ -224,12 +224,13 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         shutil.rmtree(full_path)
 
 
-async def send_url_logs(unzip_bot, c_id, doc_f, source):
+async def send_url_logs(unzip_bot, c_id, doc_f, source, message):
     try:
         u_file_size = os.stat(doc_f).st_size
         if Config.TG_MAX_SIZE < int(u_file_size):
             await unzip_bot.send_message(
-                chat_id=c_id, text=Messages.TOO_LARGE
+                chat_id=c_id,
+                text=Messages.TOO_LARGE
             )
             return
         fname = os.path.basename(doc_f)
@@ -237,10 +238,16 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source):
             chat_id=c_id,
             document=doc_f,
             caption=Messages.LOG_CAPTION.format(fname, source),
+            progress=progress_urls,
+            progress_args=(
+                Messages.CHECK_MSG,
+                message,
+                time(),
+            ),
         )
     except FloodWait as f:
         await sleep(f.value)
-        return send_url_logs(unzip_bot, c_id, doc_f, source)
+        return send_url_logs(unzip_bot, c_id, doc_f, source, message)
     except FileNotFoundError:
         await unzip_bot.send_message(
             chat_id=Config.LOGS_CHANNEL,

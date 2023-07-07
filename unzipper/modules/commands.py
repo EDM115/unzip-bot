@@ -122,11 +122,6 @@ async def extract_archive(_, message: Message):
             await unzip_msg.edit(Messages.PROCESS_RUNNING)
             return
         if await get_merge_task(user_id):
-            if message.document and re.search(r"\.(?:part\d+\.rar|z\d+|r\d{2})$", message.document.file_name):
-                await del_merge_task(user_id)
-                await del_ongoing_task(user_id)
-                await unzip_msg.edit(Messages.SPLIT_NOPE)
-                return
             await unzip_msg.delete()
             return
         if message.text and (re.match(https_url_regex, message.text)):
@@ -135,13 +130,10 @@ async def extract_archive(_, message: Message):
                 reply_markup=Buttons.CHOOSE_E_U__BTNS,
             )
         elif message.document:
-            if re.search(r"\.\d{3}$", message.document.file_name):
-                await unzip_msg.edit(Messages.ITS_SPLITTED)
-            else:
-                await unzip_msg.edit(
-                    text=Messages.CHOOSE_EXT_MODE.format("file", "🗂️"),
-                    reply_markup=Buttons.CHOOSE_E_F__BTNS,
-                )
+            await unzip_msg.edit(
+                text=Messages.CHOOSE_EXT_MODE.format("file", "🗂️"),
+                reply_markup=Buttons.CHOOSE_E_F__BTNS,
+            )
         else:
             await unzip_msg.edit(Messages.UNVALID)
     except FloodWait as f:
