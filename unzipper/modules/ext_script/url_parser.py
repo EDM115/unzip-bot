@@ -31,7 +31,7 @@ async def get_gdrive_id(gdrive_url):
             end_index = gdrive_url.find("&", start_index)
             file_id = gdrive_url[start_index:end_index]
             return file_id
-        
+
         elif "/uc?export=download&id=" in gdrive_url:
             start_index = gdrive_url.find("/uc?export=download&id=") + len("/uc?export=download&id=")
             end_index = gdrive_url.find("&", start_index)
@@ -96,7 +96,7 @@ async def anonfiles_dl(url):
     except Exception as e:
         LOGGER.info(e)
         return None
-    
+
 
 async def krakenfiles_dl(url):
     try:
