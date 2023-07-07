@@ -46,7 +46,9 @@ https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){
 async def _(_, message: Message):
     await check_user(message)
     uid = message.from_user.id
-    if (await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS) and (uid != Config.BOT_OWNER):
+    if uid == Config.BOT_OWNER:
+        return
+    if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
         ogtasks = await get_ongoing_tasks()
         if not any(uid == task["user_id"] for task in ogtasks):
             try:
@@ -54,7 +56,7 @@ async def _(_, message: Message):
                     text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
                 )
             except:
-                await _.send_message(
+                await unzipperbot.send_message(
                     chat_id=uid,
                     text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
                 )
