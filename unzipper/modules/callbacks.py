@@ -100,16 +100,15 @@ async def async_generator(iterable):
 @Client.on_callback_query()
 async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     uid = query.from_user.id
-    if uid == Config.BOT_OWNER:
-        return
-    if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
-        ogtasks = await get_ongoing_tasks()
-        if not any(ogtask["user_id"] == uid for ogtask in ogtasks):
-            await unzip_bot.send_message(
-                chat_id=uid,
-                text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
-            )
-            return
+    if uid != Config.BOT_OWNER:
+        if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
+            ogtasks = await get_ongoing_tasks()
+            if not any(ogtask["user_id"] == uid for ogtask in ogtasks):
+                await unzip_bot.send_message(
+                    chat_id=uid,
+                    text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
+                )
+                return
 
     sent_files = 0
     global log_msg
