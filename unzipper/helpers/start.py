@@ -120,4 +120,4 @@ async def remove_expired_tasks():
                         pass
                     await client.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_MERGE // 60))
 
-        await asyncio.sleep(10 * 60)  # Sleep for 10 minutes
+        await asyncio.sleep(5 * 60)  # Sleep for 5 minutes
