@@ -45,7 +45,7 @@ while running:
             chat_id=Config.LOGS_CHANNEL, text=Messages.START_TXT.format(starttime)
         )
         set_boot_time()
-        dl_thumbs()
+        #dl_thumbs()
         LOGGER.info(Messages.CHECK_LOG)
         if check_logs():
             LOGGER.info(Messages.LOG_CHECKED)
