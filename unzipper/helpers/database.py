@@ -243,8 +243,8 @@ async def upload_thumb(image):
             LOGGER.info(response.json())
             return f"https://telegra.ph{request['src']}"
     except requests.exceptions.RequestException as err:
-        LOGGER.warning(err)
-        return f"Error occurred during telegra.ph upload : {err}"
+        LOGGER.warning(f"Error occurred during telegra.ph upload : {err}")
+        return -1
 
 
 async def get_thumb_users():

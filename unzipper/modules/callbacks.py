@@ -9,7 +9,7 @@ from time import time
 from urllib.parse import unquote
 
 from aiofiles import open as openfile
-from aiohttp import ClientSession
+from aiohttp import ClientSession, InvalidURL
 from pyrogram import Client
 from pyrogram.errors import ReplyMarkupTooLong
 from pyrogram.types import CallbackQuery
@@ -59,10 +59,15 @@ split_file_pattern = r"\.(?:part\d+\.rar|z\d+|r\d{2})$"
 
 
 async def download(url, path):
-    async with ClientSession() as session, session.get(url, timeout=None, allow_redirects=True) as resp, openfile(path, mode="wb") as file:
-        async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
-            await file.write(chunk)
-    await session.close()
+    try:
+        async with ClientSession() as session, session.get(url, timeout=None, allow_redirects=True) as resp, openfile(path, mode="wb") as file:
+            async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
+                await file.write(chunk)
+        await session.close()
+    except InvalidURL:
+        LOGGER.error(Messages.INVALID_URL)
+    except:
+        LOGGER.error(Messages.ERR_DL.format(url))
 
 
 async def download_with_progress(url, path, message, unzip_bot):
@@ -201,7 +206,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         try:
             thumb_url = await upload_thumb(thumb_location)
             try:
-                await update_thumb(query.from_user.id, thumb_url, force=True)
+                if thumb_url != -1 and re.match(https_url_regex, thumb_url):
+                    await update_thumb(query.from_user.id, thumb_url, force=True)
             except:
                 LOGGER.warning(Messages.ERROR_THUMB_UPDATE)
         except:
