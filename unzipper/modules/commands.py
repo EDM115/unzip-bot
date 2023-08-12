@@ -261,16 +261,23 @@ async def broadcast_this(_, message: Message):
         await bc_msg.edit(Messages.BC_REPLY)
         return
     users_list = await get_users_list()
-    await bc_msg.edit(Messages.BC_START)
     success_no = 0
     failed_no = 0
+    done_no = 0
     total_users = await count_users()
+    await bc_msg.edit(Messages.BC_START.format(done_no, total_users))
     for user in users_list:
         b_cast = await _do_broadcast(message=r_msg, user=user["user_id"])
         if b_cast == 200:
             success_no += 1
         else:
             failed_no += 1
+        done_no += 1
+        if done_no % 10 == 0 or done_no == total_users:
+            try:
+                await bc_msg.edit(Messages.BC_START.format(done_no, total_users))
+            except FloodWait:
+                pass
     try:
         await bc_msg.edit(Messages.BC_DONE.format(
             total_users,

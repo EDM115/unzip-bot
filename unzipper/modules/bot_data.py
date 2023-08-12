@@ -578,7 +578,11 @@ If you sent /done by mistake and haven't sent all the files yet, just ignore thi
 
     BC_REPLY = "Reply to a message to broadcast it 📡"
 
-    BC_START = "Broadcasting has started, this may take a while 😪"
+    BC_START = """
+Broadcasting has started, this may take a while 😪
+
+Users : {}/{}
+    """
 
     BC_DONE = """
 **Broadcast completed ✅**
