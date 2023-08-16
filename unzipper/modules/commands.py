@@ -251,6 +251,7 @@ async def _do_broadcast(message, user):
         return _do_broadcast(message, user)
     except Exception:
         await del_user(user)
+        return 400
 
 
 @Client.on_message(filters.command("broadcast") & filters.user(Config.BOT_OWNER))
