@@ -22,8 +22,6 @@ from unzipper.helpers.database import (
     count_banned_users,
     count_users,
     del_banned_user,
-    del_merge_task,
-    del_ongoing_task,
     del_user,
     get_merge_task,
     get_ongoing_tasks,
