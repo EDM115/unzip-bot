@@ -95,7 +95,6 @@ async def remove_expired_tasks(firststart=False):
     value = firststart
     while True:
         ongoing_tasks = await get_ongoing_tasks()
-        current_time = time()
 
         for task in ongoing_tasks:
             if value:
@@ -106,6 +105,7 @@ async def remove_expired_tasks(firststart=False):
                 except:
                     pass
             else:
+                current_time = time()
                 start_time = task["start_time"]
                 type = task["type"]
                 time_gap = current_time - start_time

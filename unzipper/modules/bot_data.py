@@ -682,6 +682,10 @@ WIP
 
     NOT_CLEANED = "An error happened during /cleanall 😕"
 
+    ERASE_TASKS = "Deleting {} tasks… Please wait"
+
+    ERASE_TASKS_SUCCESS = "Successfully deleted {} tasks ✅"
+
     LOG_SENT = "Log file sent to {}"
 
     DELETED_FOLDER = "Deleted {} folder successfully"

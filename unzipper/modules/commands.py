@@ -22,6 +22,7 @@ from unzipper.helpers.database import (
     count_banned_users,
     count_users,
     del_banned_user,
+    del_ongoing_task,
     del_user,
     get_merge_task,
     get_ongoing_tasks,
@@ -480,6 +481,25 @@ async def del_everything(_, message: Message):
         os.mkdir(Config.DOWNLOAD_LOCATION)
     except:
         await cleaner.edit(Messages.NOT_CLEANED)
+
+
+@Client.on_message(
+    filters.private & filters.command("cleantasks") & filters.user(Config.BOT_OWNER)
+)
+async def del_tasks(_, message: Message):
+    ongoing_tasks = await get_ongoing_tasks()
+    number = len(ongoing_tasks)
+    cleaner = await message.reply(Messages.ERASE_TASKS.format(number))
+
+    for task in ongoing_tasks:
+        user_id = task["user_id"]
+        await del_ongoing_task(user_id)
+        try:
+            shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+        except:
+            pass
+    
+    await cleaner.edit(Messages.ERASE_TASKS_SUCCESS.format(number))
 
 
 async def send_logs(user_id):
