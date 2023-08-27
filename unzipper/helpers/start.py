@@ -85,39 +85,49 @@ async def warn_users():
         await clear_ongoing_tasks()
 
 
-def removal():
+def removal(firststart=False):
     loop = asyncio.get_event_loop()
-    loop.create_task(remove_expired_tasks())
+    loop.create_task(remove_expired_tasks(firststart))
     loop.run_until_complete(asyncio.sleep(0))
 
 
-async def remove_expired_tasks():
+async def remove_expired_tasks(firststart=False):
+    value = firststart
     while True:
         ongoing_tasks = await get_ongoing_tasks()
         current_time = time()
 
         for task in ongoing_tasks:
-            start_time = task["start_time"]
-            type = task["type"]
-            time_gap = current_time - start_time
+            if value:
+                user_id = task["user_id"]
+                await del_ongoing_task(user_id)
+                try:
+                    shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                except:
+                    pass
+            else:
+                start_time = task["start_time"]
+                type = task["type"]
+                time_gap = current_time - start_time
 
-            if type == "extract":
-                if time_gap > Config.MAX_TASK_DURATION_EXTRACT:
-                    user_id = task["user_id"]
-                    await del_ongoing_task(user_id)
-                    try:
-                        shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
-                    except:
-                        pass
-                    await client.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_EXTRACT // 60))
-            elif type == "merge":
-                if time_gap > Config.MAX_TASK_DURATION_MERGE:
-                    user_id = task["user_id"]
-                    await del_ongoing_task(user_id)
-                    try:
-                        shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
-                    except:
-                        pass
-                    await client.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_MERGE // 60))
-
+                if type == "extract":
+                    if time_gap > Config.MAX_TASK_DURATION_EXTRACT:
+                        user_id = task["user_id"]
+                        await del_ongoing_task(user_id)
+                        try:
+                            shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                        except:
+                            pass
+                        await client.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_EXTRACT // 60))
+                elif type == "merge":
+                    if time_gap > Config.MAX_TASK_DURATION_MERGE:
+                        user_id = task["user_id"]
+                        await del_ongoing_task(user_id)
+                        try:
+                            shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                        except:
+                            pass
+                        await client.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_MERGE // 60))
+        
+        value = False
         await asyncio.sleep(5 * 60)  # Sleep for 5 minutes

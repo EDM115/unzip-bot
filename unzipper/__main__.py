@@ -50,7 +50,7 @@ while running:
         if check_logs():
             LOGGER.info(Messages.LOG_CHECKED)
             LOGGER.info(Messages.BOT_RUNNING)
-            removal()
+            removal(True)
             idle()
         else:
             try:
