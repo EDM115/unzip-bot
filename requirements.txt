@@ -1,6 +1,6 @@
 pyrogram==2.0.106
 TgCrypto==1.2.5
-pyromod==1.5
+pyromod==2.0.0
 motor==3.3.0
 dnspython==2.4.2
 psutil==5.9.5
