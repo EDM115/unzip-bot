@@ -77,6 +77,7 @@ async def progress_urls(current, total, ud_type, message, start):
         except:
             pass
 
+
 def humanbytes(size):
     if not size:
         return ""
