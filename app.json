@@ -1,6 +1,6 @@
 {
     "name": "Unzipper Bot",
-    "description": "A Telegram Bot to Extract Various Types Of Archives",
+    "description": "A Telegram bot to extract various types of archives",
     "logo": "https://telegra.ph/file/d4ba24682e030fc58613f.jpg",
     "keywords": [
         "7z",
@@ -9,7 +9,7 @@
         "Telegram Bot",
         "unzipper bot"
     ],
-    "website": "https://t.me/EDM115bots",
+    "website": "https://edm115.dev/unzip",
     "repository": "https://github.com/EDM115/unzip-bot",
     "success_url": "https://t.me/EDM115bots",
     "env": {
@@ -34,7 +34,7 @@
             "required": true
         },
         "LOGS_CHANNEL": {
-            "description": "Id of a channel, can also be a group",
+            "description": "ID of a channel, can also be a group",
             "required": true
         }
     },
