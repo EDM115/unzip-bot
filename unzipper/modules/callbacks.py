@@ -55,7 +55,8 @@ from .ext_script.ext_helper import (
 from .ext_script.up_helper import answer_query, get_size, send_file, send_url_logs
 from .ext_script.url_parser import gdrive_dl
 
-split_file_pattern = r"\.(?:part\d+\.rar|z\d+|r\d{2})$"
+split_file_pattern = r"\.(?:z\d+|r\d{2})$"
+rar_file_pattern = r"\.part\d+\.rar$"
 
 
 async def download(url, path):
@@ -657,16 +658,15 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     fext = fname.split(".")[-1].casefold()
                     if (
                         fnmatch(fext, extentions_list["split"][0])
-                        or fext in extentions_list["split"]
+                        or fext in extentions_list["split"] or bool(re.search(rar_file_pattern, fname))
                     ):
                         await query.message.edit(Messages.ITS_SPLITTED)
                         return
                     if bool(re.search(split_file_pattern, fname)):
-                        #await del_ongoing_task(user_id)
-                        #await query.message.edit(Messages.SPL_RZ)
-                        #return
-                        pass
-                    elif fext not in extentions_list["archive"]:
+                        await del_ongoing_task(user_id)
+                        await query.message.edit(Messages.SPL_RZ)
+                        return
+                    if fext not in extentions_list["archive"]:
                         await del_ongoing_task(user_id)
                         await query.message.edit(Messages.DEF_NOT_AN_ARCHIVE)
                         return

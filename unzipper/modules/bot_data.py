@@ -470,7 +470,7 @@ This file is splitted
 Use the **/merge** command
     """
 
-    SPL_RZ = "Splitted RAR/ZIP files can't be processed yet"
+    SPL_RZ = "Splitted RAR/ZIP files in .rxx or .zxx format can't be processed yet"
 
     TRY_DL = """
 **Trying to download… Please wait**
