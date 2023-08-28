@@ -498,7 +498,7 @@ async def del_tasks(_, message: Message):
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
         except:
             pass
-    
+
     await cleaner.edit(Messages.ERASE_TASKS_SUCCESS.format(number))
 
 
