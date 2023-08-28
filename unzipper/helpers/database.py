@@ -203,14 +203,6 @@ async def update_uploaded(user_id, upload_count):
         await uploaded_db.insert_one({"_id": user_id, "uploaded_files": upload_count})
 
 
-# Db for cloud_upload
-cloud_db = unzipper_db["cloud_db"]
-
-
-async def get_cloud(user_id):
-    return "https://api.bayfiles.com/upload"
-
-
 # DB for thumbnails
 thumb_db = unzipper_db["thumb_db"]
 
