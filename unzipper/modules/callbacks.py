@@ -105,7 +105,7 @@ async def async_generator(iterable):
 @Client.on_callback_query()
 async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     uid = query.from_user.id
-    if uid != Config.BOT_OWNER:
+    if uid != Config.BOT_OWNER:  # skipcq: PTC-W0048
         if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
             ogtasks = await get_ongoing_tasks()
             if not any(ogtask["user_id"] == uid for ogtask in ogtasks):
