@@ -107,10 +107,10 @@ async def remove_expired_tasks(firststart=False):
             else:
                 current_time = time()
                 start_time = task["start_time"]
-                type = task["type"]
+                task_type = task["type"]
                 time_gap = current_time - start_time
 
-                if type == "extract":
+                if task_type == "extract":
                     if time_gap > Config.MAX_TASK_DURATION_EXTRACT:
                         user_id = task["user_id"]
                         await del_ongoing_task(user_id)
@@ -119,7 +119,7 @@ async def remove_expired_tasks(firststart=False):
                         except:
                             pass
                         await client.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_EXTRACT // 60))
-                elif type == "merge":
+                elif task_type == "merge":
                     if time_gap > Config.MAX_TASK_DURATION_MERGE:
                         user_id = task["user_id"]
                         await del_ongoing_task(user_id)
