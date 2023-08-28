@@ -662,10 +662,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         await query.message.edit(Messages.ITS_SPLITTED)
                         return
                     if bool(re.search(split_file_pattern, fname)):
-                        await del_ongoing_task(user_id)
-                        await query.message.edit(Messages.SPL_RZ)
-                        return
-                    if fext not in extentions_list["archive"]:
+                        #await del_ongoing_task(user_id)
+                        #await query.message.edit(Messages.SPL_RZ)
+                        #return
+                        pass
+                    elif fext not in extentions_list["archive"]:
                         await del_ongoing_task(user_id)
                         await query.message.edit(Messages.DEF_NOT_AN_ARCHIVE)
                         return
