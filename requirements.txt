@@ -7,7 +7,7 @@ psutil==5.9.5
 pykeyboard==0.1.5
 aiohttp==3.8.5
 aiofiles==23.2.1
-Pillow==9.5.0
+Pillow==10.0.0
 requests==2.31.0
 GitPython==3.1.32
 gitdb==4.0.10
