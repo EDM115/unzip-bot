@@ -627,7 +627,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             c_id=Config.LOGS_CHANNEL,
                             doc_f=archive,
                             source=url,
-                            message = query.message,
+                            message=query.message,
                         )
                     else:
                         await del_ongoing_task(user_id)
