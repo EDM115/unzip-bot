@@ -416,3 +416,26 @@ async def clear_merge_tasks():
 # DB for maintenance mode
 
 maintenance_mode = unzipper_db["maintenance_mode"]
+
+
+async def get_maintenance():
+    maintenance = await maintenance_mode.find_one({"maintenance": True})
+    if maintenance is not None and maintenance:
+        return maintenance["val"]
+    return False
+
+
+async def set_maintenance(val):
+    is_exist = await maintenance_mode.find_one({"maintenance": True})
+    if is_exist is not None and is_exist:
+        await maintenance_mode.update_one({"maintenance": True}, {"$set": {"val": val}})
+    else:
+        await maintenance_mode.insert_one({"maintenance": True, "val": val})
+
+
+# DB for VIP users
+
+vip_users = unzipper_db["vip_users"]
+
+
+
