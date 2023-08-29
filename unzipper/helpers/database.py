@@ -438,4 +438,38 @@ async def set_maintenance(val):
 vip_users = unzipper_db["vip_users"]
 
 
+async def add_vip_user(uid, subscription, ends, used, billed, early, donator, started, successful, gap, gifted, referral, lifetime):
+    is_exist = await vip_users.find_one({"_id": uid})
+    if is_exist is not None and is_exist:
+        await vip_users.update_one({"_id": uid}, {"$set": {"subscription": subscription, "ends": ends, "used": used, "billed": billed, "early": early, "donator": donator, "started": started, "successful": successful, "gap": gap, "gifted": gifted, "referral": referral, "lifetime": lifetime}})
+    else:
+        await vip_users.insert_one({"_id": uid, "subscription": subscription, "ends": ends, "used": used, "billed": billed, "early": early, "donator": donator, "started": started, "successful": successful, "gap": gap, "gifted": gifted, "referral": referral, "lifetime": lifetime})
 
+
+async def remove_vip_user(uid):
+    is_exist = await vip_users.find_one({"_id": uid})
+    if is_exist is not None and is_exist:
+        await vip_users.delete_one({"_id": uid})
+    else:
+        return
+
+
+async def is_vip(uid):
+    is_exist = await vip_users.find_one({"_id": uid})
+    return bool(is_exist is not None and is_exist)
+
+
+async def get_vip_users():
+    return [vip_list async for vip_list in vip_users.find({})]
+
+
+async def count_vip_users():
+    users = await vip_users.count_documents({})
+    return users
+
+
+async def get_vip_user(uid):
+    is_exist = await vip_users.find_one({"_id": uid})
+    if is_exist is not None and is_exist:
+        return is_exist
+    return False

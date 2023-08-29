@@ -373,8 +373,7 @@ async def unban_user(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("info"))
 async def me_stats(_, message: Message):
-    me_info = await unzipperbot.ask(
-        chat_id=message.chat.id,
+    me_info = await message.chat.ask(
         text=Messages.INFO,
     )
     await unzipperbot.send_message(chat_id=message.chat.id, text=f"`{me_info}`")
