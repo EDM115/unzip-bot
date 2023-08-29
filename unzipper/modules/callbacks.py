@@ -25,6 +25,7 @@ from unzipper.helpers.database import (
     get_cancel_task,
     get_merge_task_message_id,
     get_ongoing_tasks,
+    is_vip,
     set_upload_mode,
     update_thumb,
     update_uploaded,
@@ -106,7 +107,7 @@ async def async_generator(iterable):
 @Client.on_callback_query()
 async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     uid = query.from_user.id
-    if uid != Config.BOT_OWNER:  # skipcq: PTC-W0048
+    if uid != Config.BOT_OWNER or not await is_vip(uid):  # skipcq: PTC-W0048
         if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
             ogtasks = await get_ongoing_tasks()
             if not any(ogtask["user_id"] == uid for ogtask in ogtasks):

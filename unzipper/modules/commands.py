@@ -30,6 +30,7 @@ from unzipper.helpers.database import (
     get_uploaded,
     get_users_list,
     count_ongoing_tasks,
+    is_vip,
 )
 from unzipper.helpers.unzip_help import humanbytes, timeformat_sec
 from unzipper.modules.ext_script.custom_thumbnail import add_thumb, del_thumb
@@ -45,7 +46,7 @@ https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){
 async def _(_, message: Message):
     await check_user(message)
     uid = message.from_user.id
-    if uid == Config.BOT_OWNER:
+    if uid == Config.BOT_OWNER or await is_vip(uid):
         return
     if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
         ogtasks = await get_ongoing_tasks()
