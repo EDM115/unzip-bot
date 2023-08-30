@@ -364,6 +364,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             password = await query.message.chat.ask(
                 text=Messages.PLS_SEND_PASSWORD,
             )
+            unzip_bot.stop_listening(identifier_pattern=(query.message.chat.id, None, None))
             ext_s_time = time()
             extractor = await merge_files(
                 iinput=file,
@@ -703,6 +704,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     newname = await message.chat.ask(
                         text=Messages.GIVE_NEW_NAME.format(rfnamebro),
                     )
+                    unzip_bot.stop_listening(identifier_pattern=(query.message.chat.id, None, None))
                     renamed = location.replace(archive_name, newname.text)
                 else:
                     renamed = location.replace(archive_name, rfnamebro)
@@ -786,6 +788,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 password = await query.message.chat.ask(
                     text=Messages.PLS_SEND_PASSWORD
                 )
+                unzip_bot.stop_listening(identifier_pattern=(query.message.chat.id, None, None))
                 ext_s_time = time()
                 extractor = await extr_files(
                     path=ext_files_dir,

@@ -378,6 +378,7 @@ async def me_stats(_, message: Message):
         text=Messages.INFO,
     )
     await unzipperbot.send_message(chat_id=message.chat.id, text=f"`{me_info}`")
+    _.stop_listening(identifier_pattern=(message.chat.id, None, None))
 
 
 @Client.on_message(filters.command("user") & filters.user(Config.BOT_OWNER))
