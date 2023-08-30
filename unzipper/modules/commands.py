@@ -491,18 +491,6 @@ async def maintenance_mode(_, message: Message):
         await set_maintenance(newstate)
         await message.reply(Messages.MAINTENANCE_DONE.format(newstate))
 
-    try:
-        infos = await unzipperbot.get_users(user_id)
-    except:
-        await maintenance_message.edit(Messages.UID_UNAME_INVALID)
-        return
-    if not isinstance(user_id, int):
-        try:
-            user_id = infos.id
-        except:
-            pass
-    await maintenance_message.edit(Messages.USER2_INFO.format(infos, user_id))
-
 
 @Client.on_message(filters.private & filters.command("addthumb"))
 async def thumb_add(_, message: Message):
