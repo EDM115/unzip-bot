@@ -8,9 +8,8 @@ from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
 
 from unzipper import LOGGER
-from config import Config
-
 from unzipper.modules.bot_data import Messages
+from config import Config
 
 
 def __run_cmds_unzipper(command):
