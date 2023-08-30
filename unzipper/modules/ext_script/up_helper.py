@@ -198,7 +198,10 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                             unzip_bot,
                         ),
                     )
-                    os.remove(thmb_pth)
+                    try:
+                        os.remove(thmb_pth)
+                    except:
+                        pass
                 except:
                     try:
                         await unzip_bot.send_video(
