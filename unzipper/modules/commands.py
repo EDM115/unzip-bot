@@ -461,6 +461,13 @@ async def red_alert(_, message: Message):
     # but also need to stop currently ongoing processes…
 
 
+@Client.on_message(filters.private & filters.command("maintenance") & filters.user(Config.BOT_OWNER))
+async def maintenance_mode(_, message: Message):
+    await message.reply("🚧 WIP 🚧")
+    # stop all ongoing processes, and prevent new ones from starting
+    # maybe using a global variable?
+
+
 @Client.on_message(filters.private & filters.command("addthumb"))
 async def thumb_add(_, message: Message):
     await add_thumb(unzipperbot, message)

@@ -21,25 +21,7 @@ from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
 
 # To get video duration and thumbnail
 
-async def run_shell_cmds(command):
-    async with asyncio.subprocess.create_subprocess_shell(
-        command,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE
-    ) as process:
-        stdout, stderr = await process.communicate()
 
-    if stderr:
-        LOGGER.error(stderr.decode("utf-8").strip())
-
-    if stdout:
-        shell_output = stdout.decode("utf-8").strip()
-        LOGGER.info(shell_output)
-        return shell_output
-    else:
-        return ""
-
-"""
 async def run_shell_cmds(command):
     run = subprocess.Popen(
         command,
@@ -54,27 +36,6 @@ async def run_shell_cmds(command):
     if run.stdout:
         run.stdout.close()
     return shell_output
-"""
-
-"""
-async def run_shell_command(command, timeout=None):
-    process = await asyncio.create_subprocess_shell(
-        command,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE
-    )
-
-    try:
-        stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=timeout)
-    except asyncio.TimeoutError:
-        process.kill()
-        raise Exception(f"Command '{command}' timed out after {timeout} seconds")
-
-    if process.returncode != 0:
-        raise Exception(f"Command '{command}' failed with error code {process.returncode}: {stderr.decode().strip()}")
-
-    return stdout.decode().strip()
-"""
 
 
 # Get file size

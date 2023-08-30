@@ -19,6 +19,16 @@ unzipperbot = Client(
     sleep_threshold=10,
     max_concurrent_transmissions=3,
 )
+premiumuser = Client(
+    "PremiumUser",
+	session_string=Config.SESSION_STRING,
+	api_id=Config.APP_ID,
+	api_hash=Config.API_HASH,
+	in_memory=False,
+	plugins=plugins,
+	sleep_threshold=10,
+	max_concurrent_transmissions=3,
+)
 
 logging.basicConfig(
     level=logging.INFO,
