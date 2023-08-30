@@ -117,7 +117,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
                 )
                 return
-    
+
     if uid != Config.BOT_OWNER and await get_maintenance():
         await answer_query(query, Messages.MAINTENANCE_ON)
         return
