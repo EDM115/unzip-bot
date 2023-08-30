@@ -283,11 +283,11 @@ I can extract archives like `zip`, `rar`, `tar`, …
     """
 
     ABOUT_TXT = """
-**About Unarchiver bot [v6.2.2]**
+**About Unarchiver bot [v6.3.1]**
 
-• **Language :** [Python 3.11.3](https://www.python.org/)
+• **Language :** [Python 3.11.5](https://www.python.org/)
 • **Framework :** [Pyrogram 2.0.106](https://pyrogram.org/)
-• **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot/tree/beta)
+• **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot)
 • **Developer :** [EDM115](https://github.com/EDM115)
 
 **[Rate me ⭐](https://t.me/BotsArchive/2705)**

@@ -10,7 +10,42 @@
 
 ---
 
-### v6.2.2 **[LATEST STABLE RELEASE]**
+### v6.3.1 **[LATEST STABLE RELEASE]**
+
+- Finally fixed [#133](https://github.com/EDM115/unzip-bot/issues/133)
+- Attempt to create a premium user to upload +2Gb files
+- Added `/maintenance`
+
+### v6.3.0
+
+- Ongoing tasks are removed from the database after a restart
+- Added a new command : /cleantasks
+- Finally upgraded pyromod to v2
+- Upgraded from python-3.11.3 to python-3.11.5
+- Removed any trace of bayfiles upload since the service is dead
+- Support for `.partx.rar` splitted archives
+- Download files in 10 Mb chunks instead of 5 Mb
+- Added maintenance on DB
+- Aded VIP methods in DB + implementation of no-restrictions for VIP ([#205](https://github.com/EDM115/unzip-bot/issues/205))
+
+### v6.2.4
+
+- Attempt to add some URL parsers (fail)
+- Even more refactor
+- Splitted files can be renamed
+- Url are checked before extracting
+- If a thumbnail fails to be uploaded to telegra.ph, the error message is no longer saved in the db (and on download, non url strings are skipped)
+- `/broadcast` now shows how many users had been processed
+
+### v6.2.3
+
+- Fixes little error on strings
+- Closes a lot of issues opened by DeepSource (mostly style)
+- Added a task limit (configurable in `config.py`)
+- FloodWait is now handled correctly everywhere
+- The bot is no longer blocking any task (finally)
+
+### v6.2.2
 
 - Bugfix : No longer use of `subprocess.communicate()`, as it's thread blocking
 - All strings are in `bot_data.py`, hope this hsould ease #179
