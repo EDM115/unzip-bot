@@ -670,6 +670,25 @@ WIP
 **Direct link to profile :** tg://user?id={}
     """
 
+    MAINTENANCE = """
+Do you want the bot to go in maintenance mode 🤔
+Current state : `{}`
+
+False : No maintenance
+True : Maintenance
+Send the appropriate string
+    """
+
+    MAINTENANCE_ASK = """
+False : No maintenance
+True : Maintenance
+Send the appropriate string
+    """
+
+    MAINTENANCE_DONE = "Successfully changed maintenance mode to `{}`"
+
+    MAINTENANCE_ON = "Maintenance mode is currently **ON**\nTasks can't be processed. Come back later"
+
     NO_THUMBS = "No thumbnails on the server yet"
 
     ERASE_ALL = """

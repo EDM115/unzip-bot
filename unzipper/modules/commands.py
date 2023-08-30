@@ -24,6 +24,7 @@ from unzipper.helpers.database import (
     del_banned_user,
     del_ongoing_task,
     del_user,
+    get_maintenance,
     get_merge_task,
     get_ongoing_tasks,
     get_upload_mode,
@@ -31,6 +32,7 @@ from unzipper.helpers.database import (
     get_users_list,
     count_ongoing_tasks,
     is_vip,
+    set_maintenance,
 )
 from unzipper.helpers.unzip_help import humanbytes, timeformat_sec
 from unzipper.modules.ext_script.custom_thumbnail import add_thumb, del_thumb
@@ -46,6 +48,9 @@ https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){
 async def _(_, message: Message):
     await check_user(message)
     uid = message.from_user.id
+    if uid != Config.BOT_OWNER and await get_maintenance():
+        await message.reply(Messages.MAINTENANCE_ON)
+        return
     if uid == Config.BOT_OWNER or await is_vip(uid):
         return
     if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
@@ -463,9 +468,40 @@ async def red_alert(_, message: Message):
 
 @Client.on_message(filters.private & filters.command("maintenance") & filters.user(Config.BOT_OWNER))
 async def maintenance_mode(_, message: Message):
-    await message.reply("🚧 WIP 🚧")
-    # stop all ongoing processes, and prevent new ones from starting
-    # maybe using a global variable?
+    mstatus = await get_maintenance()
+    maintenance_message = await message.reply(Messages.MAINTENANCE.format(mstatus))
+    mode = 0
+    try:
+        newstate = message.text.split(None, 1)[1]
+    except:
+        newstate = message.ask(
+            Messages.MAINTENANCE_ASK,
+        )
+        _.stop_listening(identifier_pattern=(message.chat.id, None, None))
+    while newstate not in ["True", "False"]:
+        newstate = message.ask(
+            Messages.MAINTENANCE_ASK,
+        )
+        _.stop_listening(identifier_pattern=(message.chat.id, None, None))
+        mode = 1
+    if mode == 0:
+        await set_maintenance(newstate)
+        await maintenance_message.edit(Messages.MAINTENANCE_DONE.format(newstate))
+    else:
+        await set_maintenance(newstate)
+        await message.reply(Messages.MAINTENANCE_DONE.format(newstate))
+
+    try:
+        infos = await unzipperbot.get_users(user_id)
+    except:
+        await maintenance_message.edit(Messages.UID_UNAME_INVALID)
+        return
+    if not isinstance(user_id, int):
+        try:
+            user_id = infos.id
+        except:
+            pass
+    await maintenance_message.edit(Messages.USER2_INFO.format(infos, user_id))
 
 
 @Client.on_message(filters.private & filters.command("addthumb"))

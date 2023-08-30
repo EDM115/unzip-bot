@@ -23,6 +23,7 @@ from unzipper.helpers.database import (
     del_merge_task,
     del_thumb_db,
     get_cancel_task,
+    get_maintenance,
     get_merge_task_message_id,
     get_ongoing_tasks,
     is_vip,
@@ -116,6 +117,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
                 )
                 return
+    
+    if uid != Config.BOT_OWNER and await get_maintenance():
+        await answer_query(query, Messages.MAINTENANCE_ON)
+        return
 
     sent_files = 0
     global log_msg
