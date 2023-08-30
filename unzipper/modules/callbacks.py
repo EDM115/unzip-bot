@@ -945,6 +945,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await archive_msg.reply(err)
 
     elif query.data.startswith("ext_f"):
+        LOGGER.info(query.data)
         user_id = query.from_user.id
         spl_data = query.data.split("|")
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
@@ -1087,6 +1088,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         await update_uploaded(user_id, upload_count=sent_files)
 
     elif query.data.startswith("ext_a"):
+        LOGGER.info(query.data)
         user_id = query.from_user.id
         spl_data = query.data.split("|")
         file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"

@@ -4,7 +4,7 @@ import pathlib
 import re
 import shutil
 import subprocess
-from asyncio import sleep
+import asyncio
 from time import time
 
 from pyrogram.errors import FloodWait
@@ -20,6 +20,26 @@ from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
 
 
 # To get video duration and thumbnail
+
+async def run_shell_cmds(command):
+    async with asyncio.subprocess.create_subprocess_shell(
+        command,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE
+    ) as process:
+        stdout, stderr = await process.communicate()
+
+    if stderr:
+        LOGGER.error(stderr.decode("utf-8").strip())
+
+    if stdout:
+        shell_output = stdout.decode("utf-8").strip()
+        LOGGER.info(shell_output)
+        return shell_output
+    else:
+        return ""
+
+"""
 async def run_shell_cmds(command):
     run = subprocess.Popen(
         command,
@@ -34,8 +54,9 @@ async def run_shell_cmds(command):
     if run.stdout:
         run.stdout.close()
     return shell_output
+"""
 
-disabled = """
+"""
 async def run_shell_command(command, timeout=None):
     process = await asyncio.create_subprocess_shell(
         command,
@@ -157,26 +178,57 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     os.remove(thmb_pth)
                 try:
                     await run_shell_cmds(
-                        f"ffmpeg -ss 00:00:01.00 -i {doc_f} -vf 'scale=320:320:force_original_aspect_ratio=decrease' -vframes 1 {thmb_pth}"
+                        f"ffmpeg -ss 00:00:00.00 -i {doc_f} -vf 'scale=320:320:force_original_aspect_ratio=decrease' -vframes 1 {thmb_pth}"
                     )
                 except Exception as e:
                     LOGGER.warning(e)
-                    shutil.copyfile(Config.BOT_THUMB, thmb_pth)
-                await unzip_bot.send_video(
-                    chat_id=c_id,
-                    video=doc_f,
-                    caption=Messages.EXT_CAPTION.format(fname),
-                    duration=int(vid_duration) if vid_duration.isnumeric() else 0,
-                    thumb=str(thmb_pth),
-                    progress=progress_for_pyrogram,
-                    progress_args=(
-                        Messages.TRY_UP.format(fname),
-                        upmsg,
-                        time(),
-                        unzip_bot,
-                    ),
-                )
-                os.remove(thmb_pth)
+                    shutil.copy(Config.BOT_THUMB, thmb_pth)
+                try:
+                    await unzip_bot.send_video(
+                        chat_id=c_id,
+                        video=doc_f,
+                        caption=Messages.EXT_CAPTION.format(fname),
+                        duration=int(vid_duration) if vid_duration.isnumeric() else 0,
+                        thumb=str(thmb_pth),
+                        progress=progress_for_pyrogram,
+                        progress_args=(
+                            Messages.TRY_UP.format(fname),
+                            upmsg,
+                            time(),
+                            unzip_bot,
+                        ),
+                    )
+                    os.remove(thmb_pth)
+                except:
+                    try:
+                        await unzip_bot.send_video(
+                            chat_id=c_id,
+                            video=doc_f,
+                            caption=Messages.EXT_CAPTION.format(fname),
+                            duration=0,
+                            thumb=str(Config.BOT_THUMB),
+                            progress=progress_for_pyrogram,
+                            progress_args=(
+                                Messages.TRY_UP.format(fname),
+                                upmsg,
+                                time(),
+                                unzip_bot,
+                            ),
+                        )
+                    except:
+                        await unzip_bot.send_document(
+                            chat_id=c_id,
+                            document=doc_f,
+                            caption=Messages.EXT_CAPTION.format(fname),
+                            force_document=True,
+                            progress=progress_for_pyrogram,
+                            progress_args=(
+                                Messages.TRY_UP.format(fname),
+                                upmsg,
+                                time(),
+                                unzip_bot,
+                            ),
+                        )
         else:
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
@@ -211,7 +263,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         await upmsg.delete()
         os.remove(doc_f)
     except FloodWait as f:
-        await sleep(f.value)
+        await asyncio.sleep(f.value)
         return await send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split)
     except FileNotFoundError:
         try:
@@ -246,7 +298,7 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source, message):
             ),
         )
     except FloodWait as f:
-        await sleep(f.value)
+        await asyncio.sleep(f.value)
         return send_url_logs(unzip_bot, c_id, doc_f, source, message)
     except FileNotFoundError:
         await unzip_bot.send_message(
