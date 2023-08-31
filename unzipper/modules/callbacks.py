@@ -729,7 +729,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     return
                 newfname = renamed.split("/")[-1]
                 fsize = await get_size(renamed)
-                if is_vip(user_id):
+                if await is_vip(user_id):
                     if fsize <= Config.TG_PREMIUM_SIZE:
                         await send_file(
                             unzip_bot=premiumuser,
@@ -765,7 +765,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
                 os.makedirs(splitteddir)
                 ooutput = f"{splitteddir}/{newfname}"
-                if is_vip(user_id):
+                if await (user_id):
                     splittedfiles = await split_files(renamed, ooutput, Config.TG_PREMIUM_SIZE)
                 else:
                     splittedfiles = await split_files(renamed, ooutput, Config.TG_MAX_SIZE)
@@ -781,7 +781,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 async_splittedfiles = async_generator(splittedfiles)
                 async for file in async_splittedfiles:
                     sent_files += 1
-                    if is_vip(user_id):
+                    if await is_vip(user_id):
                         await send_file(
                             unzip_bot=premiumuser,
                             c_id=user_id,
@@ -1024,7 +1024,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             file = paths[int(spl_data[3])]
         fsize = await get_size(file)
         split = False
-        if is_vip(user_id):
+        if await is_vip(user_id):
             if fsize <= Config.TG_PREMIUM_SIZE:
                 await send_file(
                     unzip_bot=premiumuser,
@@ -1059,7 +1059,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
             os.makedirs(splitteddir)
             ooutput = f"{splitteddir}/{fname}"
-            if is_vip(user_id):
+            if await is_vip(user_id):
                 splittedfiles = await split_files(file, ooutput, Config.TG_PREMIUM_SIZE)
             else:
                 splittedfiles = await split_files(file, ooutput, Config.TG_MAX_SIZE)
@@ -1076,7 +1076,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             async_splittedfiles = async_generator(splittedfiles)
             async for file in async_splittedfiles:
                 sent_files += 1
-                if is_vip(user_id):
+                if await is_vip(user_id):
                     await send_file(
                         unzip_bot=premiumuser,
                         c_id=user_id,
@@ -1200,7 +1200,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             else:
                 fsize = await get_size(file)
             split = False
-            if is_vip(user_id):
+            if await is_vip(user_id):
                 if fsize <= Config.TG_PREMIUM_SIZE:
                     await send_file(
                         unzip_bot=premiumuser,
@@ -1235,7 +1235,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
                 os.makedirs(splitteddir)
                 ooutput = f"{splitteddir}/{fname}"
-                if is_vip(user_id):
+                if await is_vip(user_id):
                     splittedfiles = await split_files(file, ooutput, Config.TG_PREMIUM_SIZE)
                 else:
                     splittedfiles = await split_files(file, ooutput, Config.TG_MAX_SIZE)
@@ -1252,7 +1252,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 async_splittedfiles = async_generator(splittedfiles)
                 async for file in async_splittedfiles:
                     sent_files += 1
-                    if is_vip(user_id):
+                    if await is_vip(user_id):
                         await send_file(
                             unzip_bot=premiumuser,
                             c_id=user_id,

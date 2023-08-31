@@ -762,6 +762,8 @@ Send the appropriate string
 
     MAINTENANCE_ON = "Maintenance mode is currently **ON**\nTasks can't be processed. Come back later"
 
+    MAINTENANCE_FAIL = "Provide one of the values"
+
     NO_THUMBS = "No thumbnails on the server yet"
 
     ERASE_ALL = """

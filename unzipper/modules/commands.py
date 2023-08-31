@@ -470,13 +470,16 @@ async def red_alert(_, message: Message):
 @unzipperbot.on_message(filters.private & filters.command("maintenance") & filters.user(Config.BOT_OWNER))
 async def maintenance_mode(_, message: Message):
     mstatus = await get_maintenance()
-    await message.reply(Messages.MAINTENANCE.format(mstatus))
-    newstate = " "
-    while newstate not in ["True", "False"]:
-        newstate = message.ask(
-            Messages.MAINTENANCE_ASK,
-        )
-    _.stop_listening(identifier_pattern=(message.chat.id, None, None))
+    text = Messages.MAINTENANCE.format(mstatus) + "\n\n" + Messages.MAINTENANCE_ASK
+    mess = await message.reply(text)
+    try:
+        newstate = message.text.split(None, 1)[1]
+    except:
+        await mess.edit(Messages.MAINTENANCE_FAIL)
+        return
+    if newstate not in ["True", "False"]:
+        await mess.edit(Messages.MAINTENANCE_FAIL)
+        return
     await set_maintenance(newstate)
     await message.reply(Messages.MAINTENANCE_DONE.format(newstate))
 
@@ -685,7 +688,28 @@ async def add_vip(_, message: Message):
         return
     lifetime = messagearray[12] == "True"
     await add_vip_user(user_id, subscription, ends, used, billed, early, donator, started, successful, gap, gifted, referral, lifetime)
+    await message.reply(Messages.VIP_ADDED_USER.format(user_id, subscription, ends, used, billed, early, donator, started, successful, gap, gifted, referral, lifetime))
 
+
+@unzipperbot.on_message(filters.command("delvip") & filters.user(Config.BOT_OWNER))
+async def del_vip(_, message: Message):
+    del_msg = await message.reply(Messages.PROVIDE_UID)
+    try:
+        user_id = message.text.split(None, 1)[1]
+    except:
+        await del_msg.edit(Messages.UNBAN_ID)
+        return
+    db = await add_user(user_id)
+    bdb = await del_banned_user(user_id)
+    text = ""
+    if db == -1:
+        text += Messages.ALREADY_ADDED.format(user_id)
+    if bdb == -1:
+        text += Messages.ALREADY_UNBANNED.format(user_id)
+    if text != "":
+        await del_msg.edit(text)
+    else:
+        await del_msg.edit(Messages.UNBANNED.format(user_id))
 
 
 @unzipperbot.on_message(
