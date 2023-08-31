@@ -73,7 +73,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         fname = os.path.basename(doc_f)
         fext = ((pathlib.Path(os.path.abspath(doc_f)).suffix).casefold().replace(".", ""))
         thumbornot = await thumb_exists(new_id)
-        upmsg = await unzip_bot.send_message(c_id, Messages.PROCESSING2)
+        upmsg = await unzipperbot.send_message(c_id, Messages.PROCESSING2)
         if ul_mode == "media" and fext in extentions_list["audio"]:
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(new_id) + ".jpg"
