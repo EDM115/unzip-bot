@@ -8,7 +8,7 @@ from pyrogram import idle
 
 from config import Config
 
-from . import unzipperbot
+from . import unzipperbot, premiumuser
 from .helpers.start import check_logs, dl_thumbs, set_boot_time, removal
 from .modules.bot_data import Messages
 
@@ -46,6 +46,8 @@ while running:
         )
         set_boot_time()
         dl_thumbs()
+        if Config.SESSION_STRING:
+            premiumuser.start()
         LOGGER.info(Messages.CHECK_LOG)
         if check_logs():
             LOGGER.info(Messages.LOG_CHECKED)
