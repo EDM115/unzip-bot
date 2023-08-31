@@ -9,7 +9,6 @@ from pyrogram.types import InlineKeyboardButton
 
 from unzipper import LOGGER
 from unzipper.modules.bot_data import Messages
-from config import Config
 
 
 def __run_cmds_unzipper(command):
@@ -63,8 +62,8 @@ async def extr_files(path, archive_path, password=None):
 
 
 # Split files
-async def split_files(iinput, ooutput):
-    command = f'7z a -tzip -mx=0 "{ooutput}" "{iinput}" -v{Config.TG_MAX_SIZE}b'
+async def split_files(iinput, ooutput, size):
+    command = f'7z a -tzip -mx=0 "{ooutput}" "{iinput}" -v{size}b'
     await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
     spdir = ooutput.replace("/" + ooutput.split("/")[-1], "")
     return await get_files(spdir)

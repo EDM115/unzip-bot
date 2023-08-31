@@ -49,6 +49,11 @@ async def get_size(doc_f):
 
 # Send file to a user
 async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
+    premium = False
+    if unzip_bot.name == "Premiumuser":
+        og_chat = c_id
+        c_id = Config.LOGS_CHANNEL
+        premium = True
     fsize = await get_size(doc_f)
     if fsize == -1:  # File not found
         try:
@@ -71,7 +76,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         if ul_mode == "media" and fext in extentions_list["audio"]:
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
-                await unzip_bot.send_audio(
+                sentfile = await unzip_bot.send_audio(
                     chat_id=c_id,
                     audio=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
@@ -85,7 +90,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     ),
                 )
             else:
-                await unzip_bot.send_audio(
+                sentfile = await unzip_bot.send_audio(
                     chat_id=c_id,
                     audio=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
@@ -99,7 +104,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                 )
         elif ul_mode == "media" and fext in extentions_list["photo"]:
             # impossible to use a thumb here :(
-            await unzip_bot.send_photo(
+            sentfile = await unzip_bot.send_photo(
                 chat_id=c_id,
                 photo=doc_f,
                 caption=Messages.EXT_CAPTION.format(fname),
@@ -117,7 +122,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
             )
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
-                await unzip_bot.send_video(
+                sentfile = await unzip_bot.send_video(
                     chat_id=c_id,
                     video=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
@@ -145,7 +150,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     LOGGER.warning(e)
                     shutil.copy(Config.BOT_THUMB, thmb_pth)
                 try:
-                    await unzip_bot.send_video(
+                    sentfile = await unzip_bot.send_video(
                         chat_id=c_id,
                         video=doc_f,
                         caption=Messages.EXT_CAPTION.format(fname),
@@ -165,7 +170,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         pass
                 except:
                     try:
-                        await unzip_bot.send_video(
+                        sentfile = await unzip_bot.send_video(
                             chat_id=c_id,
                             video=doc_f,
                             caption=Messages.EXT_CAPTION.format(fname),
@@ -180,7 +185,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                             ),
                         )
                     except:
-                        await unzip_bot.send_document(
+                        sentfile = await unzip_bot.send_document(
                             chat_id=c_id,
                             document=doc_f,
                             caption=Messages.EXT_CAPTION.format(fname),
@@ -196,7 +201,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         else:
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
-                await unzip_bot.send_document(
+                sentfile = await unzip_bot.send_document(
                     chat_id=c_id,
                     document=doc_f,
                     thumb=thumb_image,
@@ -211,7 +216,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     ),
                 )
             else:
-                await unzip_bot.send_document(
+                sentfile = await unzip_bot.send_document(
                     chat_id=c_id,
                     document=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
@@ -224,6 +229,12 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         unzip_bot,
                     ),
                 )
+        if premium:
+            try:
+                await sentfile.forward(og_chat)
+            except FloodWait as f:
+                await asyncio.sleep(f.value)
+                await sentfile.forward(og_chat)
         await upmsg.delete()
         os.remove(doc_f)
     except FloodWait as f:

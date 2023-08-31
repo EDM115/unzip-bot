@@ -344,7 +344,7 @@ If you choosed PayPal, you will have to redo the 4 above steps
 You will be notified few days before you subscription ends so you can check if you want to renew it or not
 
 **I wanna cancel my subscription**
-Just send **/stoppay** and follow the instructions accorfing to the platform you selected
+Just send **/stoppay** and follow the instructions according to the platform you selected
 Your payment will be cancelled and you will keep your VIP perks until the end of your subscription
 (i.e. if you paid for 1 month, from 05/01/2024 to 05/02/2024 and you cancel your subscription on 15/01/2024, your perks will stay until 05/02/2024)
 
