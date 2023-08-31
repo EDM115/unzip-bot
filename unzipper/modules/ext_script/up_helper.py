@@ -232,7 +232,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                 )
         if premium:
             try:
-                await sentfile.forward(og_chat)
+                await sentfile.copy(og_chat)
             except FloodWait as f:
                 await asyncio.sleep(f.value)
                 await sentfile.forward(og_chat)
