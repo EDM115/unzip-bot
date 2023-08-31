@@ -7,7 +7,7 @@ import base58check
 from config import Config
 from asyncio import sleep
 from pyrogram.errors import FloodWait
-from unzipper import LOGGER, unzipperbot as Client
+from unzipper import LOGGER, unzipperbot
 from unzipper.modules.bot_data import Messages
 
 mongodb = AsyncIOMotorClient(Config.MONGODB_URL)
@@ -116,14 +116,14 @@ async def check_user(message):
         if firstname == " " and lastname == " " and username == " ":
             uname = message.from_user.mention
             try:
-                await Client.send_message(
+                await unzipperbot.send_message(
                     chat_id=Config.LOGS_CHANNEL,
                     text=Messages.NEW_USER_BAD.format(uname),
                     disable_web_page_preview=False,
                 )
             except FloodWait as f:
                 await sleep(f.value)
-                await Client.send_message(
+                await unzipperbot.send_message(
                     chat_id=Config.LOGS_CHANNEL,
                     text=Messages.NEW_USER_BAD.format(uname),
                     disable_web_page_preview=False,
@@ -138,14 +138,14 @@ async def check_user(message):
             uname = firstname + " " + lastname
             umention = " | @" + username
             try:
-                await Client.send_message(
+                await unzipperbot.send_message(
                     chat_id=Config.LOGS_CHANNEL,
                     text=Messages.NEW_USER.format(uname, umention, message.from_user.id, message.from_user.id, message.from_user.id),
                     disable_web_page_preview=False,
                 )
             except FloodWait as f:
                 await sleep(f.value)
-                await Client.send_message(
+                await unzipperbot.send_message(
                     chat_id=Config.LOGS_CHANNEL,
                     text=Messages.NEW_USER.format(uname, umention, message.from_user.id, message.from_user.id, message.from_user.id),
                     disable_web_page_preview=False,

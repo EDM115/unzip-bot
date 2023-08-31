@@ -355,6 +355,40 @@ Referrals have benefits for both sides :)
 How to input the referral code ? Just send **/pay** to the bot and follow the instructions
     """
 
+    VIP_REQUIRED_MESSAGE = """
+Use this command as a reply to a messsage, where you have the following (ONE PER LINE) :
+The user ID (int)
+When the subscription starts (in %Y-%m-%dT%H:%M:%SZ format)
+When the subscription ends (same)
+Which platform had been used [paypal, telegram, sponsor, bmac]
+At which frequency the user is billed [monthly, yearly]
+Is the user a early supporter (can be obtained only the first 3 months) [True, False]
+Is the user also a donator [True, False]
+When does the user ever started a subscription (date)
+How many successful payments had been done (int)
+Is there been any gap between payments [True, False]
+If the user had been gifted a Premium plan [True, False]
+The user referral code (str)
+Is this a lifetime free subscription [True, False]
+    """
+
+    VIP_ADDED_USER = """
+The following user had been added with the following infos :
+User ID : `{}`
+Start date : `{}`
+End date : `{}`
+Platform : `{}`
+Frequency : `{}`
+Early supporter : `{}`
+Donator : `{}`
+First subscription date : `{}`
+Successful payments : `{}`
+Gap between payments : `{}`
+Gifted : `{}`
+Referral code : `{}`
+Lifetime : `{}`
+    """
+
     CLEAN_TXT = """
 **Are sure want to clean your task 🤔**
 

@@ -8,7 +8,7 @@ from pyrogram.errors import FloodWait
 from time import time
 
 from config import Config
-from unzipper import LOGGER, boottime, unzipperbot as client
+from unzipper import LOGGER, boottime, unzipperbot
 from unzipper.modules.bot_data import Messages
 from unzipper.modules.callbacks import download
 
@@ -18,7 +18,7 @@ from .database import clear_cancel_tasks, clear_merge_tasks, del_ongoing_task, g
 def check_logs():
     try:
         if Config.LOGS_CHANNEL:
-            c_info = client.get_chat(chat_id=Config.LOGS_CHANNEL)
+            c_info = unzipperbot.get_chat(chat_id=Config.LOGS_CHANNEL)
             if c_info.type in (enums.ChatType.PRIVATE, enums.ChatType.BOT):
                 LOGGER.warning(Messages.PRIVATE_CHAT)
                 return False
@@ -63,7 +63,7 @@ async def check_boot():
     different = await is_boot_different()
     if different:
         try:
-            await client.send_message(Config.BOT_OWNER, Messages.BOT_RESTARTED.format(old_boot, boot))
+            await unzipperbot.send_message(Config.BOT_OWNER, Messages.BOT_RESTARTED.format(old_boot, boot))
         except:
             pass  # first start obviously
         await warn_users()
@@ -76,10 +76,10 @@ async def warn_users():
         tasks = await get_ongoing_tasks()
         for task in tasks:
             try:
-                await client.send_message(task["user_id"], Messages.RESEND_TASK)
+                await unzipperbot.send_message(task["user_id"], Messages.RESEND_TASK)
             except FloodWait as f:
                 await asyncio.sleep(f.value)
-                await client.send_message(task["user_id"], Messages.RESEND_TASK)
+                await unzipperbot.send_message(task["user_id"], Messages.RESEND_TASK)
             except:
                 pass  # user deleted chat
         await clear_ongoing_tasks()
@@ -119,7 +119,7 @@ async def remove_expired_tasks(firststart=False):
                             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
                         except:
                             pass
-                        await client.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_EXTRACT // 60))
+                        await unzipperbot.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_EXTRACT // 60))
                 elif task_type == "merge":
                     if time_gap > Config.MAX_TASK_DURATION_MERGE:
                         await del_ongoing_task(user_id)
@@ -127,7 +127,7 @@ async def remove_expired_tasks(firststart=False):
                             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
                         except:
                             pass
-                        await client.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_MERGE // 60))
+                        await unzipperbot.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_MERGE // 60))
 
         value = False
         await asyncio.sleep(5 * 60)  # Sleep for 5 minutes

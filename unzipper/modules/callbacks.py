@@ -16,7 +16,7 @@ from pyrogram.types import CallbackQuery
 import unzip_http
 
 from config import Config
-from unzipper import LOGGER, premiumuser
+from unzipper import LOGGER, premiumuser, unzipperbot
 from unzipper.helpers.database import (
     add_cancel_task,
     del_cancel_task,
@@ -106,7 +106,7 @@ async def async_generator(iterable):
 
 
 # Callbacks
-@Client.on_callback_query()
+@unzipperbot.on_callback_query()
 async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     uid = query.from_user.id
     if uid != Config.BOT_OWNER or not await is_vip(uid):  # skipcq: PTC-W0048
