@@ -51,7 +51,7 @@ async def get_size(doc_f):
 async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
     premium = False
     new_id = c_id
-    if unzip_bot.name == "Premiumuser":
+    if unzip_bot.name == "PremiumUser":
         og_chat = c_id
         new_id = Config.LOGS_CHANNEL
         premium = True

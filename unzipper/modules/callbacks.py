@@ -745,7 +745,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         return shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
                     else:
                         pass
-                else:
+                elif not await is_vip(user_id):
                     if fsize <= Config.TG_MAX_SIZE:
                         await send_file(
                             unzip_bot=unzip_bot,
@@ -791,7 +791,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             log_msg=log_msg,
                             split=True,
                         )
-                    else:
+                    elif not await is_vip(user_id):
                         await send_file(
                             unzip_bot=unzip_bot,
                             c_id=user_id,
@@ -1037,7 +1037,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 )
             else:
                 split = True
-        else:
+        elif not await is_vip(user_id):
             if fsize <= Config.TG_MAX_SIZE:
                 await send_file(
                     unzip_bot=unzip_bot,
@@ -1086,7 +1086,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         log_msg=log_msg,
                         split=True,
                     )
-                else:
+                elif not await is_vip(user_id):
                     await send_file(
                         unzip_bot=unzip_bot,
                         c_id=user_id,
@@ -1213,7 +1213,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     )
                 else:
                     split = True
-            else:
+            elif not await is_vip(user_id):
                 if fsize <= Config.TG_MAX_SIZE:
                     await send_file(
                         unzip_bot=unzip_bot,
@@ -1262,7 +1262,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             log_msg=log_msg,
                             split=True,
                         )
-                    else:
+                    elif not await is_vip(user_id):
                         await send_file(
                             unzip_bot=unzip_bot,
                             c_id=user_id,
