@@ -2,6 +2,7 @@
 
 from motor.motor_asyncio import AsyncIOMotorClient
 import requests
+import base58check
 
 from config import Config
 from asyncio import sleep
@@ -472,4 +473,47 @@ async def get_vip_user(uid):
     is_exist = await vip_users.find_one({"_id": uid})
     if is_exist is not None and is_exist:
         return is_exist
-    return False
+    return None
+
+
+# DB for referrals
+
+referrals = unzipper_db["referrals"]
+
+
+async def add_referee(uid, referral_code):
+    is_exist = await referrals.find_one({"_id": uid})
+    if is_exist is not None and is_exist:
+        await referrals.update_one({"_id": uid}, {"$set": {"type": "referee", "referral_code": referral_code}})
+    else:
+        await referrals.insert_one({"_id": uid, "type": "referee", "referral_code": referral_code})
+
+
+async def add_referrer(uid, referees):
+    is_exist = await referrals.find_one({"_id": uid})
+    if is_exist is not None and is_exist:
+        await referrals.update_one({"_id": uid}, {"$set": {"type": "referrer", "referees": referees}})
+    else:
+        await referrals.insert_one({"_id": uid, "type": "referrer", "referees": referees})
+
+
+async def get_referee(uid):
+    is_exist = await referrals.find_one({"_id": uid})
+    if is_exist is not None and is_exist:
+        return is_exist
+    return None
+
+
+async def get_referrer(uid):
+    is_exist = await referrals.find_one({"_id": uid})
+    if is_exist is not None and is_exist:
+        return is_exist
+    return None
+
+
+def get_referral_code(uid):
+    return base58check.b58encode(base58check.b58encode(str(uid).encode("ascii"))).decode("ascii")
+
+
+def get_referral_uid(referral_code):
+    return int(base58check.b58decode(base58check.b58decode(referral_code).decode("ascii")).decode("ascii"))

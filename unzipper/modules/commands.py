@@ -469,27 +469,15 @@ async def red_alert(_, message: Message):
 @Client.on_message(filters.private & filters.command("maintenance") & filters.user(Config.BOT_OWNER))
 async def maintenance_mode(_, message: Message):
     mstatus = await get_maintenance()
-    maintenance_message = await message.reply(Messages.MAINTENANCE.format(mstatus))
-    mode = 0
-    try:
-        newstate = message.text.split(None, 1)[1]
-    except:
-        newstate = message.ask(
-            Messages.MAINTENANCE_ASK,
-        )
-        _.stop_listening(identifier_pattern=(message.chat.id, None, None))
+    await message.reply(Messages.MAINTENANCE.format(mstatus))
+    newstate = " "
     while newstate not in ["True", "False"]:
         newstate = message.ask(
             Messages.MAINTENANCE_ASK,
         )
-        _.stop_listening(identifier_pattern=(message.chat.id, None, None))
-        mode = 1
-    if mode == 0:
-        await set_maintenance(newstate)
-        await maintenance_message.edit(Messages.MAINTENANCE_DONE.format(newstate))
-    else:
-        await set_maintenance(newstate)
-        await message.reply(Messages.MAINTENANCE_DONE.format(newstate))
+    _.stop_listening(identifier_pattern=(message.chat.id, None, None))
+    await set_maintenance(newstate)
+    await message.reply(Messages.MAINTENANCE_DONE.format(newstate))
 
 
 @Client.on_message(filters.private & filters.command("addthumb"))

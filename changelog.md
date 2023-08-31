@@ -4,7 +4,7 @@
 
 ## You will find here all the changes made with each version, in antichronological order
 
-## Convention : `vX.Y.Z`, where `X` stands for a major change and a lot of new features, `Y` for some new features and bug fixes, `Z` for testing stuff and undebugged things
+#### Convention : `vX.Y.Z`, where `X` stands for a major change and a lot of new features, `Y` for some new features and bug fixes, `Z` for testing stuff and undebugged things
 
 </div>
 
@@ -48,7 +48,7 @@
 ### v6.2.2
 
 - Bugfix : No longer use of `subprocess.communicate()`, as it's thread blocking
-- All strings are in `bot_data.py`, hope this hsould ease #179
+- All strings are in `bot_data.py`, hope this should ease [#179](https://github.com/EDM115/unzip-bot/issues/179)
 - Even less thread block : use of `async for` and `yield`
 - Any file unreachable/with a size of 0B is skipped, thus avoiding the bot being stuck on an impossible task
 
@@ -67,7 +67,7 @@
 - URL's also shows a progressbar + ETA when possible
 - Downloads are 28 times faster
 - Some databases are cleared upon restart
-- Attempt to implement #137
+- Attempt to implement [#137](https://github.com/EDM115/unzip-bot/issues/137)
 - New boot sequence
 
 ### v6.0.0 
@@ -76,16 +76,18 @@
 - tgz and zst archives are now supported
 - Thumbnail change tasks are now removed from DB after completion
 - Dockerfile have been updated : Add of ffmpeg and venv
-- Uploading videos as media is fixed ! #133
+- Uploading videos as media is fixed ! [#133](https://github.com/EDM115/unzip-bot/issues/133)
 - Added Docker instructions on the README
 - Added GitHub Actions for Docker publishing and deployment
 - Updated the FUNDING.yml
 - New command : /donate, plus donate button appears on /start and after a task is processed
 - Tell users that they can rate the bot after a task is processed
-- #33 is gone (no longer useless alerts)
+- [#33](https://github.com/EDM115/unzip-bot/issues/33) is gone (no longer useless alerts)
 - ETA is now correct
 - Tried to add a way to cancel tasks, but it's not working
 - Files above 2 GB are now splitted
+
+---
 
 ### v5.3.1
 
@@ -106,7 +108,7 @@
 - Heroku deployment file now complies to their drop of the free their
 - Added THUMB_DEL buttons
 - Added ZIPX support
-- Added a Refresh button on /stats (#143)
+- Added a Refresh button on /stats ([#143](https://github.com/EDM115/unzip-bot/issues/143))
 
 ### v5.2.2
 
@@ -273,7 +275,7 @@
 
 ### v4.2.0
 
-- Added workaround for [issue #26](https://github.com/EDM115/unzip-bot/issues/26)
+- Added workaround for [#26](https://github.com/EDM115/unzip-bot/issues/26)
 - The bot now edit its messages each 7s (instead of 10s)
 - Attempt to make a really better ETA
 - Working around allowing user to cancel file/URL download (will look for the extracting process, bot can't reply while extracting)
@@ -291,10 +293,13 @@
 - Added `/dbexport`, `/commands`, `/admincmd`
 - Added exec and eval, but not usable now
 
-### v4.0.7 _(.6 don't exists 🥲)_
+### v4.0.7
+
+- Empty keyboard buttons are side to side
+
+### v4.0.6
 
 - Major bug fixes
-- Empty keyboard buttons are side to side
 
 ### v4.0.5
 
@@ -309,16 +314,19 @@
 - Upload count return 0 instead of None if it doesn't exist
 - Try to automatically perform a `/clean` when a task failed
 
-### v4.0.3 _(.2 don't exists 🥲)_
+### v4.0.3
+
+- Logs message now replies to the concerned archive. Better if multiple archives are processed at the same time
+- Errors shows up in logs
+- Created an empty keyboard where only Upload all & Cancel shows up
+- Fixed major bug : REPLY_MARKUP_TOO_LONG ([#2](https://github.com/EDM115/unzip-bot/issues/2))
+- Try to close session (to fix [#4](https://github.com/EDM115/unzip-bot/issues/4))
+
+### v4.0.2
 
 - `/mode` work finally as expected _(previous behavior added users to banned db when they changed their upload mode, thus the command couldn't work. That huge bug is present in Nexa's repo)_
 - Created a TimeFormatter with seconds as input
 - Created upload file count (buggy). Barely saves in DB + only shows up in logs when user selected upload all mode
-- Logs message now replies to the concerned archive. Better if multiple archives are processed at the same time
-- Errors shows up in logs
-- Created an empty keyboard where only Upload all & Cancel shows up
-- Fixed major bug : REPLY_MARKUP_TOO_LONG (refer to [issue #2](https://github.com/EDM115/unzip-bot/issues/2))
-- Try to close session (to fix [issue #4](https://github.com/EDM115/unzip-bot/issues/4))
 
 ### v4.0.1
 
@@ -334,7 +342,7 @@
 
 ---
 
-### v3.3.5 _(.4 don't exists 🥲)_
+### v3.3.4
 
 - More emojis
 - Created `/help` and `/about` from home text

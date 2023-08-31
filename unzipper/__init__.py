@@ -36,6 +36,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(name)s - %(threadName)s - %(message)s",
 )
 LOGGER = logging.getLogger(__name__)
-logging.getLogger("pyrogram").setLevel(logging.WARN)
-logging.getLogger("motor").setLevel(logging.INFO)
 logging.getLogger("aiohttp").setLevel(logging.INFO)
+logging.getLogger("asyncio").setLevel(logging.WARNING)
+logging.getLogger("motor").setLevel(logging.INFO)
+logging.getLogger("pyrogram").setLevel(logging.WARNING)

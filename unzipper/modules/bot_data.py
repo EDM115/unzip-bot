@@ -673,10 +673,6 @@ WIP
     MAINTENANCE = """
 Do you want the bot to go in maintenance mode 🤔
 Current state : `{}`
-
-False : No maintenance
-True : Maintenance
-Send the appropriate string
     """
 
     MAINTENANCE_ASK = """
