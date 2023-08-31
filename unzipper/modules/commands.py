@@ -480,7 +480,7 @@ async def maintenance_mode(_, message: Message):
     if newstate not in ["True", "False"]:
         await mess.edit(Messages.MAINTENANCE_FAIL)
         return
-    await set_maintenance(newstate)
+    await set_maintenance(newstate == "True")
     await message.reply(Messages.MAINTENANCE_DONE.format(newstate))
 
 
