@@ -594,6 +594,11 @@ async def donate_help(_, message: Message):
     await message.reply(Messages.DONATE_TEXT)
 
 
+@Client.on_message(filters.command("vip"))
+async def vip_help(_, message: Message):
+    await message.reply(Messages.VIP_INFO)
+
+
 @Client.on_message(
     filters.private & filters.command("dbexport") & filters.user(Config.BOT_OWNER)
 )

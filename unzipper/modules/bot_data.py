@@ -305,11 +305,54 @@ It helps out a ton, covers the costs (hosting, updating, … 👨‍💻)
 --How ?--
 • **[Paypal](https://www.paypal.me/8EDM115)**
 • **[GitHub Sponsors](https://github.com/sponsors/EDM115)**
-• **[Directly in Telegram](https://t.me/EDM115bots/170)**
+• **[Directly in Telegram](https://t.me/EDM115bots/544)**
 • **[BuyMeACoffee](https://www.buymeacoffee.com/edm115)**
 • **[Send cryptos (not recommended)](https://edm115.shadd.eu.org/)**
 
 Thanks for your contribution 😊
+
+--Side note :--
+Donation doesn't count as a VIP subscription. Check **/vip** for more info
+    """
+
+    VIP_INFO = """
+Wanna help the developer of this __amazing__ bot ?
+Here's how : Become a VIP user and benefit from extra perks !
+
+**VIP perks :**
+- No max tasks limit
+- No AFK timeout
+- Get a better support
+- Upload files up to 4Gb
+- Early access to new features
+- Access a second bot exclusive to VIPs __(subject to conditions)__
+- And more…
+
+**What's the price ?**
+- `1$/month`
+- `10$/year`
+
+**How to become a VIP ?**
+1) Send **/pay** to the bot
+2) Choose your subscription
+3) Send a screenshot of your payment to **@EDM115**
+4) Enjoy your VIP perks !
+
+**What happens when my subscription ends ?**
+If you choosed GitHub Sponsors, Telegram Donate or BuyMeACoffee, you will be automatically renewed until you cancel it
+If you choosed PayPal, you will have to redo the 4 above steps
+You will be notified few days before you subscription ends so you can check if you want to renew it or not
+
+**I wanna cancel my subscription**
+Just send **/stoppay** and follow the instructions accorfing to the platform you selected
+Your payment will be cancelled and you will keep your VIP perks until the end of your subscription
+(i.e. if you paid for 1 month, from 05/01/2024 to 05/02/2024 and you cancel your subscription on 15/01/2024, your perks will stay until 05/02/2024)
+
+**What is the referral system ?**
+Referrals have benefits for both sides :)
+- For the referrer : you get 1 month of VIP for free for each 3 new VIPs you bring
+- For the referred : you get 1 month of VIP for free if you take the monthly subscription, and 3 months for free if you take the yearly subscription
+How to input the referral code ? Just send **/pay** to the bot and follow the instructions
     """
 
     CLEAN_TXT = """
