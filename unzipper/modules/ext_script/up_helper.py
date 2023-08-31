@@ -51,11 +51,11 @@ async def get_size(doc_f):
 async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
     premium = False
     new_id = c_id
-    if unzip_bot.name == "PremiumUser":
+    fsize = await get_size(doc_f)
+    if unzip_bot.name == "PremiumUser" and fsize > Config.TG_MAX_SIZE:
         og_chat = c_id
         new_id = Config.LOGS_CHANNEL
         premium = True
-    fsize = await get_size(doc_f)
     if fsize == -1:  # File not found
         try:
             await unzip_bot.send_message(new_id, Messages.EMPTY_FILE.format(os.path.basename(doc_f)))
