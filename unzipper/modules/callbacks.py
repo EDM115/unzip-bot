@@ -59,6 +59,7 @@ from .ext_script.url_parser import gdrive_dl
 
 split_file_pattern = r"\.(?:z\d+|r\d{2})$"
 rar_file_pattern = r"\.part\d+\.rar$"
+telegram_url_pattern = r"(?:http[s]?:\/\/)?(?:www\.)?t\.me\/([a-zA-Z0-9_]+)\/(\d+)"
 
 
 async def download(url, path):
@@ -516,80 +517,65 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     await del_ongoing_task(user_id)
                     await query.message.edit(Messages.INVALID_URL)
                     return
-                s = ClientSession()
-                if "drive.google.com" in url:
-                    url = await gdrive_dl(url)
-                    if url is None:
-                        await del_ongoing_task(user_id)
-                        await query.message.edit(Messages.INVALID_URL)
-                        return
-                async with s as session:
-                    # Get the file size
-                    unzip_head = await session.head(url, allow_redirects=True)
-                    f_size = unzip_head.headers.get("content-length")
-                    u_file_size = f_size if f_size else "undefined"
-                    await log_msg.edit(Messages.LOG_TXT.format(user_id, url, u_file_size))
-                    archive_msg = log_msg
-                    # Checks if file is an archive using content-type header
-                    unzip_resp = await session.get(url, timeout=None, allow_redirects=True)
-                    if "application/" not in unzip_resp.headers.get("content-type"):
-                        await del_ongoing_task(user_id)
-                        await query.message.edit(Messages.NOT_AN_ARCHIVE)
-                        return
-                    rfnamebro = unquote(url.split("/")[-1])
-                    if unzip_resp.status == 200:
-                        # Makes download dir
-                        os.makedirs(download_path)
-                        s_time = time()
-                        fname = unquote(os.path.splitext(url)[1])
-                        fext = fname.split(".")[-1].casefold()
-                        if (
-                            splitted_data[2] not in ["thumb", "thumbrename"]
-                            and fext not in extentions_list["archive"]
-                        ):
+                if re.match(telegram_url_pattern, url):
+                    r_message = await unzip_bot.get_messages(
+                        chat_id=url.split("/")[-2],
+                        message_ids=int(url.split("/")[-1])
+                    )
+                    splitted_data[1] = "tg_file"
+                if splitted_data[1] == "url":
+                    s = ClientSession()
+                    if "drive.google.com" in url:
+                        url = await gdrive_dl(url)
+                        if url is None:
                             await del_ongoing_task(user_id)
-                            await query.message.edit(Messages.DEF_NOT_AN_ARCHIVE)
-                            try:
-                                shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
-                            except:
-                                pass
+                            await query.message.edit(Messages.INVALID_URL)
                             return
-                        archive = f"{download_path}/archive_from_{user_id}{fname}"
-                        location = archive
-                        await answer_query(
-                            query,
-                            Messages.PROCESSING2,
-                            unzip_client=unzip_bot
-                        )
-                        # HTTP server must send Accept-Ranges: bytes and Content-Length in headers
-                        if fext == "zip" and "accept-ranges" in unzip_resp.headers and "content-length" in unzip_resp.headers:
-                            try:
-                                loop = asyncio.get_event_loop()
-                                with concurrent.futures.ThreadPoolExecutor() as pool:
-                                    rzf, paths = await loop.run_in_executor(pool, get_zip_http, url)
+                    async with s as session:
+                        # Get the file size
+                        unzip_head = await session.head(url, allow_redirects=True)
+                        f_size = unzip_head.headers.get("content-length")
+                        u_file_size = f_size if f_size else "undefined"
+                        await log_msg.edit(Messages.LOG_TXT.format(user_id, url, u_file_size))
+                        archive_msg = log_msg
+                        # Checks if file is an archive using content-type header
+                        unzip_resp = await session.get(url, timeout=None, allow_redirects=True)
+                        if "application/" not in unzip_resp.headers.get("content-type"):
+                            await del_ongoing_task(user_id)
+                            await query.message.edit(Messages.NOT_AN_ARCHIVE)
+                            return
+                        rfnamebro = unquote(url.split("/")[-1])
+                        if unzip_resp.status == 200:
+                            # Makes download dir
+                            os.makedirs(download_path)
+                            s_time = time()
+                            fname = unquote(os.path.splitext(url)[1])
+                            fext = fname.split(".")[-1].casefold()
+                            if (
+                                splitted_data[2] not in ["thumb", "thumbrename"]
+                                and fext not in extentions_list["archive"]
+                            ):
+                                await del_ongoing_task(user_id)
+                                await query.message.edit(Messages.DEF_NOT_AN_ARCHIVE)
                                 try:
-                                    i_e_buttons = await make_keyboard(
-                                        paths=paths,
-                                        user_id=user_id,
-                                        chat_id=query.message.chat.id,
-                                        unziphttp=True,
-                                        rzfile=rzf,
-                                    )
-                                    try:
-                                        await query.message.edit(
-                                            Messages.SELECT_FILES,
-                                            reply_markup=i_e_buttons
-                                        )
-                                    except ReplyMarkupTooLong:
-                                        empty_buttons = await make_keyboard_empty(
-                                            user_id=user_id, chat_id=query.message.chat.id, unziphttp=True, rzfile=rzf)
-                                        await query.message.edit(
-                                            Messages.UNABLE_GATHER_FILES,
-                                            reply_markup=empty_buttons,
-                                        )
+                                    shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
                                 except:
+                                    pass
+                                return
+                            archive = f"{download_path}/archive_from_{user_id}{fname}"
+                            location = archive
+                            await answer_query(
+                                query,
+                                Messages.PROCESSING2,
+                                unzip_client=unzip_bot
+                            )
+                            # HTTP server must send Accept-Ranges: bytes and Content-Length in headers
+                            if fext == "zip" and "accept-ranges" in unzip_resp.headers and "content-length" in unzip_resp.headers:
+                                try:
+                                    loop = asyncio.get_event_loop()
+                                    with concurrent.futures.ThreadPoolExecutor() as pool:
+                                        rzf, paths = await loop.run_in_executor(pool, get_zip_http, url)
                                     try:
-                                        await query.message.delete()
                                         i_e_buttons = await make_keyboard(
                                             paths=paths,
                                             user_id=user_id,
@@ -597,54 +583,76 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                                             unziphttp=True,
                                             rzfile=rzf,
                                         )
-                                        await unzip_bot.send_message(
-                                            chat_id=query.message.chat.id,
-                                            text=Messages.SELECT_FILES,
-                                            reply_markup=i_e_buttons,
-                                        )
+                                        try:
+                                            await query.message.edit(
+                                                Messages.SELECT_FILES,
+                                                reply_markup=i_e_buttons
+                                            )
+                                        except ReplyMarkupTooLong:
+                                            empty_buttons = await make_keyboard_empty(
+                                                user_id=user_id, chat_id=query.message.chat.id, unziphttp=True, rzfile=rzf)
+                                            await query.message.edit(
+                                                Messages.UNABLE_GATHER_FILES,
+                                                reply_markup=empty_buttons,
+                                            )
                                     except:
                                         try:
                                             await query.message.delete()
-                                            empty_buttons = await make_keyboard_empty(
+                                            i_e_buttons = await make_keyboard(
+                                                paths=paths,
                                                 user_id=user_id,
                                                 chat_id=query.message.chat.id,
                                                 unziphttp=True,
-                                                rzfile=rzf
+                                                rzfile=rzf,
                                             )
                                             await unzip_bot.send_message(
                                                 chat_id=query.message.chat.id,
-                                                text=Messages.UNABLE_GATHER_FILES,
-                                                reply_markup=empty_buttons,
+                                                text=Messages.SELECT_FILES,
+                                                reply_markup=i_e_buttons,
                                             )
                                         except:
-                                            pass
+                                            try:
+                                                await query.message.delete()
+                                                empty_buttons = await make_keyboard_empty(
+                                                    user_id=user_id,
+                                                    chat_id=query.message.chat.id,
+                                                    unziphttp=True,
+                                                    rzfile=rzf
+                                                )
+                                                await unzip_bot.send_message(
+                                                    chat_id=query.message.chat.id,
+                                                    text=Messages.UNABLE_GATHER_FILES,
+                                                    reply_markup=empty_buttons,
+                                                )
+                                            except:
+                                                pass
+                                except Exception as e:
+                                    LOGGER.error(Messages.UNZIP_HTTP.format(url, e))
+                            try:
+                                dled = await download_with_progress(url, archive, query.message, unzip_bot)
                             except Exception as e:
-                                LOGGER.error(Messages.UNZIP_HTTP.format(url, e))
-                        try:
-                            dled = await download_with_progress(url, archive, query.message, unzip_bot)
-                        except Exception as e:
-                            dled = False
-                            LOGGER.error(Messages.ERR_DL.format(e))
-                        if isinstance(dled, bool) and not dled:
+                                dled = False
+                                LOGGER.error(Messages.ERR_DL.format(e))
+                            if isinstance(dled, bool) and not dled:
+                                return
+                            e_time = time()
+                            # Send copy in logs in case url has gone
+                            # paths = await get_files(path=archive)
+                            await send_url_logs(
+                                unzip_bot=unzip_bot,
+                                c_id=Config.LOGS_CHANNEL,
+                                doc_f=archive,
+                                source=url,
+                                message=query.message,
+                            )
+                        else:
+                            await del_ongoing_task(user_id)
+                            await query.message.edit(Messages.CANT_DL_URL)
+                            try:
+                                shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                            except:
+                                pass
                             return
-                        e_time = time()
-                        # Send copy in logs in case url has gone
-                        # paths = await get_files(path=archive)
-                        await send_url_logs(
-                            unzip_bot=unzip_bot,
-                            c_id=Config.LOGS_CHANNEL,
-                            doc_f=archive,
-                            source=url,
-                            message=query.message,
-                        )
-                    else:
-                        await del_ongoing_task(user_id)
-                        await query.message.edit(Messages.CANT_DL_URL)
-                        try:
-                            shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
-                        except:
-                            pass
-                        return
 
             elif splitted_data[1] == "tg_file":
                 if r_message.document is None:
