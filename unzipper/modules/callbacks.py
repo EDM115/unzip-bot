@@ -367,10 +367,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         except:
             pass
         if splitted_data[1] == "with_pass":
-            password = await query.message.chat.ask(
+            password = await unzip_bot.ask(
+                chat_id=query.message.chat.id,
                 text=Messages.PLS_SEND_PASSWORD,
             )
-            unzip_bot.stop_listening(identifier_pattern=(query.message.chat.id, None, None))
             ext_s_time = time()
             extractor = await merge_files(
                 iinput=file,
@@ -714,10 +714,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 await query.message.edit(Messages.PROCESSING2)
                 archive_name = location.split("/")[-1]
                 if "rename" in splitted_data[2]:
-                    newname = await message.chat.ask(
+                    newname = await unzip_bot.ask(
+                        chat_id=user_id,
                         text=Messages.GIVE_NEW_NAME.format(rfnamebro),
                     )
-                    unzip_bot.stop_listening(identifier_pattern=(query.message.chat.id, None, None))
                     renamed = location.replace(archive_name, newname.text)
                 else:
                     renamed = location.replace(archive_name, rfnamebro)
@@ -831,10 +831,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
 
             # Attempt to fetch password protected archives
             if splitted_data[2] == "with_pass":
-                password = await query.message.chat.ask(
+                password = await unzip_bot.ask(
+                    chat_id=query.message.chat.id,
                     text=Messages.PLS_SEND_PASSWORD
                 )
-                unzip_bot.stop_listening(identifier_pattern=(query.message.chat.id, None, None))
                 ext_s_time = time()
                 extractor = await extr_files(
                     path=ext_files_dir,
