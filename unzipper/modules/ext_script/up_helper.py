@@ -58,13 +58,13 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         premium = True
     if fsize == -1:  # File not found
         try:
-            await unzip_bot.send_message(new_id, Messages.EMPTY_FILE.format(os.path.basename(doc_f)))
+            await unzipperbot.send_message(new_id, Messages.EMPTY_FILE.format(os.path.basename(doc_f)))
         except:
             pass
         return
     if fsize == 0:  # Empty file
         try:
-            await unzip_bot.send_message(new_id, Messages.EMPTY_FILE.format(os.path.basename(doc_f)))
+            await unzipperbot.send_message(new_id, Messages.EMPTY_FILE.format(os.path.basename(doc_f)))
         except:
             pass
         return
@@ -231,15 +231,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     ),
                 )
         if premium:
-            try:
-                try:
-                    unzip_bot = unzipperbot
-                except:
-                    pass
-                await sentfile.copy(og_chat)
-            except FloodWait as f:
-                await asyncio.sleep(f.value)
-                await sentfile.forward(og_chat)
+            await forward_file(sentfile, og_chat)
         await upmsg.delete()
         os.remove(doc_f)
     except FloodWait as f:
@@ -247,13 +239,25 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         return await send_file(unzip_bot, new_id, doc_f, query, full_path, log_msg, split)
     except FileNotFoundError:
         try:
-            await unzip_bot.send_message(new_id, Messages.CANT_FIND.format(os.path.basename(doc_f)))
+            await unzipperbot.send_message(new_id, Messages.CANT_FIND.format(os.path.basename(doc_f)))
         except:
             pass
         return
     except BaseException as e:
         LOGGER.warning(e)
         shutil.rmtree(full_path)
+
+
+async def forward_file(message, cid):
+    try:
+        await unzipperbot.copy_message(
+            chat_id=cid,
+            from_chat_id=message.chat.id,
+            message_id=message.id,
+        )
+    except FloodWait as f:
+        await asyncio.sleep(f.value)
+        return await forward_file(message, cid)
 
 
 async def send_url_logs(unzip_bot, c_id, doc_f, source, message):
