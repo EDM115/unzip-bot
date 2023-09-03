@@ -32,7 +32,6 @@ from unzipper.helpers.database import (
     get_uploaded,
     get_users_list,
     count_ongoing_tasks,
-    get_vip_user,
     is_vip,
     set_maintenance,
 )
@@ -602,20 +601,6 @@ async def donate_help(_, message: Message):
 @unzipperbot.on_message(filters.command("vip"))
 async def vip_help(_, message: Message):
     await message.reply(Messages.VIP_INFO)
-
-
-@unzipperbot.on_message(
-    filters.private & filters.command("isvip") & filters.user(Config.BOT_OWNER)
-)
-async def is_vip_user(_, message: Message):
-    try:
-        user_id = message.text.split(None, 1)[1]
-    except:
-        await message.reply(Messages.PROVIDE_UID)
-        return
-    user_id = int(user_id)
-    LOGGER.info(await is_vip(user_id))
-    LOGGER.info(await get_vip_user(user_id))
 
 
 @unzipperbot.on_message(
