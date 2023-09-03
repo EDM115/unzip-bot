@@ -613,8 +613,8 @@ async def is_vip_user(_, message: Message):
     except:
         await message.reply(Messages.PROVIDE_UID)
         return
-    await message.reply(await is_vip(user_id))
-    await message.reply(await get_vip_user(user_id))
+    LOGGER.info(await is_vip(user_id))
+    LOGGER.info(await get_vip_user(user_id))
 
 
 @unzipperbot.on_message(
