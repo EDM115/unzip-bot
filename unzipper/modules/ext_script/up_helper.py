@@ -253,7 +253,7 @@ async def forward_file(message, cid):
         await unzipperbot.copy_message(
             chat_id=cid,
             from_chat_id=message.chat.id,
-            message_id=message.message_id,
+            message_id=message.id,
         )
     except FloodWait as f:
         await asyncio.sleep(f.value)
