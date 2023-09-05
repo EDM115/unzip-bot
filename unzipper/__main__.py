@@ -5,6 +5,7 @@ import signal
 import time
 
 from pyrogram import idle
+from pyrogram.errors import AuthKeyDuplicated
 
 from config import Config
 
@@ -47,7 +48,10 @@ while running:
         set_boot_time()
         dl_thumbs()
         if Config.SESSION_STRING:
-            premiumuser.start()
+            try:
+                premiumuser.start()
+            except AuthKeyDuplicated:
+                pass
         LOGGER.info(Messages.CHECK_LOG)
         if check_logs():
             LOGGER.info(Messages.LOG_CHECKED)
