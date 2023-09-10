@@ -10,7 +10,19 @@
 
 ---
 
-### v6.3.1 **[LATEST STABLE RELEASE]**
+### v6.3.2 **[LATEST STABLE RELEASE]**
+
+- Fixed thumbnails not being saved
+- Premium related stuff is moved to its own branch (buggy so yes)
+- Fixed files being nearly all the time not uploaded
+- Better logging
+- Added [Mend Bolt](https://github.com/marketplace/whitesource-bolt)
+- Downgraded pyromod to 1.5 again (too much errors, I know they had been fixed in 2.1.0 but still)
+- Client specification in decorators instead of global @Client
+- New maintenance logic
+- Attempt to support files sent as TG links (may fail for topics, unaccessible chats and forward-restricted files)
+
+### v6.3.1
 
 - Finally fixed [#133](https://github.com/EDM115/unzip-bot/issues/133)
 - Attempt to create a premium user to upload +2Gb files
