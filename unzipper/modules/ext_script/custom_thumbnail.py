@@ -4,7 +4,7 @@ import os
 from PIL import Image
 
 from config import Config
-from unzipper import LOGGER, unzipperbot
+from unzipper import LOGGER
 from unzipper.modules.bot_data import Buttons, Messages
 from pyrogram.errors import FloodWait
 from asyncio import sleep
@@ -39,7 +39,8 @@ async def add_thumb(_, message):
                     text=Messages.SAVING_THUMB, reply_markup=Buttons.THUMB_SAVE
                 )
             LOGGER.warning(Messages.DL_THUMB.format(user_id))
-            await unzipperbot.download_media(message=reply_message, file_name=pre_thumb)
+            file = await _.download_media(message=reply_message, file_name=pre_thumb)
+            LOGGER.warning(file)
             size = 320, 320
             try:
                 previous = Image.open(pre_thumb)
