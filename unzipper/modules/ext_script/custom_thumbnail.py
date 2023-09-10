@@ -24,7 +24,7 @@ async def add_thumb(_, message):
         if message.reply_to_message is not None:
             reply_message = message.reply_to_message
             if reply_message.media_group_id is not None:  # album sent
-                LOGGER.warning(Messages.ALBUM.format(user_id))
+                LOGGER.info(Messages.ALBUM.format(user_id))
                 await message.reply(Messages.ALBUM_NOPE)
                 return
             thumb_location = Config.THUMB_LOCATION + "/" + user_id + ".jpg"
@@ -52,9 +52,9 @@ async def add_thumb(_, message):
                 with Image.open(pre_thumb) as previous:
                     previous.thumbnail(size, Image.Resampling.LANCZOS)
                     previous.save(final_thumb, "JPEG")
-                    LOGGER.warning(Messages.THUMB_SAVED)
+                    LOGGER.info(Messages.THUMB_SAVED)
             except:
-                LOGGER.warning(Messages.THUMB_FAILED)
+                LOGGER.info(Messages.THUMB_FAILED)
                 try:
                     os.remove(pre_thumb)
                 except:
@@ -77,8 +77,8 @@ async def add_thumb(_, message):
 
 async def del_thumb(message):
     try:
-        id = message.from_user.id
-        thumb_location = Config.THUMB_LOCATION + "/" + str(id) + ".jpg"
+        uid = message.from_user.id
+        thumb_location = Config.THUMB_LOCATION + "/" + str(uid) + ".jpg"
         if not os.path.exists(thumb_location):
             await message.reply(text=Messages.NO_THUMB)
         else:

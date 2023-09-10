@@ -228,7 +228,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
             pass
         return
     except BaseException as e:
-        LOGGER.warning(e)
+        LOGGER.error(e)
         shutil.rmtree(full_path)
 
 

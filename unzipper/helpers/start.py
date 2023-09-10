@@ -20,13 +20,13 @@ def check_logs():
         if Config.LOGS_CHANNEL:
             c_info = unzipperbot.get_chat(chat_id=Config.LOGS_CHANNEL)
             if c_info.type in (enums.ChatType.PRIVATE, enums.ChatType.BOT):
-                LOGGER.warning(Messages.PRIVATE_CHAT)
+                LOGGER.error(Messages.PRIVATE_CHAT)
                 return False
             return True
-        LOGGER.warning(Messages.NO_LOG_ID)
+        LOGGER.error(Messages.NO_LOG_ID)
         return sys.exit()
     except:
-        LOGGER.warning(Messages.ERROR_LOG_CHECK)
+        LOGGER.error(Messages.ERROR_LOG_CHECK)
         return False
 
 

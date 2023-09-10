@@ -9,7 +9,7 @@ from pyrogram.errors import AuthKeyDuplicated
 
 from config import Config
 
-from . import unzipperbot
+from . import LOGGER, unzipperbot
 from .helpers.start import check_logs, dl_thumbs, set_boot_time, removal
 from .modules.bot_data import Messages
 
@@ -23,15 +23,6 @@ def handler_stop_signals(signum, frame):
 
 signal.signal(signal.SIGINT, handler_stop_signals)
 signal.signal(signal.SIGTERM, handler_stop_signals)
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(name)s - %(threadName)s - %(message)s",
-)
-LOGGER = logging.getLogger(__name__)
-logging.getLogger("pyrogram").setLevel(logging.WARN)
-logging.getLogger("motor").setLevel(logging.INFO)
-logging.getLogger("aiohttp").setLevel(logging.INFO)
 
 while running:
     if __name__ == "__main__":

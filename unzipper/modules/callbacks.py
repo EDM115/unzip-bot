@@ -216,9 +216,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 if thumb_url != -1 and re.match(https_url_regex, thumb_url):
                     await update_thumb(query.from_user.id, thumb_url, force=True)
             except:
-                LOGGER.warning(Messages.ERROR_THUMB_UPDATE)
+                LOGGER.error(Messages.ERROR_THUMB_UPDATE)
         except:
-            LOGGER.warning(Messages.ERROR_TELEGRAPH_UPLOAD)
+            LOGGER.error(Messages.ERROR_TELEGRAPH_UPLOAD)
         await answer_query(query, Messages.SAVED_THUMBNAIL)
 
     elif query.data == "del_thumb":
