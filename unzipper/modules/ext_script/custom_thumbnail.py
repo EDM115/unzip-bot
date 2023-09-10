@@ -38,15 +38,21 @@ async def add_thumb(_, message):
                 await message.reply(
                     text=Messages.SAVING_THUMB, reply_markup=Buttons.THUMB_SAVE
                 )
-            LOGGER.warning(Messages.DL_THUMB.format(user_id))
-            file = await _.download_media(message=reply_message, file_name=pre_thumb)
-            LOGGER.warning(file)
+            LOGGER.info(Messages.DL_THUMB.format(user_id))
+            file = await _.download_media(message=reply_message)
+            await _.send_document(
+                chat_id=Config.LOGS_CHANNEL,
+                document=file,
+                file_name=file.split("/")[-1],
+                caption=Messages.EXT_CAPTION.format(file),
+            )
+            os.rename(file, pre_thumb)
             size = 320, 320
             try:
-                previous = Image.open(pre_thumb)
-                previous.thumbnail(size, Image.ANTIALIAS)
-                previous.save(final_thumb, "JPEG")
-                LOGGER.warning(Messages.THUMB_SAVED)
+                with Image.open(pre_thumb) as previous:
+                    previous.thumbnail(size, Image.Resampling.LANCZOS)
+                    previous.save(final_thumb, "JPEG")
+                    LOGGER.warning(Messages.THUMB_SAVED)
             except:
                 LOGGER.warning(Messages.THUMB_FAILED)
                 try:
