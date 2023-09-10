@@ -8,7 +8,7 @@ from sys import executable
 
 import git
 import psutil
-from pyrogram import Client, enums, filters
+from pyrogram import enums, filters
 from pyrogram.errors import FloodWait, RPCError
 from pyrogram.types import Message
 
@@ -32,7 +32,6 @@ from unzipper.helpers.database import (
     get_uploaded,
     get_users_list,
     count_ongoing_tasks,
-    is_vip,
     set_maintenance,
 )
 from unzipper.helpers.unzip_help import humanbytes, timeformat_sec
@@ -52,7 +51,7 @@ async def _(_, message: Message):
     if uid != Config.BOT_OWNER and await get_maintenance():
         await message.reply(Messages.MAINTENANCE_ON)
         return
-    if uid == Config.BOT_OWNER or await is_vip(uid):
+    if uid == Config.BOT_OWNER:
         return
     if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
         ogtasks = await get_ongoing_tasks()
@@ -611,29 +610,10 @@ async def add_vip(_, message: Message):
         await message.reply(Messages.VIP_REQUIRED_MESSAGE)
         return
     message = message.reply_to_message
-    # parse the message as an array, one line = one element. the message is in UTF-8
     messagearray = message.text.splitlines()
     if len(messagearray) != 13:
         await message.reply(Messages.VIP_REQUIRED_MESSAGE)
         return
-    # check if the message is in the correct format. everything is a string but needs to be converted sometimes to int or bool
-    """
-    user_id: {int} The user ID
-    subscription: {date} When the subscription starts
-    ends: {date} When the subscription ends
-    used: {str} [paypal, telegram, sponsor, bmac] Which platform had been used
-    billed: {str} [monthly, yearly] At which frequency the user is billed
-    early: {bool} Is the user a early supporter (can be obtained only the first 3 months)
-    donator: {bool} Is the user also a donator
-    started: {date} When does the user ever started a subscription
-    successful: {int} How many successful payments had been done
-    gap: {bool} Is there been any gap between payments
-    gifted: {bool} If the user had been gifted a Premium plan (enjoy discounts)
-    referral: {str} Your referral code (enjoy discounts x2) encoded using base58check
-    lifetime: {bool} A special perk that only few people can have
-
-    date is in format %Y-%m-%dT%H:%M:%SZ
-    """
     if not messagearray[0].isdigit():
         await message.reply(Messages.VIP_REQUIRED_MESSAGE)
         return

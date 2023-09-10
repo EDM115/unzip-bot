@@ -12,7 +12,7 @@ from unzipper import LOGGER, boottime, unzipperbot
 from unzipper.modules.bot_data import Messages
 from unzipper.modules.callbacks import download
 
-from .database import clear_cancel_tasks, clear_merge_tasks, del_ongoing_task, get_thumb_users, is_vip, set_boot, get_boot, set_old_boot, get_old_boot, is_boot_different, count_ongoing_tasks, get_ongoing_tasks, clear_ongoing_tasks
+from .database import clear_cancel_tasks, clear_merge_tasks, del_ongoing_task, get_thumb_users, set_boot, get_boot, set_old_boot, get_old_boot, is_boot_different, count_ongoing_tasks, get_ongoing_tasks, clear_ongoing_tasks
 
 
 def check_logs():
@@ -105,28 +105,27 @@ async def remove_expired_tasks(firststart=False):
                 except:
                     pass
             else:
-                if not await is_vip(user_id):
-                    current_time = time()
-                    start_time = task["start_time"]
-                    task_type = task["type"]
-                    time_gap = current_time - start_time
+                current_time = time()
+                start_time = task["start_time"]
+                task_type = task["type"]
+                time_gap = current_time - start_time
 
-                    if task_type == "extract":
-                        if time_gap > Config.MAX_TASK_DURATION_EXTRACT:
-                            await del_ongoing_task(user_id)
-                            try:
-                                shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
-                            except:
-                                pass
-                            await unzipperbot.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_EXTRACT // 60))
-                    elif task_type == "merge":
-                        if time_gap > Config.MAX_TASK_DURATION_MERGE:
-                            await del_ongoing_task(user_id)
-                            try:
-                                shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
-                            except:
-                                pass
-                            await unzipperbot.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_MERGE // 60))
+                if task_type == "extract":
+                    if time_gap > Config.MAX_TASK_DURATION_EXTRACT:
+                        await del_ongoing_task(user_id)
+                        try:
+                            shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                        except:
+                            pass
+                        await unzipperbot.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_EXTRACT // 60))
+                elif task_type == "merge":
+                    if time_gap > Config.MAX_TASK_DURATION_MERGE:
+                        await del_ongoing_task(user_id)
+                        try:
+                            shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
+                        except:
+                            pass
+                        await unzipperbot.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_MERGE // 60))
 
         value = False
         await asyncio.sleep(5 * 60)  # Sleep for 5 minutes

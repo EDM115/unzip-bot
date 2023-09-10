@@ -9,7 +9,7 @@ from pyrogram.errors import AuthKeyDuplicated
 
 from config import Config
 
-from . import unzipperbot, premiumuser
+from . import unzipperbot
 from .helpers.start import check_logs, dl_thumbs, set_boot_time, removal
 from .modules.bot_data import Messages
 
@@ -47,11 +47,6 @@ while running:
         )
         set_boot_time()
         dl_thumbs()
-        if Config.SESSION_STRING:
-            try:
-                premiumuser.start()
-            except AuthKeyDuplicated:
-                pass
         LOGGER.info(Messages.CHECK_LOG)
         if check_logs():
             LOGGER.info(Messages.LOG_CHECKED)

@@ -16,7 +16,7 @@ from pyrogram.types import CallbackQuery
 import unzip_http
 
 from config import Config
-from unzipper import LOGGER, premiumuser, unzipperbot
+from unzipper import LOGGER, unzipperbot
 from unzipper.helpers.database import (
     add_cancel_task,
     del_cancel_task,
@@ -26,7 +26,6 @@ from unzipper.helpers.database import (
     get_maintenance,
     get_merge_task_message_id,
     get_ongoing_tasks,
-    is_vip,
     set_upload_mode,
     update_thumb,
     update_uploaded,
@@ -109,7 +108,7 @@ async def async_generator(iterable):
 @unzipperbot.on_callback_query()
 async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     uid = query.from_user.id
-    if uid != Config.BOT_OWNER or not await is_vip(uid):  # skipcq: PTC-W0048
+    if uid != Config.BOT_OWNER:  # skipcq: PTC-W0048
         if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
             ogtasks = await get_ongoing_tasks()
             if not any(ogtask["user_id"] == uid for ogtask in ogtasks):
@@ -729,38 +728,19 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     return
                 newfname = renamed.split("/")[-1]
                 fsize = await get_size(renamed)
-                if await is_vip(user_id):
-                    if fsize <= Config.TG_PREMIUM_SIZE:
-                        await send_file(
-                            unzip_bot=premiumuser,
-                            c_id=user_id,
-                            doc_f=renamed,
-                            query=query,
-                            full_path=renamed,
-                            log_msg=log_msg,
-                            split=False,
-                        )
-                        await query.message.delete()
-                        await del_ongoing_task(user_id)
-                        return shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
-                    else:
-                        pass
-                elif not await is_vip(user_id):
-                    if fsize <= Config.TG_MAX_SIZE:
-                        await send_file(
-                            unzip_bot=unzip_bot,
-                            c_id=user_id,
-                            doc_f=renamed,
-                            query=query,
-                            full_path=renamed,
-                            log_msg=log_msg,
-                            split=False,
-                        )
-                        await query.message.delete()
-                        await del_ongoing_task(user_id)
-                        return shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
-                    else:
-                        pass
+                if fsize <= Config.TG_MAX_SIZE:
+                    await send_file(
+                        unzip_bot=unzip_bot,
+                        c_id=user_id,
+                        doc_f=renamed,
+                        query=query,
+                        full_path=renamed,
+                        log_msg=log_msg,
+                        split=False,
+                    )
+                    await query.message.delete()
+                    await del_ongoing_task(user_id)
+                    return shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
                 await query.message.edit(Messages.SPLITTING.format(newfname))
                 splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
                 os.makedirs(splitteddir)
@@ -781,26 +761,15 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 async_splittedfiles = async_generator(splittedfiles)
                 async for file in async_splittedfiles:
                     sent_files += 1
-                    if await is_vip(user_id):
-                        await send_file(
-                            unzip_bot=premiumuser,
-                            c_id=user_id,
-                            doc_f=file,
-                            query=query,
-                            full_path=splitteddir,
-                            log_msg=log_msg,
-                            split=True,
-                        )
-                    elif not await is_vip(user_id):
-                        await send_file(
-                            unzip_bot=unzip_bot,
-                            c_id=user_id,
-                            doc_f=file,
-                            query=query,
-                            full_path=splitteddir,
-                            log_msg=log_msg,
-                            split=True,
-                        )
+                    await send_file(
+                        unzip_bot=unzip_bot,
+                        c_id=user_id,
+                        doc_f=file,
+                        query=query,
+                        full_path=splitteddir,
+                        log_msg=log_msg,
+                        split=True,
+                    )
                 try:
                     shutil.rmtree(splitteddir)
                     shutil.rmtree(renamed.replace(newfname, ""))
@@ -1024,32 +993,18 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             file = paths[int(spl_data[3])]
         fsize = await get_size(file)
         split = False
-        if await is_vip(user_id):
-            if fsize <= Config.TG_PREMIUM_SIZE:
-                await send_file(
-                    unzip_bot=premiumuser,
-                    c_id=spl_data[2],
-                    doc_f=file,
-                    query=query,
-                    full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
-                    log_msg=log_msg,
-                    split=False,
-                )
-            else:
-                split = True
-        elif not await is_vip(user_id):
-            if fsize <= Config.TG_MAX_SIZE:
-                await send_file(
-                    unzip_bot=unzip_bot,
-                    c_id=spl_data[2],
-                    doc_f=file,
-                    query=query,
-                    full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
-                    log_msg=log_msg,
-                    split=False,
-                )
-            else:
-                split = True
+        if fsize <= Config.TG_MAX_SIZE:
+            await send_file(
+                unzip_bot=unzip_bot,
+                c_id=spl_data[2],
+                doc_f=file,
+                query=query,
+                full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
+                log_msg=log_msg,
+                split=False,
+            )
+        else:
+            split = True
         if split:
             fname = file.split('/')[-1]
             smessage = await unzip_bot.send_message(
@@ -1059,10 +1014,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
             os.makedirs(splitteddir)
             ooutput = f"{splitteddir}/{fname}"
-            if await is_vip(user_id):
-                splittedfiles = await split_files(file, ooutput, Config.TG_PREMIUM_SIZE)
-            else:
-                splittedfiles = await split_files(file, ooutput, Config.TG_MAX_SIZE)
+            splittedfiles = await split_files(file, ooutput, Config.TG_MAX_SIZE)
             LOGGER.info(splittedfiles)
             if not splittedfiles:
                 try:
@@ -1076,26 +1028,15 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             async_splittedfiles = async_generator(splittedfiles)
             async for file in async_splittedfiles:
                 sent_files += 1
-                if await is_vip(user_id):
-                    await send_file(
-                        unzip_bot=premiumuser,
-                        c_id=user_id,
-                        doc_f=file,
-                        query=query,
-                        full_path=splitteddir,
-                        log_msg=log_msg,
-                        split=True,
-                    )
-                elif not await is_vip(user_id):
-                    await send_file(
-                        unzip_bot=unzip_bot,
-                        c_id=user_id,
-                        doc_f=file,
-                        query=query,
-                        full_path=splitteddir,
-                        log_msg=log_msg,
-                        split=True,
-                    )
+                await send_file(
+                    unzip_bot=unzip_bot,
+                    c_id=user_id,
+                    doc_f=file,
+                    query=query,
+                    full_path=splitteddir,
+                    log_msg=log_msg,
+                    split=True,
+                )
             try:
                 shutil.rmtree(splitteddir)
                 os.remove(file)
@@ -1200,32 +1141,18 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             else:
                 fsize = await get_size(file)
             split = False
-            if await is_vip(user_id):
-                if fsize <= Config.TG_PREMIUM_SIZE:
-                    await send_file(
-                        unzip_bot=premiumuser,
-                        c_id=spl_data[2],
-                        doc_f=file,
-                        query=query,
-                        full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
-                        log_msg=log_msg,
-                        split=False,
-                    )
-                else:
-                    split = True
-            elif not await is_vip(user_id):
-                if fsize <= Config.TG_MAX_SIZE:
-                    await send_file(
-                        unzip_bot=unzip_bot,
-                        c_id=spl_data[2],
-                        doc_f=file,
-                        query=query,
-                        full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
-                        log_msg=log_msg,
-                        split=False,
-                    )
-                else:
-                    split = True
+            if fsize <= Config.TG_MAX_SIZE:
+                await send_file(
+                    unzip_bot=unzip_bot,
+                    c_id=spl_data[2],
+                    doc_f=file,
+                    query=query,
+                    full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
+                    log_msg=log_msg,
+                    split=False,
+                )
+            else:
+                split = True
             if split:
                 fname = file.split('/')[-1]
                 smessage = await unzip_bot.send_message(
@@ -1235,10 +1162,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
                 os.makedirs(splitteddir)
                 ooutput = f"{splitteddir}/{fname}"
-                if await is_vip(user_id):
-                    splittedfiles = await split_files(file, ooutput, Config.TG_PREMIUM_SIZE)
-                else:
-                    splittedfiles = await split_files(file, ooutput, Config.TG_MAX_SIZE)
+                splittedfiles = await split_files(file, ooutput, Config.TG_MAX_SIZE)
                 LOGGER.info(splittedfiles)
                 if not splittedfiles:
                     try:
@@ -1252,26 +1176,15 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 async_splittedfiles = async_generator(splittedfiles)
                 async for file in async_splittedfiles:
                     sent_files += 1
-                    if await is_vip(user_id):
-                        await send_file(
-                            unzip_bot=premiumuser,
-                            c_id=user_id,
-                            doc_f=file,
-                            query=query,
-                            full_path=splitteddir,
-                            log_msg=log_msg,
-                            split=True,
-                        )
-                    elif not await is_vip(user_id):
-                        await send_file(
-                            unzip_bot=unzip_bot,
-                            c_id=user_id,
-                            doc_f=file,
-                            query=query,
-                            full_path=splitteddir,
-                            log_msg=log_msg,
-                            split=True,
-                        )
+                    await send_file(
+                        unzip_bot=unzip_bot,
+                        c_id=user_id,
+                        doc_f=file,
+                        query=query,
+                        full_path=splitteddir,
+                        log_msg=log_msg,
+                        split=True,
+                    )
                 try:
                     shutil.rmtree(splitteddir)
                 except:

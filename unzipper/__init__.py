@@ -10,15 +10,6 @@ from config import Config
 boottime = time.time()
 
 plugins = dict(root="modules")
-premiumuser = Client(
-    "PremiumUser",
-    session_string=Config.SESSION_STRING,
-    api_id=Config.APP_ID,
-    api_hash=Config.API_HASH,
-    plugins=plugins,
-    sleep_threshold=10,
-    max_concurrent_transmissions=3,
-)
 unzipperbot = Client(
     "UnzipperBot",
     bot_token=Config.BOT_TOKEN,

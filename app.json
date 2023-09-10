@@ -36,10 +36,6 @@
         "LOGS_CHANNEL": {
             "description": "ID of a channel, can also be a group",
             "required": true
-        },
-        "SESSION_STRING": {
-            "description": "Session string for Premium uploads",
-            "required": false
         }
     },
     "addons": [],
