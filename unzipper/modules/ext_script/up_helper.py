@@ -7,7 +7,7 @@ import subprocess
 import asyncio
 from time import time
 
-from pyrogram.errors import FloodWait
+from pyrogram.errors import FloodWait, PhotoExtInvalid, PhotoSaveFileInvalid
 
 from config import Config
 from unzipper import LOGGER
@@ -91,18 +91,81 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                 )
         elif ul_mode == "media" and fext in extentions_list["photo"]:
             # impossible to use a thumb here :(
-            sentfile = await unzip_bot.send_photo(
-                chat_id=c_id,
-                photo=doc_f,
-                caption=Messages.EXT_CAPTION.format(fname),
-                progress=progress_for_pyrogram,
-                progress_args=(
-                    Messages.TRY_UP.format(fname),
-                    upmsg,
-                    time(),
-                    unzip_bot,
-                ),
-            )
+            try:
+                sentfile = await unzip_bot.send_photo(
+                    chat_id=c_id,
+                    photo=doc_f,
+                    caption=Messages.EXT_CAPTION.format(fname),
+                    progress=progress_for_pyrogram,
+                    progress_args=(
+                        Messages.TRY_UP.format(fname),
+                        upmsg,
+                        time(),
+                        unzip_bot,
+                    ),
+                )
+            except PhotoExtInvalid:
+                if thumbornot:
+                    thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
+                    sentfile = await unzip_bot.send_document(
+                        chat_id=c_id,
+                        document=doc_f,
+                        thumb=thumb_image,
+                        caption=Messages.EXT_CAPTION.format(fname),
+                        force_document=True,
+                        progress=progress_for_pyrogram,
+                        progress_args=(
+                            Messages.TRY_UP.format(fname),
+                            upmsg,
+                            time(),
+                            unzip_bot,
+                        ),
+                    )
+                else:
+                    sentfile = await unzip_bot.send_document(
+                        chat_id=c_id,
+                        document=doc_f,
+                        caption=Messages.EXT_CAPTION.format(fname),
+                        force_document=True,
+                        progress=progress_for_pyrogram,
+                        progress_args=(
+                            Messages.TRY_UP.format(fname),
+                            upmsg,
+                            time(),
+                            unzip_bot,
+                        ),
+                    )
+            except PhotoSaveFileInvalid:
+                if thumbornot:
+                    thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
+                    sentfile = await unzip_bot.send_document(
+                        chat_id=c_id,
+                        document=doc_f,
+                        thumb=thumb_image,
+                        caption=Messages.EXT_CAPTION.format(fname),
+                        force_document=True,
+                        progress=progress_for_pyrogram,
+                        progress_args=(
+                            Messages.TRY_UP.format(fname),
+                            upmsg,
+                            time(),
+                            unzip_bot,
+                        ),
+                    )
+                else:
+                    sentfile = await unzip_bot.send_document(
+                        chat_id=c_id,
+                        document=doc_f,
+                        caption=Messages.EXT_CAPTION.format(fname),
+                        force_document=True,
+                        progress=progress_for_pyrogram,
+                        progress_args=(
+                            Messages.TRY_UP.format(fname),
+                            upmsg,
+                            time(),
+                            unzip_bot,
+                        ),
+                    )
         elif ul_mode == "media" and fext in extentions_list["video"]:
             vid_duration = await run_shell_cmds(
                 f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}"
