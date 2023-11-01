@@ -9,7 +9,7 @@ Pillow==10.1.0
 psutil==5.9.6
 pykeyboard==0.1.5
 pyrogram==2.0.106
-pyromod==1.5
+pyromod==3.1.0
 requests==2.31.0
 TgCrypto==1.2.5
 unzip-http==0.4
