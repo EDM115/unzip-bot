@@ -9,7 +9,7 @@ RUN pacman -Syyu --noconfirm && \
     libvdpau libwebp libxcursor libx11 libxau libxcb libxdamage libxdmcp \
     libxext libxfixes libxft libxrender libxv libxxf86vm mesa mpg123 ocl-icd \
     onevpl openexr openjpeg2 pango pcre2 perl-mailtools perl-error perl-timedate \
-    perl pixman portaudio pulseaudio sdl2 speex speexdsp sqlite v4l-utils \
+    perl pixman portaudio sdl2 speex speexdsp sqlite v4l-utils \
     vid.stab vmaf vulkan-icd-loader wayland xorgproto zimg && \
     pacman -Rnsu $(pacman -Qdtq) && \
     pacman -Scc --noconfirm
