@@ -2,7 +2,7 @@ FROM archlinux:latest
 
 RUN pacman -Syyu --noconfirm && \
     pacman -S --noconfirm python-pip zstd p7zip git ffmpeg && \
-    pacman -Rsu --noconfirm cairo alsa-lib default-cursors fontconfig freetype2 \
+    pacman -Ru --noconfirm cairo alsa-lib default-cursors fontconfig freetype2 \
     gdk-pixbuf2 giflib gperftools gsm harfbuzz hicolor-icon-theme hidapi imath \
     jack2 lcms2 libass libbluray libbs2b libjpeg-turbo libiec61883 libjxl \
     libopenmpt libpng libpulse librsvg libthai libtheora libtiff libusb libva \
