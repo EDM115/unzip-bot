@@ -2,7 +2,7 @@ FROM archlinux:latest
 
 RUN pacman -Syyu --noconfirm && \
     pacman -S --noconfirm python-pip zstd p7zip git ffmpeg && \
-    pacman -Ru --noconfirm cairo alsa-lib default-cursors fontconfig freetype2 \
+    pacman -Rnsu --noconfirm cairo alsa-lib default-cursors fontconfig freetype2 \
     gdk-pixbuf2 giflib gperftools gsm harfbuzz hicolor-icon-theme hidapi imath \
     jack2 lcms2 libass libbluray libbs2b libjpeg-turbo libiec61883 libjxl \
     libopenmpt libpng libpulse librsvg libthai libtheora libtiff libusb libva \
@@ -11,7 +11,6 @@ RUN pacman -Syyu --noconfirm && \
     onevpl openexr openjpeg2 pango pcre2 perl-mailtools perl-error perl-timedate \
     perl pixman portaudio sdl2 speex speexdsp sqlite v4l-utils \
     vid.stab vmaf vulkan-icd-loader wayland xorgproto zimg && \
-    pacman -Rnsu $(pacman -Qdtq) && \
     pacman -Scc --noconfirm
 
 RUN python -m venv /venv && \
