@@ -1,7 +1,8 @@
 repo_name: EDM115/unzip-bot
-report_id: 2583f03ee931b2fc651d8ca39fbc0459
+report_id: a22151c2a9a30641224fb622a23031a5
+version: 0.1
 repo_type: Public
-timestamp: '2023-12-14T12:17:50+00:00'
+timestamp: '2024-01-05T09:16:39+00:00'
 requested_by: EDM115
 provider: github
 branch: master
@@ -16,6 +17,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/993/pUBY5pVj.png
+  detection_source_url: https://github.com/EDM115/unzip-bot
   detection_source: Repo Metadata
 - name: MongoDB
   description: The database for giant ideas
@@ -25,6 +27,7 @@ tools:
   category: Data Stores
   sub_category: Databases
   image_url: https://img.stackshare.io/service/1030/leaf-360x360.png
+  detection_source_url: https://github.com/EDM115/unzip-bot/blob/master/unzipper/helpers/database.py
   detection_source: unzipper/helpers/database.py
   last_updated_by: EDM115
   last_updated_on: 2023-08-28 15:49:59.000000000 Z
@@ -36,6 +39,7 @@ tools:
   category: Data Stores
   sub_category: Database Tools
   image_url: https://img.stackshare.io/service/109221/default_b888cdf5617d936aa6aacf130911906955508639.png
+  detection_source_url: https://github.com/EDM115/unzip-bot/blob/master/requirements.txt
   detection_source: requirements.txt
   last_updated_by: EDM 1.15
   last_updated_on: 2022-05-02 04:19:37.000000000 Z
@@ -48,6 +52,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Virtual Machine Platforms & Containers
   image_url: https://img.stackshare.io/service/586/n4u37v9t_400x400.png
+  detection_source_url: https://github.com/EDM115/unzip-bot
   detection_source: Repo Metadata
 - name: Git
   description: Fast, scalable, distributed revision control system
@@ -57,6 +62,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Version Control System
   image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source_url: https://github.com/EDM115/unzip-bot
   detection_source: Repo Metadata
 - name: GitHub Actions
   description: Automate your workflow from idea to production
@@ -66,6 +72,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Continuous Integration
   image_url: https://img.stackshare.io/service/11563/actions.png
+  detection_source_url: https://github.com/EDM115/unzip-bot/blob/master/.github/workflows/black-code-style.yml
   detection_source: ".github/workflows/black-code-style.yml"
   last_updated_by: renovate[bot]
   last_updated_on: 2023-10-10 07:17:45.000000000 Z
@@ -77,6 +84,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Hosted Package Repository
   image_url: https://img.stackshare.io/service/12572/-RIWgodF_400x400.jpg
+  detection_source_url: https://github.com/EDM115/unzip-bot/blob/master/requirements.txt
   detection_source: requirements.txt
   last_updated_by: EDM 1.15
   last_updated_on: 2022-05-02 04:19:37.000000000 Z
@@ -89,6 +97,7 @@ tools:
   category: Application Hosting
   sub_category: Platform as a Service
   image_url: https://img.stackshare.io/service/133/3wgIDj3j.png
+  detection_source_url: https://github.com/EDM115/unzip-bot/blob/master/app.json
   detection_source: app.json
   last_updated_by: EDM 1.15
   last_updated_on: 2023-01-09 14:02:29.000000000 Z
@@ -100,6 +109,7 @@ tools:
   category: Assets and Media
   sub_category: Image Processing and Management
   image_url: https://img.stackshare.io/service/2375/default_1f67b0ca7416a9f52beb655f90b5602d5ef74b75.jpg
+  detection_source_url: https://github.com/EDM115/unzip-bot/blob/master/requirements.txt
   detection_source: requirements.txt
   last_updated_by: renovate[bot]
   last_updated_on: 2023-10-15 16:24:32.000000000 Z
@@ -111,6 +121,7 @@ tools:
   category: Communications
   sub_category: Large Language Model Tools
   image_url: https://img.stackshare.io/service/48790/default_5b6c6b73f1ff3775c85d2a1ba954cb87e30cbf13.jpg
+  detection_source_url: https://github.com/EDM115/unzip-bot/blob/master/requirements.txt
   detection_source: requirements.txt
   last_updated_by: EDM 1.15
   last_updated_on: 2022-05-02 04:19:37.000000000 Z
@@ -123,6 +134,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/4631/default_c2062d40130562bdc836c13dbca02d318205a962.png
+  detection_source_url: https://github.com/EDM115/unzip-bot
   detection_source: Repo Metadata
 - name: GitPython
   description: Python Git Library
