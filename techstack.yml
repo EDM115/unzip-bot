@@ -2,11 +2,11 @@ repo_name: EDM115/unzip-bot
 report_id: a22151c2a9a30641224fb622a23031a5
 version: 0.1
 repo_type: Public
-timestamp: '2024-01-05T09:16:39+00:00'
+timestamp: '2024-01-11T12:29:11+00:00'
 requested_by: EDM115
 provider: github
 branch: master
-detected_tools_count: 19
+detected_tools_count: 17
 tools:
 - name: Python
   description: A clear and powerful object-oriented programming language, comparable
@@ -31,18 +31,6 @@ tools:
   detection_source: unzipper/helpers/database.py
   last_updated_by: EDM115
   last_updated_on: 2023-08-28 15:49:59.000000000 Z
-- name: pgvector
-  description: Open-source vector similarity search for Postgres
-  website_url: https://github.com/pgvector/pgvector/
-  open_source: false
-  hosted_saas: false
-  category: Data Stores
-  sub_category: Database Tools
-  image_url: https://img.stackshare.io/service/109221/default_b888cdf5617d936aa6aacf130911906955508639.png
-  detection_source_url: https://github.com/EDM115/unzip-bot/blob/master/requirements.txt
-  detection_source: requirements.txt
-  last_updated_by: EDM 1.15
-  last_updated_on: 2022-05-02 04:19:37.000000000 Z
 - name: Docker
   description: Enterprise Container Platform for High-Velocity Innovation.
   website_url: https://www.docker.com/
@@ -113,18 +101,6 @@ tools:
   detection_source: requirements.txt
   last_updated_by: renovate[bot]
   last_updated_on: 2023-10-15 16:24:32.000000000 Z
-- name: LangChain
-  description: Build AI apps with LLMs through composability
-  website_url: https://github.com/hwchase17/langchain
-  open_source: true
-  hosted_saas: false
-  category: Communications
-  sub_category: Large Language Model Tools
-  image_url: https://img.stackshare.io/service/48790/default_5b6c6b73f1ff3775c85d2a1ba954cb87e30cbf13.jpg
-  detection_source_url: https://github.com/EDM115/unzip-bot/blob/master/requirements.txt
-  detection_source: requirements.txt
-  last_updated_by: EDM 1.15
-  last_updated_on: 2022-05-02 04:19:37.000000000 Z
 - name: Shell
   description: A shell is a text-based terminal, used for manipulating programs and
     files. Shell scripts typically manage program execution.
@@ -139,7 +115,7 @@ tools:
 - name: GitPython
   description: Python Git Library
   package_url: https://pypi.org/project/GitPython
-  version: 3.1.40
+  version: 3.1.41
   license: BSD-3-Clause
   open_source: true
   hosted_saas: false
@@ -149,7 +125,7 @@ tools:
   detection_source_url: https://github.com/EDM115/unzip-bot/blob/master/requirements.txt
   detection_source: requirements.txt
   last_updated_by: renovate[bot]
-  last_updated_on: 2023-10-18 17:18:37.000000000 Z
+  last_updated_on: 2024-01-10 17:26:25.000000000 Z
 - name: aiofiles
   description: File support for asyncio
   package_url: https://pypi.org/project/aiofiles
@@ -191,7 +167,7 @@ tools:
   detection_source_url: https://github.com/EDM115/unzip-bot/blob/master/requirements.txt
   detection_source: requirements.txt
   last_updated_by: renovate[bot]
-  last_updated_on: 2023-10-18 17:18:37.000000000 Z
+  last_updated_on: 2024-01-10 17:26:25.000000000 Z
 - name: gitdb
   description: Git Object Database
   package_url: https://pypi.org/project/gitdb
@@ -223,7 +199,7 @@ tools:
 - name: psutil
   description: Cross-platform lib for process and system monitoring in Python
   package_url: https://pypi.org/project/psutil
-  version: 5.9.6
+  version: 5.9.7
   license: BSD-3-Clause
   open_source: true
   hosted_saas: false
@@ -233,7 +209,7 @@ tools:
   detection_source_url: https://github.com/EDM115/unzip-bot/blob/master/requirements.txt
   detection_source: requirements.txt
   last_updated_by: renovate[bot]
-  last_updated_on: 2023-10-15 15:57:54.000000000 Z
+  last_updated_on: 2023-12-17 12:38:31.000000000 Z
 - name: requests
   description: Python HTTP for Humans
   package_url: https://pypi.org/project/requests
