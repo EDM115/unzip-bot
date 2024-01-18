@@ -64,7 +64,7 @@ async def download(url, path):
     try:
         async with ClientSession() as session:
             async with session.get(url, timeout=None, allow_redirects=True) as resp:
-                with openfile(path, mode="wb") as file:
+                async with openfile(path, mode="wb") as file:
                     async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
                         await file.write(chunk)
     except InvalidURL:
@@ -81,7 +81,7 @@ async def download_with_progress(url, path, message, unzip_bot):
                 current_size = 0
                 start_time = time()
 
-                with openfile(path, mode="wb") as file:
+                async with openfile(path, mode="wb") as file:
                     async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
                         if message.from_user is not None and await get_cancel_task(message.from_user.id):
                             await message.edit(text=Messages.DL_STOPPED)
