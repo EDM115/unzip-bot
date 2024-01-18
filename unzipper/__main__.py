@@ -36,6 +36,7 @@ def shutdown_bot():
         unzipperbot.stop()
         LOGGER.info("Bot stopped 😪")
 
+
 if __name__ == "__main__":
     try:
         if not os.path.isdir(Config.DOWNLOAD_LOCATION):
