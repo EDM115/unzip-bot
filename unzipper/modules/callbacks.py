@@ -69,7 +69,7 @@ async def download(url, path):
                         await file.write(chunk)
     except InvalidURL:
         LOGGER.error(Messages.INVALID_URL)
-    except Exception as e:
+    except Exception:
         LOGGER.error(Messages.ERR_DL.format(url))
 
 
