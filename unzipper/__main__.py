@@ -23,6 +23,7 @@ def handler_stop_signals(signum, frame):
 signal.signal(signal.SIGINT, handler_stop_signals)
 signal.signal(signal.SIGTERM, handler_stop_signals)
 
+
 def shutdown_bot():
     stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
     try:
