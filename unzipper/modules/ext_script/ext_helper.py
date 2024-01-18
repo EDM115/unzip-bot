@@ -3,12 +3,23 @@ import os
 from asyncio import get_running_loop
 from functools import partial
 import subprocess
+import shutil
 
 from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
 
 from unzipper import LOGGER
 from unzipper.modules.bot_data import Messages
+
+
+async def cleanup_macos_artifacts(extraction_path):
+    for root, dirs, files in os.walk(extraction_path):
+        for name in files:
+            if name == ".DS_Store":
+                os.remove(os.path.join(root, name))
+        for name in dirs:
+            if name == "__MACOSX":
+                shutil.rmtree(os.path.join(root, name))
 
 
 def __run_cmds_unzipper(command):
@@ -57,8 +68,11 @@ async def extr_files(path, archive_path, password=None):
     file_path = os.path.splitext(archive_path)[1]
     if file_path == ".zst":
         os.mkdir(path)
-        return await _extract_with_zstd(path, archive_path)
-    return await _extract_with_7z_helper(path, archive_path, password)
+        result = await _extract_with_zstd(path, archive_path)
+    else:
+        result = await _extract_with_7z_helper(path, archive_path, password)
+    await cleanup_macos_artifacts(path)
+    return result
 
 
 # Split files
