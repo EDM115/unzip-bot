@@ -625,7 +625,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             if isinstance(dled, bool) and not dled:
                                 return
                             e_time = time()
-                            # paths = await get_files(path=archive)
                             await send_url_logs(
                                 unzip_bot=unzip_bot,
                                 c_id=Config.LOGS_CHANNEL,
@@ -655,7 +654,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     fname,
                     humanbytes(r_message.document.file_size)
                 ))
-                # fext = (pathlib.Path(fname).suffix).casefold()
                 if splitted_data[2] not in ["thumb", "thumbrename"]:
                     fext = fname.split(".")[-1].casefold()
                     if (
