@@ -1,7 +1,6 @@
 # Copyright (c) 2022 - 2024 EDM115
 import asyncio
 import shutil
-import sys
 
 from pyrogram import enums
 from pyrogram.errors import FloodWait
