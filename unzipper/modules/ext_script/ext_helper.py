@@ -4,6 +4,7 @@ from asyncio import get_running_loop
 from functools import partial
 import subprocess
 import shutil
+import shlex
 
 from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
@@ -57,7 +58,7 @@ async def _test_with_7z_helper(archive_path):
     return "Everything is Ok" in await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
 
-# Extract with zstd (for .zst files)
+# Extract with zstd (for .tar.zst files)
 async def _extract_with_zstd(path, archive_path):
     command = f"zstd -f --output-dir-flat {path} -d {archive_path}"
     return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
@@ -65,8 +66,27 @@ async def _extract_with_zstd(path, archive_path):
 
 # Main function to extract files
 async def extr_files(path, archive_path, password=None):
-    file_path = os.path.splitext(archive_path)[1]
-    if file_path == ".zst":
+    file_path, file_ext = os.path.splitext(archive_path)
+    _, file_ext_inner = os.path.splitext(file_path)
+    tarball_extensions = [
+        '.gz', '.tgz', '.taz',
+        '.bz2', '.tb2', '.tbz', '.tbz2', '.tz2',
+        '.lz',
+        '.lzma', '.tlz',
+        '.lzo',
+        '.xz', '.txz',
+        '.z', '.tz', '.taz',
+        '.zst', '.tzst'
+    ]
+    if file_ext_inner == '.tar' or file_ext in tarball_extensions:
+        temp_path = path.rsplit("/", 1)[0] + "/tar_temp"
+        os.makedirs(temp_path, exist_ok=True)
+        result = await _extract_with_7z_helper(temp_path, archive_path, password)
+        filename = os.path.join(temp_path, os.listdir(temp_path)[0])
+        command = f'tar -xvf {shlex.quote(filename)} -C {shlex.quote(path)}'
+        result += await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
+        shutil.rmtree(temp_path)
+    elif file_path == ".zst":
         os.mkdir(path)
         result = await _extract_with_zstd(path, archive_path)
     else:
