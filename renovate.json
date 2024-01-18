@@ -1,6 +1,33 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "addLabels": [
+    "Mend: Renovate"
+  ],
+  "assignees": [
+    "EDM115"
+  ],
+  "cloneSubmodules": true,
+  "commitBodyTable": true,
+  "configMigration": true,
+  "dependencyDashboard": true,
+  "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
+  "draftPR": true,
+  "enabled": true,
   "extends": [
-    "config:base"
-  ]
+    "config:recommended"
+  ],
+  "labels": [
+    "Mend: Renovate"
+  ],
+  "osvVulnerabilityAlerts": true,
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0,
+  "reviewers": [
+    "EDM115"
+  ],
+  "semanticCommitScope": "dependencies",
+  "semanticCommitType": "update",
+  "semanticCommits": "enabled",
+  "stopUpdatingLabel": "Mend: Stop updating",
+  "timezone": "Europe/Paris"
 }

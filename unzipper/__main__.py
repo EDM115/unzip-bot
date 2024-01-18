@@ -1,11 +1,9 @@
-# Copyright (c) 2023 EDM115
-import logging
+# Copyright (c) 2022 - 2024 EDM115
 import os
 import signal
 import time
 
 from pyrogram import idle
-from pyrogram.errors import AuthKeyDuplicated
 
 from config import Config
 
@@ -18,14 +16,27 @@ running = True
 
 def handler_stop_signals(signum, frame):
     global running
+    LOGGER.info(f"Received stop signal ({signal.Signals(signum).name}). Exiting...")
     running = False
 
 
 signal.signal(signal.SIGINT, handler_stop_signals)
 signal.signal(signal.SIGTERM, handler_stop_signals)
 
-while running:
-    if __name__ == "__main__":
+def shutdown_bot():
+    stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
+    try:
+        unzipperbot.send_message(
+            chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime)
+        )
+    except Exception as e:
+        LOGGER.error(f"Error sending shutdown message: {e}")
+    finally:
+        unzipperbot.stop()
+        LOGGER.info("Bot stopped 😪")
+
+if __name__ == "__main__":
+    try:
         if not os.path.isdir(Config.DOWNLOAD_LOCATION):
             os.makedirs(Config.DOWNLOAD_LOCATION)
         if not os.path.isdir(Config.THUMB_LOCATION):
@@ -43,7 +54,8 @@ while running:
             LOGGER.info(Messages.LOG_CHECKED)
             LOGGER.info(Messages.BOT_RUNNING)
             removal(True)
-            idle()
+            while running:
+                idle()
         else:
             try:
                 unzipperbot.send_message(
@@ -52,12 +64,8 @@ while running:
                 )
             except:
                 pass
-            unzipperbot.stop()
-
-LOGGER.info("Received SIGTERM")
-stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
-unzipperbot.send_message(
-    chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime)
-)
-unzipperbot.stop()
-LOGGER.info("Bot stopped 😪")
+            shutdown_bot()
+    except Exception as e:
+        LOGGER.error(f"Error in main loop: {e}")
+    finally:
+        shutdown_bot()

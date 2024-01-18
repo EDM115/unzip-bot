@@ -3,7 +3,7 @@ exclude:
   - "unzipper/modules/ext_script/ext_helper.py"
   - "unzipper/modules/ext_script/up_helper.py"
 auto: false
-pull_requests: true
+pull_requests: false
 commit_template: |
   Restyled by ${restyler.name}
 statuses:

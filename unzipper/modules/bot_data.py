@@ -1,4 +1,4 @@
-# Copyright (c) 2023 EDM115
+# Copyright (c) 2022 - 2024 EDM115
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
@@ -36,7 +36,7 @@ class Messages:
 
     RATE = "Rate me ⭐"
 
-# start.py
+    # start.py
 
     PRIVATE_CHAT = "A private chat can't be used 😐"
 
@@ -66,7 +66,7 @@ Your task was running for more than {} minutes, it has been stopped
 Don't go AFK next time 😉
     """
 
-# database.py
+    # database.py
 
     BANNED = """
 **Sorry you're banned 💀**
@@ -90,7 +90,7 @@ Report this at @EDM115_chat if you think this is a mistake, I may unban you
 **Profile URL :** [tg://user?id={}](tg://user?id={})
     """
 
-# unzip_help.py
+    # unzip_help.py
 
     UNKNOWN_SIZE = """
 **Size :** Unknown
@@ -111,7 +111,7 @@ This may take a while, go grab a coffee ☕️
 
     ETA = "**ETA :**"
 
-# __main__.py
+    # __main__.py
 
     START_TXT = "ℹ️ The bot have successfully started at `{}` 💪"
 
@@ -130,7 +130,7 @@ Error : the provided **LOGS_CHANNEL** (`{}`) is incorrect
 Bot crashed 😪
     """
 
-# callbacks.py
+    # callbacks.py
 
     MAX_TASKS = """
 Sorry, the bot is currently full 🥺
@@ -590,7 +590,7 @@ Please send the new file name (**--INCLUDE THE FILE EXTENTION !--**)
 
     PROCESS_CANCELLED = "❌ Process cancelled"
 
-# commands.py
+    # commands.py
 
     PROCESS_RUNNING = """
 Already one process is running, don't spam 😐
@@ -836,11 +836,7 @@ Here's all the commands that only the owner (you) can use :
 **/commands** : For all the other commands
     """
 
-# cloud_upload.py
-
-    ERROR_UP_BAYFILES = "Error happened on BayFiles upload (check connection, or retry later)"
-
-# custom_thumbnail.py
+    # custom_thumbnail.py
 
     ALBUM = "{} tried to save a thumbnail from an album"
 
@@ -856,13 +852,13 @@ Here's all the commands that only the owner (you) can use :
 
     NO_THUMB = "You already have no thumbnail 😅"
 
-# ext_helper.py
+    # ext_helper.py
 
     UP_ALL = "Upload all 📤"
 
     CANCEL_IT = "❌ Cancel"
 
-# up_helper.py
+    # up_helper.py
 
     TRY_UP = """
 **Trying to upload {}… Please wait**

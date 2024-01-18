@@ -1,4 +1,4 @@
-# Copyright (c) 2023 EDM115
+# Copyright (c) 2022 - 2024 EDM115
 import asyncio
 import concurrent.futures
 import os
@@ -54,7 +54,6 @@ from .ext_script.ext_helper import (
     split_files,
 )
 from .ext_script.up_helper import answer_query, get_size, send_file, send_url_logs
-from .ext_script.url_parser import gdrive_dl
 
 split_file_pattern = r"\.(?:z\d+|r\d{2})$"
 rar_file_pattern = r"\.part\d+\.rar$"
@@ -290,7 +289,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 if message.document is None:
                     pass
                 else:
-                    if message.from_user.id == user_id:  # avoid getting files from other users, tho idk why this could happen
+                    if message.from_user.id == user_id:
                         newarray.append(message)
             length = len(newarray)
             if length == 0:
@@ -524,12 +523,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     splitted_data[1] = "tg_file"
                 if splitted_data[1] == "url":
                     s = ClientSession()
-                    if "drive.google.com" in url:
-                        url = await gdrive_dl(url)
-                        if url is None:
-                            await del_ongoing_task(user_id)
-                            await query.message.edit(Messages.INVALID_URL)
-                            return
                     async with s as session:
                         # Get the file size
                         unzip_head = await session.head(url, allow_redirects=True)
@@ -537,7 +530,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         u_file_size = f_size if f_size else "undefined"
                         await log_msg.edit(Messages.LOG_TXT.format(user_id, url, u_file_size))
                         archive_msg = log_msg
-                        # Checks if file is an archive using content-type header
                         unzip_resp = await session.get(url, timeout=None, allow_redirects=True)
                         if "application/" not in unzip_resp.headers.get("content-type"):
                             await del_ongoing_task(user_id)
@@ -545,7 +537,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             return
                         rfnamebro = unquote(url.split("/")[-1])
                         if unzip_resp.status == 200:
-                            # Makes download dir
                             os.makedirs(download_path)
                             s_time = time()
                             fname = unquote(os.path.splitext(url)[1])
@@ -568,7 +559,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                                 Messages.PROCESSING2,
                                 unzip_client=unzip_bot
                             )
-                            # HTTP server must send Accept-Ranges: bytes and Content-Length in headers
                             if fext == "zip" and "accept-ranges" in unzip_resp.headers and "content-length" in unzip_resp.headers:
                                 try:
                                     loop = asyncio.get_event_loop()
@@ -635,7 +625,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             if isinstance(dled, bool) and not dled:
                                 return
                             e_time = time()
-                            # Send copy in logs in case url has gone
                             # paths = await get_files(path=archive)
                             await send_url_logs(
                                 unzip_bot=unzip_bot,
@@ -666,7 +655,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     fname,
                     humanbytes(r_message.document.file_size)
                 ))
-                # Checks if it's actually an archive
                 # fext = (pathlib.Path(fname).suffix).casefold()
                 if splitted_data[2] not in ["thumb", "thumbrename"]:
                     fext = fname.split(".")[-1].casefold()
@@ -684,7 +672,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         await del_ongoing_task(user_id)
                         await query.message.edit(Messages.DEF_NOT_AN_ARCHIVE)
                         return
-                # Makes download dir
                 os.makedirs(download_path)
                 s_time = time()
                 location = f"{download_path}/archive_from_{user_id}{os.path.splitext(fname)[1]}"
@@ -745,10 +732,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
                 os.makedirs(splitteddir)
                 ooutput = f"{splitteddir}/{newfname}"
-                if await (user_id):
-                    splittedfiles = await split_files(renamed, ooutput, Config.TG_PREMIUM_SIZE)
-                else:
-                    splittedfiles = await split_files(renamed, ooutput, Config.TG_MAX_SIZE)
+                splittedfiles = await split_files(renamed, ooutput, Config.TG_MAX_SIZE)
                 if not splittedfiles:
                     try:
                         shutil.rmtree(splitteddir)
@@ -777,16 +761,17 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     pass
                 await del_ongoing_task(user_id)
                 try:
-                    await query.message.edit(
-                        text=Messages.UPLOADED,
-                        reply_markup=Buttons.RATE_ME
-                    )
-                except:
                     await unzip_bot.send_message(
                         chat_id=user_id,
                         text=Messages.UPLOADED,
                         reply_markup=Buttons.RATE_ME
                     )
+                    await query.message.edit(
+                        text=Messages.UPLOADED,
+                        reply_markup=Buttons.RATE_ME
+                    )
+                except:
+                    pass
                 return
 
             dltime = TimeFormatter(round(e_time - s_time) * 1000)
@@ -1137,7 +1122,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             if urled:
                 file = spl_data[4].open(file)
                 fsize = Config.TG_MAX_SIZE + 1
-                # secutity as we can't retrieve the file size from URL
+                # security as we can't always retrieve the file size from URL
             else:
                 fsize = await get_size(file)
             split = False
@@ -1194,10 +1179,18 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 except:
                     pass
 
-        await query.message.edit(
-            text=Messages.UPLOADED,
-            reply_markup=Buttons.RATE_ME
-        )
+        try:
+            await unzip_bot.send_message(
+                chat_id=user_id,
+                text=Messages.UPLOADED,
+                reply_markup=Buttons.RATE_ME
+            )
+            await query.message.edit(
+                text=Messages.UPLOADED,
+                reply_markup=Buttons.RATE_ME
+            )
+        except:
+            pass
         await log_msg.reply(Messages.HOW_MANY_UPLOADED.format(sent_files))
         await update_uploaded(user_id, upload_count=sent_files)
         await del_ongoing_task(user_id)

@@ -1,4 +1,4 @@
-# Copyright (c) 2023 EDM115
+# Copyright (c) 2022 - 2024 EDM115
 import asyncio
 import shutil
 import sys
@@ -24,7 +24,7 @@ def check_logs():
                 return False
             return True
         LOGGER.error(Messages.NO_LOG_ID)
-        return sys.exit()
+        return False
     except:
         LOGGER.error(Messages.ERROR_LOG_CHECK)
         return False
@@ -98,6 +98,8 @@ async def remove_expired_tasks(firststart=False):
 
         for task in ongoing_tasks:
             user_id = task["user_id"]
+            if user_id == Config.BOT_OWNER:
+                continue
             if value:
                 await del_ongoing_task(user_id)
                 try:

@@ -1,4 +1,4 @@
-# Copyright (c) 2023 EDM115
+# Copyright (c) 2022 - 2024 EDM115
 import os
 from asyncio import get_running_loop
 from functools import partial
@@ -42,7 +42,7 @@ async def _extract_with_7z_helper(path, archive_path, password=None):
 
 
 async def _test_with_7z_helper(archive_path):
-    command = f'7z t {archive_path} -p"IAmVeryProbablySureThatThisPasswordWillNeverBeUsedElseItsVeryStrangeAAAAAAAAAAAAAAAAAAA" -y'  # skipcq: FLK-E501
+    command = f'7z t {archive_path} -p"dont care + didnt ask + cry about it + stay mad + get real + L + mald seethe cope harder + h0es mad + basic + skill issue + ratio + you fell off + the audacity + triggered + any askers + redpilled + get a life + ok and? + cringe + touch grass + donowalled + not based + your’re probably white + not funny didn’t laugh + you’re* + grammar issue + go outside + get good + reported + ad hominem + GG! + ur momdon’t care + didn’t ask + cry about it + stay mad + get real + L + mald seethe cope harder + hoes mad + basic + skill issue + ratio + you fell off + the audacity + triggered + any askers + redpilled + get a life + ok and? + cringe + touch grass + donowalled + not based + your’re a full time discordian + not funny didn’t laugh + you’re* + grammar issue + go outside + get good + your gay + reported + ad hominem + GG! + ur mom + unknown + random + biased + racially motivated + kys + ur unfunny +ratio don’t care + didn’t ask + cry about it + stay mad + get real + L + mald seethe copedon’t care + didn’t ask + cry about it + stay mad + get real + L + mald seethe cope harder + h0es mad + basic + skill issue + ratio + you fell off + the audacity + triggered + any askers + redpilled + get a life + ok and? + cringe + touch grass + donowalled + not based + your’re probably white + not funny didn’t laugh + you’re* + grammar issue + go outside + get good + reported + ad hominem + GG! + ur momdon’t care + didn’t ask + cry about it + stay mad + get real + L + mald seethe cope harder + hoes mad + basic + skill issue + ratio + you fell off + the audacity + triggered + any askers + redpilled + get a life + ok and? + cringe + touch grass + donowalled + not based + your’re a full time discordian + not funny didn’t laugh + you’re* + grammar issue + go outside + get good + your gay + reported + ad hominem + GG! + ur mom + unknown + random + biased + racially motivated + kys + ur unfunny +ratio don’t care + didn’t ask + cry about it + stay mad + get real + so bad + so ass" -y'  # skipcq: FLK-E501
     return "Everything is Ok" in await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
 

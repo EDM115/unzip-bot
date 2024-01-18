@@ -1,4 +1,4 @@
-# Copyright (c) 2023 EDM115
+# Copyright (c) 2022 - 2024 EDM115
 import os
 import pathlib
 import re
@@ -68,6 +68,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     audio=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
                     thumb=thumb_image,
+                    disable_notification=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Messages.TRY_UP.format(fname),
@@ -81,6 +82,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     chat_id=c_id,
                     audio=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
+                    disable_notification=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Messages.TRY_UP.format(fname),
@@ -96,6 +98,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     chat_id=c_id,
                     photo=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
+                    disable_notification=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Messages.TRY_UP.format(fname),
@@ -113,6 +116,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         thumb=thumb_image,
                         caption=Messages.EXT_CAPTION.format(fname),
                         force_document=True,
+                        disable_notification=True,
                         progress=progress_for_pyrogram,
                         progress_args=(
                             Messages.TRY_UP.format(fname),
@@ -127,6 +131,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         document=doc_f,
                         caption=Messages.EXT_CAPTION.format(fname),
                         force_document=True,
+                        disable_notification=True,
                         progress=progress_for_pyrogram,
                         progress_args=(
                             Messages.TRY_UP.format(fname),
@@ -144,6 +149,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         thumb=thumb_image,
                         caption=Messages.EXT_CAPTION.format(fname),
                         force_document=True,
+                        disable_notification=True,
                         progress=progress_for_pyrogram,
                         progress_args=(
                             Messages.TRY_UP.format(fname),
@@ -158,6 +164,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         document=doc_f,
                         caption=Messages.EXT_CAPTION.format(fname),
                         force_document=True,
+                        disable_notification=True,
                         progress=progress_for_pyrogram,
                         progress_args=(
                             Messages.TRY_UP.format(fname),
@@ -178,6 +185,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     caption=Messages.EXT_CAPTION.format(fname),
                     duration=int(vid_duration) if vid_duration.isnumeric() else 0,
                     thumb=thumb_image,
+                    disable_notification=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Messages.TRY_UP.format(fname),
@@ -206,6 +214,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         caption=Messages.EXT_CAPTION.format(fname),
                         duration=int(vid_duration) if vid_duration.isnumeric() else 0,
                         thumb=str(thmb_pth),
+                        disable_notification=True,
                         progress=progress_for_pyrogram,
                         progress_args=(
                             Messages.TRY_UP.format(fname),
@@ -226,6 +235,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                             caption=Messages.EXT_CAPTION.format(fname),
                             duration=0,
                             thumb=str(Config.BOT_THUMB),
+                            disable_notification=True,
                             progress=progress_for_pyrogram,
                             progress_args=(
                                 Messages.TRY_UP.format(fname),
@@ -240,6 +250,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                             document=doc_f,
                             caption=Messages.EXT_CAPTION.format(fname),
                             force_document=True,
+                            disable_notification=True,
                             progress=progress_for_pyrogram,
                             progress_args=(
                                 Messages.TRY_UP.format(fname),
@@ -257,6 +268,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     thumb=thumb_image,
                     caption=Messages.EXT_CAPTION.format(fname),
                     force_document=True,
+                    disable_notification=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Messages.TRY_UP.format(fname),
@@ -271,6 +283,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     document=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
                     force_document=True,
+                    disable_notification=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Messages.TRY_UP.format(fname),
@@ -301,6 +314,7 @@ async def forward_file(message, cid):
             chat_id=cid,
             from_chat_id=message.chat.id,
             message_id=message.id,
+            disable_notification=True,
         )
     except FloodWait as f:
         await asyncio.sleep(f.value)
@@ -321,6 +335,7 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source, message):
             chat_id=c_id,
             document=doc_f,
             caption=Messages.LOG_CAPTION.format(fname, source),
+            disable_notification=True,
             progress=progress_urls,
             progress_args=(
                 Messages.CHECK_MSG,
