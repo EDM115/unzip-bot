@@ -62,34 +62,38 @@ telegram_url_pattern = r"(?:http[s]?:\/\/)?(?:www\.)?t\.me\/([a-zA-Z0-9_]+)\/(\d
 
 async def download(url, path):
     try:
-        async with ClientSession() as session, session.get(url, timeout=None, allow_redirects=True) as resp, openfile(path, mode="wb") as file:
-            async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
-                await file.write(chunk)
-        await session.close()
+        async with ClientSession() as session:
+            async with session.get(url, timeout=None, allow_redirects=True) as resp:
+                with openfile(path, mode="wb") as file:
+                    async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
+                        await file.write(chunk)
     except InvalidURL:
         LOGGER.error(Messages.INVALID_URL)
-    except:
+    except Exception as e:
         LOGGER.error(Messages.ERR_DL.format(url))
 
 
 async def download_with_progress(url, path, message, unzip_bot):
-    async with ClientSession() as session, session.get(url, timeout=None, allow_redirects=True) as resp, openfile(path, mode="wb") as file:
-        total_size = int(resp.headers.get("Content-Length", 0))
-        current_size = 0
-        start_time = time()
+    try:
+        async with ClientSession() as session:
+            async with session.get(url, timeout=None, allow_redirects=True) as resp:
+                total_size = int(resp.headers.get("Content-Length", 0))
+                current_size = 0
+                start_time = time()
 
-        async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
-            if message.from_user is not None and await get_cancel_task(message.from_user.id):
-                await session.close()
-                await message.edit(text=Messages.DL_STOPPED)
-                await del_cancel_task(message.from_user.id)
-                return False
+                with openfile(path, mode="wb") as file:
+                    async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
+                        if message.from_user is not None and await get_cancel_task(message.from_user.id):
+                            await message.edit(text=Messages.DL_STOPPED)
+                            await del_cancel_task(message.from_user.id)
+                            return False
 
-            await file.write(chunk)
-            current_size += len(chunk)
-            await progress_for_pyrogram(current_size, total_size, Messages.DL_URL.format(url), message, start_time, unzip_bot)
+                        await file.write(chunk)
+                        current_size += len(chunk)
+                        await progress_for_pyrogram(current_size, total_size, Messages.DL_URL.format(url), message, start_time, unzip_bot)
 
-    await session.close()
+    except Exception:
+        LOGGER.error(Messages.ERR_DL.format(url))
 
 
 def get_zip_http(url):
