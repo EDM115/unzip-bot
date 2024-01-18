@@ -16,7 +16,7 @@ running = True
 
 def handler_stop_signals(signum, frame):
     global running
-    LOGGER.info(f"Received stop signal ({signal.Signals(signum).name}, {signum}, {frame}). Exiting...")
+    LOGGER.info("Received stop signal (%s, %s, %s). Exiting...", signal.Signals(signum).name, signum, frame)
     running = False
 
 
@@ -31,7 +31,7 @@ def shutdown_bot():
             chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime)
         )
     except Exception as e:
-        LOGGER.error(f"Error sending shutdown message: {e}")
+        LOGGER.error("Error sending shutdown message: %s", e)
     finally:
         unzipperbot.stop()
         LOGGER.info("Bot stopped 😪")
@@ -68,6 +68,6 @@ if __name__ == "__main__":
                 pass
             shutdown_bot()
     except Exception as e:
-        LOGGER.error(f"Error in main loop: {e}")
+        LOGGER.error("Error in main loop: %s", e)
     finally:
         shutdown_bot()
