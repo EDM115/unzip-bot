@@ -16,7 +16,7 @@ running = True
 
 def handler_stop_signals(signum, frame):
     global running
-    LOGGER.info(f"Received stop signal ({signal.Signals(signum).name}). Exiting...")
+    LOGGER.info(f"Received stop signal ({signal.Signals(signum).name}, {signum}, {frame}). Exiting...")
     running = False
 
 
