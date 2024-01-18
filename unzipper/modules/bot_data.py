@@ -602,6 +602,8 @@ Wanna clear your files from my server ? Then just send **/clean** command
 
     UNVALID = "Send a valid archive/URL"
 
+    NO_SPACE = "There's no space left on the server 😥"
+
     MERGE = """
 You have splitted archives to process ?
 Send me **all** the splitted files (.001, .002, .00×, …)

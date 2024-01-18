@@ -42,7 +42,7 @@ from unzipper.helpers.unzip_help import (
 )
 
 from .bot_data import ERROR_MSGS, Buttons, Messages
-from .commands import https_url_regex, get_stats
+from .commands import https_url_regex, get_stats, sufficient_disk_space
 from .ext_script.custom_thumbnail import silent_del
 from .ext_script.ext_helper import (
     _test_with_7z_helper,
@@ -532,6 +532,10 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         unzip_head = await session.head(url, allow_redirects=True)
                         f_size = unzip_head.headers.get("content-length")
                         u_file_size = f_size if f_size else "undefined"
+                        if u_file_size != "undefined" and not sufficient_disk_space(int(u_file_size)):
+                            await del_ongoing_task(user_id)
+                            await query.message.edit(Messages.NO_SPACE)
+                            return
                         await log_msg.edit(Messages.LOG_TXT.format(user_id, url, u_file_size))
                         archive_msg = log_msg
                         unzip_resp = await session.get(url, timeout=None, allow_redirects=True)

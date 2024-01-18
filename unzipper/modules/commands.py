@@ -44,6 +44,14 @@ from .bot_data import Buttons, Messages
 https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"
 
 
+def sufficient_disk_space(required_space):
+    disk_usage = psutil.disk_usage('/')
+    free_space = disk_usage.free
+    if free_space >= required_space:
+        return True
+    return False
+
+
 @unzipperbot.on_message(filters.private)
 async def _(_, message: Message):
     await check_user(message)
@@ -135,10 +143,13 @@ async def extract_archive(_, message: Message):
                 reply_markup=Buttons.CHOOSE_E_U__BTNS,
             )
         elif message.document:
-            await unzip_msg.edit(
-                text=Messages.CHOOSE_EXT_MODE.format("file", "🗂️"),
-                reply_markup=Buttons.CHOOSE_E_F__BTNS,
-            )
+            if sufficient_disk_space(message.document.file_size):
+                await unzip_msg.edit(
+                    text=Messages.CHOOSE_EXT_MODE.format("file", "🗂️"),
+                    reply_markup=Buttons.CHOOSE_E_F__BTNS,
+                )
+            else:
+                await unzip_msg.edit(Messages.NO_SPACE)
         else:
             await unzip_msg.edit(Messages.UNVALID)
     except FloodWait as f:
