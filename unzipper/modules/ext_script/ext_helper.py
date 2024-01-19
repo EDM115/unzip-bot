@@ -73,7 +73,7 @@ async def _extract_with_zstd(path, archive_path):
 # Main function to extract files
 async def extr_files(path, archive_path, password=None):
     os.makedirs(path, exist_ok=True)
-    tarball_extensions = [
+    tarball_extensions = (
         '.tar.gz', '.gz', '.tgz', '.taz',
         '.tar.bz2', '.bz2', '.tb2', '.tbz', '.tbz2', '.tz2',
         '.tar.lz', '.lz',
@@ -81,7 +81,7 @@ async def extr_files(path, archive_path, password=None):
         '.tar.lzo', '.lzo',
         '.tar.xz', '.xz', '.txz',
         '.tar.z', '.z', '.tz', '.taz'
-    ]
+    )
     if archive_path.endswith(tarball_extensions):
         LOGGER.info("tar")
         temp_path = path.rsplit("/", 1)[0] + "/tar_temp"
@@ -92,7 +92,7 @@ async def extr_files(path, archive_path, password=None):
         command = f'tar -xvf {shlex.quote(filename)} -C {shlex.quote(path)}'
         result += await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
         shutil.rmtree(temp_path)
-    elif archive_path.endswith(['.tar.zst', '.zst', '.tzst']):
+    elif archive_path.endswith(('.tar.zst', '.zst', '.tzst')):
         LOGGER.info("zstd")
         os.mkdir(path)
         result = await _extract_with_zstd(path, archive_path)
