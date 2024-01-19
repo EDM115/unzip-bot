@@ -753,6 +753,8 @@ async def eval_command(_, message):
     cmd = message.text.split(" ", maxsplit=1)[1]
 
     stdout, stderr = await aexec(cmd, _, message)
+    LOGGER.info("stdout: " + stdout)
+    LOGGER.info("stderr: " + stderr)
 
     evaluation = stderr.strip() or stdout.strip() or "Success"
     final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation}</code> \n"

@@ -550,26 +550,21 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         if content_disposition:
                             _, params = cgi.parse_header(content_disposition)
                             real_filename = params.get('filename')
-                            LOGGER.info("real_filename1 : ", real_filename)
                             if real_filename != "":
                                 rfnamebro = unquote(real_filename)
-                                LOGGER.info("rfnamebro1 : ", rfnamebro)
                         if rfnamebro == "":
                             rfnamebro = unquote(url.split("/")[-1])
-                            LOGGER.info("rfnamebro2 : ", rfnamebro)
                         if unzip_resp.status == 200:
                             os.makedirs(download_path)
                             s_time = time()
                             if real_filename:
                                 archive = os.path.join(download_path, real_filename)
                                 fext = real_filename.split(".")[-1].casefold()
-                                LOGGER.info(archive)
                             else:
                                 fname = unquote(os.path.splitext(url)[1])
                                 fname = fname.split("?")[0]
                                 fext = fname.split(".")[-1].casefold()
                                 archive = f"{download_path}/{fname}"
-                                LOGGER.info(archive)
                             if (
                                 splitted_data[2] not in ["thumb", "thumbrename"]
                                 and fext not in extentions_list["archive"]
@@ -700,7 +695,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 os.makedirs(download_path)
                 s_time = time()
                 location = f"{download_path}/{fname}"
-                LOGGER.info(location)
                 archive = await r_message.download(
                     file_name=location,
                     progress=progress_for_pyrogram,
