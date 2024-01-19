@@ -11,13 +11,10 @@ from . import LOGGER, unzipperbot
 from .helpers.start import check_logs, dl_thumbs, set_boot_time, removal
 from .modules.bot_data import Messages
 
-running = True
-
 
 def handler_stop_signals(signum, frame):
-    global running
     LOGGER.info("Received stop signal (%s, %s, %s). Exiting...", signal.Signals(signum).name, signum, frame)
-    running = False
+    shutdown_bot()
 
 
 signal.signal(signal.SIGINT, handler_stop_signals)
@@ -56,8 +53,7 @@ if __name__ == "__main__":
             LOGGER.info(Messages.LOG_CHECKED)
             LOGGER.info(Messages.BOT_RUNNING)
             removal(True)
-            while running:
-                idle()
+            idle()
         else:
             try:
                 unzipperbot.send_message(
