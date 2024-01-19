@@ -82,8 +82,8 @@ async def extr_files(path, archive_path, password=None):
         '.tar.xz', '.xz', '.txz',
         '.tar.z', '.z', '.tz', '.taz'
     ]
-    if any(ext in archive_path for ext in tarball_extensions):
-        LOGGER.inof("tar")
+    if archive_path.endswith(tarball_extensions):
+        LOGGER.info("tar")
         temp_path = path.rsplit("/", 1)[0] + "/tar_temp"
         os.makedirs(temp_path, exist_ok=True)
         result = await _extract_with_7z_helper(temp_path, archive_path)
@@ -92,7 +92,7 @@ async def extr_files(path, archive_path, password=None):
         command = f'tar -xvf {shlex.quote(filename)} -C {shlex.quote(path)}'
         result += await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
         shutil.rmtree(temp_path)
-    elif any(ext in archive_path for ext in ['.tar.zst', '.zst', '.tzst']):
+    elif archive_path.endswith(['.tar.zst', '.zst', '.tzst']):
         LOGGER.info("zstd")
         os.mkdir(path)
         result = await _extract_with_zstd(path, archive_path)
