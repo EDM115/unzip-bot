@@ -601,7 +601,6 @@ async def pull_updates(_, message: Message):
     repo = git.Repo("/app")
     current = repo.head.commit
     repo.remotes.origin.pull()
-    time.sleep(2)
     if current != repo.head.commit:
         await git_reply.edit(Messages.PULLED)
         await restart(_, message)

@@ -560,11 +560,13 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             if real_filename:
                                 archive = os.path.join(download_path, real_filename)
                                 fext = real_filename.split(".")[-1].casefold()
+                                LOGGER.info("fext: %s, archive: %s", fext, archive)
                             else:
                                 fname = unquote(os.path.splitext(url)[1])
                                 fname = fname.split("?")[0]
                                 fext = fname.split(".")[-1].casefold()
                                 archive = f"{download_path}/{fname}"
+                                LOGGER.info("fext: %s, archive: %s", fext, archive)
                             if (
                                 splitted_data[2] not in ["thumb", "thumbrename"]
                                 and fext not in extentions_list["archive"]
