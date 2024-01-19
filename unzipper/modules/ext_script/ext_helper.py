@@ -30,18 +30,21 @@ async def cleanup_macos_artifacts(extraction_path):
 
 
 def __run_cmds_unzipper(command):
-    ext_cmd = subprocess.Popen(
-        command["cmd"],
+    cmd = shlex.split(command['cmd'])
+    ext_process = subprocess.Popen(
+        cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        shell=True
+        shell=False
     )
-    ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8").rstrip('\n')
-    LOGGER.info(ext_out)
-    if ext_cmd.stderr:
-        ext_cmd.stderr.close()
-    if ext_cmd.stdout:
-        ext_cmd.stdout.close()
+    ext_out, ext_err = ext_process.communicate()
+
+    ext_out = ext_out.decode("utf-8").rstrip('\n')
+    ext_err = ext_err.decode("utf-8").rstrip('\n')
+
+    LOGGER.info(f"Output: {ext_out}")
+    if ext_err:
+        LOGGER.error(f"Error: {ext_err}")
     return ext_out
 
 
