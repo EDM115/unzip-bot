@@ -155,7 +155,8 @@ async def extract_archive(_, message: Message):
             else:
                 await unzip_msg.edit(Messages.NO_SPACE)
         else:
-            await unzip_msg.edit(Messages.UNVALID)
+            if not message.text.startswith("/exec") or message.text.startswith("/eval"):
+                await unzip_msg.edit(Messages.UNVALID)
     except FloodWait as f:
         await sleep(f.value)
         await extract_archive(_, message)
@@ -732,11 +733,18 @@ async def getadmin_cmds(_, message):
 
 
 async def aexec(code, client, message):
-    exec(
-        f"async def __aexec(client, message): "
-        + "".join(f"\n {l}" for l in code.split("\n"))
-    )
-    return await locals()["__aexec"](client, message)
+    stdout = io.StringIO()
+    stderr = io.StringIO()
+    with redirect_stdout(stdout), redirect_stderr(stderr):
+        try:
+            exec(
+                f"async def __aexec(client, message): "
+                + "".join(f"\n {l}" for l in code.split("\n"))
+            )
+            await locals()["__aexec"](client, message)
+        except Exception as e:
+            stderr.write(f"{type(e).__name__}: {str(e)}\n")
+    return stdout.getvalue(), stderr.getvalue()
 
 
 @unzipperbot.on_message(filters.command("eval") & filters.user(Config.BOT_OWNER))
@@ -744,21 +752,10 @@ async def eval_command(_, message):
     status_message = await message.reply_text("Processing ...")
     cmd = message.text.split(" ", maxsplit=1)[1]
 
-    stdout = io.StringIO()
-    stderr = io.StringIO()
+    stdout, stderr = await aexec(cmd, _, message)
 
-    with redirect_stdout(stdout), redirect_stderr(stderr):
-        try:
-            await aexec(cmd, _, message)
-        except Exception as e:
-            traceback_text = traceback.format_exc()
-            stderr.write(traceback_text)
-
-    stdout_value = stdout.getvalue()
-    stderr_value = stderr.getvalue()
-
-    evaluation = stderr_value or stdout_value or "Success"
-    final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation.strip()}</code> \n"
+    evaluation = stderr.strip() or stdout.strip() or "Success"
+    final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation}</code> \n"
 
     if len(final_output) > Config.MAX_MESSAGE_LENGTH:
         with open("eval.txt", "w+", encoding="utf8") as out_file:
