@@ -735,16 +735,20 @@ async def getadmin_cmds(_, message):
 async def aexec(code, client, message):
     stdout = io.StringIO()
     stderr = io.StringIO()
+    result = None
     with redirect_stdout(stdout), redirect_stderr(stderr):
         try:
-            exec(
-                f"async def __aexec(client, message): "
-                + "".join(f"\n {l}" for l in code.split("\n"))
-            )
-            await locals()["__aexec"](client, message)
+            try:
+                result = eval(code)
+            except SyntaxError:
+                exec(
+                    f"async def __aexec(client, message): "
+                    + "".join(f"\n {l}" for l in code.split("\n"))
+                )
+                await locals()["__aexec"](client, message)
         except Exception as e:
             stderr.write(f"{type(e).__name__}: {str(e)}\n")
-    return stdout.getvalue(), stderr.getvalue()
+    return stdout.getvalue(), stderr.getvalue(), result
 
 
 @unzipperbot.on_message(filters.command("eval") & filters.user(Config.BOT_OWNER))
@@ -752,11 +756,19 @@ async def eval_command(_, message):
     status_message = await message.reply_text("Processing ...")
     cmd = message.text.split(" ", maxsplit=1)[1]
 
-    stdout, stderr = await aexec(cmd, _, message)
+    stdout, stderr, result = await aexec(cmd, _, message)
     LOGGER.info("stdout: " + stdout)
     LOGGER.info("stderr: " + stderr)
 
-    evaluation = stderr.strip() or stdout.strip() or "Success"
+    if result is not None:
+        evaluation = str(result)
+    elif stderr.strip():
+        evaluation = stderr.strip()
+    elif stdout.strip():
+        evaluation = stdout.strip()
+    else:
+        evaluation = "Success"
+
     final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation}</code> \n"
 
     if len(final_output) > Config.MAX_MESSAGE_LENGTH:
