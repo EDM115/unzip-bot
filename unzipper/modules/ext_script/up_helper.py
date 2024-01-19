@@ -1,5 +1,4 @@
 # Copyright (c) 2022 - 2024 EDM115
-from importlib import metadata
 import os
 import pathlib
 import re
@@ -61,7 +60,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         fname = os.path.basename(doc_f)
         fext = ((pathlib.Path(os.path.abspath(doc_f)).suffix).casefold().replace(".", ""))
         thumbornot = await thumb_exists(c_id)
-        upmsg = await unzipperbot.send_message(c_id, Messages.PROCESSING2)
+        upmsg = await unzipperbot.send_message(c_id, Messages.PROCESSING2, disable_notification=True)
         if ul_mode == "media" and fext in extentions_list["audio"]:
             metadata = await get_audio_metadata(doc_f)
             if thumbornot:

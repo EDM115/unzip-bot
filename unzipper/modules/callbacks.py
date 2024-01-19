@@ -840,6 +840,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     ext_e_time = time()
             # Checks if there is an error happened while extracting the archive
             if any(err in extractor for err in ERROR_MSGS):
+                LOGGER.error("Error while extracting archive (line 843)" + extractor)
+                LOGGER.error(await get_files(ext_files_dir))
                 try:
                     await query.message.edit(Messages.EXT_FAILED_TXT)
                     shutil.rmtree(ext_files_dir)
