@@ -546,16 +546,17 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             return
                         content_disposition = unzip_head.headers.get('content-disposition')
                         rfnamebro = ""
+                        real_filename = ""
                         if content_disposition:
                             _, params = cgi.parse_header(content_disposition)
                             real_filename = params.get('filename')
-                            LOGGER.info(real_filename)
-                            if real_filename:
+                            LOGGER.info("real_filename1 : ", real_filename)
+                            if real_filename != "":
                                 rfnamebro = unquote(real_filename)
-                                LOGGER.info(rfnamebro)
+                                LOGGER.info("rfnamebro1 : ", rfnamebro)
                         if rfnamebro == "":
                             rfnamebro = unquote(url.split("/")[-1])
-                            LOGGER.info(rfnamebro)
+                            LOGGER.info("rfnamebro2 : ", rfnamebro)
                         if unzip_resp.status == 200:
                             os.makedirs(download_path)
                             s_time = time()
