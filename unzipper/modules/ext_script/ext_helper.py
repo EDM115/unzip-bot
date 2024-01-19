@@ -72,6 +72,7 @@ async def _extract_with_zstd(path, archive_path):
 
 # Main function to extract files
 async def extr_files(path, archive_path, password=None):
+    os.makedirs(path, exist_ok=True)
     tarball_extensions = [
         '.tar.gz', '.gz', '.tgz', '.taz',
         '.tar.bz2', '.bz2', '.tb2', '.tbz', '.tbz2', '.tz2',
@@ -85,10 +86,8 @@ async def extr_files(path, archive_path, password=None):
         temp_path = path.rsplit("/", 1)[0] + "/tar_temp"
         os.makedirs(temp_path, exist_ok=True)
         result = await _extract_with_7z_helper(temp_path, archive_path)
-        rfilename = await get_files(temp_path)
-        rfilename = rfilename[0].split("/")[-1]
-        LOGGER.info(rfilename)
-        filename = os.path.join(temp_path, rfilename)
+        filename = await get_files(temp_path)
+        filename = filename[0]
         command = f'tar -xvf {shlex.quote(filename)} -C {shlex.quote(path)}'
         result += await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
         shutil.rmtree(temp_path)
