@@ -30,9 +30,8 @@ async def cleanup_macos_artifacts(extraction_path):
 
 
 def __run_cmds_unzipper(command):
-    cmd = shlex.split(command['cmd'])
     ext_cmd = subprocess.Popen(
-        cmd,
+        command["cmd"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         shell=True
