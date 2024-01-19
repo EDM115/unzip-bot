@@ -695,6 +695,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 os.makedirs(download_path)
                 s_time = time()
                 location = f"{download_path}/{fname}"
+                LOGGER.info("location: %s", location)
                 archive = await r_message.download(
                     file_name=location,
                     progress=progress_for_pyrogram,
@@ -836,6 +837,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     )
                     ext_e_time = time()
                 else:
+                    LOGGER.info("Error on test")
                     extractor = "Error"
                     ext_e_time = time()
             # Checks if there is an error happened while extracting the archive
