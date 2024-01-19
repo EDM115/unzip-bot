@@ -13,6 +13,12 @@ from unzipper import LOGGER
 from unzipper.modules.bot_data import Messages
 
 
+# Get files in directory as a list
+async def get_files(path):
+    path_list = [val for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(path)] for val in sublist]  # skipcq: FLK-E501
+    return sorted(path_list)
+
+
 async def cleanup_macos_artifacts(extraction_path):
     for root, dirs, files in os.walk(extraction_path):
         for name in files:
@@ -66,27 +72,24 @@ async def _extract_with_zstd(path, archive_path):
 
 # Main function to extract files
 async def extr_files(path, archive_path, password=None):
-    file_path, file_ext = os.path.splitext(archive_path)
-    _, file_ext_inner = os.path.splitext(file_path)
     tarball_extensions = [
-        '.gz', '.tgz', '.taz',
-        '.bz2', '.tb2', '.tbz', '.tbz2', '.tz2',
-        '.lz',
-        '.lzma', '.tlz',
-        '.lzo',
-        '.xz', '.txz',
-        '.z', '.tz', '.taz',
-        '.zst', '.tzst'
+        '.tar.gz', '.gz', '.tgz', '.taz',
+        '.tar.bz2', '.bz2', '.tb2', '.tbz', '.tbz2', '.tz2',
+        '.tar.lz', '.lz',
+        '.tar.lzma', '.lzma', '.tlz',
+        '.tar.lzo', '.lzo',
+        '.tar.xz', '.xz', '.txz',
+        '.tar.z', '.z', '.tz', '.taz'
     ]
-    if file_ext_inner == '.tar' or file_ext in tarball_extensions:
+    if any(ext in archive_path for ext in tarball_extensions):
         temp_path = path.rsplit("/", 1)[0] + "/tar_temp"
         os.makedirs(temp_path, exist_ok=True)
-        result = await _extract_with_7z_helper(temp_path, archive_path, password)
-        filename = os.path.join(temp_path, os.listdir(temp_path)[0])
+        result = await _extract_with_7z_helper(temp_path, archive_path)
+        filename = os.path.join(temp_path, await get_files(temp_path)[0])
         command = f'tar -xvf {shlex.quote(filename)} -C {shlex.quote(path)}'
         result += await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
         shutil.rmtree(temp_path)
-    elif file_path == ".zst":
+    elif any(ext in archive_path for ext in ['.tar.zst', '.zst', '.tzst']):
         os.mkdir(path)
         result = await _extract_with_zstd(path, archive_path)
     else:
@@ -110,12 +113,6 @@ async def merge_files(iinput, ooutput, password=None):
     else:
         command = f'7z x -o"{ooutput}" "{iinput}" -y'
     return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
-
-
-# Get files in directory as a list
-async def get_files(path):
-    path_list = [val for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(path)] for val in sublist]  # skipcq: FLK-E501
-    return sorted(path_list)
 
 
 # Make keyboard
