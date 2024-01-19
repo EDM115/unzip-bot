@@ -132,6 +132,8 @@ async def extract_archive(_, message: Message):
     try:
         if message.chat.type != enums.ChatType.PRIVATE:
             return
+        if message.text.startswith("/exec") or message.text.startswith("/eval"):
+            return
         unzip_msg = await message.reply(Messages.PROCESSING2, reply_to_message_id=message.id)
         user_id = message.from_user.id
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
@@ -155,8 +157,7 @@ async def extract_archive(_, message: Message):
             else:
                 await unzip_msg.edit(Messages.NO_SPACE)
         else:
-            if not message.text.startswith("/exec") or message.text.startswith("/eval"):
-                await unzip_msg.edit(Messages.UNVALID)
+            await unzip_msg.edit(Messages.UNVALID)
     except FloodWait as f:
         await sleep(f.value)
         await extract_archive(_, message)
