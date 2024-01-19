@@ -132,32 +132,31 @@ async def extract_archive(_, message: Message):
     try:
         if message.chat.type != enums.ChatType.PRIVATE:
             return
-        if filters.command("eval") or filters.command("exec"):
-            return
-        unzip_msg = await message.reply(Messages.PROCESSING2, reply_to_message_id=message.id)
-        user_id = message.from_user.id
-        download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
-        if os.path.isdir(download_path):
-            await unzip_msg.edit(Messages.PROCESS_RUNNING)
-            return
-        if await get_merge_task(user_id):
-            await unzip_msg.delete()
-            return
-        if message.text and (re.match(https_url_regex, message.text)):
-            await unzip_msg.edit(
-                text=Messages.CHOOSE_EXT_MODE.format("URL", "🔗"),
-                reply_markup=Buttons.CHOOSE_E_U__BTNS,
-            )
-        elif message.document:
-            if sufficient_disk_space(message.document.file_size):
+        if not filters.command("eval") and not filters.command("exec"):    
+            unzip_msg = await message.reply(Messages.PROCESSING2, reply_to_message_id=message.id)
+            user_id = message.from_user.id
+            download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
+            if os.path.isdir(download_path):
+                await unzip_msg.edit(Messages.PROCESS_RUNNING)
+                return
+            if await get_merge_task(user_id):
+                await unzip_msg.delete()
+                return
+            if message.text and (re.match(https_url_regex, message.text)):
                 await unzip_msg.edit(
-                    text=Messages.CHOOSE_EXT_MODE.format("file", "🗂️"),
-                    reply_markup=Buttons.CHOOSE_E_F__BTNS,
+                    text=Messages.CHOOSE_EXT_MODE.format("URL", "🔗"),
+                    reply_markup=Buttons.CHOOSE_E_U__BTNS,
                 )
+            elif message.document:
+                if sufficient_disk_space(message.document.file_size):
+                    await unzip_msg.edit(
+                        text=Messages.CHOOSE_EXT_MODE.format("file", "🗂️"),
+                        reply_markup=Buttons.CHOOSE_E_F__BTNS,
+                    )
+                else:
+                    await unzip_msg.edit(Messages.NO_SPACE)
             else:
-                await unzip_msg.edit(Messages.NO_SPACE)
-        else:
-            await unzip_msg.edit(Messages.UNVALID)
+                await unzip_msg.edit(Messages.UNVALID)
     except FloodWait as f:
         await sleep(f.value)
         await extract_archive(_, message)
