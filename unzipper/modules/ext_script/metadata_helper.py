@@ -12,7 +12,11 @@ from mutagen.aac import AAC
 
 def get_audio_metadata(file_path):
     file_ext = file_path.split('.')[-1].lower()
-    audio_meta = {}
+    audio_meta = {
+        'performer': None,
+        'title': None,
+        'duration': None
+    }
 
     try:
         if file_ext in ['mp3']:
@@ -64,6 +68,7 @@ def get_audio_metadata(file_path):
 
         elif file_ext == 'wav':
             # WAV doesn't have a standard tagging system, handling might vary
+            pass
 
         elif file_ext == 'wma':
             audio_meta['performer'] = audio.tags.get('Author', [None])[0]
@@ -71,6 +76,7 @@ def get_audio_metadata(file_path):
 
         elif file_ext == 'aac':
             # AAC tagging is not standardized, handling might vary
+            pass
 
     except Exception:
         return None

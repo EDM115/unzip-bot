@@ -1,4 +1,5 @@
 # Copyright (c) 2022 - 2024 EDM115
+from importlib import metadata
 import os
 import pathlib
 import re
@@ -17,6 +18,7 @@ from unzipper.helpers.unzip_help import extentions_list, progress_urls
 from unzipper.helpers.unzip_help import progress_for_pyrogram
 from unzipper.modules.bot_data import Messages
 from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
+from unzipper.modules.ext_script.metadata_helper import get_audio_metadata
 
 
 # To get video duration and thumbnail
@@ -61,12 +63,16 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         thumbornot = await thumb_exists(c_id)
         upmsg = await unzipperbot.send_message(c_id, Messages.PROCESSING2)
         if ul_mode == "media" and fext in extentions_list["audio"]:
+            metadata = await get_audio_metadata(doc_f)
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
                 await unzip_bot.send_audio(
                     chat_id=c_id,
                     audio=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
+                    duration=metadata['duration'] if metadata else None,
+                    performer=metadata['performer'] if metadata else None,
+                    title=metadata['title'] if metadata else None,
                     thumb=thumb_image,
                     disable_notification=True,
                     progress=progress_for_pyrogram,
@@ -82,6 +88,9 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     chat_id=c_id,
                     audio=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
+                    duration=metadata['duration'] if metadata else None,
+                    performer=metadata['performer'] if metadata else None,
+                    title=metadata['title'] if metadata else None,
                     disable_notification=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
