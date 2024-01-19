@@ -1,5 +1,6 @@
 # Copyright (c) 2022 - 2024 EDM115
 import asyncio
+import cgi
 import concurrent.futures
 import os
 import re
@@ -543,12 +544,23 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             await del_ongoing_task(user_id)
                             await query.message.edit(Messages.NOT_AN_ARCHIVE)
                             return
-                        rfnamebro = unquote(url.split("/")[-1])
+                        content_disposition = unzip_head.headers.get('content-disposition')
+                        if content_disposition:
+                            _, params = cgi.parse_header(content_disposition)
+                            real_filename = params.get('filename')
+                            if real_filename:
+                                rfnamebro = unquote(real_filename)
+                        if not rfnamebro:
+                            rfnamebro = unquote(url.split("/")[-1])
                         if unzip_resp.status == 200:
                             os.makedirs(download_path)
                             s_time = time()
-                            fname = unquote(os.path.splitext(url)[1])
-                            fext = fname.split(".")[-1].casefold()
+                            if real_filename:
+                                archive = os.path.join(download_path, real_filename)
+                            else:
+                                fname = unquote(os.path.splitext(url)[1])
+                                fext = fname.split(".")[-1].casefold()
+                                archive = f"{download_path}/{fname}"
                             if (
                                 splitted_data[2] not in ["thumb", "thumbrename"]
                                 and fext not in extentions_list["archive"]
@@ -560,8 +572,6 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                                 except:
                                     pass
                                 return
-                            archive = f"{download_path}/archive_from_{user_id}{fname}"
-                            location = archive
                             await answer_query(
                                 query,
                                 Messages.PROCESSING2,
@@ -680,7 +690,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         return
                 os.makedirs(download_path)
                 s_time = time()
-                location = f"{download_path}/archive_from_{user_id}{os.path.splitext(fname)[1]}"
+                location = f"{download_path}/{fname}"
                 archive = await r_message.download(
                     file_name=location,
                     progress=progress_for_pyrogram,
