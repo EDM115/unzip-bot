@@ -83,6 +83,7 @@ async def extr_files(path, archive_path, password=None):
         '.tar.z', '.z', '.tz', '.taz'
     ]
     if any(ext in archive_path for ext in tarball_extensions):
+        LOGGER.inof("tar")
         temp_path = path.rsplit("/", 1)[0] + "/tar_temp"
         os.makedirs(temp_path, exist_ok=True)
         result = await _extract_with_7z_helper(temp_path, archive_path)
@@ -92,10 +93,13 @@ async def extr_files(path, archive_path, password=None):
         result += await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
         shutil.rmtree(temp_path)
     elif any(ext in archive_path for ext in ['.tar.zst', '.zst', '.tzst']):
+        LOGGER.info("zstd")
         os.mkdir(path)
         result = await _extract_with_zstd(path, archive_path)
     else:
+        LOGGER.info("normal archive")
         result = await _extract_with_7z_helper(path, archive_path, password)
+    LOGGER.info(await get_files(path))
     await cleanup_macos_artifacts(path)
     return result
 
