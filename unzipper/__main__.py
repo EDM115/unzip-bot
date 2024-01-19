@@ -33,7 +33,7 @@ def shutdown_bot():
     except Exception as e:
         LOGGER.error("Error sending shutdown message: %s", e)
     finally:
-        unzipperbot.stop()
+        unzipperbot.stop(block=False)
         LOGGER.info("Bot stopped 😪")
 
 

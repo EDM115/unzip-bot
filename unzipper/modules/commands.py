@@ -1,10 +1,14 @@
 # Copyright (c) 2022 - 2024 EDM115
+import io
 import os
 import re
 import shutil
 import time
-from asyncio import sleep
+import traceback
+from asyncio import sleep, create_subprocess_shell, subprocess
+from contextlib import redirect_stdout, redirect_stderr
 from sys import executable
+
 
 import git
 import psutil
@@ -727,104 +731,70 @@ async def getadmin_cmds(_, message):
     )
 
 
-disabled = """ async def exec_message_f(client, message):
-    if message.from_user.id in AUTH_CHANNEL:
-        DELAY_BETWEEN_EDITS = 0.3
-        PROCESS_RUN_TIME = 100
-        cmd = message.text.split(" ", maxsplit=1)[1]
-
-        reply_to_id = message.message_id
-        if message.reply_to_message:
-            reply_to_id = message.reply_to_message.message_id
-
-        start_time = time.time() + PROCESS_RUN_TIME
-        process = await asyncio.create_subprocess_shell(
-            cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        e = stderr.decode()
-        if not e:
-            e = "No Error"
-        o = stdout.decode()
-        if not o:
-            o = "No Output"
-        else:
-            _o = o.split("\n")
-            o = "`\n".join(_o)
-        OUTPUT = f"**QUERY:**\n__Command:__\n`{cmd}` \n__PID:__\n`{process.pid}`\n\n**stderr:** \n`{e}`\n**Output:**\n{o}"
-
-        if len(OUTPUT) > MAX_MESSAGE_LENGTH:
-            with io.BytesIO(str.encode(OUTPUT)) as out_file:
-                out_file.name = "exec.text"
-                await client.send_document(
-                    chat_id=message.chat.id,
-                    document=out_file,
-                    caption=cmd,
-                    disable_notification=True,
-                    reply_to_message_id=reply_to_id,
-                )
-            await message.delete()
-        else:
-            await message.reply_text(OUTPUT)
-
-async def eval_message_f(client, message):
-    if message.from_user.id in AUTH_CHANNEL:
-        status_message = await message.reply_text("Processing ...")
-        cmd = message.text.split(" ", maxsplit=1)[1]
-
-        reply_to_id = message.message_id
-        if message.reply_to_message:
-            reply_to_id = message.reply_to_message.message_id
-
-        old_stderr = sys.stderr
-        old_stdout = sys.stdout
-        redirected_output = sys.stdout = io.StringIO()
-        redirected_error = sys.stderr = io.StringIO()
-        stdout, stderr, exc = None, None, None
-
-        try:
-            await aexec(cmd, client, message)
-        except Exception:
-            exc = traceback.format_exc()
-
-        stdout = redirected_output.getvalue()
-        stderr = redirected_error.getvalue()
-        sys.stdout = old_stdout
-        sys.stderr = old_stderr
-
-        evaluation = ""
-        if exc:
-            evaluation = exc
-        elif stderr:
-            evaluation = stderr
-        elif stdout:
-            evaluation = stdout
-        else:
-            evaluation = "Success"
-
-        final_output = (
-            "<b>EVAL</b>: <code>{}</code>\n\n<b>OUTPUT</b>:\n<code>{}</code> \n".format(
-                cmd, evaluation.strip()
-            )
-        )
-
-        if len(final_output) > MAX_MESSAGE_LENGTH:
-            with open("eval.text", "w+", encoding="utf8") as out_file:
-                out_file.write(str(final_output))
-            await message.reply_document(
-                document="eval.text",
-                caption=cmd,
-                disable_notification=True,
-                reply_to_message_id=reply_to_id,
-            )
-            os.remove("eval.text")
-            await status_message.delete()
-        else:
-            await status_message.edit(final_output)
-
 async def aexec(code, client, message):
     exec(
         f"async def __aexec(client, message): "
         + "".join(f"\n {l}" for l in code.split("\n"))
     )
-    return await locals()["__aexec"](client, message) """
+    return await locals()["__aexec"](client, message)
+
+
+@unzipperbot.on_message(filters.command("eval") & filters.user(Config.BOT_OWNER))
+async def eval_command(_, message):
+    status_message = await message.reply_text("Processing ...")
+    cmd = message.text.split(" ", maxsplit=1)[1]
+
+    stdout = io.StringIO()
+    stderr = io.StringIO()
+
+    with redirect_stdout(stdout), redirect_stderr(stderr):
+        try:
+            await aexec(cmd, _, message)
+        except Exception as e:
+            traceback_text = traceback.format_exc()
+            stderr.write(traceback_text)
+
+    stdout_value = stdout.getvalue()
+    stderr_value = stderr.getvalue()
+
+    evaluation = stderr_value or stdout_value or "Success"
+    final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation.strip()}</code> \n"
+
+    if len(final_output) > Config.MAX_MESSAGE_LENGTH:
+        with open("eval.txt", "w+", encoding="utf8") as out_file:
+            out_file.write(str(final_output))
+        await message.reply_document(
+            document="eval.txt",
+            caption=cmd,
+            reply_to_message_id=message.message_id,
+        )
+        await status_message.delete()
+        os.remove("eval.txt")
+    else:
+        await status_message.edit(final_output)
+
+
+@unzipperbot.on_message(filters.command("exec") & filters.user(Config.BOT_OWNER))
+async def exec_command(_, message):
+    cmd = message.text.split(" ", maxsplit=1)[1]
+    process = await create_subprocess_shell(
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+    stdout, stderr = await process.communicate()
+    e = stderr.decode()
+    o = stdout.decode()
+
+    e = e or "No Error"
+    o = o or "No Output"
+    OUTPUT = f"**COMMAND:**\n`{cmd}`\n\n**OUTPUT:**\n{o}\n\n**ERROR:**\n`{e}`"
+
+    if len(OUTPUT) > Config.MAX_MESSAGE_LENGTH:
+        with io.BytesIO(str.encode(OUTPUT)) as out_file:
+            out_file.name = "exec.txt"
+            await message.reply_document(
+                document=out_file,
+                caption=cmd,
+                reply_to_message_id=message.message_id,
+            )
+    else:
+        await message.reply_text(OUTPUT)
