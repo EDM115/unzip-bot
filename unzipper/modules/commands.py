@@ -777,7 +777,7 @@ async def eval_command(_, message):
         await message.reply_document(
             document="eval.txt",
             caption=cmd,
-            reply_to_message_id=message.message_id,
+            reply_to_message_id=message.id,
         )
         await status_message.delete()
         os.remove("eval.txt")
@@ -805,7 +805,7 @@ async def exec_command(_, message):
             await message.reply_document(
                 document=out_file,
                 caption=cmd,
-                reply_to_message_id=message.message_id,
+                reply_to_message_id=message.id,
             )
     else:
         await message.reply_text(OUTPUT)
