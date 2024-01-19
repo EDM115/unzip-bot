@@ -132,7 +132,7 @@ async def extract_archive(_, message: Message):
     try:
         if message.chat.type != enums.ChatType.PRIVATE:
             return
-        if message.text.startswith("/exec") or message.text.startswith("/eval"):
+        if filters.command("eval") or filters.command("exec"):
             return
         unzip_msg = await message.reply(Messages.PROCESSING2, reply_to_message_id=message.id)
         user_id = message.from_user.id
