@@ -562,9 +562,11 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                             s_time = time()
                             if real_filename:
                                 archive = os.path.join(download_path, real_filename)
+                                fext = real_filename.split(".")[-1].casefold()
                                 LOGGER.info(archive)
                             else:
                                 fname = unquote(os.path.splitext(url)[1])
+                                fname = fname.split("?")[0]
                                 fext = fname.split(".")[-1].casefold()
                                 archive = f"{download_path}/{fname}"
                                 LOGGER.info(archive)
