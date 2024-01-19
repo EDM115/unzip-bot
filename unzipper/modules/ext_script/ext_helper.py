@@ -52,6 +52,7 @@ async def run_cmds_on_cr(func, **kwargs):
 
 # Extract with 7z
 async def _extract_with_7z_helper(path, archive_path, password=None):
+    LOGGER.info("7z : " + archive_path + " : " + path)
     if password:
         command = f'7z x -o{path} -p"{password}" {archive_path} -y'
     else:
