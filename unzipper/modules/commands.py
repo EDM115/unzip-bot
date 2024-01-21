@@ -60,11 +60,25 @@ def sufficient_disk_space(required_space):
 
 @unzipperbot.on_message(filters.private)
 async def _(_, message: Message):
+    await check_user(message)
     uid = message.from_user.id
-    if uid != Config.BOT_OWNER:
-        await check_user(message)
-        if await get_maintenance():
-            await message.reply(Messages.MAINTENANCE_ON)
+    if uid != Config.BOT_OWNER and await get_maintenance():
+        await message.reply(Messages.MAINTENANCE_ON)
+        return
+    if uid == Config.BOT_OWNER:
+        return
+    if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
+        ogtasks = await get_ongoing_tasks()
+        if not any(uid == task["user_id"] for task in ogtasks):
+            try:
+                await message.reply(
+                    text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
+                )
+            except:
+                await unzipperbot.send_message(
+                    chat_id=uid,
+                    text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
+                )
             return
 
 
@@ -121,23 +135,9 @@ async def extract_archive(_, message: Message):
         if message.chat.type != enums.ChatType.PRIVATE:
             return
         if message.command and message.command[0] in ["eval", "exec"]:
-            return
-        user_id = message.from_user.id
-        if user_id != Config.BOT_OWNER:
-            if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
-                ogtasks = await get_ongoing_tasks()
-                if not any(user_id == task["user_id"] for task in ogtasks):
-                    try:
-                        await message.reply(
-                            text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
-                        )
-                    except:
-                        await unzipperbot.send_message(
-                            chat_id=user_id,
-                            text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
-                        )
-                    return
+            return  
         unzip_msg = await message.reply(Messages.PROCESSING2, reply_to_message_id=message.id)
+        user_id = message.from_user.id
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
         if os.path.isdir(download_path):
             await unzip_msg.edit(Messages.PROCESS_RUNNING)
