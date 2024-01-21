@@ -45,7 +45,7 @@ async def get_audio_metadata(file_path):
             return audio_meta
 
         audio_meta['duration'] = int(audio.info.length)
-        
+
         if file_ext == 'mp3':
             audio_meta['performer'] = audio.get('artist', [None])[0]
             audio_meta['title'] = audio.get('title', [None])[0]
