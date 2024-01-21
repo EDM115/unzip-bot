@@ -745,7 +745,7 @@ async def aexec(code, client, message):
             except SyntaxError:
                 exec(
                     "async def __aexec(client, message): "
-                    + "".join(f"\n {l}" for l in code.split("\n"))
+                    + "".join(f"\n {line}" for line in code.split("\n"))
                 )
                 await locals()["__aexec"](client, message)
         except Exception as e:
