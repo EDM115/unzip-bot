@@ -61,9 +61,7 @@ def sufficient_disk_space(required_space):
 @unzipperbot.on_message(filters.private)
 async def _(_, message: Message):
     uid = message.from_user.id
-    if uid == Config.BOT_OWNER:
-        pass
-    else:
+    if uid != Config.BOT_OWNER:
         await check_user(message)
         if await get_maintenance():
             await message.reply(Messages.MAINTENANCE_ON)
@@ -125,9 +123,7 @@ async def extract_archive(_, message: Message):
         if message.command and message.command[0] in ["eval", "exec"]:
             return
         user_id = message.from_user.id
-        if user_id == Config.BOT_OWNER:
-            pass
-        else:
+        if user_id != Config.BOT_OWNER:
             if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
                 ogtasks = await get_ongoing_tasks()
                 if not any(user_id == task["user_id"] for task in ogtasks):
