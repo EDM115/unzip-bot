@@ -748,7 +748,7 @@ async def aexec(code, client, message):
                 result = eval(code)
             except SyntaxError:
                 exec(
-                    f"async def __aexec(client, message): "
+                    "async def __aexec(client, message): "
                     + "".join(f"\n {l}" for l in code.split("\n"))
                 )
                 await locals()["__aexec"](client, message)
