@@ -1,3 +1,4 @@
+import os
 from mutagen.mp3 import MP3
 from mutagen.easyid3 import EasyID3
 from mutagen.mp4 import MP4
@@ -8,9 +9,12 @@ from mutagen.oggopus import OggOpus
 from mutagen.wave import WAVE
 from mutagen.asf import ASF
 from mutagen.aac import AAC
+import mutagen.id3 as id3
+
+from unzipper.modules.ext_script.ext_helper import run_cmds_on_cr, __run_cmds_unzipper
 
 
-def get_audio_metadata(file_path):
+async def get_audio_metadata(file_path):
     file_ext = file_path.split('.')[-1].lower()
     audio_meta = {
         'performer': None,
@@ -38,7 +42,7 @@ def get_audio_metadata(file_path):
         elif file_ext in ['aac']:
             audio = AAC(file_path)
         else:
-            return None
+            return audio_meta
 
         audio_meta['duration'] = int(audio.info.length)
         
@@ -79,6 +83,60 @@ def get_audio_metadata(file_path):
             pass
 
     except Exception:
-        return None
+        return audio_meta
 
     return audio_meta
+
+async def convert_and_save(file_path, target_format, metadata):
+    directory, filename = os.path.split(file_path)
+    basename, _ = os.path.splitext(filename)
+    new_file = os.path.join(directory, f"{basename}.{target_format}")
+
+    cmd = ['ffmpeg', '-i', file_path, '-vn']
+    cmd.append(new_file)
+    await run_cmds_on_cr(__run_cmds_unzipper, cmd=cmd)
+
+    if target_format == 'mp3':
+        audio = MP3(new_file, ID3=EasyID3)
+        audio['artist'] = metadata['performer']
+        audio['title'] = metadata['title']
+        audio.save()
+    elif target_format in ['m4a', 'alac']:
+        audio = MP4(new_file)
+        audio.tags['\xa9ART'] = metadata['performer']
+        audio.tags['\xa9nam'] = metadata['title']
+        audio.save()
+    elif target_format == 'flac':
+        audio = FLAC(new_file)
+        audio['artist'] = metadata['performer']
+        audio['title'] = metadata['title']
+        audio.save()
+    elif target_format in ['aif', 'aiff']:
+        audio = AIFF(new_file)
+        # The metadata have to be a Frame instance
+        audio['artist'] = id3.TextFrame(encoding=3, text=[metadata['performer']])
+        audio['title'] = id3.TextFrame(encoding=3, text=[metadata['title']])
+        audio.save()
+    elif target_format == 'ogg':
+        audio = OggVorbis(new_file)
+        audio['artist'] = metadata['performer']
+        audio['title'] = metadata['title']
+        audio.save()
+    elif target_format == 'opus':
+        audio = OggOpus(new_file)
+        audio['artist'] = metadata['performer']
+        audio['title'] = metadata['title']
+        audio.save()
+    elif target_format == 'wav':
+        audio = WAVE(new_file)
+        audio.save()
+    elif target_format == 'wma':
+        audio = ASF(new_file)
+        audio.tags['Author'] = metadata['performer']
+        audio.tags['WM/AlbumTitle'] = metadata['title']
+        audio.save()
+    elif target_format == 'aac':
+        audio = AAC(new_file)
+        audio.save()
+
+    return new_file
