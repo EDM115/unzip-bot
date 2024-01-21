@@ -4,7 +4,6 @@ import os
 import re
 import shutil
 import time
-import traceback
 from asyncio import sleep, create_subprocess_shell, subprocess
 from contextlib import redirect_stdout, redirect_stderr
 from sys import executable
@@ -51,33 +50,23 @@ https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){
 def sufficient_disk_space(required_space):
     disk_usage = psutil.disk_usage('/')
     free_space = disk_usage.free
-    if free_space >= required_space:
+    total_space = disk_usage.total
+    five_percent_total = total_space * 0.05
+
+    if free_space >= required_space and free_space >= five_percent_total:
         return True
     return False
 
 
 @unzipperbot.on_message(filters.private)
 async def _(_, message: Message):
-    await check_user(message)
     uid = message.from_user.id
-    if uid != Config.BOT_OWNER and await get_maintenance():
-        await message.reply(Messages.MAINTENANCE_ON)
-        return
     if uid == Config.BOT_OWNER:
         return
-    if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
-        ogtasks = await get_ongoing_tasks()
-        if not any(uid == task["user_id"] for task in ogtasks):
-            try:
-                await message.reply(
-                    text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
-                )
-            except:
-                await unzipperbot.send_message(
-                    chat_id=uid,
-                    text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
-                )
-            return
+    await check_user(message)
+    if await get_maintenance():
+        await message.reply(Messages.MAINTENANCE_ON)
+        return
 
 
 @unzipperbot.on_message(filters.command("start"))
@@ -133,9 +122,22 @@ async def extract_archive(_, message: Message):
         if message.chat.type != enums.ChatType.PRIVATE:
             return
         if message.command and message.command[0] in ["eval", "exec"]:
-            return  
-        unzip_msg = await message.reply(Messages.PROCESSING2, reply_to_message_id=message.id)
+            return
         user_id = message.from_user.id
+        if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
+            ogtasks = await get_ongoing_tasks()
+            if not any(user_id == task["user_id"] for task in ogtasks):
+                try:
+                    await message.reply(
+                        text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
+                    )
+                except:
+                    await unzipperbot.send_message(
+                        chat_id=user_id,
+                        text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
+                    )
+                return
+        unzip_msg = await message.reply(Messages.PROCESSING2, reply_to_message_id=message.id)
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
         if os.path.isdir(download_path):
             await unzip_msg.edit(Messages.PROCESS_RUNNING)

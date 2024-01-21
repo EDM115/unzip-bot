@@ -94,13 +94,13 @@ async def remove_expired_tasks(firststart=False):
     value = firststart
     while True:
         ongoing_tasks = await get_ongoing_tasks()
+        await clear_ongoing_tasks()
 
         for task in ongoing_tasks:
             user_id = task["user_id"]
             if user_id == Config.BOT_OWNER:
                 continue
             if value:
-                await del_ongoing_task(user_id)
                 try:
                     shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
                 except:
@@ -113,7 +113,6 @@ async def remove_expired_tasks(firststart=False):
 
                 if task_type == "extract":
                     if time_gap > Config.MAX_TASK_DURATION_EXTRACT:
-                        await del_ongoing_task(user_id)
                         try:
                             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
                         except:
@@ -121,7 +120,6 @@ async def remove_expired_tasks(firststart=False):
                         await unzipperbot.send_message(user_id, Messages.TASK_EXPIRED.format(Config.MAX_TASK_DURATION_EXTRACT // 60))
                 elif task_type == "merge":
                     if time_gap > Config.MAX_TASK_DURATION_MERGE:
-                        await del_ongoing_task(user_id)
                         try:
                             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
                         except:
