@@ -11,7 +11,7 @@ from unzipper import LOGGER, boottime, unzipperbot
 from unzipper.modules.bot_data import Messages
 from unzipper.modules.callbacks import download
 
-from .database import clear_cancel_tasks, clear_merge_tasks, del_ongoing_task, get_thumb_users, set_boot, get_boot, set_old_boot, get_old_boot, is_boot_different, count_ongoing_tasks, get_ongoing_tasks, clear_ongoing_tasks
+from .database import clear_cancel_tasks, clear_merge_tasks, get_thumb_users, set_boot, get_boot, set_old_boot, get_old_boot, is_boot_different, count_ongoing_tasks, get_ongoing_tasks, clear_ongoing_tasks
 
 
 def check_logs():
