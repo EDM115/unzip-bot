@@ -92,8 +92,7 @@ async def convert_and_save(file_path, target_format, metadata):
     basename, _ = os.path.splitext(filename)
     new_file = os.path.join(directory, f"{basename}.{target_format}")
 
-    cmd = ['ffmpeg', '-i', file_path, '-vn']
-    cmd.append(new_file)
+    cmd = ['ffmpeg', '-i', file_path, '-vn', new_file]
     await run_cmds_on_cr(__run_cmds_unzipper, cmd=cmd)
 
     if target_format == 'mp3':
