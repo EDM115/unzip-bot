@@ -23,12 +23,11 @@ from unzipper.modules.ext_script.metadata_helper import get_audio_metadata
 # To get video duration and thumbnail
 async def run_shell_cmds(command):
     run = subprocess.Popen(
-        command,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        shell=True
+        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
     )
-    shell_output = run.stdout.read()[:-1].decode("utf-8").rstrip('\n') + run.stderr.read()[:-1].decode("utf-8").rstrip('\n')
+    shell_output = run.stdout.read()[:-1].decode("utf-8").rstrip(
+        "\n"
+    ) + run.stderr.read()[:-1].decode("utf-8").rstrip("\n")
     LOGGER.info("shell_output : " + shell_output)
     if run.stderr:
         run.stderr.close()
@@ -51,16 +50,20 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
     fsize = await get_size(doc_f)
     if fsize in (-1, 0):  # File not found or empty
         try:
-            await unzipperbot.send_message(c_id, Messages.EMPTY_FILE.format(os.path.basename(doc_f)))
+            await unzipperbot.send_message(
+                c_id, Messages.EMPTY_FILE.format(os.path.basename(doc_f))
+            )
         except:
             pass
         return
     try:
         ul_mode = await get_upload_mode(c_id)
         fname = os.path.basename(doc_f)
-        fext = ((pathlib.Path(os.path.abspath(doc_f)).suffix).casefold().replace(".", ""))
+        fext = (pathlib.Path(os.path.abspath(doc_f)).suffix).casefold().replace(".", "")
         thumbornot = await thumb_exists(c_id)
-        upmsg = await unzipperbot.send_message(c_id, Messages.PROCESSING2, disable_notification=True)
+        upmsg = await unzipperbot.send_message(
+            c_id, Messages.PROCESSING2, disable_notification=True
+        )
         if ul_mode == "media" and fext in extentions_list["audio"]:
             metadata = await get_audio_metadata(doc_f)
             if thumbornot:
@@ -69,9 +72,9 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     chat_id=c_id,
                     audio=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
-                    duration=metadata['duration'],
-                    performer=metadata['performer'],
-                    title=metadata['title'],
+                    duration=metadata["duration"],
+                    performer=metadata["performer"],
+                    title=metadata["title"],
                     thumb=thumb_image,
                     disable_notification=True,
                     progress=progress_for_pyrogram,
@@ -87,9 +90,9 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     chat_id=c_id,
                     audio=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
-                    duration=metadata['duration'],
-                    performer=metadata['performer'],
-                    title=metadata['title'],
+                    duration=metadata["duration"],
+                    performer=metadata["performer"],
+                    title=metadata["title"],
                     disable_notification=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
@@ -307,7 +310,9 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         return await send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split)
     except FileNotFoundError:
         try:
-            await unzipperbot.send_message(c_id, Messages.CANT_FIND.format(os.path.basename(doc_f)))
+            await unzipperbot.send_message(
+                c_id, Messages.CANT_FIND.format(os.path.basename(doc_f))
+            )
         except:
             pass
         return
@@ -333,10 +338,7 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source, message):
     try:
         u_file_size = os.stat(doc_f).st_size
         if Config.TG_MAX_SIZE < int(u_file_size):
-            await unzip_bot.send_message(
-                chat_id=c_id,
-                text=Messages.TOO_LARGE
-            )
+            await unzip_bot.send_message(chat_id=c_id, text=Messages.TOO_LARGE)
             return
         fname = os.path.basename(doc_f)
         await unzip_bot.send_document(
@@ -386,11 +388,15 @@ async def answer_query(
         try:
             if unzip_client:
                 await unzip_client.send_message(
-                    chat_id=query.message.chat.id, text=message_text, reply_markup=buttons
+                    chat_id=query.message.chat.id,
+                    text=message_text,
+                    reply_markup=buttons,
                 )
             else:
                 await unzipperbot.send_message(
-                    chat_id=query.message.chat.id, text=message_text, reply_markup=buttons
+                    chat_id=query.message.chat.id,
+                    text=message_text,
+                    reply_markup=buttons,
                 )
         except:
             pass
