@@ -48,7 +48,7 @@ https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){
 
 
 def sufficient_disk_space(required_space):
-    disk_usage = psutil.disk_usage('/')
+    disk_usage = psutil.disk_usage("/")
     free_space = disk_usage.free
     total_space = disk_usage.total
     five_percent_total = total_space * 0.05
@@ -107,7 +107,9 @@ async def clean_my_files(_, message: Message):
 @unzipperbot.on_message(filters.command("help"))
 async def help_me(_, message: Message):
     try:
-        await message.reply_text(text=Messages.HELP_TXT, reply_markup=Buttons.ME_GOIN_HOME)
+        await message.reply_text(
+            text=Messages.HELP_TXT, reply_markup=Buttons.ME_GOIN_HOME
+        )
     except FloodWait as f:
         await sleep(f.value)
         await help_me(_, message)
@@ -135,8 +137,10 @@ async def extract_archive(_, message: Message):
         if message.chat.type != enums.ChatType.PRIVATE:
             return
         if message.command and message.command[0] in ["eval", "exec"]:
-            return  
-        unzip_msg = await message.reply(Messages.PROCESSING2, reply_to_message_id=message.id)
+            return
+        unzip_msg = await message.reply(
+            Messages.PROCESSING2, reply_to_message_id=message.id
+        )
         user_id = message.from_user.id
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
         if os.path.isdir(download_path):
@@ -169,7 +173,9 @@ async def extract_archive(_, message: Message):
 async def cancel_task_by_user(_, message):
     idtodel = message.id - 1
     try:
-        await unzipperbot.delete_messages(chat_id=message.from_user.id, message_ids=idtodel)
+        await unzipperbot.delete_messages(
+            chat_id=message.from_user.id, message_ids=idtodel
+        )
     except:
         pass
     await message.reply(Messages.CANCELLED)
@@ -188,10 +194,7 @@ async def merging(_, message: Message):
 @unzipperbot.on_message(filters.private & filters.command("done"))
 async def done_merge(_, message: Message):
     try:
-        await message.reply(
-            Messages.DONE,
-            reply_markup=Buttons.MERGE_THEM_ALL
-        )
+        await message.reply(Messages.DONE, reply_markup=Buttons.MERGE_THEM_ALL)
     except FloodWait as f:
         await sleep(f.value)
         await done_merge(_, message)
@@ -304,18 +307,22 @@ async def broadcast_this(_, message: Message):
             except FloodWait:
                 pass
     try:
-        await bc_msg.edit(Messages.BC_DONE.format(
-            total_users,
-            success_no,
-            failed_no,
-        ))
+        await bc_msg.edit(
+            Messages.BC_DONE.format(
+                total_users,
+                success_no,
+                failed_no,
+            )
+        )
     except FloodWait as f:
         await sleep(f.value)
-        await bc_msg.edit(Messages.BC_DONE.format(
-            total_users,
-            success_no,
-            failed_no,
-        ))
+        await bc_msg.edit(
+            Messages.BC_DONE.format(
+                total_users,
+                success_no,
+                failed_no,
+            )
+        )
 
 
 @unzipperbot.on_message(filters.command("sendto") & filters.user(Config.BOT_OWNER))
@@ -485,7 +492,9 @@ async def red_alert(_, message: Message):
     # but also need to stop currently ongoing processes…
 
 
-@unzipperbot.on_message(filters.private & filters.command("maintenance") & filters.user(Config.BOT_OWNER))
+@unzipperbot.on_message(
+    filters.private & filters.command("maintenance") & filters.user(Config.BOT_OWNER)
+)
 async def maintenance_mode(_, message: Message):
     mstatus = await get_maintenance()
     text = Messages.MAINTENANCE.format(mstatus) + "\n\n" + Messages.MAINTENANCE_ASK
@@ -565,7 +574,7 @@ async def send_logs(user_id):
 
 
 def clear_logs():
-    open('file.txt', 'w').close()
+    open("file.txt", "w").close()
 
 
 @unzipperbot.on_message(
@@ -586,9 +595,7 @@ async def restart(_, message: Message):
     except:
         pass
     restarttime = time.strftime("%Y/%m/%d - %H:%M:%S")
-    await message.reply_text(
-        Messages.RESTARTED_AT.format(restarttime), quote=True
-    )
+    await message.reply_text(Messages.RESTARTED_AT.format(restarttime), quote=True)
     await send_logs(message.from_user.id)
     LOGGER.info(Messages.RESTARTING.format(message.from_user.id))
     clear_logs()
@@ -685,13 +692,43 @@ async def add_vip(_, message: Message):
         await message.reply(Messages.VIP_REQUIRED_MESSAGE)
         return
     lifetime = messagearray[12] == "True"
-    await add_vip_user(user_id, subscription, ends, used, billed, early, donator, started, successful, gap, gifted, referral, lifetime)
-    await message.reply(Messages.VIP_ADDED_USER.format(user_id, subscription, ends, used, billed, early, donator, started, successful, gap, gifted, referral, lifetime))
+    await add_vip_user(
+        user_id,
+        subscription,
+        ends,
+        used,
+        billed,
+        early,
+        donator,
+        started,
+        successful,
+        gap,
+        gifted,
+        referral,
+        lifetime,
+    )
+    await message.reply(
+        Messages.VIP_ADDED_USER.format(
+            user_id,
+            subscription,
+            ends,
+            used,
+            billed,
+            early,
+            donator,
+            started,
+            successful,
+            gap,
+            gifted,
+            referral,
+            lifetime,
+        )
+    )
 
 
 @unzipperbot.on_message(filters.command("delvip") & filters.user(Config.BOT_OWNER))
 async def del_vip(_, message: Message):
-    """ del_msg = await message.reply(Messages.PROVIDE_UID)
+    """del_msg = await message.reply(Messages.PROVIDE_UID)
     try:
         user_id = message.text.split(None, 1)[1]
     except:
@@ -707,7 +744,7 @@ async def del_vip(_, message: Message):
     if text != "":
         await del_msg.edit(text)
     else:
-        await del_msg.edit(Messages.UNBANNED.format(user_id)) """
+        await del_msg.edit(Messages.UNBANNED.format(user_id))"""
     pass
 
 

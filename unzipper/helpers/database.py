@@ -140,14 +140,26 @@ async def check_user(message):
             try:
                 await unzipperbot.send_message(
                     chat_id=Config.LOGS_CHANNEL,
-                    text=Messages.NEW_USER.format(uname, umention, message.from_user.id, message.from_user.id, message.from_user.id),
+                    text=Messages.NEW_USER.format(
+                        uname,
+                        umention,
+                        message.from_user.id,
+                        message.from_user.id,
+                        message.from_user.id,
+                    ),
                     disable_web_page_preview=False,
                 )
             except FloodWait as f:
                 await sleep(f.value)
                 await unzipperbot.send_message(
                     chat_id=Config.LOGS_CHANNEL,
-                    text=Messages.NEW_USER.format(uname, umention, message.from_user.id, message.from_user.id, message.from_user.id),
+                    text=Messages.NEW_USER.format(
+                        uname,
+                        umention,
+                        message.from_user.id,
+                        message.from_user.id,
+                        message.from_user.id,
+                    ),
                     disable_web_page_preview=False,
                 )
     await message.continue_propagation()
@@ -229,7 +241,8 @@ async def upload_thumb(image):
     try:
         with open(image, "rb") as file:
             response = requests.post(
-                "https://telegra.ph/upload", files={"file": ("file", file, "image/jpeg")}
+                "https://telegra.ph/upload",
+                files={"file": ("file", file, "image/jpeg")},
             )
             response.raise_for_status()  # Raise an exception if the request was not successful
             request = response.json()[0]
@@ -296,11 +309,7 @@ async def is_boot_different():
     different = True
     is_exist = await bot_data.find_one({"boot": True})
     is_exist_old = await bot_data.find_one({"old_boot": True})
-    if (
-        is_exist
-        and is_exist_old
-        and is_exist["time"] == is_exist_old["time"]
-    ):
+    if is_exist and is_exist_old and is_exist["time"] == is_exist_old["time"]:
         different = False
     return different
 
@@ -319,7 +328,9 @@ async def count_ongoing_tasks():
 
 
 async def add_ongoing_task(user_id, start_time, task_type):
-    await ongoing_tasks.insert_one({"user_id": user_id, "start_time": start_time, "type": task_type})
+    await ongoing_tasks.insert_one(
+        {"user_id": user_id, "start_time": start_time, "type": task_type}
+    )
 
 
 async def del_ongoing_task(user_id):
@@ -387,7 +398,9 @@ async def add_merge_task(user_id, message_id):
     if not await get_merge_task(user_id):
         await merge_tasks.insert_one({"user_id": user_id, "message_id": message_id})
     else:
-        await merge_tasks.update_one({"user_id": user_id}, {"$set": {"message_id": message_id}})
+        await merge_tasks.update_one(
+            {"user_id": user_id}, {"$set": {"message_id": message_id}}
+        )
 
 
 async def del_merge_task(user_id):
@@ -439,12 +452,60 @@ async def set_maintenance(val):
 vip_users = unzipper_db["vip_users"]
 
 
-async def add_vip_user(uid, subscription, ends, used, billed, early, donator, started, successful, gap, gifted, referral, lifetime):
+async def add_vip_user(
+    uid,
+    subscription,
+    ends,
+    used,
+    billed,
+    early,
+    donator,
+    started,
+    successful,
+    gap,
+    gifted,
+    referral,
+    lifetime,
+):
     is_exist = await vip_users.find_one({"_id": uid})
     if is_exist is not None and is_exist:
-        await vip_users.update_one({"_id": uid}, {"$set": {"subscription": subscription, "ends": ends, "used": used, "billed": billed, "early": early, "donator": donator, "started": started, "successful": successful, "gap": gap, "gifted": gifted, "referral": referral, "lifetime": lifetime}})
+        await vip_users.update_one(
+            {"_id": uid},
+            {
+                "$set": {
+                    "subscription": subscription,
+                    "ends": ends,
+                    "used": used,
+                    "billed": billed,
+                    "early": early,
+                    "donator": donator,
+                    "started": started,
+                    "successful": successful,
+                    "gap": gap,
+                    "gifted": gifted,
+                    "referral": referral,
+                    "lifetime": lifetime,
+                }
+            },
+        )
     else:
-        await vip_users.insert_one({"_id": uid, "subscription": subscription, "ends": ends, "used": used, "billed": billed, "early": early, "donator": donator, "started": started, "successful": successful, "gap": gap, "gifted": gifted, "referral": referral, "lifetime": lifetime})
+        await vip_users.insert_one(
+            {
+                "_id": uid,
+                "subscription": subscription,
+                "ends": ends,
+                "used": used,
+                "billed": billed,
+                "early": early,
+                "donator": donator,
+                "started": started,
+                "successful": successful,
+                "gap": gap,
+                "gifted": gifted,
+                "referral": referral,
+                "lifetime": lifetime,
+            }
+        )
 
 
 async def remove_vip_user(uid):
@@ -484,17 +545,25 @@ referrals = unzipper_db["referrals"]
 async def add_referee(uid, referral_code):
     is_exist = await referrals.find_one({"_id": uid})
     if is_exist is not None and is_exist:
-        await referrals.update_one({"_id": uid}, {"$set": {"type": "referee", "referral_code": referral_code}})
+        await referrals.update_one(
+            {"_id": uid}, {"$set": {"type": "referee", "referral_code": referral_code}}
+        )
     else:
-        await referrals.insert_one({"_id": uid, "type": "referee", "referral_code": referral_code})
+        await referrals.insert_one(
+            {"_id": uid, "type": "referee", "referral_code": referral_code}
+        )
 
 
 async def add_referrer(uid, referees):
     is_exist = await referrals.find_one({"_id": uid})
     if is_exist is not None and is_exist:
-        await referrals.update_one({"_id": uid}, {"$set": {"type": "referrer", "referees": referees}})
+        await referrals.update_one(
+            {"_id": uid}, {"$set": {"type": "referrer", "referees": referees}}
+        )
     else:
-        await referrals.insert_one({"_id": uid, "type": "referrer", "referees": referees})
+        await referrals.insert_one(
+            {"_id": uid, "type": "referrer", "referees": referees}
+        )
 
 
 async def get_referee(uid):
@@ -512,8 +581,14 @@ async def get_referrer(uid):
 
 
 def get_referral_code(uid):
-    return base58check.b58encode(base58check.b58encode(str(uid).encode("ascii"))).decode("ascii")
+    return base58check.b58encode(
+        base58check.b58encode(str(uid).encode("ascii"))
+    ).decode("ascii")
 
 
 def get_referral_uid(referral_code):
-    return int(base58check.b58decode(base58check.b58decode(referral_code).decode("ascii")).decode("ascii"))
+    return int(
+        base58check.b58decode(
+            base58check.b58decode(referral_code).decode("ascii")
+        ).decode("ascii")
+    )

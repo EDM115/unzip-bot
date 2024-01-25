@@ -13,7 +13,12 @@ from .modules.bot_data import Messages
 
 
 def handler_stop_signals(signum, frame):
-    LOGGER.info("Received stop signal (%s, %s, %s). Exiting...", signal.Signals(signum).name, signum, frame)
+    LOGGER.info(
+        "Received stop signal (%s, %s, %s). Exiting...",
+        signal.Signals(signum).name,
+        signum,
+        frame,
+    )
     shutdown_bot()
 
 

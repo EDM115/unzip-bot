@@ -14,7 +14,11 @@ from unzipper.modules.bot_data import Messages
 
 # Get files in directory as a list
 async def get_files(path):
-    path_list = [val for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(path)] for val in sublist]  # skipcq: FLK-E501
+    path_list = [
+        val
+        for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(path)]
+        for val in sublist
+    ]  # skipcq: FLK-E501
     return sorted(path_list)
 
 
@@ -30,13 +34,10 @@ async def cleanup_macos_artifacts(extraction_path):
 
 def __run_cmds_unzipper(command):
     ext_cmd = subprocess.Popen(
-        command["cmd"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        shell=True
+        command["cmd"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
     )
-    ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8").rstrip('\n')
-    ext_err = ext_cmd.stderr.read()[:-1].decode("utf-8").rstrip('\n')
+    ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8").rstrip("\n")
+    ext_err = ext_cmd.stderr.read()[:-1].decode("utf-8").rstrip("\n")
     LOGGER.info("ext_out : " + ext_out)
     LOGGER.info("ext_err : " + ext_err)
     if ext_cmd.stderr:
@@ -77,13 +78,30 @@ async def _extract_with_zstd(path, archive_path):
 async def extr_files(path, archive_path, password=None):
     os.makedirs(path, exist_ok=True)
     tarball_extensions = (
-        '.tar.gz', '.gz', '.tgz', '.taz',
-        '.tar.bz2', '.bz2', '.tb2', '.tbz', '.tbz2', '.tz2',
-        '.tar.lz', '.lz',
-        '.tar.lzma', '.lzma', '.tlz',
-        '.tar.lzo', '.lzo',
-        '.tar.xz', '.xz', '.txz',
-        '.tar.z', '.z', '.tz', '.taz'
+        ".tar.gz",
+        ".gz",
+        ".tgz",
+        ".taz",
+        ".tar.bz2",
+        ".bz2",
+        ".tb2",
+        ".tbz",
+        ".tbz2",
+        ".tz2",
+        ".tar.lz",
+        ".lz",
+        ".tar.lzma",
+        ".lzma",
+        ".tlz",
+        ".tar.lzo",
+        ".lzo",
+        ".tar.xz",
+        ".xz",
+        ".txz",
+        ".tar.z",
+        ".z",
+        ".tz",
+        ".taz",
     )
     if archive_path.endswith(tarball_extensions):
         LOGGER.info("tar")
@@ -95,7 +113,7 @@ async def extr_files(path, archive_path, password=None):
         command = f'tar -xvf "{filename}" -C {path}'
         result += await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
         shutil.rmtree(temp_path)
-    elif archive_path.endswith(('.tar.zst', '.zst', '.tzst')):
+    elif archive_path.endswith((".tar.zst", ".zst", ".tzst")):
         LOGGER.info("zstd")
         os.mkdir(path)
         result = await _extract_with_zstd(path, archive_path)
@@ -130,29 +148,35 @@ async def make_keyboard(paths, user_id, chat_id, unziphttp, rzfile=None):
     i_kbd = InlineKeyboard(row_width=1)
     data = []
     if unziphttp:
-        data.append(InlineKeyboardButton(
-            Messages.UP_ALL,
-            f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}"
-        ))
+        data.append(
+            InlineKeyboardButton(
+                Messages.UP_ALL, f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}"
+            )
+        )
     else:
-        data.append(InlineKeyboardButton(
-            Messages.UP_ALL,
-            f"ext_a|{user_id}|{chat_id}|{unziphttp}"
-        ))
+        data.append(
+            InlineKeyboardButton(
+                Messages.UP_ALL, f"ext_a|{user_id}|{chat_id}|{unziphttp}"
+            )
+        )
     data.append(InlineKeyboardButton(Messages.CANCEL_IT, "cancel_dis"))
     for file in paths:
         if num > 96:
             break
         if unziphttp:
-            data.append(InlineKeyboardButton(
-                f"{num} - {os.path.basename(file)}".encode("utf-8").decode("utf-8"),
-                f"ext_f|{user_id}|{chat_id}|{num}|{unziphttp}|{rzfile}",
-            ))
+            data.append(
+                InlineKeyboardButton(
+                    f"{num} - {os.path.basename(file)}".encode("utf-8").decode("utf-8"),
+                    f"ext_f|{user_id}|{chat_id}|{num}|{unziphttp}|{rzfile}",
+                )
+            )
         else:
-            data.append(InlineKeyboardButton(
-                f"{num} - {os.path.basename(file)}".encode("utf-8").decode("utf-8"),
-                f"ext_f|{user_id}|{chat_id}|{num}|{unziphttp}",
-            ))
+            data.append(
+                InlineKeyboardButton(
+                    f"{num} - {os.path.basename(file)}".encode("utf-8").decode("utf-8"),
+                    f"ext_f|{user_id}|{chat_id}|{num}|{unziphttp}",
+                )
+            )
         num += 1
     i_kbd.add(*data)
     return i_kbd
@@ -162,15 +186,17 @@ async def make_keyboard_empty(user_id, chat_id, unziphttp, rzfile=None):
     i_kbd = InlineKeyboard(row_width=2)
     data = []
     if unziphttp:
-        data.append(InlineKeyboardButton(
-            Messages.UP_ALL,
-            f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}"
-        ))
+        data.append(
+            InlineKeyboardButton(
+                Messages.UP_ALL, f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}"
+            )
+        )
     else:
-        data.append(InlineKeyboardButton(
-            Messages.UP_ALL,
-            f"ext_a|{user_id}|{chat_id}|{unziphttp}"
-        ))
+        data.append(
+            InlineKeyboardButton(
+                Messages.UP_ALL, f"ext_a|{user_id}|{chat_id}|{unziphttp}"
+            )
+        )
     data.append(InlineKeyboardButton(Messages.CANCEL_IT, "cancel_dis"))
     i_kbd.add(*data)
     return i_kbd
