@@ -4,7 +4,6 @@ import os
 import re
 import shutil
 import time
-import traceback
 from asyncio import sleep, create_subprocess_shell, subprocess
 from contextlib import redirect_stdout, redirect_stderr
 from sys import executable
@@ -51,7 +50,10 @@ https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){
 def sufficient_disk_space(required_space):
     disk_usage = psutil.disk_usage('/')
     free_space = disk_usage.free
-    if free_space >= required_space:
+    total_space = disk_usage.total
+    five_percent_total = total_space * 0.05
+
+    if free_space >= required_space and free_space >= five_percent_total:
         return True
     return False
 
@@ -689,7 +691,7 @@ async def add_vip(_, message: Message):
 
 @unzipperbot.on_message(filters.command("delvip") & filters.user(Config.BOT_OWNER))
 async def del_vip(_, message: Message):
-    del_msg = await message.reply(Messages.PROVIDE_UID)
+    """ del_msg = await message.reply(Messages.PROVIDE_UID)
     try:
         user_id = message.text.split(None, 1)[1]
     except:
@@ -705,7 +707,8 @@ async def del_vip(_, message: Message):
     if text != "":
         await del_msg.edit(text)
     else:
-        await del_msg.edit(Messages.UNBANNED.format(user_id))
+        await del_msg.edit(Messages.UNBANNED.format(user_id)) """
+    pass
 
 
 @unzipperbot.on_message(
@@ -742,8 +745,8 @@ async def aexec(code, client, message):
                 result = eval(code)
             except SyntaxError:
                 exec(
-                    f"async def __aexec(client, message): "
-                    + "".join(f"\n {l}" for l in code.split("\n"))
+                    "async def __aexec(client, message): "
+                    + "".join(f"\n {line}" for line in code.split("\n"))
                 )
                 await locals()["__aexec"](client, message)
         except Exception as e:

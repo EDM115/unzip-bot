@@ -4,7 +4,6 @@ from asyncio import get_running_loop
 from functools import partial
 import subprocess
 import shutil
-import shlex
 
 from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
@@ -37,12 +36,14 @@ def __run_cmds_unzipper(command):
         shell=True
     )
     ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8").rstrip('\n')
-    LOGGER.info(ext_out)
+    ext_err = ext_cmd.stderr.read()[:-1].decode("utf-8").rstrip('\n')
+    LOGGER.info("ext_out : " + ext_out)
+    LOGGER.info("ext_err : " + ext_err)
     if ext_cmd.stderr:
         ext_cmd.stderr.close()
     if ext_cmd.stdout:
         ext_cmd.stdout.close()
-    return ext_out
+    return ext_out + ext_err
 
 
 async def run_cmds_on_cr(func, **kwargs):
@@ -54,20 +55,21 @@ async def run_cmds_on_cr(func, **kwargs):
 async def _extract_with_7z_helper(path, archive_path, password=None):
     LOGGER.info("7z : " + archive_path + " : " + path)
     if password:
-        command = f'7z x -o{path} -p"{password}" {archive_path} -y'
+        command = f'7z x -o{path} -p"{password}" "{archive_path}" -y'
     else:
-        command = f"7z x -o{path} {archive_path} -y"
+        command = f'7z x -o{path} "{archive_path}" -y'
     return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
 
 async def _test_with_7z_helper(archive_path):
-    command = f'7z t {archive_path} -p"dont care + didnt ask + cry about it + stay mad + get real + L" -y'  # skipcq: FLK-E501
+    password = "dont care + didnt ask + cry about it + stay mad + get real + L"
+    command = f'7z t "{archive_path}" -p"{password}" -y'
     return "Everything is Ok" in await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
 
 # Extract with zstd (for .tar.zst files)
 async def _extract_with_zstd(path, archive_path):
-    command = f"zstd -f --output-dir-flat {path} -d {archive_path}"
+    command = f'zstd -f --output-dir-flat {path} -d "{archive_path}"'
     return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
 
@@ -90,7 +92,7 @@ async def extr_files(path, archive_path, password=None):
         result = await _extract_with_7z_helper(temp_path, archive_path)
         filename = await get_files(temp_path)
         filename = filename[0]
-        command = f'tar -xvf {shlex.quote(filename)} -C {shlex.quote(path)}'
+        command = f'tar -xvf "{filename}" -C {path}'
         result += await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
         shutil.rmtree(temp_path)
     elif archive_path.endswith(('.tar.zst', '.zst', '.tzst')):

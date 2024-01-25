@@ -10,7 +10,34 @@
 
 ---
 
-### v6.3.2 **[LATEST STABLE RELEASE]**
+### v6.3.3 **[LATEST STABLE RELEASE]**
+
+- Added support for PKG archives
+- ICO aren't treated as images anymore
+- When we upload a picture, either catch PhotoExtInvalid if it isn't meant to be uploaded as a picture
+or catch PhotoSaveFileInvalid if the picture is too big for Telegram
+- Added M4A and ALAC as Audio files
+- Reduced the number of Docker layers
+- Bumped the number of concurrent tasks to 75
+- removed useless files and imports
+- updated the licence years
+- updated the gh bot's config files
+- added ffmpeg buildpack
+- updated python runtime from 3.11.5 to 3.12.1
+- SIGTERM partial handling
+- new feature : if you Upload all, you won't get hundreds of notifications ! Now the bot sends the files silently and send one notification when everything's uploaded
+- New password for testing archives
+- Cap the resources to avoid quota exceedings
+- Don't upload files from MacOS archives (`.DS_Store`, `__MACOSX`)
+- Fixed TAR archives being broken (basically a `.tar.gz` would only upload the `.tar` inside)
+- Archives are no longer renamed to "archive_from_ID.ext"
+- Added `/eval` and `/exec` commands for Owner + aexec function
+- Audio files with media tags are uploaded with their tags
+- Tasks aren't processed if there is less than 5% of disk space available
+- All ongoing tasks are removed instantly instead of one by one
+- Updated dependencies (GitPython, Pillow, aiohttp, psutil, gitdb, motor)
+
+### v6.3.2
 
 - Fixed thumbnails not being saved
 - Premium related stuff is moved to its own branch (buggy so yes)
