@@ -118,7 +118,7 @@ async def remove_expired_tasks(firststart=False):
         else:
             for task in ongoing_tasks:
                 user_id = task["user_id"]
-                if not user_id == Config.BOT_OWNER::
+                if not user_id == Config.BOT_OWNER:
                     current_time = time()
                     start_time = task["start_time"]
                     task_type = task["type"]
