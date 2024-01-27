@@ -28,15 +28,25 @@ signal.signal(signal.SIGTERM, handler_stop_signals)
 
 def shutdown_bot():
     stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
+    LOGGER.info(Messages.STOP_TXT.format(stoptime))
+    LOGGER.info("Bot stopped 😪")
     try:
         unzipperbot.send_message(
             chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime)
         )
+        with open("unzip-log.txt", "rb") as doc_f:
+            try:
+                unzipperbot.send_document(
+                    chat_id=Config.LOGS_CHANNEL,
+                    document=doc_f,
+                    file_name=doc_f.name,
+                )
+            except:
+                pass
     except Exception as e:
         LOGGER.error("Error sending shutdown message: %s", e)
     finally:
         unzipperbot.stop(block=False)
-        LOGGER.info("Bot stopped 😪")
 
 
 if __name__ == "__main__":
