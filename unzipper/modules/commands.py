@@ -1,10 +1,13 @@
-# Copyright (c) 2023 EDM115
+# Copyright (c) 2022 - 2024 EDM115
+import io
 import os
 import re
 import shutil
 import time
-from asyncio import sleep
+from asyncio import sleep, create_subprocess_shell, subprocess
+from contextlib import redirect_stdout, redirect_stderr
 from sys import executable
+
 
 import git
 import psutil
@@ -42,6 +45,17 @@ from .bot_data import Buttons, Messages
 
 # Regex for urls
 https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"
+
+
+def sufficient_disk_space(required_space):
+    disk_usage = psutil.disk_usage("/")
+    free_space = disk_usage.free
+    total_space = disk_usage.total
+    five_percent_total = total_space * 0.05
+
+    if free_space >= required_space and free_space >= five_percent_total:
+        return True
+    return False
 
 
 @unzipperbot.on_message(filters.private)
@@ -93,7 +107,9 @@ async def clean_my_files(_, message: Message):
 @unzipperbot.on_message(filters.command("help"))
 async def help_me(_, message: Message):
     try:
-        await message.reply_text(text=Messages.HELP_TXT, reply_markup=Buttons.ME_GOIN_HOME)
+        await message.reply_text(
+            text=Messages.HELP_TXT, reply_markup=Buttons.ME_GOIN_HOME
+        )
     except FloodWait as f:
         await sleep(f.value)
         await help_me(_, message)
@@ -120,7 +136,11 @@ async def extract_archive(_, message: Message):
     try:
         if message.chat.type != enums.ChatType.PRIVATE:
             return
-        unzip_msg = await message.reply(Messages.PROCESSING2, reply_to_message_id=message.id)
+        if message.command and message.command[0] in ["eval", "exec"]:
+            return
+        unzip_msg = await message.reply(
+            Messages.PROCESSING2, reply_to_message_id=message.id
+        )
         user_id = message.from_user.id
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
         if os.path.isdir(download_path):
@@ -135,10 +155,13 @@ async def extract_archive(_, message: Message):
                 reply_markup=Buttons.CHOOSE_E_U__BTNS,
             )
         elif message.document:
-            await unzip_msg.edit(
-                text=Messages.CHOOSE_EXT_MODE.format("file", "🗂️"),
-                reply_markup=Buttons.CHOOSE_E_F__BTNS,
-            )
+            if sufficient_disk_space(message.document.file_size):
+                await unzip_msg.edit(
+                    text=Messages.CHOOSE_EXT_MODE.format("file", "🗂️"),
+                    reply_markup=Buttons.CHOOSE_E_F__BTNS,
+                )
+            else:
+                await unzip_msg.edit(Messages.NO_SPACE)
         else:
             await unzip_msg.edit(Messages.UNVALID)
     except FloodWait as f:
@@ -150,7 +173,9 @@ async def extract_archive(_, message: Message):
 async def cancel_task_by_user(_, message):
     idtodel = message.id - 1
     try:
-        await unzipperbot.delete_messages(chat_id=message.from_user.id, message_ids=idtodel)
+        await unzipperbot.delete_messages(
+            chat_id=message.from_user.id, message_ids=idtodel
+        )
     except:
         pass
     await message.reply(Messages.CANCELLED)
@@ -169,10 +194,7 @@ async def merging(_, message: Message):
 @unzipperbot.on_message(filters.private & filters.command("done"))
 async def done_merge(_, message: Message):
     try:
-        await message.reply(
-            Messages.DONE,
-            reply_markup=Buttons.MERGE_THEM_ALL
-        )
+        await message.reply(Messages.DONE, reply_markup=Buttons.MERGE_THEM_ALL)
     except FloodWait as f:
         await sleep(f.value)
         await done_merge(_, message)
@@ -285,18 +307,22 @@ async def broadcast_this(_, message: Message):
             except FloodWait:
                 pass
     try:
-        await bc_msg.edit(Messages.BC_DONE.format(
-            total_users,
-            success_no,
-            failed_no,
-        ))
+        await bc_msg.edit(
+            Messages.BC_DONE.format(
+                total_users,
+                success_no,
+                failed_no,
+            )
+        )
     except FloodWait as f:
         await sleep(f.value)
-        await bc_msg.edit(Messages.BC_DONE.format(
-            total_users,
-            success_no,
-            failed_no,
-        ))
+        await bc_msg.edit(
+            Messages.BC_DONE.format(
+                total_users,
+                success_no,
+                failed_no,
+            )
+        )
 
 
 @unzipperbot.on_message(filters.command("sendto") & filters.user(Config.BOT_OWNER))
@@ -466,7 +492,9 @@ async def red_alert(_, message: Message):
     # but also need to stop currently ongoing processes…
 
 
-@unzipperbot.on_message(filters.private & filters.command("maintenance") & filters.user(Config.BOT_OWNER))
+@unzipperbot.on_message(
+    filters.private & filters.command("maintenance") & filters.user(Config.BOT_OWNER)
+)
 async def maintenance_mode(_, message: Message):
     mstatus = await get_maintenance()
     text = Messages.MAINTENANCE.format(mstatus) + "\n\n" + Messages.MAINTENANCE_ASK
@@ -546,7 +574,7 @@ async def send_logs(user_id):
 
 
 def clear_logs():
-    open('file.txt', 'w').close()
+    open("file.txt", "w").close()
 
 
 @unzipperbot.on_message(
@@ -567,9 +595,7 @@ async def restart(_, message: Message):
     except:
         pass
     restarttime = time.strftime("%Y/%m/%d - %H:%M:%S")
-    await message.reply_text(
-        Messages.RESTARTED_AT.format(restarttime), quote=True
-    )
+    await message.reply_text(Messages.RESTARTED_AT.format(restarttime), quote=True)
     await send_logs(message.from_user.id)
     LOGGER.info(Messages.RESTARTING.format(message.from_user.id))
     clear_logs()
@@ -584,7 +610,6 @@ async def pull_updates(_, message: Message):
     repo = git.Repo("/app")
     current = repo.head.commit
     repo.remotes.origin.pull()
-    time.sleep(2)
     if current != repo.head.commit:
         await git_reply.edit(Messages.PULLED)
         await restart(_, message)
@@ -667,13 +692,43 @@ async def add_vip(_, message: Message):
         await message.reply(Messages.VIP_REQUIRED_MESSAGE)
         return
     lifetime = messagearray[12] == "True"
-    await add_vip_user(user_id, subscription, ends, used, billed, early, donator, started, successful, gap, gifted, referral, lifetime)
-    await message.reply(Messages.VIP_ADDED_USER.format(user_id, subscription, ends, used, billed, early, donator, started, successful, gap, gifted, referral, lifetime))
+    await add_vip_user(
+        user_id,
+        subscription,
+        ends,
+        used,
+        billed,
+        early,
+        donator,
+        started,
+        successful,
+        gap,
+        gifted,
+        referral,
+        lifetime,
+    )
+    await message.reply(
+        Messages.VIP_ADDED_USER.format(
+            user_id,
+            subscription,
+            ends,
+            used,
+            billed,
+            early,
+            donator,
+            started,
+            successful,
+            gap,
+            gifted,
+            referral,
+            lifetime,
+        )
+    )
 
 
 @unzipperbot.on_message(filters.command("delvip") & filters.user(Config.BOT_OWNER))
 async def del_vip(_, message: Message):
-    del_msg = await message.reply(Messages.PROVIDE_UID)
+    """del_msg = await message.reply(Messages.PROVIDE_UID)
     try:
         user_id = message.text.split(None, 1)[1]
     except:
@@ -689,7 +744,8 @@ async def del_vip(_, message: Message):
     if text != "":
         await del_msg.edit(text)
     else:
-        await del_msg.edit(Messages.UNBANNED.format(user_id))
+        await del_msg.edit(Messages.UNBANNED.format(user_id))"""
+    pass
 
 
 @unzipperbot.on_message(
@@ -716,104 +772,80 @@ async def getadmin_cmds(_, message):
     )
 
 
-disabled = """ async def exec_message_f(client, message):
-    if message.from_user.id in AUTH_CHANNEL:
-        DELAY_BETWEEN_EDITS = 0.3
-        PROCESS_RUN_TIME = 100
-        cmd = message.text.split(" ", maxsplit=1)[1]
-
-        reply_to_id = message.message_id
-        if message.reply_to_message:
-            reply_to_id = message.reply_to_message.message_id
-
-        start_time = time.time() + PROCESS_RUN_TIME
-        process = await asyncio.create_subprocess_shell(
-            cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        e = stderr.decode()
-        if not e:
-            e = "No Error"
-        o = stdout.decode()
-        if not o:
-            o = "No Output"
-        else:
-            _o = o.split("\n")
-            o = "`\n".join(_o)
-        OUTPUT = f"**QUERY:**\n__Command:__\n`{cmd}` \n__PID:__\n`{process.pid}`\n\n**stderr:** \n`{e}`\n**Output:**\n{o}"
-
-        if len(OUTPUT) > MAX_MESSAGE_LENGTH:
-            with io.BytesIO(str.encode(OUTPUT)) as out_file:
-                out_file.name = "exec.text"
-                await client.send_document(
-                    chat_id=message.chat.id,
-                    document=out_file,
-                    caption=cmd,
-                    disable_notification=True,
-                    reply_to_message_id=reply_to_id,
-                )
-            await message.delete()
-        else:
-            await message.reply_text(OUTPUT)
-
-async def eval_message_f(client, message):
-    if message.from_user.id in AUTH_CHANNEL:
-        status_message = await message.reply_text("Processing ...")
-        cmd = message.text.split(" ", maxsplit=1)[1]
-
-        reply_to_id = message.message_id
-        if message.reply_to_message:
-            reply_to_id = message.reply_to_message.message_id
-
-        old_stderr = sys.stderr
-        old_stdout = sys.stdout
-        redirected_output = sys.stdout = io.StringIO()
-        redirected_error = sys.stderr = io.StringIO()
-        stdout, stderr, exc = None, None, None
-
-        try:
-            await aexec(cmd, client, message)
-        except Exception:
-            exc = traceback.format_exc()
-
-        stdout = redirected_output.getvalue()
-        stderr = redirected_error.getvalue()
-        sys.stdout = old_stdout
-        sys.stderr = old_stderr
-
-        evaluation = ""
-        if exc:
-            evaluation = exc
-        elif stderr:
-            evaluation = stderr
-        elif stdout:
-            evaluation = stdout
-        else:
-            evaluation = "Success"
-
-        final_output = (
-            "<b>EVAL</b>: <code>{}</code>\n\n<b>OUTPUT</b>:\n<code>{}</code> \n".format(
-                cmd, evaluation.strip()
-            )
-        )
-
-        if len(final_output) > MAX_MESSAGE_LENGTH:
-            with open("eval.text", "w+", encoding="utf8") as out_file:
-                out_file.write(str(final_output))
-            await message.reply_document(
-                document="eval.text",
-                caption=cmd,
-                disable_notification=True,
-                reply_to_message_id=reply_to_id,
-            )
-            os.remove("eval.text")
-            await status_message.delete()
-        else:
-            await status_message.edit(final_output)
-
 async def aexec(code, client, message):
-    exec(
-        f"async def __aexec(client, message): "
-        + "".join(f"\n {l}" for l in code.split("\n"))
+    stdout = io.StringIO()
+    stderr = io.StringIO()
+    result = None
+    with redirect_stdout(stdout), redirect_stderr(stderr):
+        try:
+            try:
+                result = eval(code)
+            except SyntaxError:
+                exec(
+                    "async def __aexec(client, message): "
+                    + "".join(f"\n {line}" for line in code.split("\n"))
+                )
+                await locals()["__aexec"](client, message)
+        except Exception as e:
+            stderr.write(f"{type(e).__name__}: {str(e)}\n")
+    return stdout.getvalue(), stderr.getvalue(), result
+
+
+@unzipperbot.on_message(filters.command("eval") & filters.user(Config.BOT_OWNER))
+async def eval_command(_, message):
+    status_message = await message.reply_text("Processing ...")
+    cmd = message.text.split(" ", maxsplit=1)[1]
+
+    stdout, stderr, result = await aexec(cmd, _, message)
+    LOGGER.info("stdout: " + stdout)
+    LOGGER.info("stderr: " + stderr)
+
+    if result is not None:
+        evaluation = str(result)
+    elif stderr.strip():
+        evaluation = stderr.strip()
+    elif stdout.strip():
+        evaluation = stdout.strip()
+    else:
+        evaluation = "Success"
+
+    final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation}</code> \n"
+
+    if len(final_output) > Config.MAX_MESSAGE_LENGTH:
+        with open("eval.txt", "w+", encoding="utf8") as out_file:
+            out_file.write(str(final_output))
+        await message.reply_document(
+            document="eval.txt",
+            caption=cmd,
+            reply_to_message_id=message.id,
+        )
+        await status_message.delete()
+        os.remove("eval.txt")
+    else:
+        await status_message.edit(final_output)
+
+
+@unzipperbot.on_message(filters.command("exec") & filters.user(Config.BOT_OWNER))
+async def exec_command(_, message):
+    cmd = message.text.split(" ", maxsplit=1)[1]
+    process = await create_subprocess_shell(
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
-    return await locals()["__aexec"](client, message) """
+    stdout, stderr = await process.communicate()
+    e = stderr.decode()
+    o = stdout.decode()
+
+    e = e or "No Error"
+    o = o or "No Output"
+    OUTPUT = f"**COMMAND:**\n`{cmd}`\n\n**OUTPUT:**\n{o}\n\n**ERROR:**\n`{e}`"
+
+    if len(OUTPUT) > Config.MAX_MESSAGE_LENGTH:
+        with io.BytesIO(str.encode(OUTPUT)) as out_file:
+            out_file.name = "exec.txt"
+            await message.reply_document(
+                document=out_file,
+                caption=cmd,
+                reply_to_message_id=message.id,
+            )
+    else:
+        await message.reply_text(OUTPUT)

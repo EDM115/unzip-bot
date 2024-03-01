@@ -1,9 +1,8 @@
-# Copyright (c) 2023 EDM115
+# Copyright (c) 2022 - 2024 EDM115
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 class Messages:
-
     # here
 
     HELP = "Help 📜"
@@ -36,13 +35,13 @@ class Messages:
 
     RATE = "Rate me ⭐"
 
-# start.py
+    # start.py
 
-    PRIVATE_CHAT = "A private chat can't be used 😐"
+    PRIVATE_CHAT = "A private chat can't be used"
 
-    NO_LOG_ID = "No log channel ID have been provided !"
+    NO_LOG_ID = "No log channel ID have been provided"
 
-    ERROR_LOG_CHECK = "An error happened while checking Log channel 💀 Make sure haven't provided a wrong Log channel ID 🧐"
+    ERROR_LOG_CHECK = "An error happened while checking the log channel 💀 Make sure you haven't provided a wrong log channel ID 🧐"
 
     DL_THUMBS = "Downloading {} thumbs"
 
@@ -66,7 +65,7 @@ Your task was running for more than {} minutes, it has been stopped
 Don't go AFK next time 😉
     """
 
-# database.py
+    # database.py
 
     BANNED = """
 **Sorry you're banned 💀**
@@ -78,8 +77,7 @@ Report this at @EDM115_chat if you think this is a mistake, I may unban you
 **#NEW_USER** 🎙
 
 **User profile :** `{}`
-**User ID :** `[AttributeError]` Can't get it
-**Profile URL :** Can't get it
+`[AttributeError]`
     """
 
     NEW_USER = """
@@ -90,7 +88,7 @@ Report this at @EDM115_chat if you think this is a mistake, I may unban you
 **Profile URL :** [tg://user?id={}](tg://user?id={})
     """
 
-# unzip_help.py
+    # unzip_help.py
 
     UNKNOWN_SIZE = """
 **Size :** Unknown
@@ -111,7 +109,7 @@ This may take a while, go grab a coffee ☕️
 
     ETA = "**ETA :**"
 
-# __main__.py
+    # __main__.py
 
     START_TXT = "ℹ️ The bot have successfully started at `{}` 💪"
 
@@ -119,9 +117,9 @@ This may take a while, go grab a coffee ☕️
 
     STARTING_BOT = "Starting bot…"
 
-    CHECK_LOG = "Checking Log channel…"
+    CHECK_LOG = "Checking log channel…"
 
-    LOG_CHECKED = "Log channel alright"
+    LOG_CHECKED = "Log channel checked"
 
     BOT_RUNNING = "Bot is running now ! Join @EDM115bots"
 
@@ -130,12 +128,12 @@ Error : the provided **LOGS_CHANNEL** (`{}`) is incorrect
 Bot crashed 😪
     """
 
-# callbacks.py
+    # callbacks.py
 
     MAX_TASKS = """
 Sorry, the bot is currently full 🥺
 
-{} tasks are already running, please wait few minutes
+{} tasks are already running, please wait a few minutes
     """
 
     CHOOSE_EXT_MODE = """
@@ -144,7 +142,7 @@ Select the extraction mode for that {} 👀
 {} : **Normal mode**
 🔐 : **Password protected**
 🖼️ : **Change the thumbnail**
-🖼️✏ : **Change the thumbnail and rename the file**
+✏ : **Change the thumbnail and rename the file**
 ❌ : **Cancel your task**
     """
 
@@ -160,22 +158,6 @@ Select the extraction mode for that merged file 👀
 `{}`
 
 Successfully extracted by @unzip_edm115bot 🥰
-    """
-
-    URL_UPLOAD = """
-`{}` is too huge to be uploaded to Telegram (`{}`)
-
-Instead, I made it available here : {} 🥰
-    """
-
-    URL_ERROR = """
-An error happened for `{}` 😕
-
-**Error code :** `{}`
-**Error type :** `{}`
-**Error message :** `{}`
-
-Please report this at @EDM115_chat if you think this is a serious error
     """
 
     REPORT_TEXT = """
@@ -200,23 +182,23 @@ have been saved from the URL
 
 **What to do ?**
 
-   • Please make sure archive isn’t corrupted
+   • Please make sure archive isn't corrupted
    • Please make sure that you selected the right mode !
    • Also check if you sent the right password (it's case sensitive)
-   • Maybe your archive format isn’t supported yet 😔
+   • Maybe your archive format isn't supported yet 😔
 
 
-**⚠ IN ALL CASES ⚠**, please send **/clean**, else you couldn’t send any other task 🙂🔫 (may be fixed in the future)
+**⚠ IN ALL CASES ⚠**, please send **/clean**, else you can't send any other task 🙂🔫
 
 Please report this at @EDM115_chat if you think this is a serious error
     """
 
-    HOW_MANY_UPLOADED = "`{}` files were extracted from that archive"
+    HOW_MANY_UPLOADED = "`{}` file(s) have been extracted from that archive"
 
-    PLS_REPLY = "You need to reply to a picture for saving it as custom thumbnail 🤓"
+    PLS_REPLY = "You need to reply ↩️ to a picture with this command for saving it as custom thumbnail 🤓"
 
     NO_MERGE_TASK = """
-Bruh there's no merge task ongoing 🗿
+There's no merge task ongoing
 Use **/merge** to start one
     """
 
@@ -235,7 +217,7 @@ Use **/merge** to start one
     """
 
     DL_URL = """
-**Trying to download… Please wait**
+**Downloading… Please wait**
 
 **URL :** `{}`
 
@@ -248,11 +230,10 @@ Use **/merge** to start one
     START_TEXT = """
 Hi **{}** 👋, I'm **Unarchiver bot** 🥰
 
-
-I can extract archives like `zip`, `rar`, `tar`, …
+I can extract any archive, with password or not, splitted, …
+Send **/commands** to learn more
 
 **Made with ❤️ by @EDM115bots**
-
 **/donate** if you can 🥺
     """
 
@@ -269,12 +250,12 @@ I can extract archives like `zip`, `rar`, `tar`, …
 
 **Note :**
     **1.** If your archive is password protected select `🔐` button
-    **2.** Please don’t send corrupted files ! If you sent one by mistake just send **/clean**
-    **3.** If your archive have +95 files in it then bot can’t show all of extracted files to select from (yet). So in that case if you can’t see your file in the buttons just click on `Upload all 📤` button. It will send all extracted files to you !
+    **2.** Please don't send corrupted files ! If you sent one by mistake just send **/clean**
+    **3.** If your archive have +95 files in it then bot can't show all of extracted files to select from (yet). So in that case if you can't see your file in the buttons just click on `Upload all 📤` button. It will send all extracted files to you !
 
 
 **• Got an error ?**
-    Visit edm115.eu.org/unzip#help
+    Visit edm115.dev/unzip#help
 
 
 **• I wanna have help 🥺**
@@ -283,9 +264,9 @@ I can extract archives like `zip`, `rar`, `tar`, …
     """
 
     ABOUT_TXT = """
-**About Unarchiver bot [v6.3.2]**
+**About Unarchiver bot [v6.3.3]**
 
-• **Language :** [Python 3.11.5](https://www.python.org/)
+• **Language :** [Python 3.12.1](https://www.python.org/)
 • **Framework :** [Pyrogram 2.0.106](https://pyrogram.org/)
 • **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot)
 • **Developer :** [EDM115](https://github.com/EDM115)
@@ -295,6 +276,8 @@ Made with ❤️ by **@EDM115bots**
     """
 
     DONATE_TEXT = """
+--**NOT AVAILABLE YET !**--
+
 I'm going to be honest : **this bot costs me money**…
 Nothing's free on this world, however I try to keep this bot for free for as many people as possible
 I don't like to put restrictions, nor getting your PM's flooded with ads…
@@ -316,6 +299,8 @@ Donation doesn't count as a VIP subscription. Check **/vip** for more info
     """
 
     VIP_INFO = """
+--**NOT AVAILABLE YET !**--
+
 Wanna help the developer of this __amazing__ bot ?
 Here's how : Become a VIP user and benefit from extra perks !
 
@@ -392,7 +377,7 @@ Lifetime : `{}`
     CLEAN_TXT = """
 **Are sure want to clean your task 🤔**
 
-Note : This action cannot be undone !
+Note : This action cannot be undone
     """
 
     SELECT_UPLOAD_MODE_TXT = """
@@ -401,11 +386,11 @@ Select your upload mode 👇
 **Current upload mode is :** `{}`
     """
 
-    CHANGED_UPLOAD_MODE_TXT = "**Successfully changed upload mode to** `{}` ✅"
+    CHANGED_UPLOAD_MODE_TXT = "**Successfully changed the upload mode to** `{}` ✅"
 
     EXISTING_THUMB = """
 A thumbnail already have been saved 😅 What you wanna do ?
-• Checking the actual thumbnail
+• Check the actual thumbnail
 • Replace it with the new one you just sent
 • Cancel
     """
@@ -423,7 +408,7 @@ Do you really want to delete your thumbnail ?
 
     DEL_CONFIRM_THUMB_2 = "Do you really want to delete your thumbnail ?"
 
-    DELETED_THUMB = "**Successfully removed your thumbnail ✅**"
+    DELETED_THUMB = "**Successfully deleted your thumbnail ✅**"
 
     ERROR_THUMB_RENAME = "Error on thumb rename"
 
@@ -478,7 +463,7 @@ Please report this at @EDM115_chat if you think this is a serious error
 
     CANCELLED_TXT = "**{} ✅**"
 
-    DL_STOPPED = "✅ The download of your file have successfully been cancelled 😌"
+    DL_STOPPED = "The download of your file have successfully been cancelled ✅"
 
     PROCESSING_TASK = "**✅ Processing your task… Please wait**"
 
@@ -487,7 +472,7 @@ Please report this at @EDM115_chat if you think this is a serious error
     PROCESS_MSGS = "**Processing {} messages… Please wait**"
 
     DL_FILES = """
-**Trying to download file {}/{}… Please wait**
+**Downloading file {}/{}… Please wait**
 
     """
 
@@ -502,7 +487,7 @@ File : {}
 
     PLS_SEND_PASSWORD = "**Please send me the password 🔑**"
 
-    PASSWORD_PROTECTED = "That archive is password protected 😡 **Don't fool me !**    "
+    PASSWORD_PROTECTED = "That archive is password protected 😡 **/clean** and retry"
 
     SELECT_FILES = "Select files to upload 👇"
 
@@ -523,8 +508,6 @@ User ID : {}
 
     NOT_AN_ARCHIVE = """
 That's not an archive 💀
-
-**Try to @transload it**
     """
 
     DEF_NOT_AN_ARCHIVE = """
@@ -538,7 +521,7 @@ If you believe it's an error, send the file to **@EDM115**
 
     ERR_DL = "Error on download : {}"
 
-    CANT_DL_URL = "**Sorry, I can't download that URL 😭 Try to @transload it**"
+    CANT_DL_URL = "**Sorry, I can't download that URL 😭**"
 
     GIVE_ARCHIVE = "Give me an archive to extract 😐"
 
@@ -550,7 +533,7 @@ Use the **/merge** command
     SPL_RZ = "Splitted RAR/ZIP files in .rxx or .zxx format can't be processed yet"
 
     TRY_DL = """
-**Trying to download… Please wait**
+**Downloading… Please wait**
 
     """
 
@@ -570,7 +553,7 @@ Please send the new file name (**--INCLUDE THE FILE EXTENTION !--**)
 
     ERR_SPLIT = "An error occured while splitting a file above 2 Gb 😥"
 
-    SEND_ALL_PARTS = "Trying to send all parts of {} to you… Please wait"
+    SEND_ALL_PARTS = "Sending all parts of {} to you… Please wait"
 
     UPLOADED = """
 **Successfully uploaded ✅**
@@ -582,7 +565,7 @@ Please send the new file name (**--INCLUDE THE FILE EXTENTION !--**)
 
     SENDING_FILE = "Sending that file to you… Please wait"
 
-    SEND_ALL_FILES = "Trying to send all files to you… Please wait"
+    SEND_ALL_FILES = "Sending all files to you… Please wait"
 
     REFRESHING = "Refreshing… ⏳"
 
@@ -590,17 +573,19 @@ Please send the new file name (**--INCLUDE THE FILE EXTENTION !--**)
 
     PROCESS_CANCELLED = "❌ Process cancelled"
 
-# commands.py
+    # commands.py
 
     PROCESS_RUNNING = """
 Already one process is running, don't spam 😐
 
-Wanna clear your files from my server ? Then just send **/clean** command
+Send **/clean** if you want to process a new file
     """
 
     SPLIT_NOPE = "Those type of splitted files can't be processed yet"
 
     UNVALID = "Send a valid archive/URL"
+
+    NO_SPACE = "There's no space left on the server 😥"
 
     MERGE = """
 You have splitted archives to process ?
@@ -612,14 +597,14 @@ Send me **all** the splitted files (.001, .002, .00×, …)
     DONE = """
 If you have sent **ALL** the files, you can click on the `Merge 🛠️` button below
 
-If you sent /done by mistake and haven't sent all the files yet, just ignore this message and re-send **/done** when ALL the files are sent
+If you sent /done by mistake and haven't sent all the files yet, just ignore this message and re-send **/done** after ALL the files are sent
     """
 
     STATS = """
 **💫 Current bot stats 💫**
 
 **💾 Disk usage :**
- ↳ **Total Disk Space :** `{}`
+ ↳ **Total disk space :** `{}`
  ↳ **Used :** `{} - {}%`
  ↳ **Free :** `{}`
  ↳ **Ongoing tasks :** `{}`
@@ -638,7 +623,7 @@ If you sent /done by mistake and haven't sent all the files yet, just ignore thi
  ↳ **Total banned users :** `{}`
 
 **💾 Disk usage :**
- ↳ **Total Disk Space :** `{}`
+ ↳ **Total disk space :** `{}`
  ↳ **Used :** `{} - {}%`
  ↳ **Free :** `{}`
  ↳ **Ongoing tasks :** `{}`
@@ -760,21 +745,20 @@ Send the appropriate string
 
     MAINTENANCE_DONE = "Successfully changed maintenance mode to `{}`"
 
-    MAINTENANCE_ON = "Maintenance mode is currently **ON**\nTasks can't be processed. Come back later"
+    MAINTENANCE_ON = """
+Maintenance mode is currently **ON**
+Tasks can't be processed. Come back later
+    """
 
     MAINTENANCE_FAIL = "Provide one of the values"
 
     NO_THUMBS = "No thumbnails on the server yet"
 
-    ERASE_ALL = """
-🚧 WIP 🚧
+    ERASE_ALL = "**Cleaning…**"
 
-**Cleaning…**
-    """
+    CLEANED = "The whole server have been cleaned ✅"
 
-    CLEANED = "The whole server have been cleaned 😌"
-
-    NOT_CLEANED = "An error happened during /cleanall 😕"
+    NOT_CLEANED = "An error happened during /cleanall"
 
     ERASE_TASKS = "Deleting {} tasks… Please wait"
 
@@ -804,16 +788,15 @@ Here is the list of the commands you can use (only in private btw) :
 **/donate** : Know how you can contribute to this bot
 **/clean** : Remove your files from my server. Also useful if a task failed
 **/mode** : Change your upload mode (either `doc` or `media`)
-**/stats** : Know all the current stats about me. If you're running on Heroku, it's reset every day
+**/stats** : Know all the current stats about me
 **/merge** : Merge splitted archives together
 **/done** : After you sent all the splitted archives, use this to merge them
 **/info** : Get full info about a [Message](https://docs.pyrogram.org/api/types/Message) (info returned by Pyrogram)
-**/addthumb** : Upload with a custom thumbnail (not permanant yet)
+**/addthumb** : Upload with a custom thumbnail
 **/delthumb** : Removes your thumbnail
 **/report** : Used by replying to a message, sends it to the bot owner (useful for bug report, or any question)
+**/vip** : __Not available yet__ Know more about the VIP subscription
 **/commands** : This message
-
-**/admincmd** : Only if you are the Owner
     """
 
     ADMINCMD = """
@@ -821,26 +804,30 @@ Here's all the commands that only the owner (you) can use :
 
 **/gitpull** : Pulls the latest changes from GitHub
 **/broadcast** : Send something to all the users
-**/sendto {user_id}** : Same as broadcast but for a single user. Don't handle replies for now…
-**/ban {user_id}** : Ban an user. He no longer can use your bot, except if…
+**/sendto {user_id}** : Same as broadcast but for a single user. Doesn't handle replies for now…
+**/ban {user_id}** : Ban an user. He can no longer use your bot, except if…
 **/unban {user_id}** : …you unban him. All his stats and settings stays saved after a ban
 **/user {user_id}** : Know more about the use of your bot by a single user
 **/user2 {user_id}** : Get full info about an [User](https://docs.pyrogram.org/api/types/User) (info returned by Pyrogram)
 **/self** : Get full info about me (info returned by Pyrogram)
-**/redbutton** : Will fully restart bot + server
+**/getthumbs** : Get all the thumbnails on the server
+**/redbutton** : __Does nothing yet__
+**/maintenance** : Put the bot in or out of maintenance mode. No tasks can be processed while on
 **/cleanall** : Same as `/clean`, but for the whole server
+**/cleantasks** : Same as `/cleanall`, plus removes them from the database
 **/logs** : Send you the logs (all of them). Useful for bug tracking. Send them to **@EDM115** if you don't understand them/need help
 **/restart** : Does a basic restart, less intrusive as the `/redbutton` one
-**/dbexport** : Exports the whole database as CSV
+**/dbexport** : ~~Exports the whole database as CSV~~ __Does nothing yet__
+**/addvip {user_id, subscription, ends, used, billed, early, donator, started, successful, gap, gifted, referral, lifetime}** : __Not available yet__ Add an user to the VIP database
+**/delvip {user_id}** : __Not available yet__ Remove an user from the VIP database
+**/dbexportvip** : __Not available yet__ Exports the VIP database as CSV
+**/eval {code}** : Evaluate a piece of code. Useful for debugging
+**/exec {code}** : Execute a piece of code. Useful for debugging
 **/admincmd** : This message
 **/commands** : For all the other commands
     """
 
-# cloud_upload.py
-
-    ERROR_UP_BAYFILES = "Error happened on BayFiles upload (check connection, or retry later)"
-
-# custom_thumbnail.py
+    # custom_thumbnail.py
 
     ALBUM = "{} tried to save a thumbnail from an album"
 
@@ -856,16 +843,16 @@ Here's all the commands that only the owner (you) can use :
 
     NO_THUMB = "You already have no thumbnail 😅"
 
-# ext_helper.py
+    # ext_helper.py
 
     UP_ALL = "Upload all 📤"
 
     CANCEL_IT = "❌ Cancel"
 
-# up_helper.py
+    # up_helper.py
 
     TRY_UP = """
-**Trying to upload {}… Please wait**
+**Uploading {}… Please wait**
 
     """
 
@@ -898,14 +885,16 @@ class Buttons:
             [
                 InlineKeyboardButton(Messages.STATS_BTN, callback_data="statscallback"),
                 InlineKeyboardButton(Messages.DONATE, callback_data="donatecallback"),
-            ]
+            ],
         ]
     )
 
     REFRESH_BUTTON = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton(Messages.REFRESH, callback_data="statscallback|refresh"),
+                InlineKeyboardButton(
+                    Messages.REFRESH, callback_data="statscallback|refresh"
+                ),
                 InlineKeyboardButton(Messages.BACK, callback_data="megoinhome"),
             ]
         ]
@@ -924,7 +913,7 @@ class Buttons:
             [
                 InlineKeyboardButton("🖼️", callback_data="extract_file|tg_file|thumb"),
                 InlineKeyboardButton(
-                    "🖼️✏", callback_data="extract_file|tg_file|thumbrename"
+                    "✏", callback_data="extract_file|tg_file|thumbrename"
                 ),
             ],
             [InlineKeyboardButton("❌", callback_data="cancel_dis")],
@@ -934,12 +923,8 @@ class Buttons:
     CHOOSE_E_F_M__BTNS = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton(
-                    "🗂️", callback_data="merged|no_pass"
-                ),
-                InlineKeyboardButton(
-                    "🔐", callback_data="merged|with_pass"
-                ),
+                InlineKeyboardButton("🗂️", callback_data="merged|no_pass"),
+                InlineKeyboardButton("🔐", callback_data="merged|with_pass"),
             ],
             [InlineKeyboardButton("❌", callback_data="cancel_dis")],
         ]
@@ -953,9 +938,7 @@ class Buttons:
             ],
             [
                 InlineKeyboardButton("🖼️", callback_data="extract_file|url|thumb"),
-                InlineKeyboardButton(
-                    "🖼️✏", callback_data="extract_file|url|thumbrename"
-                ),
+                InlineKeyboardButton("✏", callback_data="extract_file|url|thumbrename"),
             ],
             [InlineKeyboardButton("❌", callback_data="cancel_dis")],
         ]
@@ -987,7 +970,7 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(Messages.AS_DOC, callback_data="set_mode|doc"),
-                InlineKeyboardButton(Messages.AS_MEDIA, callback_data="set_mode|media")
+                InlineKeyboardButton(Messages.AS_MEDIA, callback_data="set_mode|media"),
             ],
         ]
     )
@@ -1009,7 +992,9 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(Messages.CHECK, callback_data="check_thumb"),
-                InlineKeyboardButton(Messages.REPLACE, callback_data="save_thumb|replace"),
+                InlineKeyboardButton(
+                    Messages.REPLACE, callback_data="save_thumb|replace"
+                ),
             ],
             [InlineKeyboardButton(Messages.CANCEL_IT, callback_data="nope_thumb")],
         ]
@@ -1018,7 +1003,9 @@ class Buttons:
     THUMB_FINAL = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton(Messages.REPLACE, callback_data="save_thumb|replace"),
+                InlineKeyboardButton(
+                    Messages.REPLACE, callback_data="save_thumb|replace"
+                ),
                 InlineKeyboardButton(Messages.CANCEL_IT, callback_data="nope_thumb"),
             ]
         ]
@@ -1047,7 +1034,7 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(Messages.DELETE, callback_data="del_thumb"),
-                InlineKeyboardButton(Messages.CANCEL_IT, callback_data="nope_thumb")
+                InlineKeyboardButton(Messages.CANCEL_IT, callback_data="nope_thumb"),
             ],
         ]
     )
@@ -1055,8 +1042,10 @@ class Buttons:
     RATE_ME = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton(Messages.RATE, url="https://t.me/BotsArchive/2705"),
-                InlineKeyboardButton(Messages.DONATE, callback_data="donatecallback")
+                InlineKeyboardButton(
+                    Messages.RATE, url="https://t.me/BotsArchive/2705"
+                ),
+                InlineKeyboardButton(Messages.DONATE, callback_data="donatecallback"),
             ],
         ]
     )

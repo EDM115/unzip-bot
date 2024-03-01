@@ -1,4 +1,4 @@
-# Copyright (c) 2023 EDM115
+# Copyright (c) 2022 - 2024 EDM115
 import os
 
 
@@ -12,6 +12,7 @@ class Config:
     DOWNLOAD_LOCATION = f"{os.path.dirname(__file__)}/Downloaded"
     THUMB_LOCATION = f"{os.path.dirname(__file__)}/Thumbnails"
     TG_MAX_SIZE = 2097152000
+    MAX_MESSAGE_LENGTH = 4096
     # Default chunk size (0.005 MB → 1024*6) Increase if you need faster downloads
     CHUNK_SIZE = 1024 * 1024 * 10  # 10 MB
     BOT_THUMB = f"{os.path.dirname(__file__)}/bot_thumb.jpg"

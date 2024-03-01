@@ -1,4 +1,4 @@
-# Copyright (c) 2023 EDM115
+# Copyright (c) 2022 - 2024 EDM115
 import math
 import time
 
@@ -40,7 +40,10 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
             elapsed_time = TimeFormatter(milliseconds=elapsed_time)
             estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
             progress = f'[{"".join(["⬢" for i in range(math.floor(percentage / 5))])}{"".join(["⬡" for i in range(20 - math.floor(percentage / 5))])}] \n{Messages.PROCESSING} : `{round(percentage, 2)}%`\n'
-            tmp = progress + f'`{humanbytes(current)} of {humanbytes(total)}`\n{Messages.SPEED} `{humanbytes(speed)}/s`\n{Messages.ETA} `{estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"}`\n'
+            tmp = (
+                progress
+                + f'`{humanbytes(current)} of {humanbytes(total)}`\n{Messages.SPEED} `{humanbytes(speed)}/s`\n{Messages.ETA} `{estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"}`\n'
+            )
             try:
                 await message.edit(
                     text=Messages.PROGRESS_MSG.format(ud_type, tmp),
@@ -68,7 +71,10 @@ async def progress_urls(current, total, ud_type, message, start):
         elapsed_time = TimeFormatter(milliseconds=elapsed_time)
         estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
         progress = f'[{"".join(["⬢" for i in range(math.floor(percentage / 5))])}{"".join(["⬡" for i in range(20 - math.floor(percentage / 5))])}] \n{Messages.PROCESSING} : `{round(percentage, 2)}%`\n'
-        tmp = progress + f'{Messages.ETA} `{estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"}`\n'
+        tmp = (
+            progress
+            + f'{Messages.ETA} `{estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"}`\n'
+        )
         try:
             await message.edit(Messages.PROGRESS_MSG.format(ud_type, tmp))
         except FloodWait as f:

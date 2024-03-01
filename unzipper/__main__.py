@@ -1,11 +1,9 @@
-# Copyright (c) 2023 EDM115
-import logging
+# Copyright (c) 2022 - 2024 EDM115
 import os
 import signal
 import time
 
 from pyrogram import idle
-from pyrogram.errors import AuthKeyDuplicated
 
 from config import Config
 
@@ -13,19 +11,46 @@ from . import LOGGER, unzipperbot
 from .helpers.start import check_logs, dl_thumbs, set_boot_time, removal
 from .modules.bot_data import Messages
 
-running = True
-
 
 def handler_stop_signals(signum, frame):
-    global running
-    running = False
+    LOGGER.info(
+        "Received stop signal (%s, %s, %s). Exiting...",
+        signal.Signals(signum).name,
+        signum,
+        frame,
+    )
+    shutdown_bot()
 
 
 signal.signal(signal.SIGINT, handler_stop_signals)
 signal.signal(signal.SIGTERM, handler_stop_signals)
 
-while running:
-    if __name__ == "__main__":
+
+def shutdown_bot():
+    stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
+    LOGGER.info(Messages.STOP_TXT.format(stoptime))
+    LOGGER.info("Bot stopped 😪")
+    try:
+        unzipperbot.send_message(
+            chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime)
+        )
+        with open("unzip-log.txt", "rb") as doc_f:
+            try:
+                unzipperbot.send_document(
+                    chat_id=Config.LOGS_CHANNEL,
+                    document=doc_f,
+                    file_name=doc_f.name,
+                )
+            except:
+                pass
+    except Exception as e:
+        LOGGER.error("Error sending shutdown message: %s", e)
+    finally:
+        unzipperbot.stop(block=False)
+
+
+if __name__ == "__main__":
+    try:
         if not os.path.isdir(Config.DOWNLOAD_LOCATION):
             os.makedirs(Config.DOWNLOAD_LOCATION)
         if not os.path.isdir(Config.THUMB_LOCATION):
@@ -52,12 +77,8 @@ while running:
                 )
             except:
                 pass
-            unzipperbot.stop()
-
-LOGGER.info("Received SIGTERM")
-stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
-unzipperbot.send_message(
-    chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime)
-)
-unzipperbot.stop()
-LOGGER.info("Bot stopped 😪")
+            shutdown_bot()
+    except Exception as e:
+        LOGGER.error("Error in main loop: %s", e)
+    finally:
+        shutdown_bot()
