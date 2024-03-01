@@ -2,7 +2,7 @@ repo_name: EDM115/unzip-bot
 report_id: a22151c2a9a30641224fb622a23031a5
 version: 0.1
 repo_type: Public
-timestamp: '2024-01-11T12:29:11+00:00'
+timestamp: '2024-02-29T18:13:11+00:00'
 requested_by: EDM115
 provider: github
 branch: master
@@ -154,6 +154,20 @@ tools:
   detection_source: requirements.txt
   last_updated_by: renovate[bot]
   last_updated_on: 2023-11-26 18:24:43.000000000 Z
+  vulnerabilities:
+  - name: aiohttp is vulnerable to directory traversal
+    cve_id: CVE-2024-23334
+    cve_url: https://github.com/advisories/GHSA-5h86-8mv2-jq9f
+    detected_date: Jan 30
+    severity: moderate
+    first_patched: 3.9.2
+  - name: aiohttp's HTTP parser (the python one, not llhttp) still overly lenient
+      about separators
+    cve_id: CVE-2024-23829
+    cve_url: https://github.com/advisories/GHSA-8qpw-xqxj-h4r2
+    detected_date: Jan 30
+    severity: moderate
+    first_patched: 3.9.2
 - name: dnspython
   description: DNS toolkit
   package_url: https://pypi.org/project/dnspython
