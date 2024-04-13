@@ -210,8 +210,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         final_thumb = Config.THUMB_LOCATION + "/waiting_" + str(user_id) + ".jpg"
         try:
             shutil.move(final_thumb, thumb_location)
-        except:
+        except Exception as e:
             LOGGER.warning(Messages.ERROR_THUMB_RENAME)
+            LOGGER.error(e)
         try:
             thumb_url = await upload_thumb(thumb_location)
             try:
