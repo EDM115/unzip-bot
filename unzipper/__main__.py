@@ -51,10 +51,8 @@ def shutdown_bot():
 
 if __name__ == "__main__":
     try:
-        if not os.path.isdir(Config.DOWNLOAD_LOCATION):
-            os.makedirs(Config.DOWNLOAD_LOCATION)
-        if not os.path.isdir(Config.THUMB_LOCATION):
-            os.makedirs(Config.THUMB_LOCATION)
+        os.makedirs(Config.DOWNLOAD_LOCATION, exist_ok=True)
+        os.makedirs(Config.THUMB_LOCATION, exist_ok=True)
         LOGGER.info(Messages.STARTING_BOT)
         unzipperbot.start()
         starttime = time.strftime("%Y/%m/%d - %H:%M:%S")

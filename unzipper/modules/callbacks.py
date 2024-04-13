@@ -209,7 +209,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         thumb_location = Config.THUMB_LOCATION + "/" + str(user_id) + ".jpg"
         final_thumb = Config.THUMB_LOCATION + "/waiting_" + str(user_id) + ".jpg"
         try:
-            os.rename(final_thumb, thumb_location)
+            shutil.move(final_thumb, thumb_location)
         except:
             LOGGER.warning(Messages.ERROR_THUMB_RENAME)
         try:
@@ -281,8 +281,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     pass
                 return
             length = len(messages_array)
-            if not os.path.isdir(download_path):
-                os.makedirs(download_path)
+            os.makedirs(download_path, exist_ok=True)
             rs_time = time()
             newarray = []
             await merge_msg.edit(Messages.PROCESS_MSGS.format(length))
@@ -343,7 +342,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         user_id = query.from_user.id
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}/merge"
         ext_files_dir = f"{Config.DOWNLOAD_LOCATION}/{user_id}/extracted"
-        os.makedirs(ext_files_dir)
+        os.makedirs(ext_files_dir, exist_ok=True)
         try:
             files = await get_files(download_path)
             file = files[0]
@@ -548,7 +547,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         if rfnamebro == "":
                             rfnamebro = unquote(url.split("/")[-1])
                         if unzip_resp.status == 200:
-                            os.makedirs(download_path)
+                            os.makedirs(download_path, exist_ok=True)
                             s_time = time()
                             if real_filename:
                                 archive = os.path.join(download_path, real_filename)
@@ -737,7 +736,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 else:
                     renamed = location.replace(archive_name, rfnamebro)
                 try:
-                    os.rename(location, renamed)
+                    shutil.move(location, renamed)
                 except OSError as e:
                     await del_ongoing_task(user_id)
                     LOGGER.error(e)
@@ -759,7 +758,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     return shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
                 await query.message.edit(Messages.SPLITTING.format(newfname))
                 splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
-                os.makedirs(splitteddir)
+                os.makedirs(splitteddir, exist_ok=True)
                 ooutput = f"{splitteddir}/{newfname}"
                 splittedfiles = await split_files(renamed, ooutput, Config.TG_MAX_SIZE)
                 if not splittedfiles:
@@ -1013,7 +1012,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                 chat_id=user_id, text=Messages.SPLITTING.format(fname)
             )
             splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
-            os.makedirs(splitteddir)
+            os.makedirs(splitteddir, exist_ok=True)
             ooutput = f"{splitteddir}/{fname}"
             splittedfiles = await split_files(file, ooutput, Config.TG_MAX_SIZE)
             LOGGER.info(splittedfiles)
@@ -1160,7 +1159,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     chat_id=user_id, text=Messages.SPLITTING.format(fname)
                 )
                 splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
-                os.makedirs(splitteddir)
+                os.makedirs(splitteddir, exist_ok=True)
                 ooutput = f"{splitteddir}/{fname}"
                 splittedfiles = await split_files(file, ooutput, Config.TG_MAX_SIZE)
                 LOGGER.info(splittedfiles)
