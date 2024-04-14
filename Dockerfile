@@ -2,13 +2,13 @@ FROM archlinux:latest
 
 RUN pacman -Syyu --noconfirm && \
     pacman -S --noconfirm python-pip zstd p7zip gcc git ffmpeg && \
-    python -m venv /venv
-ENV PATH="/venv/bin:$PATH"
-RUN pip install -U pip setuptools wheel && \
-    mkdir /app && \
+    python3 -m venv /venv && \
     pacman -Scc --noconfirm
+ENV PATH="/venv/bin:$PATH"
+RUN pip3 install -U pip setuptools wheel && \
+    mkdir /app
 WORKDIR /app
-RUN git clone https://github.com/EDM115/unzip-bot.git /app
-COPY requirements.txt /app/requirements.txt
-RUN pip install -U -r requirements.txt
-CMD ["bash", "start.sh"]
+RUN git clone https://github.com/EDM115/unzip-bot.git /app && \
+    pip3 install -U -r requirements.txt
+COPY .env /app/.env
+CMD ["/bin/bash", "start.sh"]
