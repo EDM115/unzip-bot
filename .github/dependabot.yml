@@ -1,20 +1,20 @@
-version: 2
 updates:
   - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "sunday"
-      time: "20:00"
-      timezone: "Europe/Paris"
     assignees:
       - "EDM115"
     commit-message:
-      prefix: "[dependabot/pip] "
       include: scope
+      prefix: "[dependabot/pip] "
+    directory: "/"
     labels:
       - "dependabot/pip"
     pull-request-branch-name:
       separator: "/"
     reviewers:
       - "EDM115"
+    schedule:
+      day: "sunday"
+      interval: "weekly"
+      time: "20:00"
+      timezone: "Europe/Paris"
+version: 2
