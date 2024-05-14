@@ -379,7 +379,7 @@ async def ban_user(_, message: Message):
     if text != "":
         await ban_msg.edit(text)
     else:
-        await ban_msg.edit(Messages.BANNED.format(user_id))
+        await ban_msg.edit(Messages.USER_BANNED.format(user_id))
 
 
 @unzipperbot.on_message(filters.command("unban") & filters.user(Config.BOT_OWNER))

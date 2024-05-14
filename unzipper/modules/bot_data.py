@@ -688,7 +688,7 @@ Note : if you need to reply to replies, always use that /report command (or join
 
     ALREADY_REMOVED = "{} have already been removed from the user database"
 
-    BANNED = """
+    USER_BANNED = """
 **Successfully banned that user ✅**
 
 **User ID :** `{}`
