@@ -1174,12 +1174,12 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                     return
                 await smessage.edit(Messages.SEND_ALL_PARTS.format(fname))
                 async_splittedfiles = async_generator(splittedfiles)
-                async for file in async_splittedfiles:
+                async for s_file in async_splittedfiles:
                     sent_files += 1
                     await send_file(
                         unzip_bot=unzip_bot,
                         c_id=user_id,
-                        doc_f=file,
+                        doc_f=s_file,
                         query=query,
                         full_path=splitteddir,
                         log_msg=log_msg,
