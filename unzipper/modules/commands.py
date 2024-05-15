@@ -21,7 +21,6 @@ from unzipper.helpers.database import (
     add_merge_task,
     add_user,
     add_banned_user,
-    add_vip_user,
     check_user,
     count_banned_users,
     count_users,
