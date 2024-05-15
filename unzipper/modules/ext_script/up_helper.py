@@ -186,7 +186,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     )
         elif ul_mode == "media" and fext in extentions_list["video"]:
             vid_duration = await run_shell_cmds(
-                f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {doc_f}"
+                f'ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "{doc_f}"'
             )
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
@@ -213,7 +213,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     os.remove(thmb_pth)
                 try:
                     await run_shell_cmds(
-                        f"ffmpeg -ss 00:00:00.00 -i {doc_f} -vf 'scale=320:320:force_original_aspect_ratio=decrease' -vframes 1 {thmb_pth}"
+                        f'ffmpeg -ss 00:00:00.00 -i "{doc_f}" -vf "scale=320:320:force_original_aspect_ratio=decrease" -vframes 1 "{thmb_pth}"'
                     )
                 except Exception as e:
                     LOGGER.warning(e)
@@ -366,7 +366,7 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source, message):
 
 
 async def merge_splitted_archives(user_id, path):
-    cmd = f"cd {path} && cat * > MERGED_{user_id}.zip"
+    cmd = f'cd "{path}" && cat * > MERGED_{user_id}.zip'
     await run_shell_cmds(cmd)
 
 

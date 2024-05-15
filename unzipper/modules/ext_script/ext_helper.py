@@ -56,9 +56,9 @@ async def run_cmds_on_cr(func, **kwargs):
 async def _extract_with_7z_helper(path, archive_path, password=None):
     LOGGER.info("7z : " + archive_path + " : " + path)
     if password:
-        command = f'7z x -o{path} -p"{password}" "{archive_path}" -y'
+        command = f'7z x -o"{path}" -p"{password}" "{archive_path}" -y'
     else:
-        command = f'7z x -o{path} "{archive_path}" -y'
+        command = f'7z x -o"{path}" "{archive_path}" -y'
     return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
 
@@ -70,7 +70,7 @@ async def _test_with_7z_helper(archive_path):
 
 # Extract with zstd (for .tar.zst files)
 async def _extract_with_zstd(path, archive_path):
-    command = f'zstd -f --output-dir-flat {path} -d "{archive_path}"'
+    command = f'zstd -f --output-dir-flat "{path}" -d "{archive_path}"'
     return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
 
@@ -110,7 +110,7 @@ async def extr_files(path, archive_path, password=None):
         result = await _extract_with_7z_helper(temp_path, archive_path)
         filename = await get_files(temp_path)
         filename = filename[0]
-        command = f'tar -xvf "{filename}" -C {path}'
+        command = f'tar -xvf "{filename}" -C "{path}"'
         result += await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
         shutil.rmtree(temp_path)
     elif archive_path.endswith((".tar.zst", ".zst", ".tzst")):
