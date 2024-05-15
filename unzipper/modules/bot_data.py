@@ -276,8 +276,6 @@ Made with ❤️ by **@EDM115bots**
     """
 
     DONATE_TEXT = """
---**NOT AVAILABLE YET !**--
-
 I'm going to be honest : **this bot costs me money**…
 Nothing's free on this world, however I try to keep this bot for free for as many people as possible
 I don't like to put restrictions, nor getting your PM's flooded with ads…
@@ -288,9 +286,9 @@ It helps out a ton, covers the costs (hosting, updating, … 👨‍💻)
 --How ?--
 • **[Paypal](https://www.paypal.me/8EDM115)**
 • **[GitHub Sponsors](https://github.com/sponsors/EDM115)**
-• **[Directly in Telegram](https://t.me/EDM115bots/544)**
+• **[Directly in Telegram](https://t.me/EDM115bots/698)**
 • **[BuyMeACoffee](https://www.buymeacoffee.com/edm115)**
-• **[Send cryptos (not recommended)](https://edm115.shadd.eu.org/)**
+• **[Send cryptos (not recommended)](https://walad.link/edm115)**
 
 Thanks for your contribution 😊
 
