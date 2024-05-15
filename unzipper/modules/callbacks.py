@@ -1,10 +1,11 @@
 # Copyright (c) 2022 - 2024 EDM115
 import asyncio
-import cgi
 import concurrent.futures
 import os
 import re
 import shutil
+from email.parser import Parser
+from email.policy import default
 from fnmatch import fnmatch
 from time import time
 from urllib.parse import unquote
@@ -538,8 +539,8 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         rfnamebro = ""
                         real_filename = ""
                         if content_disposition:
-                            _, params = cgi.parse_header(content_disposition)
-                            real_filename = params.get("filename")
+                            headers = Parser(policy=default).parsestr(f'Content-Disposition: {content_disposition}')
+                            real_filename = headers.get_filename()
                             if real_filename != "":
                                 rfnamebro = unquote(real_filename)
                         if rfnamebro == "":
