@@ -10,9 +10,15 @@ env/
 venv/
 
 # VS Code
-.vscode
 .vscode/
-.vscode/*
 
 # Secrets
 *.session
+*.session-journal
+
+# Internal directories and files
+downloads/
+Downloaded/
+Thumbnails/
+unknown_errors.txt
+unzip-log.txt
