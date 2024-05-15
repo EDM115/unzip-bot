@@ -129,14 +129,12 @@ async def about_me(_, message: Message):
 
 
 @unzipperbot.on_message(
-    filters.incoming & filters.private & filters.document
-    | filters.regex(https_url_regex)
+    filters.incoming & filters.private & (filters.document
+    | filters.regex(https_url_regex)) & ~filters.command(["eval", "exec"])
 )
 async def extract_archive(_, message: Message):
     try:
         if message.chat.type != enums.ChatType.PRIVATE:
-            return
-        if message.command and message.command[0] in ["eval", "exec"]:
             return
         unzip_msg = await message.reply(
             Messages.PROCESSING2, reply_to_message_id=message.id
