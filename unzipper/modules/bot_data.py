@@ -816,9 +816,6 @@ Here's all the commands that only the owner (you) can use :
 **/logs** : Send you the logs (all of them). Useful for bug tracking. Send them to **@EDM115** if you don't understand them/need help
 **/restart** : Does a basic restart, less intrusive as the `/redbutton` one
 **/dbexport** : ~~Exports the whole database as CSV~~ __Does nothing yet__
-**/addvip {user_id, subscription, ends, used, billed, early, donator, started, successful, gap, gifted, referral, lifetime}** : __Not available yet__ Add an user to the VIP database
-**/delvip {user_id}** : __Not available yet__ Remove an user from the VIP database
-**/dbexportvip** : __Not available yet__ Exports the VIP database as CSV
 **/eval {code}** : Evaluate a piece of code. Useful for debugging
 **/exec {code}** : Execute a piece of code. Useful for debugging
 **/admincmd** : This message
