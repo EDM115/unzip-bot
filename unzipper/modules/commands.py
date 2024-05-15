@@ -1,4 +1,5 @@
 # Copyright (c) 2022 - 2024 EDM115
+import ast
 import io
 import os
 import re
@@ -7,7 +8,6 @@ import time
 from asyncio import sleep, create_subprocess_shell, subprocess
 from contextlib import redirect_stdout, redirect_stderr
 from sys import executable
-
 
 import git
 import psutil
@@ -657,13 +657,21 @@ async def aexec(code, client, message):
     with redirect_stdout(stdout), redirect_stderr(stderr):
         try:
             try:
-                result = eval(code)
+                result = ast.literal_eval(code)
             except SyntaxError:
                 exec(
                     "async def __aexec(client, message): "
                     + "".join(f"\n {line}" for line in code.split("\n"))
                 )
                 await locals()["__aexec"](client, message)
+            except ValueError as e:
+                stderr.write(f"ValueError: {str(e)}\n")
+            except TypeError as e:
+                stderr.write(f"TypeError: {str(e)}\n")
+            except MemoryError as e:
+                stderr.write(f"MemoryError: {str(e)}\n")
+            except RecursionError as e:
+                stderr.write(f"RecursionError: {str(e)}\n")
         except Exception as e:
             stderr.write(f"{type(e).__name__}: {str(e)}\n")
     return stdout.getvalue(), stderr.getvalue(), result
