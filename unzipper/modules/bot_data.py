@@ -483,7 +483,7 @@ Task : #Merge
 File : {}
     """
 
-    PLS_SEND_PASSWORD = "**Please send me the password 🔑**"
+    PLS_SEND_PASSWORD = "**Please send me the password 🔑**"  # skipcq: SCT-A000
 
     PASSWORD_PROTECTED = "That archive is password protected 😡 **/clean** and retry"
 

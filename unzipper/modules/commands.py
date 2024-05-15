@@ -727,7 +727,8 @@ async def add_vip(_, message: Message):
 
 @unzipperbot.on_message(filters.command("delvip") & filters.user(Config.BOT_OWNER))
 async def del_vip(_, message: Message):
-    """del_msg = await message.reply(Messages.PROVIDE_UID)
+    """
+    del_msg = await message.reply(Messages.PROVIDE_UID)
     try:
         user_id = message.text.split(None, 1)[1]
     except:
@@ -743,8 +744,8 @@ async def del_vip(_, message: Message):
     if text != "":
         await del_msg.edit(text)
     else:
-        await del_msg.edit(Messages.UNBANNED.format(user_id))"""
-    pass
+        await del_msg.edit(Messages.UNBANNED.format(user_id))
+    """
 
 
 @unzipperbot.on_message(

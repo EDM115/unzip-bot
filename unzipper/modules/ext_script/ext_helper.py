@@ -63,7 +63,7 @@ async def _extract_with_7z_helper(path, archive_path, password=None):
 
 
 async def _test_with_7z_helper(archive_path):
-    password = "dont care + didnt ask + cry about it + stay mad + get real + L"
+    password = "dont care + didnt ask + cry about it + stay mad + get real + L"  # skipcq: PTC-W1006, SCT-A000
     command = f'7z t "{archive_path}" -p"{password}" -y'
     return "Everything is Ok" in await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
 
