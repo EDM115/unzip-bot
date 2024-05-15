@@ -129,8 +129,9 @@ async def about_me(_, message: Message):
 
 
 @unzipperbot.on_message(
-    filters.incoming & filters.private & (filters.document
-    | filters.regex(https_url_regex)) & ~filters.command(["eval", "exec"])
+    filters.incoming & filters.private
+    & (filters.document | filters.regex(https_url_regex))
+    & ~filters.command(["eval", "exec"])
 )
 async def extract_archive(_, message: Message):
     try:
