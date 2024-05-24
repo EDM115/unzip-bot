@@ -42,5 +42,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }},latest
+          tags: ${{ steps.meta.outputs.tags }},edm115/unzip-bot:latest,ghcr.io/${{ github.repository }}:latest
           labels: ${{ steps.meta.outputs.labels }}
