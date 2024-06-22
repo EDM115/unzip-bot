@@ -58,7 +58,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         return
     try:
         ul_mode = await get_upload_mode(c_id)
-        fname = os.sep.join(os.path.abspath(doc_f).split(os.sep)[4:])
+        fname = os.sep.join(os.path.abspath(doc_f).split(os.sep)[5:])
         fext = (pathlib.Path(os.path.abspath(doc_f)).suffix).casefold().replace(".", "")
         thumbornot = await thumb_exists(c_id)
         upmsg = await unzipperbot.send_message(
