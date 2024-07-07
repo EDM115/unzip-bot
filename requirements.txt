@@ -13,4 +13,4 @@ pyrogram==2.0.106
 pyromod==1.5
 requests==2.32.3
 TgCrypto==1.2.5
-unzip-http==0.4
+unzip-http==0.6
