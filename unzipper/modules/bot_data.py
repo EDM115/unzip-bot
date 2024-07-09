@@ -573,6 +573,8 @@ Please send the new file name (**--INCLUDE THE FILE EXTENTION !--**)
 
     # commands.py
 
+    PRIVACY = "PRIVACY ??"
+
     PROCESS_RUNNING = """
 Already one process is running, don't spam 😐
 
