@@ -673,13 +673,13 @@ async def aexec(code, client, message):
                 )
                 await locals()["__aexec"](client, message)
             except ValueError as e:
-                stderr.write(f"ValueError: {str(e)}\n")
+                stderr.write(f"ValueError : {str(e)}\n")
             except TypeError as e:
-                stderr.write(f"TypeError: {str(e)}\n")
+                stderr.write(f"TypeError : {str(e)}\n")
             except MemoryError as e:
-                stderr.write(f"MemoryError: {str(e)}\n")
+                stderr.write(f"MemoryError : {str(e)}\n")
             except RecursionError as e:
-                stderr.write(f"RecursionError: {str(e)}\n")
+                stderr.write(f"RecursionError : {str(e)}\n")
         except Exception as e:
             stderr.write(f"{type(e).__name__}: {str(e)}\n")
     return stdout.getvalue(), stderr.getvalue(), result
@@ -703,11 +703,12 @@ async def eval_command(_, message):
     else:
         evaluation = "Success"
 
-    final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation}</code> \n"
+    final_output = f"<b>EVAL</b> : <code>{cmd}</code>\n\n<b>OUTPUT</b> :\n<code>{evaluation}</code> \n"
 
     if len(final_output) > Config.MAX_MESSAGE_LENGTH:
+        trimmed_output = f"EVAL : {cmd}\n\nOUTPUT :\n{evaluation}"
         with open("eval.txt", "w+", encoding="utf8") as out_file:
-            out_file.write(str(final_output))
+            out_file.write(str(trimmed_output))
         await message.reply_document(
             document="eval.txt",
             caption=cmd,
@@ -729,16 +730,17 @@ async def exec_command(_, message):
     e = stderr.decode()
     o = stdout.decode()
 
-    e = e or "No Error"
-    o = o or "No Output"
-    OUTPUT = f"**COMMAND:**\n`{cmd}`\n\n**OUTPUT:**\n{o}\n\n**ERROR:**\n`{e}`"
+    e = e or "No error"
+    o = o or "No output"
+    OUTPUT = f"**COMMAND :**\n`{cmd}`\n\n**OUTPUT :**\n`{o}`\n\n**ERROR :**\n`{e}`"
 
     if len(OUTPUT) > Config.MAX_MESSAGE_LENGTH:
-        with io.BytesIO(str.encode(OUTPUT)) as out_file:
+        T_OUTPUT = f"COMMAND :\n{cmd}\n\nOUTPUT :\n{o}\n\nERROR :\n{e}"
+        with io.BytesIO(str.encode(T_OUTPUT)) as out_file:
             out_file.name = "exec.txt"
             await message.reply_document(
                 document=out_file,
-                caption=cmd,
+                caption=f"`{cmd}`",
                 reply_to_message_id=message.id,
             )
     else:
