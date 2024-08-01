@@ -126,6 +126,7 @@ async def about_me(_, message: Message):
         await sleep(f.value)
         await about_me(_, message)
 
+
 @unzipperbot.on_message(filters.command("privacy"))
 async def privacy_text(_, message: Message):
     try:
@@ -136,7 +137,8 @@ async def privacy_text(_, message: Message):
 
 
 @unzipperbot.on_message(
-    filters.incoming & filters.private
+    filters.incoming
+    & filters.private
     & (filters.document | filters.regex(https_url_regex))
     & ~filters.command(["eval", "exec"])
 )
