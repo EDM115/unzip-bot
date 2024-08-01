@@ -64,7 +64,9 @@ telegram_url_pattern = r"(?:http[s]?:\/\/)?(?:www\.)?t\.me\/([a-zA-Z0-9_]+)\/(\d
 
 async def download(url, path):
     try:
-        async with ClientSession() as session, session.get(url, timeout=None, allow_redirects=True) as resp, openfile(path, mode="wb") as file:
+        async with ClientSession() as session, session.get(
+            url, timeout=None, allow_redirects=True
+        ) as resp, openfile(path, mode="wb") as file:
             async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
                 await file.write(chunk)
     except InvalidURL:
@@ -75,7 +77,9 @@ async def download(url, path):
 
 async def download_with_progress(url, path, message, unzip_bot):
     try:
-        async with ClientSession() as session, session.get(url, timeout=None, allow_redirects=True) as resp:
+        async with ClientSession() as session, session.get(
+            url, timeout=None, allow_redirects=True
+        ) as resp:
             total_size = int(resp.headers.get("Content-Length", 0))
             current_size = 0
             start_time = time()
@@ -539,7 +543,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
                         rfnamebro = ""
                         real_filename = ""
                         if content_disposition:
-                            headers = Parser(policy=default).parsestr(f'Content-Disposition: {content_disposition}')
+                            headers = Parser(policy=default).parsestr(
+                                f"Content-Disposition: {content_disposition}"
+                            )
                             real_filename = headers.get_filename()
                             if real_filename != "":
                                 rfnamebro = unquote(real_filename)

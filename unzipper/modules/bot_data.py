@@ -900,9 +900,7 @@ class Buttons:
     CHOOSE_E_F__BTNS = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton(
-                    "🗂️", callback_data="extract_file|tg_file|no_pass"
-                ),
+                InlineKeyboardButton("🗂️", callback_data="extract_file|tg_file|no_pass"),
                 InlineKeyboardButton(
                     "🔐", callback_data="extract_file|tg_file|with_pass"
                 ),
