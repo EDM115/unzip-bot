@@ -152,4 +152,4 @@ async def remove_expired_tasks(firststart=False):
                             ),
                         )
 
-    value, firststart = False
+    value = firststart = False
