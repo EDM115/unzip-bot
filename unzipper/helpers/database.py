@@ -11,7 +11,7 @@ from unzipper import LOGGER, unzipperbot
 from unzipper.modules.bot_data import Messages
 
 mongodb = AsyncIOMotorClient(Config.MONGODB_URL)
-unzipper_db = mongodb["Unzipper_Bot"]
+unzipper_db = mongodb[Config.MONGODB_DBNAME]
 
 
 # Users Database

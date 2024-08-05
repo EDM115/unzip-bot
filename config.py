@@ -12,6 +12,7 @@ class Config:
         else os.environ.get("LOGS_CHANNEL")
     )
     MONGODB_URL = os.environ.get("MONGODB_URL")
+    MONGODB_DBNAME = os.environ.get("MONGODB_DBNAME", "Unzipper_Bot")
     BOT_OWNER = int(os.environ.get("BOT_OWNER"))
     DOWNLOAD_LOCATION = f"{os.path.dirname(__file__)}/Downloaded"
     THUMB_LOCATION = f"{os.path.dirname(__file__)}/Thumbnails"
