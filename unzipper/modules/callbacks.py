@@ -990,6 +990,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
         LOGGER.info("ext_f paths : " + str(paths))
         try:
             await query.answer(Messages.SENDING_FILE)
+            await query.message.edit(text=Messages.UPLOADING_THIS_FILE)
         except:
             pass
         sent_files += 1

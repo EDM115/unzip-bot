@@ -197,6 +197,8 @@ Please report this at @EDM115_chat if you think this is a serious error
 
     PLS_REPLY = "You need to reply ↩️ to a picture with this command for saving it as custom thumbnail 🤓"
 
+    UPLOADING_THIS_FILE = "Uploading this file… Please wait"
+
     NO_MERGE_TASK = """
 There's no merge task ongoing
 Use **/merge** to start one
