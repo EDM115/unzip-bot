@@ -21,3 +21,6 @@
 
 ## You're done :partying_face:
 ### Now use that as `MONGODB_URL`
+> [!NOTE]  
+> It should look like : `mongodb+srv://username:password@cluster-name.abcde.mongodb.net/?retryWrites=true&w=majority`  
+> You can strip the DB name here, it's set on the `MONGODB_DBNAME` env var
