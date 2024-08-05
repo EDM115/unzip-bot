@@ -110,7 +110,6 @@ def removal(firststart=False):
     loop.run_until_complete(asyncio.sleep(0))
 
 
-@aiocron.crontab("*/5 * * * *")
 async def remove_expired_tasks(firststart=False):
     value = firststart
     ongoing_tasks = await get_ongoing_tasks()
@@ -157,3 +156,16 @@ async def remove_expired_tasks(firststart=False):
                         )
 
     value = firststart = False
+
+
+@aiocron.crontab("*/5 * * * *")
+async def scheduled_remove_expired_tasks():
+    await remove_expired_tasks()
+
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    try:
+        loop.run_forever()
+    finally:
+        loop.close()
