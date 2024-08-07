@@ -1,11 +1,12 @@
 FROM archlinux:latest
 
 RUN pacman -Syyu --noconfirm && \
-    pacman -S --noconfirm python-pip zstd p7zip gcc git ffmpeg && \
+    pacman -S --noconfirm ffmpeg gcc git p7zip python-pip tzdata zstd && \
     python3 -m venv /venv && \
     pacman -Scc --noconfirm && \
-    timedatectl set-timezone Europe/Paris
+    ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
 ENV PATH="/venv/bin:$PATH"
+ENV TZ=Europe/Paris
 RUN pip3 install -U pip setuptools wheel && \
     mkdir /app
 WORKDIR /app
