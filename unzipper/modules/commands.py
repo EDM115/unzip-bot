@@ -5,24 +5,27 @@ import os
 import re
 import shutil
 import time
-from asyncio import sleep, create_subprocess_shell, subprocess
-from contextlib import redirect_stdout, redirect_stderr
-from sys import executable
 
 import git
 import psutil
+
+from asyncio import create_subprocess_shell, sleep, subprocess
+from contextlib import redirect_stderr, redirect_stdout
 from pyrogram import enums, filters
 from pyrogram.errors import FloodWait, RPCError
 from pyrogram.types import Message
+from sys import executable
 
+from .bot_data import Buttons, Messages
 from config import Config
-from unzipper import LOGGER, boottime, unzipperbot
+from unzipper import boottime, LOGGER, unzipperbot
 from unzipper.helpers.database import (
+    add_banned_user,
     add_merge_task,
     add_user,
-    add_banned_user,
     check_user,
     count_banned_users,
+    count_ongoing_tasks,
     count_users,
     del_banned_user,
     del_ongoing_task,
@@ -33,14 +36,11 @@ from unzipper.helpers.database import (
     get_upload_mode,
     get_uploaded,
     get_users_list,
-    count_ongoing_tasks,
     set_maintenance,
 )
 from unzipper.helpers.unzip_help import humanbytes, timeformat_sec
 from unzipper.modules.ext_script.custom_thumbnail import add_thumb, del_thumb
 from unzipper.modules.ext_script.ext_helper import get_files
-
-from .bot_data import Buttons, Messages
 
 # Regex for urls
 https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"
