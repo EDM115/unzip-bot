@@ -4,7 +4,6 @@ import time
 
 import pyrogram
 
-from pyrogram import Client
 from pyromod import listen  # skipcq: PY-W2000
 
 from config import Config
@@ -12,7 +11,7 @@ from config import Config
 boottime = time.time()
 
 plugins = dict(root="modules")
-unzipperbot = Client(
+unzipperbot = pyrogram.Client(
     "UnzipperBot",
     bot_token=Config.BOT_TOKEN,
     api_id=Config.APP_ID,

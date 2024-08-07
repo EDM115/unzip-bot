@@ -163,9 +163,7 @@ async def scheduled_remove_expired_tasks():
     await remove_expired_tasks()
 
 
-if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    try:
-        loop.run_forever()
-    finally:
-        loop.close()
+def start_cron_jobs():
+    scheduled_remove_expired_tasks.start()
+    asyncio.get_event_loop().run_forever()
+
