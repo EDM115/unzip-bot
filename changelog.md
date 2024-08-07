@@ -10,6 +10,34 @@
 
 ---
 
+### v6.3.4
+
+- Applied Black code style
+- Sends the logs to log channel when shutting down
+- Uses `shutil.move` instead of `os.rename` to move files (useful when 2 paths aren't on the same disk, ex Docker volumes)
+- Simplified the Dockerfile (less steps => less layers)
+- Added a pre-filled `.env`, and automatically load its vars if they aren't empty, else display a warning
+- Correctly handle spaces in file paths, fixing issues with ffmpeg and other command-line utilities
+- Display the entire file path on a file caption, instead of just the filename
+- Don't trigger doc/url process when using /exec and /eval
+- Added the `/privacy` command
+- The logs channel can now be an username, and we may have fixed an issue with Pyrogram being so old that it can't see 64-bits channel IDs
+- `/eval` and `/exec` now don't format the output when writing to a file
+- Deleted VIP related commands and strings for now
+- The DB collection name can be customized (useful when multiple bots run on the same DB but needs a different collection, ex not to share the ongoing tasks list)
+- The upload list buttons is hidden when uploading a file, assuring that no user spam click
+- The check for tasks running for more time than expected no longer relies on a while true + asyncio.sleep, but on a `aiocron` job
+- When rebooting, the timestamps sent to the owner are now readable
+- The video duration is now properly parsed (no more 0s videos) and the thumbnail is no longer generated from 0s but rather midway through the video
+- Several code improvements (style and bug-risk mainly)
+- Uses `ast.literal_eval` instead of `eval` for security reasons, catches properly most exceptions
+- Stopped using the deprecated `cgi` module and now gets filename from headers with `email.parser`
+- Updated the `.gitignore`
+- Sorted imports
+- When pushing a tagged image, it is now also pushed as `latest`
+- Updated python runtime from 3.12.1 to 3.12.4
+- Updated dependencies (aiofiles, aiohttp, dnspython, GitPython, motor, Pillow, psutil, requests, unzip-http), added aiocron
+
 ### v6.3.3 **[LATEST STABLE RELEASE]**
 
 - Added support for PKG archives

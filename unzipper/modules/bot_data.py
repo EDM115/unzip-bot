@@ -266,9 +266,9 @@ Send **/commands** to learn more
     """
 
     ABOUT_TXT = """
-**About Unarchiver bot [v6.3.3]**
+**About Unarchiver bot [v6.3.4]**
 
-• **Language :** [Python 3.12.1](https://www.python.org/)
+• **Language :** [Python 3.12.4](https://www.python.org/)
 • **Framework :** [Pyrogram 2.0.106](https://pyrogram.org/)
 • **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot)
 • **Developer :** [EDM115](https://github.com/EDM115)
@@ -290,7 +290,6 @@ It helps out a ton, covers the costs (hosting, updating, … 👨‍💻)
 • **[GitHub Sponsors](https://github.com/sponsors/EDM115)**
 • **[Directly in Telegram](https://t.me/EDM115bots/698)**
 • **[BuyMeACoffee](https://www.buymeacoffee.com/edm115)**
-• **[Send cryptos (not recommended)](https://walad.link/edm115)**
 
 Thanks for your contribution 😊
 
