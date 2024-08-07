@@ -1,17 +1,19 @@
 import os
-from mutagen.mp3 import MP3
-from mutagen.easyid3 import EasyID3
-from mutagen.mp4 import MP4
-from mutagen.flac import FLAC
-from mutagen.aiff import AIFF
-from mutagen.oggvorbis import OggVorbis
-from mutagen.oggopus import OggOpus
-from mutagen.wave import WAVE
-from mutagen.asf import ASF
-from mutagen.aac import AAC
+
 import mutagen.id3 as id3
 
-from unzipper.modules.ext_script.ext_helper import run_cmds_on_cr, __run_cmds_unzipper
+from mutagen.aac import AAC
+from mutagen.aiff import AIFF
+from mutagen.asf import ASF
+from mutagen.easyid3 import EasyID3
+from mutagen.flac import FLAC
+from mutagen.mp3 import MP3
+from mutagen.mp4 import MP4
+from mutagen.oggopus import OggOpus
+from mutagen.oggvorbis import OggVorbis
+from mutagen.wave import WAVE
+
+from unzipper.modules.ext_script.ext_helper import __run_cmds_unzipper, run_cmds_on_cr
 
 
 async def get_audio_metadata(file_path):

@@ -12,4 +12,5 @@ if grep -qE '^[^#]*=\s*("|'\''?)\s*\1\s*$' .env; then
 else
   source .env
 fi
+export TZ="Europe/Paris"
 python3 -m unzipper

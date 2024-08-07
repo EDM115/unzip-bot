@@ -6,9 +6,8 @@ import time
 from pyrogram import idle
 
 from config import Config
-
 from . import LOGGER, unzipperbot
-from .helpers.start import check_logs, dl_thumbs, set_boot_time, removal
+from .helpers.start import check_logs, dl_thumbs, set_boot_time, start_cron_jobs, removal
 from .modules.bot_data import Messages
 
 
@@ -29,7 +28,6 @@ signal.signal(signal.SIGTERM, handler_stop_signals)
 def shutdown_bot():
     stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
     LOGGER.info(Messages.STOP_TXT.format(stoptime))
-    LOGGER.info("Bot stopped 😪")
     try:
         unzipperbot.send_message(
             chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime)
@@ -44,8 +42,9 @@ def shutdown_bot():
             except:
                 pass
     except Exception as e:
-        LOGGER.error("Error sending shutdown message: %s", e)
+        LOGGER.error("Error sending shutdown message : %s", e)
     finally:
+        LOGGER.info("Bot stopped 😪")
         unzipperbot.stop(block=False)
 
 
@@ -64,8 +63,9 @@ if __name__ == "__main__":
         LOGGER.info(Messages.CHECK_LOG)
         if check_logs():
             LOGGER.info(Messages.LOG_CHECKED)
-            LOGGER.info(Messages.BOT_RUNNING)
             removal(True)
+            start_cron_jobs()
+            LOGGER.info(Messages.BOT_RUNNING)
             idle()
         else:
             try:
@@ -77,6 +77,6 @@ if __name__ == "__main__":
                 pass
             shutdown_bot()
     except Exception as e:
-        LOGGER.error("Error in main loop: %s", e)
+        LOGGER.error("Error in main loop : %s", e)
     finally:
         shutdown_bot()

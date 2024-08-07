@@ -3,7 +3,8 @@ FROM archlinux:latest
 RUN pacman -Syyu --noconfirm && \
     pacman -S --noconfirm python-pip zstd p7zip gcc git ffmpeg && \
     python3 -m venv /venv && \
-    pacman -Scc --noconfirm
+    pacman -Scc --noconfirm && \
+    timedatectl set-timezone Europe/Paris
 ENV PATH="/venv/bin:$PATH"
 RUN pip3 install -U pip setuptools wheel && \
     mkdir /app

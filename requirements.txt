@@ -1,5 +1,5 @@
 aiocron==1.8
-aiofiles==23.2.1
+aiofiles==24.1.0
 aiohttp==3.9.5
 base58check==1.0.2
 dnspython==2.6.1
@@ -8,7 +8,7 @@ GitPython==3.1.43
 motor==3.5.1
 mutagen==1.47.0
 Pillow==10.4.0
-psutil==5.9.8
+psutil==6.0.0
 pykeyboard==0.1.5
 pyrogram==2.0.106
 pyromod==1.5

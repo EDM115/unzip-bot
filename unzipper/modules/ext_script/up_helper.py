@@ -1,20 +1,19 @@
 # Copyright (c) 2022 - 2024 EDM115
+import asyncio
 import os
 import pathlib
 import re
 import shutil
 import subprocess
-import asyncio
-from time import time
 
+from datetime import timedelta
+from time import time
 from pyrogram.errors import FloodWait, PhotoExtInvalid, PhotoSaveFileInvalid
 
 from config import Config
-from unzipper import LOGGER
-from unzipper import unzipperbot
+from unzipper import LOGGER, unzipperbot
 from unzipper.helpers.database import get_upload_mode
-from unzipper.helpers.unzip_help import extentions_list, progress_urls
-from unzipper.helpers.unzip_help import progress_for_pyrogram
+from unzipper.helpers.unzip_help import extentions_list, progress_for_pyrogram, progress_urls
 from unzipper.modules.bot_data import Messages
 from unzipper.modules.ext_script.custom_thumbnail import thumb_exists
 from unzipper.modules.ext_script.metadata_helper import get_audio_metadata
@@ -194,7 +193,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     chat_id=c_id,
                     video=doc_f,
                     caption=Messages.EXT_CAPTION.format(fname),
-                    duration=int(vid_duration) if vid_duration.isnumeric() else 0,
+                    duration=int(float(vid_duration)),
                     thumb=thumb_image,
                     disable_notification=True,
                     progress=progress_for_pyrogram,
@@ -212,8 +211,17 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                 if os.path.exists(thmb_pth):
                     os.remove(thmb_pth)
                 try:
+                    midpoint_seconds = int(float(vid_duration) / 2)
+                    midpoint_timedelta = timedelta(seconds=midpoint_seconds)
+                    midpoint_str = str(midpoint_timedelta)
+
+                    if '.' not in midpoint_str:
+                        midpoint_str += '.00'
+                    else:
+                        midpoint_str = midpoint_str.split('.')[0] + '.' + midpoint_str.split('.')[1][:2]
+
                     await run_shell_cmds(
-                        f'ffmpeg -ss 00:00:00.00 -i "{doc_f}" -vf "scale=320:320:force_original_aspect_ratio=decrease" -vframes 1 "{thmb_pth}"'
+                        f'ffmpeg -ss {midpoint_str} -i "{doc_f}" -vf "scale=320:320:force_original_aspect_ratio=decrease" -vframes 1 "{thmb_pth}"'
                     )
                 except Exception as e:
                     LOGGER.warning(e)
