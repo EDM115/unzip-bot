@@ -77,10 +77,11 @@ async def check_boot():
     if different:
         try:
             await unzipperbot.send_message(
-                Config.BOT_OWNER, Messages.BOT_RESTARTED.format(
+                Config.BOT_OWNER,
+                Messages.BOT_RESTARTED.format(
                     datetime.fromtimestamp(old_boot).strftime(r"%d/%m/%Y - %H:%M:%S"),
-                    datetime.fromtimestamp(boot).strftime(r"%d/%m/%Y - %H:%M:%S")
-                )
+                    datetime.fromtimestamp(boot).strftime(r"%d/%m/%Y - %H:%M:%S"),
+                ),
             )
         except:
             pass  # first start obviously
