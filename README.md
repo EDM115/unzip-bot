@@ -85,7 +85,7 @@ Deploying is easy 🥰 You can deploy this bot in Heroku or in a VPS ♥️
 git clone https://github.com/EDM115/unzip-bot.git
 cd unzip-bot
 nano .env
-docker build -t unzip-bot .
+docker build -t edm115/unzip-bot .
 ```
 
 + Open Docker Desktop, go on the Images tab, click on the Run button
@@ -130,13 +130,20 @@ chmod +x start.sh && ./start.sh
 + Go in the repo's folder
 
 ```bash
-docker build -t unzip-bot .
+docker build -t edm115/unzip-bot .
+docker run -d -v downloaded-volume:/app/Downloaded -v thumbnails-volume:/app/Thumbnails --env-file ./.env --network host --name unzip-bot-container edm115/unzip-bot
+docker start unzip-bot-container
+# if you want to check something
+docker exec -it unzip-bot-container sh
+docker logs unzip-bot-container
+# once you're done
+docker stop unzip-bot-container
 ```
 
 + If you wanna publish :
 
 ```bash
-docker tag unzip-bot edm115/unzip-bot:latest
+docker tag edm115/unzip-bot edm115/unzip-bot:latest
 ```
 
 *(replace `edm115` with your docker hub username, `unzip-bot` with the repo's name and `latest` whith whatever you want)*
