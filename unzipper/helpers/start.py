@@ -54,12 +54,15 @@ def dl_thumbs():
         if thumb.get("url") is None and thumb.get("file_id") is not None:
             unzipperbot.download_media(
                 message=thumb.get("file_id"),
-                file_name=(Config.THUMB_LOCATION + "/" + str(thumb.get("_id")) + ".jpg"),
+                file_name=(
+                    Config.THUMB_LOCATION + "/" + str(thumb.get("_id")) + ".jpg"
+                ),
             )
         elif thumb.get("url") is not None and thumb.get("file_id") is None:
             loop2 = asyncio.get_event_loop()
             coroutine2 = download(
-                thumb.get("url"), (Config.THUMB_LOCATION + "/" + str(thumb.get("_id")) + ".jpg")
+                thumb.get("url"),
+                (Config.THUMB_LOCATION + "/" + str(thumb.get("_id")) + ".jpg"),
             )
             loop2.run_until_complete(coroutine2)
         i += 1
@@ -101,10 +104,14 @@ async def warn_users():
         tasks = await get_ongoing_tasks()
         for task in tasks:
             try:
-                await unzipperbot.send_message(task.get("user_id"), Messages.RESEND_TASK)
+                await unzipperbot.send_message(
+                    task.get("user_id"), Messages.RESEND_TASK
+                )
             except FloodWait as f:
                 await asyncio.sleep(f.value)
-                await unzipperbot.send_message(task.get("user_id"), Messages.RESEND_TASK)
+                await unzipperbot.send_message(
+                    task.get("user_id"), Messages.RESEND_TASK
+                )
             except:
                 pass  # user deleted chat
         await clear_ongoing_tasks()
