@@ -189,7 +189,7 @@ async def set_upload_mode(user_id, mode):
 async def get_upload_mode(user_id):
     umode = await mode_db.find_one({"_id": user_id})
     if umode is not None and umode:
-        return umode["mode"]
+        return umode.get("mode")
     return "media"
 
 
@@ -200,7 +200,7 @@ uploaded_db = unzipper_db["uploaded_count_db"]
 async def get_uploaded(user_id):
     up_count = await uploaded_db.find_one({"_id": user_id})
     if up_count is not None and up_count:
-        return up_count["uploaded_files"]
+        return up_count.get("uploaded_files")
     return 0
 
 
@@ -237,7 +237,7 @@ async def update_temp_thumb(user_id, thumb_id):
 async def update_thumb(user_id):
     existing = await thumb_db.find_one({"_id": user_id})
     if existing is not None and existing:
-        await thumb_db.update_one({"_id": user_id}, {"$set": {"file_id": existing["temp"]}})
+        await thumb_db.update_one({"_id": user_id}, {"$set": {"file_id": existing.get("temp")}})
         await thumb_db.update_one({"_id": user_id}, {"$unset": {"temp": ""}})
     else:
         return
@@ -268,8 +268,8 @@ bot_data = unzipper_db["bot_data"]
 async def get_boot():
     boot = await bot_data.find_one({"boot": True})
     if boot is not None and boot:
-        return boot["time"]
-    return boot
+        return boot.get("time")
+    return None
 
 
 async def set_boot(boottime):
@@ -291,15 +291,15 @@ async def set_old_boot(boottime):
 async def get_old_boot():
     old_boot = await bot_data.find_one({"old_boot": True})
     if old_boot is not None and old_boot:
-        return old_boot["time"]
-    return old_boot
+        return old_boot.get("time")
+    return None
 
 
 async def is_boot_different():
     different = True
     is_exist = await bot_data.find_one({"boot": True})
     is_exist_old = await bot_data.find_one({"old_boot": True})
-    if is_exist and is_exist_old and is_exist["time"] == is_exist_old["time"]:
+    if is_exist and is_exist_old and is_exist.get("time") == is_exist_old.get("time"):
         different = False
     return different
 
@@ -409,7 +409,7 @@ async def get_merge_task(user_id):
 async def get_merge_task_message_id(user_id):
     is_exist = await merge_tasks.find_one({"user_id": user_id})
     if is_exist is not None and is_exist:
-        return is_exist["message_id"]
+        return is_exist.get("message_id")
     return False
 
 
@@ -425,7 +425,7 @@ maintenance_mode = unzipper_db["maintenance_mode"]
 async def get_maintenance():
     maintenance = await maintenance_mode.find_one({"maintenance": True})
     if maintenance is not None and maintenance:
-        return maintenance["val"]
+        return maintenance.get("val")
     return False
 
 

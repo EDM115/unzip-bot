@@ -68,7 +68,7 @@ async def _(_, message: Message):
         return
     if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
         ogtasks = await get_ongoing_tasks()
-        if not any(uid == task["user_id"] for task in ogtasks):
+        if not any(uid == task.get("user_id") for task in ogtasks):
             try:
                 await message.reply(
                     text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
@@ -303,7 +303,7 @@ async def broadcast_this(_, message: Message):
     total_users = await count_users()
     await bc_msg.edit(Messages.BC_START.format(done_no, total_users))
     for user in users_list:
-        b_cast = await _do_broadcast(message=r_msg, user=user["user_id"])
+        b_cast = await _do_broadcast(message=r_msg, user=user.get("user_id"))
         if b_cast == 200:
             success_no += 1
         else:
@@ -551,7 +551,7 @@ async def del_tasks(_, message: Message):
     cleaner = await message.reply(Messages.ERASE_TASKS.format(number))
 
     for task in ongoing_tasks:
-        user_id = task["user_id"]
+        user_id = task.get("user_id")
         await del_ongoing_task(user_id)
         try:
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")

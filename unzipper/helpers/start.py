@@ -52,14 +52,14 @@ def dl_thumbs():
     LOGGER.info(Messages.DL_THUMBS.format(maxthumbs))
     for thumb in thumbs:
         loop2 = asyncio.get_event_loop()
-        if thumb["url"] is None and thumb["file_id"] is not None:
+        if thumb.get("url") is None and thumb.get("file_id") is not None:
             coroutine2 = unzipperbot.download_media(
-                message=thumb["file_id"],
-                file_name=(Config.THUMB_LOCATION + "/" + str(thumb["_id"]) + ".jpg"),
+                message=thumb.get("file_id"),
+                file_name=(Config.THUMB_LOCATION + "/" + str(thumb.get("_id")) + ".jpg"),
             )
-        elif thumb["url"] is not None and thumb["file_id"] is None:
+        elif thumb.get("url") is not None and thumb.get("file_id") is None:
             coroutine2 = download(
-                thumb["url"], (Config.THUMB_LOCATION + "/" + str(thumb["_id"]) + ".jpg")
+                thumb.get("url"), (Config.THUMB_LOCATION + "/" + str(thumb.get("_id")) + ".jpg")
             )
         if coroutine2 is not None:
             loop2.run_until_complete(coroutine2)
@@ -102,10 +102,10 @@ async def warn_users():
         tasks = await get_ongoing_tasks()
         for task in tasks:
             try:
-                await unzipperbot.send_message(task["user_id"], Messages.RESEND_TASK)
+                await unzipperbot.send_message(task.get("user_id"), Messages.RESEND_TASK)
             except FloodWait as f:
                 await asyncio.sleep(f.value)
-                await unzipperbot.send_message(task["user_id"], Messages.RESEND_TASK)
+                await unzipperbot.send_message(task.get("user_id"), Messages.RESEND_TASK)
             except:
                 pass  # user deleted chat
         await clear_ongoing_tasks()
@@ -128,11 +128,11 @@ async def remove_expired_tasks(firststart=False):
             pass
     else:
         for task in ongoing_tasks:
-            user_id = task["user_id"]
+            user_id = task.get("user_id")
             if not user_id == Config.BOT_OWNER:
                 current_time = time()
-                start_time = task["start_time"]
-                task_type = task["type"]
+                start_time = task.get("start_time")
+                task_type = task.get("type")
                 time_gap = current_time - start_time
 
                 if task_type == "extract":

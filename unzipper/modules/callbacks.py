@@ -125,7 +125,7 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
     if uid != Config.BOT_OWNER:  # skipcq: PTC-W0048
         if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
             ogtasks = await get_ongoing_tasks()
-            if not any(ogtask["user_id"] == uid for ogtask in ogtasks):
+            if not any(ogtask.get("user_id") == uid for ogtask in ogtasks):
                 await unzip_bot.send_message(
                     chat_id=uid,
                     text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),

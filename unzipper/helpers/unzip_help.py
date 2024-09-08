@@ -89,7 +89,7 @@ def humanbytes(size):
     while size > power:
         size /= power
         n += 1
-    return str(round(size, 2)) + " " + Dic_powerN[n] + "B"
+    return str(round(size, 2)) + " " + Dic_powerN.get(n) + "B"
 
 
 def TimeFormatter(milliseconds: int) -> str:
