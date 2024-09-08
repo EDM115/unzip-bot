@@ -835,7 +835,11 @@ Here's all the commands that only the owner (you) can use :
 
     THUMB_SAVED = "Thumbnail saved"
 
-    THUMB_CAPTION = "Saved thumbnail of {}"
+    THUMB_CAPTION = """
+#thumbnail
+
+Saved thumbnail of [{}](tg://user?id={})
+    """
 
     THUMB_FAILED = "Failed to generate thumb"
 

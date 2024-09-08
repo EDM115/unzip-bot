@@ -46,6 +46,10 @@ async def add_thumb(_, message):
                     photo=final_thumb,
                     caption=Messages.THUMB_CAPTION.format(user_id),
                 )
+                try:
+                    os.remove(pre_thumb)
+                except:
+                    pass
                 await update_temp_thumb(message.from_user.id, savedpic.photo.file_id)
                 if os.path.exists(thumb_location) and os.path.isfile(thumb_location):
                     await message.reply(
@@ -57,10 +61,6 @@ async def add_thumb(_, message):
                     )
             except:
                 LOGGER.info(Messages.THUMB_FAILED)
-                try:
-                    os.remove(pre_thumb)
-                except:
-                    pass
                 try:
                     os.remove(final_thumb)
                 except:
