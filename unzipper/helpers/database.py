@@ -6,7 +6,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from pyrogram.errors import FloodWait
 
 from config import Config
-from unzipper import LOGGER, unzipperbot
+from unzipper import unzipperbot
 from unzipper.modules.bot_data import Messages
 
 mongodb = AsyncIOMotorClient(Config.MONGODB_URL)
