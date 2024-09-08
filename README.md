@@ -130,7 +130,7 @@ chmod +x start.sh && ./start.sh
 + Go in the repo's folder
 
 ```bash
-docker build -t edm115/unzip-bot .
+docker build --no-cache -t edm115/unzip-bot .
 docker run -d -v downloaded-volume:/app/Downloaded -v thumbnails-volume:/app/Thumbnails --env-file ./.env --network host --name unzip-bot-container edm115/unzip-bot
 docker start unzip-bot-container
 # if you want to check something

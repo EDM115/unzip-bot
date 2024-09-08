@@ -46,7 +46,7 @@ async def add_thumb(_, message):
                     photo=final_thumb,
                     caption=Messages.THUMB_CAPTION.format(user_id),
                 )
-                await update_temp_thumb(user_id, savedpic.photo.file_id)
+                await update_temp_thumb(message.from_user.id, savedpic.photo.file_id)
                 if os.path.exists(thumb_location) and os.path.isfile(thumb_location):
                     await message.reply(
                         text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_REPLACEMENT
