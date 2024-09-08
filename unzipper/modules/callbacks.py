@@ -48,7 +48,6 @@ from unzipper.helpers.database import (
     set_upload_mode,
     update_thumb,
     update_uploaded,
-    upload_thumb,
 )
 from unzipper.helpers.unzip_help import (
     extentions_list,
@@ -216,14 +215,9 @@ async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
             LOGGER.warning(Messages.ERROR_THUMB_RENAME)
             LOGGER.error(e)
         try:
-            thumb_url = await upload_thumb(thumb_location)
-            try:
-                if thumb_url != -1 and re.match(https_url_regex, thumb_url):
-                    await update_thumb(query.from_user.id, thumb_url, force=True)
-            except:
-                LOGGER.error(Messages.ERROR_THUMB_UPDATE)
+            await update_thumb(query.from_user.id)
         except:
-            LOGGER.error(Messages.ERROR_TELEGRAPH_UPLOAD)
+            LOGGER.error(Messages.ERROR_THUMB_UPDATE)
         await answer_query(query, Messages.SAVED_THUMBNAIL)
 
     elif query.data == "del_thumb":

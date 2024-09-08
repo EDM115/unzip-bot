@@ -52,10 +52,17 @@ def dl_thumbs():
     LOGGER.info(Messages.DL_THUMBS.format(maxthumbs))
     for thumb in thumbs:
         loop2 = asyncio.get_event_loop()
-        coroutine2 = download(
-            thumb["url"], (Config.THUMB_LOCATION + "/" + str(thumb["_id"]) + ".jpg")
-        )
-        loop2.run_until_complete(coroutine2)
+        if thumb["url"] is None and thumb["file_id"] is not None:
+            coroutine2 = unzipperbot.download_media(
+                message=thumb["file_id"],
+                file_name=(Config.THUMB_LOCATION + "/" + str(thumb["_id"]) + ".jpg"),
+            )
+        elif thumb["url"] is not None and thumb["file_id"] is None:
+            coroutine2 = download(
+                thumb["url"], (Config.THUMB_LOCATION + "/" + str(thumb["_id"]) + ".jpg")
+            )
+        if coroutine2 is not None:
+            loop2.run_until_complete(coroutine2)
         i += 1
         if i % 10 == 0 or i == maxthumbs:
             LOGGER.info(Messages.DOWNLOADED_THUMBS.format(i, maxthumbs))

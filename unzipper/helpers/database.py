@@ -1,6 +1,5 @@
 # Copyright (c) 2022 - 2024 EDM115
 import base58check
-import requests
 
 from asyncio import sleep
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -223,34 +222,25 @@ thumb_db = unzipper_db["thumb_db"]
 async def get_thumb(user_id):
     existing = await thumb_db.find_one({"_id": user_id})
     if existing is not None and existing:
-        return existing["url"]
+        return existing
     return None
 
 
-async def update_thumb(user_id, thumb_url, force):
+async def update_temp_thumb(user_id, thumb_id):
     existing = await thumb_db.find_one({"_id": user_id})
     if existing is not None and existing:
-        if not force:
-            return existing["url"]
-        await thumb_db.update_one({"_id": user_id}, {"$set": {"url": thumb_url}})
+        await thumb_db.update_one({"_id": user_id}, {"$set": {"temp": thumb_id}})
     else:
-        await thumb_db.insert_one({"_id": user_id, "url": thumb_url})
+        await thumb_db.insert_one({"_id": user_id, "temp": thumb_id})
 
 
-async def upload_thumb(image):
-    try:
-        with open(image, "rb") as file:
-            response = requests.post(
-                "https://telegra.ph/upload",
-                files={"file": ("file", file, "image/jpeg")},
-            )
-            response.raise_for_status()  # Raise an exception if the request was not successful
-            request = response.json()[0]
-            LOGGER.info(response.json())
-            return f"https://telegra.ph{request['src']}"
-    except requests.exceptions.RequestException as err:
-        LOGGER.warning("Error occurred during telegra.ph upload : %s", err)
-        return -1
+async def update_thumb(user_id):
+    existing = await thumb_db.find_one({"_id": user_id})
+    if existing is not None and existing:
+        await thumb_db.update_one({"_id": user_id}, {"$set": {"file_id": existing["temp"]}})
+        await thumb_db.update_one({"_id": user_id}, {"$unset": {"temp": ""}})
+    else:
+        return
 
 
 async def get_thumb_users():

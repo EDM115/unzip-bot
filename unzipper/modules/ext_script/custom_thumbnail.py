@@ -8,6 +8,7 @@ from pyrogram.errors import FloodWait
 
 from config import Config
 from unzipper import LOGGER
+from unzipper.helpers.database import update_temp_thumb
 from unzipper.modules.bot_data import Buttons, Messages
 
 
@@ -31,22 +32,8 @@ async def add_thumb(_, message):
             thumb_location = Config.THUMB_LOCATION + "/" + user_id + ".jpg"
             pre_thumb = Config.THUMB_LOCATION + "/not_resized_" + user_id + ".jpg"
             final_thumb = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
-            if os.path.exists(thumb_location) and os.path.isfile(thumb_location):
-                await message.reply(
-                    text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_REPLACEMENT
-                )
-            else:
-                await message.reply(
-                    text=Messages.SAVING_THUMB, reply_markup=Buttons.THUMB_SAVE
-                )
             LOGGER.info(Messages.DL_THUMB.format(user_id))
             file = await _.download_media(message=reply_message)
-            await _.send_document(
-                chat_id=Config.LOGS_CHANNEL,
-                document=file,
-                file_name=file.split("/")[-1],
-                caption=Messages.EXT_CAPTION.format(file),
-            )
             shutil.move(file, pre_thumb)
             size = 320, 320
             try:
@@ -54,6 +41,20 @@ async def add_thumb(_, message):
                     previous.thumbnail(size, Image.Resampling.LANCZOS)
                     previous.save(final_thumb, "JPEG")
                     LOGGER.info(Messages.THUMB_SAVED)
+                savedpic = await _.send_photo(
+                    chat_id=Config.LOGS_CHANNEL,
+                    photo=final_thumb,
+                    caption=Messages.THUMB_CAPTION.format(user_id),
+                )
+                await update_temp_thumb(user_id, savedpic.photo.file_id)
+                if os.path.exists(thumb_location) and os.path.isfile(thumb_location):
+                    await message.reply(
+                        text=Messages.EXISTING_THUMB, reply_markup=Buttons.THUMB_REPLACEMENT
+                    )
+                else:
+                    await message.reply(
+                        text=Messages.SAVING_THUMB, reply_markup=Buttons.THUMB_SAVE
+                    )
             except:
                 LOGGER.info(Messages.THUMB_FAILED)
                 try:

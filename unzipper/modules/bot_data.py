@@ -835,6 +835,8 @@ Here's all the commands that only the owner (you) can use :
 
     THUMB_SAVED = "Thumbnail saved"
 
+    THUMB_CAPTION = "Saved thumbnail of {}"
+
     THUMB_FAILED = "Failed to generate thumb"
 
     THUMB_ERROR = "Error happened 😕 Try again later"
