@@ -266,7 +266,7 @@ Send **/commands** to learn more
     """
 
     ABOUT_TXT = """
-**About Unarchiver bot [v6.3.4]**
+**About Unarchiver bot [v6.3.5]**
 
 • **Language :** [Python 3.12.4](https://www.python.org/)
 • **Framework :** [Pyrogram 2.0.106](https://pyrogram.org/)
@@ -838,7 +838,7 @@ Here's all the commands that only the owner (you) can use :
     THUMB_CAPTION = """
 #thumbnail
 
-Saved thumbnail of [{}](tg://user?id={})
+Saved thumbnail of [user {}](tg://user?id={})
     """
 
     THUMB_FAILED = "Failed to generate thumb"
