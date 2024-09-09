@@ -241,6 +241,8 @@ async def update_thumb(user_id):
             {"_id": user_id}, {"$set": {"file_id": existing.get("temp")}}
         )
         await thumb_db.update_one({"_id": user_id}, {"$unset": {"temp": ""}})
+        if existing.get("url") is not None:
+            await thumb_db.update_one({"_id": user_id}, {"$unset": {"url": ""}})
     else:
         return
 
