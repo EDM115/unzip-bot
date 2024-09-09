@@ -237,7 +237,6 @@ async def update_temp_thumb(user_id, thumb_id):
 async def update_thumb(user_id):
     existing = await thumb_db.find_one({"_id": user_id})
     if existing is not None and existing:
-        print(existing)
         await thumb_db.update_one(
             {"_id": user_id}, {"$set": {"file_id": existing.get("temp")}}
         )

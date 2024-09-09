@@ -34,28 +34,23 @@ async def add_thumb(_, message):
             final_thumb = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
             LOGGER.info(Messages.DL_THUMB.format(user_id))
             file = await _.download_media(message=reply_message)
-            LOGGER.info("file : " + str(file))
             shutil.move(file, pre_thumb)
             size = (320, 320)
             try:
                 with Image.open(pre_thumb) as previous:
-                    LOGGER.info("image opened")
                     previous.thumbnail(size, Image.Resampling.LANCZOS)
-                    LOGGER.info("thumbnail created")
                     previous.save(final_thumb, "JPEG")
                     LOGGER.info(Messages.THUMB_SAVED)
                 savedpic = await _.send_photo(
                     chat_id=Config.LOGS_CHANNEL,
                     photo=final_thumb,
-                    caption=Messages.THUMB_CAPTION.format(user_id),
+                    caption=Messages.THUMB_CAPTION.format(user_id, user_id),
                 )
-                LOGGER.info("passed savedpic")
                 try:
                     os.remove(pre_thumb)
                 except:
                     pass
                 await update_temp_thumb(message.from_user.id, savedpic.photo.file_id)
-                LOGGER.info("passed update_temp_thumb")
                 if os.path.exists(thumb_location) and os.path.isfile(thumb_location):
                     await message.reply(
                         text=Messages.EXISTING_THUMB,
@@ -65,8 +60,8 @@ async def add_thumb(_, message):
                     await message.reply(
                         text=Messages.SAVING_THUMB, reply_markup=Buttons.THUMB_SAVE
                     )
-            except Exception as e:
-                LOGGER.info(Messages.THUMB_FAILED + "\t" + str(e))
+            except:
+                LOGGER.info(Messages.THUMB_FAILED)
                 try:
                     os.remove(final_thumb)
                 except:
