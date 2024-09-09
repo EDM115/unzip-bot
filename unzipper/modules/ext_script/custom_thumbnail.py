@@ -34,11 +34,14 @@ async def add_thumb(_, message):
             final_thumb = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
             LOGGER.info(Messages.DL_THUMB.format(user_id))
             file = await _.download_media(message=reply_message)
+            LOGGER.info("file : " + str(file))
             shutil.move(file, pre_thumb)
             size = (320, 320)
             try:
                 with Image.open(pre_thumb) as previous:
+                    LOGGER.info("image opened")
                     previous.thumbnail(size, Image.Resampling.LANCZOS)
+                    LOGGER.info("thumbnail created")
                     previous.save(final_thumb, "JPEG")
                     LOGGER.info(Messages.THUMB_SAVED)
                 savedpic = await _.send_photo(
