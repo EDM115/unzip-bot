@@ -35,7 +35,7 @@ async def add_thumb(_, message):
             LOGGER.info(Messages.DL_THUMB.format(user_id))
             file = await _.download_media(message=reply_message)
             shutil.move(file, pre_thumb)
-            size = 320, 320
+            size = (320, 320)
             try:
                 with Image.open(pre_thumb) as previous:
                     previous.thumbnail(size, Image.Resampling.LANCZOS)
@@ -46,11 +46,13 @@ async def add_thumb(_, message):
                     photo=final_thumb,
                     caption=Messages.THUMB_CAPTION.format(user_id),
                 )
+                LOGGER.info("passed savedpic")
                 try:
                     os.remove(pre_thumb)
                 except:
                     pass
                 await update_temp_thumb(message.from_user.id, savedpic.photo.file_id)
+                LOGGER.info("passed update_temp_thumb")
                 if os.path.exists(thumb_location) and os.path.isfile(thumb_location):
                     await message.reply(
                         text=Messages.EXISTING_THUMB,
