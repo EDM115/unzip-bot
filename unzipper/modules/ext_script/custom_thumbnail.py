@@ -60,8 +60,8 @@ async def add_thumb(_, message):
                     await message.reply(
                         text=Messages.SAVING_THUMB, reply_markup=Buttons.THUMB_SAVE
                     )
-            except:
-                LOGGER.info(Messages.THUMB_FAILED)
+            except Exception as e:
+                LOGGER.info(Messages.THUMB_FAILED + "\t" + str(e))
                 try:
                     os.remove(final_thumb)
                 except:
