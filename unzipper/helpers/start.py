@@ -124,9 +124,8 @@ def removal(firststart=False):
 
 
 async def remove_expired_tasks(firststart=False):
-    value = firststart
     ongoing_tasks = await get_ongoing_tasks()
-    if value:
+    if firststart:
         await clear_ongoing_tasks()
         try:
             shutil.rmtree(Config.DOWNLOAD_LOCATION)
@@ -167,8 +166,6 @@ async def remove_expired_tasks(firststart=False):
                                 Config.MAX_TASK_DURATION_MERGE // 60
                             ),
                         )
-
-    value = firststart = False
 
 
 @aiocron.crontab("*/5 * * * *")
