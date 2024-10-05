@@ -2,7 +2,7 @@ aiocron==1.8
 aiofiles==24.1.0
 aiohttp==3.10.9
 base58check==1.0.2
-dnspython==2.6.1
+dnspython==2.7.0
 gitdb==4.0.11
 GitPython==3.1.43
 motor==3.6.0
