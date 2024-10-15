@@ -12,6 +12,9 @@ venv/
 # VS Code
 .vscode/
 
+# SonarQube
+.scannerwork/
+
 # Secrets
 *.session
 *.session-journal
