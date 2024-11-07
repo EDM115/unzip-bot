@@ -1,0 +1,29 @@
+import logging
+from telegram.ext import Updater, CommandHandler, MessageHandler
+
+TOKEN = 7901866660:AAFJ2Te56IAreu3nxnXKgRrQXNEKMF3CoSg  # 
+
+logging.basicConfig(level=logging.INFO)
+
+def save_restricted_content(update, context):
+    # Save content to file
+    file_id = update.message.document.file_id
+    file = context.bot.get_file(file_id)
+    file.download('restricted_content/')
+
+def restrict_access(update, context):
+    # Restrict access to saved content
+    context.bot.send_message(chat_id=(link unavailable), text='Access restricted.')
+
+def main():
+    updater = Updater(TOKEN, use_context=True)
+    dp = updater.dispatcher
+
+    dp.add_handler(CommandHandler('save', save_restricted_content))
+    dp.add_handler(CommandHandler('restrict', restrict_access))
+
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
