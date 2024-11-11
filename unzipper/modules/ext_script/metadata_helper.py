@@ -1,7 +1,7 @@
+# Copyright (c) 2022 - 2024 EDM115
 import os
 
 import mutagen.id3 as id3
-
 from mutagen.aac import AAC
 from mutagen.aiff import AIFF
 from mutagen.asf import ASF

@@ -1,5 +1,5 @@
 {
-    "name": "Unzipper Bot",
+    "name": "unzip-bot",
     "description": "A Telegram bot to extract various types of archives",
     "logo": "https://telegra.ph/file/d4ba24682e030fc58613f.jpg",
     "keywords": [
@@ -22,15 +22,15 @@
             "required": true
         },
         "BOT_OWNER": {
-            "description": "Telegram Id of your account",
+            "description": "Telegram ID of your account",
             "required": true
         },
         "BOT_TOKEN": {
-            "description": "Your Bot Token From @BotFather",
+            "description": "Your bot token from @BotFather",
             "required": true
         },
         "MONGODB_URL": {
-            "description": "Your MongoDB url, Get it from https://www.mongodb.com/",
+            "description": "Your MongoDB url, get it from https://www.mongodb.com/",
             "required": true
         },
         "LOGS_CHANNEL": {

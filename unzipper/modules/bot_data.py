@@ -1,6 +1,8 @@
 # Copyright (c) 2022 - 2024 EDM115
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+from config import Config
+
 
 class Messages:
     # here
@@ -265,10 +267,10 @@ Send **/commands** to learn more
     PM me at **@EDM115** or join the chat **@EDM115_chat**
     """
 
-    ABOUT_TXT = """
-**About Unarchiver bot [v6.3.5]**
+    ABOUT_TXT = f"""
+**About Unarchiver bot [v{Config.VERSION}]**
 
-• **Language :** [Python 3.12.4](https://www.python.org/)
+• **Language :** [Python 3.12.7](https://www.python.org/)
 • **Framework :** [Pyrogram 2.0.106](https://pyrogram.org/)
 • **Source code :** [EDM115/unzip-bot](https://github.com/EDM115/unzip-bot)
 • **Developer :** [EDM115](https://github.com/EDM115)
