@@ -6,15 +6,15 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from pyrogram.errors import FloodWait
 
 from config import Config
-from unzipper import unzipperbot
-from unzipper.modules.bot_data import Messages
+from unzip import unzipbot
+from unzip.modules.bot_data import Messages
 
 mongodb = AsyncIOMotorClient(Config.MONGODB_URL)
-unzipper_db = mongodb[Config.MONGODB_DBNAME]
+unzip_db = mongodb[Config.MONGODB_DBNAME]
 
 
 # Users Database
-user_db = unzipper_db["users_db"]
+user_db = unzip_db["users_db"]
 
 
 async def add_user(user_id):
@@ -52,7 +52,7 @@ async def get_users_list():
 
 
 # Banned users database
-b_user_db = unzipper_db["banned_users_db"]
+b_user_db = unzip_db["banned_users_db"]
 
 
 async def add_banned_user(user_id):
@@ -115,14 +115,14 @@ async def check_user(message):
         if firstname == " " and lastname == " " and username == " ":
             uname = message.from_user.mention
             try:
-                await unzipperbot.send_message(
+                await unzipbot.send_message(
                     chat_id=Config.LOGS_CHANNEL,
                     text=Messages.NEW_USER_BAD.format(uname),
                     disable_web_page_preview=False,
                 )
             except FloodWait as f:
                 await sleep(f.value)
-                await unzipperbot.send_message(
+                await unzipbot.send_message(
                     chat_id=Config.LOGS_CHANNEL,
                     text=Messages.NEW_USER_BAD.format(uname),
                     disable_web_page_preview=False,
@@ -137,7 +137,7 @@ async def check_user(message):
             uname = firstname + " " + lastname
             umention = " | @" + username
             try:
-                await unzipperbot.send_message(
+                await unzipbot.send_message(
                     chat_id=Config.LOGS_CHANNEL,
                     text=Messages.NEW_USER.format(
                         uname,
@@ -150,7 +150,7 @@ async def check_user(message):
                 )
             except FloodWait as f:
                 await sleep(f.value)
-                await unzipperbot.send_message(
+                await unzipbot.send_message(
                     chat_id=Config.LOGS_CHANNEL,
                     text=Messages.NEW_USER.format(
                         uname,
@@ -175,7 +175,7 @@ async def get_all_users():
 
 
 # Upload mode
-mode_db = unzipper_db["ulmode_db"]
+mode_db = unzip_db["ulmode_db"]
 
 
 async def set_upload_mode(user_id, mode):
@@ -194,7 +194,7 @@ async def get_upload_mode(user_id):
 
 
 # Db for how many files user uploaded
-uploaded_db = unzipper_db["uploaded_count_db"]
+uploaded_db = unzip_db["uploaded_count_db"]
 
 
 async def get_uploaded(user_id):
@@ -216,7 +216,7 @@ async def update_uploaded(user_id, upload_count):
 
 
 # DB for thumbnails
-thumb_db = unzipper_db["thumb_db"]
+thumb_db = unzip_db["thumb_db"]
 
 
 async def get_thumb(user_id):
@@ -266,7 +266,7 @@ async def del_thumb_db(user_id):
 
 
 # DB for bot data
-bot_data = unzipper_db["bot_data"]
+bot_data = unzip_db["bot_data"]
 
 
 async def get_boot():
@@ -309,7 +309,7 @@ async def is_boot_different():
 
 
 # DB for ongoing tasks
-ongoing_tasks = unzipper_db["ongoing_tasks"]
+ongoing_tasks = unzip_db["ongoing_tasks"]
 
 
 async def get_ongoing_tasks():
@@ -340,7 +340,7 @@ async def clear_ongoing_tasks():
 
 
 # DB for cancel tasks (that's stupid)
-cancel_tasks = unzipper_db["cancel_tasks"]
+cancel_tasks = unzip_db["cancel_tasks"]
 
 
 async def get_cancel_tasks():
@@ -376,7 +376,7 @@ async def clear_cancel_tasks():
 
 # DB for merge tasks
 
-merge_tasks = unzipper_db["merge_tasks"]
+merge_tasks = unzip_db["merge_tasks"]
 
 
 async def get_merge_tasks():
@@ -423,7 +423,7 @@ async def clear_merge_tasks():
 
 # DB for maintenance mode
 
-maintenance_mode = unzipper_db["maintenance_mode"]
+maintenance_mode = unzip_db["maintenance_mode"]
 
 
 async def get_maintenance():
@@ -443,7 +443,7 @@ async def set_maintenance(val):
 
 # DB for VIP users
 
-vip_users = unzipper_db["vip_users"]
+vip_users = unzip_db["vip_users"]
 
 
 async def add_vip_user(
@@ -533,7 +533,7 @@ async def get_vip_user(uid):
 
 # DB for referrals
 
-referrals = unzipper_db["referrals"]
+referrals = unzip_db["referrals"]
 
 
 async def add_referee(uid, referral_code):

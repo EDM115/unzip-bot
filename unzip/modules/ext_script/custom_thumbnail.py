@@ -7,9 +7,9 @@ from PIL import Image
 from pyrogram.errors import FloodWait
 
 from config import Config
-from unzipper import LOGGER
-from unzipper.helpers.database import update_temp_thumb
-from unzipper.modules.bot_data import Buttons, Messages
+from unzip import LOGGER
+from unzip.helpers.database import update_temp_thumb
+from unzip.modules.bot_data import Buttons, Messages
 
 
 async def silent_del(user_id):

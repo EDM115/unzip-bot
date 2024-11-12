@@ -16,8 +16,8 @@ from pyrogram.errors import FloodWait, RPCError
 from pyrogram.types import Message
 
 from config import Config
-from unzipper import LOGGER, boottime, unzipperbot
-from unzipper.helpers.database import (
+from unzip import LOGGER, boottime, unzipbot
+from unzip.helpers.database import (
     add_banned_user,
     add_merge_task,
     add_user,
@@ -36,9 +36,9 @@ from unzipper.helpers.database import (
     get_users_list,
     set_maintenance,
 )
-from unzipper.helpers.unzip_help import humanbytes, timeformat_sec
-from unzipper.modules.ext_script.custom_thumbnail import add_thumb, del_thumb
-from unzipper.modules.ext_script.ext_helper import get_files
+from unzip.helpers.unzip_help import humanbytes, timeformat_sec
+from unzip.modules.ext_script.custom_thumbnail import add_thumb, del_thumb
+from unzip.modules.ext_script.ext_helper import get_files
 
 from .bot_data import Buttons, Messages
 
@@ -57,7 +57,7 @@ def sufficient_disk_space(required_space):
     return False
 
 
-@unzipperbot.on_message(filters.private)
+@unzipbot.on_message(filters.private)
 async def _(_, message: Message):
     await check_user(message)
     uid = message.from_user.id
@@ -74,14 +74,14 @@ async def _(_, message: Message):
                     text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
                 )
             except:
-                await unzipperbot.send_message(
+                await unzipbot.send_message(
                     chat_id=uid,
                     text=Messages.MAX_TASKS.format(Config.MAX_CONCURRENT_TASKS),
                 )
             return
 
 
-@unzipperbot.on_message(filters.command("start"))
+@unzipbot.on_message(filters.command("start"))
 async def start_bot(_, message: Message):
     try:
         await message.reply_text(
@@ -94,7 +94,7 @@ async def start_bot(_, message: Message):
         await start_bot(_, message)
 
 
-@unzipperbot.on_message(filters.private & filters.command("clean"))
+@unzipbot.on_message(filters.private & filters.command("clean"))
 async def clean_my_files(_, message: Message):
     try:
         await message.reply_text(text=Messages.CLEAN_TXT, reply_markup=Buttons.CLN_BTNS)
@@ -103,7 +103,7 @@ async def clean_my_files(_, message: Message):
         await clean_my_files(_, message)
 
 
-@unzipperbot.on_message(filters.command("help"))
+@unzipbot.on_message(filters.command("help"))
 async def help_me(_, message: Message):
     try:
         await message.reply_text(
@@ -114,7 +114,7 @@ async def help_me(_, message: Message):
         await help_me(_, message)
 
 
-@unzipperbot.on_message(filters.command("about"))
+@unzipbot.on_message(filters.command("about"))
 async def about_me(_, message: Message):
     try:
         await message.reply_text(
@@ -127,7 +127,7 @@ async def about_me(_, message: Message):
         await about_me(_, message)
 
 
-@unzipperbot.on_message(filters.command("privacy"))
+@unzipbot.on_message(filters.command("privacy"))
 async def privacy_text(_, message: Message):
     try:
         await message.reply_text(text=Messages.PRIVACY)
@@ -136,7 +136,7 @@ async def privacy_text(_, message: Message):
         await privacy_text(_, message)
 
 
-@unzipperbot.on_message(
+@unzipbot.on_message(
     filters.incoming
     & filters.private
     & (filters.document | filters.regex(https_url_regex))
@@ -177,11 +177,11 @@ async def extract_archive(_, message: Message):
         await extract_archive(_, message)
 
 
-@unzipperbot.on_message(filters.private & filters.command("cancel"))
+@unzipbot.on_message(filters.private & filters.command("cancel"))
 async def cancel_task_by_user(_, message):
     idtodel = message.id - 1
     try:
-        await unzipperbot.delete_messages(
+        await unzipbot.delete_messages(
             chat_id=message.from_user.id, message_ids=idtodel
         )
     except:
@@ -189,7 +189,7 @@ async def cancel_task_by_user(_, message):
     await message.reply(Messages.CANCELLED)
 
 
-@unzipperbot.on_message(filters.private & filters.command("merge"))
+@unzipbot.on_message(filters.private & filters.command("merge"))
 async def merging(_, message: Message):
     try:
         merge_msg = await message.reply(Messages.MERGE)
@@ -199,7 +199,7 @@ async def merging(_, message: Message):
         await merging(_, message)
 
 
-@unzipperbot.on_message(filters.private & filters.command("done"))
+@unzipbot.on_message(filters.private & filters.command("done"))
 async def done_merge(_, message: Message):
     try:
         await message.reply(Messages.DONE, reply_markup=Buttons.MERGE_THEM_ALL)
@@ -208,7 +208,7 @@ async def done_merge(_, message: Message):
         await done_merge(_, message)
 
 
-@unzipperbot.on_message(filters.private & filters.command("mode"))
+@unzipbot.on_message(filters.private & filters.command("mode"))
 async def set_mode_for_user(_, message: Message):
     try:
         upload_mode = await get_upload_mode(message.from_user.id)
@@ -266,7 +266,7 @@ async def get_stats(id):
     return stats_string
 
 
-@unzipperbot.on_message(filters.command("stats"))
+@unzipbot.on_message(filters.command("stats"))
 async def send_stats(_, message: Message):
     try:
         stats_msg = await message.reply(Messages.PROCESSING2)
@@ -289,7 +289,7 @@ async def _do_broadcast(message, user):
         return 400
 
 
-@unzipperbot.on_message(filters.command("broadcast") & filters.user(Config.BOT_OWNER))
+@unzipbot.on_message(filters.command("broadcast") & filters.user(Config.BOT_OWNER))
 async def broadcast_this(_, message: Message):
     bc_msg = await message.reply(Messages.PROCESSING2)
     r_msg = message.reply_to_message
@@ -333,7 +333,7 @@ async def broadcast_this(_, message: Message):
         )
 
 
-@unzipperbot.on_message(filters.command("sendto") & filters.user(Config.BOT_OWNER))
+@unzipbot.on_message(filters.command("sendto") & filters.user(Config.BOT_OWNER))
 async def send_this(_, message: Message):
     sd_msg = await message.reply(Messages.PROCESSING2)
     r_msg = message.reply_to_message
@@ -353,7 +353,7 @@ async def send_this(_, message: Message):
         await sd_msg.edit(Messages.SEND_FAILED.format(user_id))
 
 
-@unzipperbot.on_message(filters.command("report"))
+@unzipbot.on_message(filters.command("report"))
 async def report_this(_, message: Message):
     sd_msg = await message.reply(Messages.PROCESSING2)
     r_msg = message.reply_to_message
@@ -362,14 +362,14 @@ async def report_this(_, message: Message):
         await sd_msg.edit(Messages.REPORT_REPLY)
         return
     await sd_msg.edit(Messages.SENDING)
-    await unzipperbot.send_message(
+    await unzipbot.send_message(
         chat_id=Config.LOGS_CHANNEL,
         text=Messages.REPORT_TEXT.format(u_id, r_msg.text.markdown),
     )
     await sd_msg.edit(Messages.REPORT_DONE)
 
 
-@unzipperbot.on_message(filters.command("ban") & filters.user(Config.BOT_OWNER))
+@unzipbot.on_message(filters.command("ban") & filters.user(Config.BOT_OWNER))
 async def ban_user(_, message: Message):
     ban_msg = await message.reply(Messages.PROCESSING2)
     try:
@@ -390,7 +390,7 @@ async def ban_user(_, message: Message):
         await ban_msg.edit(Messages.USER_BANNED.format(user_id))
 
 
-@unzipperbot.on_message(filters.command("unban") & filters.user(Config.BOT_OWNER))
+@unzipbot.on_message(filters.command("unban") & filters.user(Config.BOT_OWNER))
 async def unban_user(_, message: Message):
     unban_msg = await message.reply(Messages.PROCESSING2)
     try:
@@ -411,16 +411,16 @@ async def unban_user(_, message: Message):
         await unban_msg.edit(Messages.UNBANNED.format(user_id))
 
 
-@unzipperbot.on_message(filters.private & filters.command("info"))
+@unzipbot.on_message(filters.private & filters.command("info"))
 async def me_stats(_, message: Message):
-    me_info = await unzipperbot.ask(
+    me_info = await unzipbot.ask(
         chat_id=message.chat.id,
         text=Messages.INFO,
     )
-    await unzipperbot.send_message(chat_id=message.chat.id, text=f"`{me_info}`")
+    await unzipbot.send_message(chat_id=message.chat.id, text=f"`{me_info}`")
 
 
-@unzipperbot.on_message(filters.command("user") & filters.user(Config.BOT_OWNER))
+@unzipbot.on_message(filters.command("user") & filters.user(Config.BOT_OWNER))
 async def info_user(_, message: Message):
     await message.reply(Messages.USER)
     info_user_msg = await message.reply(Messages.PROCESSING2)
@@ -435,7 +435,7 @@ async def info_user(_, message: Message):
     await info_user_msg.edit(Messages.USER_INFO.format(user_id, up_count))
 
 
-@unzipperbot.on_message(filters.command("user2") & filters.user(Config.BOT_OWNER))
+@unzipbot.on_message(filters.command("user2") & filters.user(Config.BOT_OWNER))
 async def info_user2(_, message: Message):
     user2_msg = await message.reply(Messages.PROCESSING2)
     try:
@@ -444,7 +444,7 @@ async def info_user2(_, message: Message):
         await user2_msg.edit(Messages.PROVIDE_UID2)
         return
     try:
-        infos = await unzipperbot.get_users(user_id)
+        infos = await unzipbot.get_users(user_id)
     except:
         await user2_msg.edit(Messages.UID_UNAME_INVALID)
         return
@@ -456,13 +456,13 @@ async def info_user2(_, message: Message):
     await user2_msg.edit(Messages.USER2_INFO.format(infos, user_id))
 
 
-@unzipperbot.on_message(filters.command("self") & filters.user(Config.BOT_OWNER))
+@unzipbot.on_message(filters.command("self") & filters.user(Config.BOT_OWNER))
 async def info_self(_, message: Message):
-    self_infos = await unzipperbot.get_me()
+    self_infos = await unzipbot.get_me()
     await message.reply(f"`{self_infos}`")
 
 
-@unzipperbot.on_message(
+@unzipbot.on_message(
     filters.private & filters.command("getthumbs") & filters.user(Config.BOT_OWNER)
 )
 async def get_all_thumbs(_, message: Message):
@@ -471,7 +471,7 @@ async def get_all_thumbs(_, message: Message):
         await message.reply(Messages.NO_THUMBS)
     for doc_f in paths:
         try:
-            await unzipperbot.send_document(
+            await unzipbot.send_document(
                 chat_id=message.chat.id,
                 document=doc_f,
                 file_name=doc_f.split("/")[-1],
@@ -480,7 +480,7 @@ async def get_all_thumbs(_, message: Message):
             )
         except FloodWait as f:
             await sleep(f.value)
-            await unzipperbot.send_document(
+            await unzipbot.send_document(
                 chat_id=message.chat.id,
                 document=doc_f,
                 file_name=doc_f.split("/")[-1],
@@ -491,7 +491,7 @@ async def get_all_thumbs(_, message: Message):
             LOGGER.error(e)
 
 
-@unzipperbot.on_message(
+@unzipbot.on_message(
     filters.private & filters.command("redbutton") & filters.user(Config.BOT_OWNER)
 )
 async def red_alert(_, message: Message):
@@ -500,7 +500,7 @@ async def red_alert(_, message: Message):
     # but also need to stop currently ongoing processes…
 
 
-@unzipperbot.on_message(
+@unzipbot.on_message(
     filters.private & filters.command("maintenance") & filters.user(Config.BOT_OWNER)
 )
 async def maintenance_mode(_, message: Message):
@@ -519,17 +519,17 @@ async def maintenance_mode(_, message: Message):
     await message.reply(Messages.MAINTENANCE_DONE.format(newstate))
 
 
-@unzipperbot.on_message(filters.private & filters.command("addthumb"))
+@unzipbot.on_message(filters.private & filters.command("addthumb"))
 async def thumb_add(_, message: Message):
-    await add_thumb(unzipperbot, message)
+    await add_thumb(unzipbot, message)
 
 
-@unzipperbot.on_message(filters.private & filters.command("delthumb"))
+@unzipbot.on_message(filters.private & filters.command("delthumb"))
 async def thumb_del(_, message: Message):
     await del_thumb(message)
 
 
-@unzipperbot.on_message(
+@unzipbot.on_message(
     filters.private & filters.command("cleanall") & filters.user(Config.BOT_OWNER)
 )
 async def del_everything(_, message: Message):
@@ -542,7 +542,7 @@ async def del_everything(_, message: Message):
         await cleaner.edit(Messages.NOT_CLEANED)
 
 
-@unzipperbot.on_message(
+@unzipbot.on_message(
     filters.private & filters.command("cleantasks") & filters.user(Config.BOT_OWNER)
 )
 async def del_tasks(_, message: Message):
@@ -564,7 +564,7 @@ async def del_tasks(_, message: Message):
 async def send_logs(user_id):
     with open("unzip-log.txt", "rb") as doc_f:
         try:
-            await unzipperbot.send_document(
+            await unzipbot.send_document(
                 chat_id=user_id,
                 document=doc_f,
                 file_name=doc_f.name,
@@ -572,13 +572,13 @@ async def send_logs(user_id):
             LOGGER.info(Messages.LOG_SENT.format(user_id))
         except FloodWait as f:
             await sleep(f.value)
-            await unzipperbot.send_document(
+            await unzipbot.send_document(
                 chat_id=user_id,
                 document=doc_f,
                 file_name=doc_f.name,
             )
         except RPCError as e:
-            await unzipperbot.send_message(chat_id=user_id, text=e)
+            await unzipbot.send_message(chat_id=user_id, text=e)
 
 
 def clear_logs():
@@ -586,14 +586,14 @@ def clear_logs():
         f.close()
 
 
-@unzipperbot.on_message(
+@unzipbot.on_message(
     filters.private & filters.command("logs") & filters.user(Config.BOT_OWNER)
 )
 async def logz(_, message: Message):
     await send_logs(message.from_user.id)
 
 
-@unzipperbot.on_message(
+@unzipbot.on_message(
     filters.private & filters.command("restart") & filters.user(Config.BOT_OWNER)
 )
 async def restart(_, message: Message):
@@ -608,10 +608,10 @@ async def restart(_, message: Message):
     await send_logs(message.from_user.id)
     LOGGER.info(Messages.RESTARTING.format(message.from_user.id))
     clear_logs()
-    os.execl(executable, executable, "-m", "unzipper")
+    os.execl(executable, executable, "-m", "unzip")
 
 
-@unzipperbot.on_message(
+@unzipbot.on_message(
     filters.private & filters.command("gitpull") & filters.user(Config.BOT_OWNER)
 )
 async def pull_updates(_, message: Message):
@@ -626,17 +626,17 @@ async def pull_updates(_, message: Message):
         await git_reply.edit(Messages.NO_PULL)
 
 
-@unzipperbot.on_message(filters.command("donate"))
+@unzipbot.on_message(filters.command("donate"))
 async def donate_help(_, message: Message):
     await message.reply(Messages.DONATE_TEXT)
 
 
-@unzipperbot.on_message(filters.command("vip"))
+@unzipbot.on_message(filters.command("vip"))
 async def vip_help(_, message: Message):
     await message.reply(Messages.VIP_INFO)
 
 
-@unzipperbot.on_message(
+@unzipbot.on_message(
     filters.private & filters.command("dbexport") & filters.user(Config.BOT_OWNER)
 )
 async def export_db(_, message):
@@ -644,7 +644,7 @@ async def export_db(_, message):
     # Will use https://www.mongodb.com/docs/database-tools/mongoexport/ on command to export as CSV
 
 
-@unzipperbot.on_message(filters.command("commands"))
+@unzipbot.on_message(filters.command("commands"))
 async def getall_cmds(_, message):
     await message.reply(
         Messages.COMMANDS_LIST,
@@ -652,7 +652,7 @@ async def getall_cmds(_, message):
     )
 
 
-@unzipperbot.on_message(filters.command("admincmd") & filters.user(Config.BOT_OWNER))
+@unzipbot.on_message(filters.command("admincmd") & filters.user(Config.BOT_OWNER))
 async def getadmin_cmds(_, message):
     await message.reply(
         Messages.ADMINCMD,
@@ -687,7 +687,7 @@ async def aexec(code, client, message):
     return stdout.getvalue(), stderr.getvalue(), result
 
 
-@unzipperbot.on_message(filters.command("eval") & filters.user(Config.BOT_OWNER))
+@unzipbot.on_message(filters.command("eval") & filters.user(Config.BOT_OWNER))
 async def eval_command(_, message):
     status_message = await message.reply_text("Processing ...")
     cmd = message.text.split(" ", maxsplit=1)[1]
@@ -722,7 +722,7 @@ async def eval_command(_, message):
         await status_message.edit(final_output)
 
 
-@unzipperbot.on_message(filters.command("exec") & filters.user(Config.BOT_OWNER))
+@unzipbot.on_message(filters.command("exec") & filters.user(Config.BOT_OWNER))
 async def exec_command(_, message):
     cmd = message.text.split(" ", maxsplit=1)[1]
     process = await create_subprocess_shell(

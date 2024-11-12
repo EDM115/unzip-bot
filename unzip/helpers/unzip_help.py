@@ -5,8 +5,8 @@ from asyncio import sleep
 
 from pyrogram.errors import FloodWait
 
-from unzipper.helpers.database import del_cancel_task, get_cancel_task
-from unzipper.modules.bot_data import Buttons, Messages
+from unzip.helpers.database import del_cancel_task, get_cancel_task
+from unzip.modules.bot_data import Buttons, Messages
 
 
 async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_bot):

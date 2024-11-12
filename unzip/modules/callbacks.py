@@ -18,8 +18,8 @@ from pyrogram.errors import ReplyMarkupTooLong
 from pyrogram.types import CallbackQuery
 
 from config import Config
-from unzipper import LOGGER, unzipperbot
-from unzipper.helpers.database import (
+from unzip import LOGGER, unzipbot
+from unzip.helpers.database import (
     add_cancel_task,
     add_ongoing_task,
     count_ongoing_tasks,
@@ -35,7 +35,7 @@ from unzipper.helpers.database import (
     update_thumb,
     update_uploaded,
 )
-from unzipper.helpers.unzip_help import (
+from unzip.helpers.unzip_help import (
     TimeFormatter,
     extentions_list,
     humanbytes,
@@ -119,8 +119,8 @@ async def async_generator(iterable):
 
 
 # Callbacks
-@unzipperbot.on_callback_query()
-async def unzipper_cb(unzip_bot: Client, query: CallbackQuery):
+@unzipbot.on_callback_query()
+async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
     uid = query.from_user.id
     if uid != Config.BOT_OWNER:  # skipcq: PTC-W0048
         if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:

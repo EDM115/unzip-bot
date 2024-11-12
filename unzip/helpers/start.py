@@ -9,9 +9,9 @@ from pyrogram import enums
 from pyrogram.errors import FloodWait
 
 from config import Config
-from unzipper import LOGGER, boottime, unzipperbot
-from unzipper.modules.bot_data import Messages
-from unzipper.modules.callbacks import download
+from unzip import LOGGER, boottime, unzipbot
+from unzip.modules.bot_data import Messages
+from unzip.modules.callbacks import download
 
 from .database import (
     clear_cancel_tasks,
@@ -32,7 +32,7 @@ from .database import (
 def check_logs():
     try:
         if Config.LOGS_CHANNEL:
-            c_info = unzipperbot.get_chat(chat_id=Config.LOGS_CHANNEL)
+            c_info = unzipbot.get_chat(chat_id=Config.LOGS_CHANNEL)
             if c_info.type in (enums.ChatType.PRIVATE, enums.ChatType.BOT):
                 LOGGER.error(Messages.PRIVATE_CHAT)
                 return False
@@ -53,7 +53,7 @@ def dl_thumbs():
     LOGGER.info(Messages.DL_THUMBS.format(maxthumbs))
     for thumb in thumbs:
         if thumb.get("url") is None and thumb.get("file_id") is not None:
-            unzipperbot.download_media(
+            unzipbot.download_media(
                 message=thumb.get("file_id"),
                 file_name=(
                     Config.THUMB_LOCATION + "/" + str(thumb.get("_id")) + ".jpg"
@@ -86,7 +86,7 @@ async def check_boot():
     different = await is_boot_different()
     if different:
         try:
-            await unzipperbot.send_message(
+            await unzipbot.send_message(
                 Config.BOT_OWNER,
                 Messages.BOT_RESTARTED.format(
                     datetime.fromtimestamp(old_boot).strftime(r"%d/%m/%Y - %H:%M:%S"),
@@ -105,12 +105,12 @@ async def warn_users():
         tasks = await get_ongoing_tasks()
         for task in tasks:
             try:
-                await unzipperbot.send_message(
+                await unzipbot.send_message(
                     task.get("user_id"), Messages.RESEND_TASK
                 )
             except FloodWait as f:
                 await asyncio.sleep(f.value)
-                await unzipperbot.send_message(
+                await unzipbot.send_message(
                     task.get("user_id"), Messages.RESEND_TASK
                 )
             except:
@@ -148,7 +148,7 @@ async def remove_expired_tasks(firststart=False):
                             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
                         except:
                             pass
-                        await unzipperbot.send_message(
+                        await unzipbot.send_message(
                             user_id,
                             Messages.TASK_EXPIRED.format(
                                 Config.MAX_TASK_DURATION_EXTRACT // 60
@@ -161,7 +161,7 @@ async def remove_expired_tasks(firststart=False):
                             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
                         except:
                             pass
-                        await unzipperbot.send_message(
+                        await unzipbot.send_message(
                             user_id,
                             Messages.TASK_EXPIRED.format(
                                 Config.MAX_TASK_DURATION_MERGE // 60

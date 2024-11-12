@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "
-🔥 Unzip Bot 🔥
+🔥 unzip-bot 🔥
 
 Copyright (c) 2022 - 2024 EDM115
 
@@ -13,4 +13,4 @@ else
   source .env
 fi
 export TZ="Europe/Paris"
-python3 -m unzipper
+python3 -m unzip

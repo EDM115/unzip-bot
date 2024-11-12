@@ -8,8 +8,8 @@ from functools import partial
 from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
 
-from unzipper import LOGGER
-from unzipper.modules.bot_data import Messages
+from unzip import LOGGER
+from unzip.modules.bot_data import Messages
 
 
 # Get files in directory as a list
@@ -32,7 +32,7 @@ async def cleanup_macos_artifacts(extraction_path):
                 shutil.rmtree(os.path.join(root, name))
 
 
-def __run_cmds_unzipper(command):
+def __run_cmds_unzip(command):
     ext_cmd = subprocess.Popen(
         command["cmd"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
     )
@@ -59,19 +59,19 @@ async def _extract_with_7z_helper(path, archive_path, password=None):
         command = f'7z x -o"{path}" -p"{password}" "{archive_path}" -y'
     else:
         command = f'7z x -o"{path}" "{archive_path}" -y'
-    return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
+    return await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
 
 
 async def _test_with_7z_helper(archive_path):
     password = "dont care + didnt ask + cry about it + stay mad + get real + L"  # skipcq: PTC-W1006, SCT-A000
     command = f'7z t "{archive_path}" -p"{password}" -y'
-    return "Everything is Ok" in await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
+    return "Everything is Ok" in await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
 
 
 # Extract with zstd (for .tar.zst files)
 async def _extract_with_zstd(path, archive_path):
     command = f'zstd -f --output-dir-flat "{path}" -d "{archive_path}"'
-    return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
+    return await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
 
 
 # Main function to extract files
@@ -111,7 +111,7 @@ async def extr_files(path, archive_path, password=None):
         filename = await get_files(temp_path)
         filename = filename[0]
         command = f'tar -xvf "{filename}" -C "{path}"'
-        result += await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
+        result += await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
         shutil.rmtree(temp_path)
     elif archive_path.endswith((".tar.zst", ".zst", ".tzst")):
         LOGGER.info("zstd")
@@ -128,7 +128,7 @@ async def extr_files(path, archive_path, password=None):
 # Split files
 async def split_files(iinput, ooutput, size):
     command = f'7z a -tzip -mx=0 "{ooutput}" "{iinput}" -v{size}b'
-    await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
+    await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
     spdir = ooutput.replace("/" + ooutput.split("/")[-1], "")
     return await get_files(spdir)
 
@@ -139,7 +139,7 @@ async def merge_files(iinput, ooutput, password=None):
         command = f'7z x -o"{ooutput}" -p"{password}" "{iinput}" -y'
     else:
         command = f'7z x -o"{ooutput}" "{iinput}" -y'
-    return await run_cmds_on_cr(__run_cmds_unzipper, cmd=command)
+    return await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
 
 
 # Make keyboard
