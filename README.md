@@ -40,7 +40,7 @@ And much more :fire: Dive into the code to find out :hand_over_mouth:
 - `API_HASH` - Your API_HASH. Get it from [my.telegram.org](my.telegram.org)
 - `BOT_OWNER` - Your Telegram Account ID. Get it from [@MissRose_bot](https://t.me/MissRose_bot) (Start the bot and send `/info` command).
 - `BOT_TOKEN` - Bot Token of Your Telegram Bot. Get it from [@BotFather](https://t.me/BotFather)
-- `MONGODB_DBNAME` - *(optional)* A custom name for the MongoDB database, useful if you deploy multiple instances of the bot on the same account. Defaults to `unzip_Bot`
+- `MONGODB_DBNAME` - *(optional)* A custom name for the MongoDB database, useful if you deploy multiple instances of the bot on the same account. Defaults to `Unzipper_Bot`
 - `MONGODB_URL` - Your MongoDB URL ([**tutorial here**](./CreateMongoDB.md))
 - `LOGS_CHANNEL` - Make a private channel and get its ID (search on Google if you don't know how to do). Using a group works as well, just add [`Rose`](https://t.me/MissRose_bot?startgroup=startbot), then send `/id` (In both cases, **make sure to add your bot to the channel/group as an admin !**)
 
@@ -140,4 +140,4 @@ This unzip-bot repository is licensed under the [MIT License](https://github.com
 Enjoy copying and modifying, but always mention me  
   
 • Inspired by Itz-fork/Nexa's work, but with additional features and bug fixes.  
-This is a maintained repo of the [original](https://github.com/Itz-fork/unzip-Bot), props to him for the OG code
+This is a maintained repo of the [original](https://github.com/Itz-fork/Unzipper-Bot), props to him for the OG code

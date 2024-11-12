@@ -232,7 +232,7 @@ Use **/merge** to start one
     ACTUAL_THUMB = "Your actual thumbnail"
 
     START_TEXT = """
-Hi **{}** 👋, I'm **Unarchiver bot** 🥰
+Hi **{}** 👋, I'm the **unzip-bot** 🥰
 
 I can extract any archive, with password or not, splitted, …
 Send **/commands** to learn more
@@ -268,7 +268,7 @@ Send **/commands** to learn more
     """
 
     ABOUT_TXT = f"""
-**About Unarchiver bot [v{Config.VERSION}]**
+**About the unzip-bot [v{Config.VERSION}]**
 
 • **Language :** [Python 3.12.7](https://www.python.org/)
 • **Framework :** [Pyrogram 2.0.106](https://pyrogram.org/)
