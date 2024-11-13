@@ -562,7 +562,7 @@ async def del_tasks(_, message: Message):
 
 
 async def send_logs(user_id):
-    with open("unzip-log.txt", "rb") as doc_f:
+    with open("unzip-bot.log", "rb") as doc_f:
         try:
             await unzipbot.send_document(
                 chat_id=user_id,

@@ -39,7 +39,7 @@ def shutdown_bot():
         unzipbot.send_message(
             chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime)
         )
-        with open("unzip-log.txt", "rb") as doc_f:
+        with open("unzip-bot.log", "rb") as doc_f:
             try:
                 unzipbot.send_document(
                     chat_id=Config.LOGS_CHANNEL,

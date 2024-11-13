@@ -22,7 +22,7 @@ pyrogram.utils.MIN_CHAT_ID = -999999999999
 pyrogram.utils.MIN_CHANNEL_ID = -100999999999999
 logging.basicConfig(
     level=logging.INFO,
-    handlers=[logging.FileHandler("unzip-log.txt"), logging.StreamHandler()],
+    handlers=[logging.FileHandler("unzip-bot.log"), logging.StreamHandler()],
     format="%(asctime)s - %(levelname)s - %(name)s - %(threadName)s - %(message)s",
 )
 LOGGER = logging.getLogger(__name__)
