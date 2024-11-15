@@ -13,7 +13,7 @@ from mutagen.oggopus import OggOpus
 from mutagen.oggvorbis import OggVorbis
 from mutagen.wave import WAVE
 
-from unzip.modules.ext_script.ext_helper import __run_cmds_unzip, run_cmds_on_cr
+from unzipbot.modules.ext_script.ext_helper import __run_cmds_unzip, run_cmds_on_cr
 
 
 async def get_audio_metadata(file_path):

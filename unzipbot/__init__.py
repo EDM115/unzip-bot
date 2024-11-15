@@ -9,7 +9,7 @@ from config import Config
 
 boottime = time.time()
 plugins = dict(root="modules")
-unzipbot = pyrogram.Client(
+unzipbot_client = pyrogram.Client(
     "unzip-bot",
     bot_token=Config.BOT_TOKEN,
     api_id=Config.APP_ID,

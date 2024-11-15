@@ -7,7 +7,7 @@ from pyrogram import idle
 
 from config import Config
 
-from . import LOGGER, unzipbot
+from . import LOGGER, unzipbot_client
 from .helpers.start import (
     check_logs,
     dl_thumbs,
@@ -36,12 +36,12 @@ def shutdown_bot():
     stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
     LOGGER.info(Messages.STOP_TXT.format(stoptime))
     try:
-        unzipbot.send_message(
+        unzipbot_client.send_message(
             chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime)
         )
         with open("unzip-bot.log", "rb") as doc_f:
             try:
-                unzipbot.send_document(
+                unzipbot_client.send_document(
                     chat_id=Config.LOGS_CHANNEL,
                     document=doc_f,
                     file_name=doc_f.name,
@@ -52,7 +52,7 @@ def shutdown_bot():
         LOGGER.error("Error sending shutdown message : %s", e)
     finally:
         LOGGER.info("Bot stopped 😪")
-        unzipbot.stop(block=False)
+        unzipbot_client.stop(block=False)
 
 
 if __name__ == "__main__":
@@ -60,9 +60,9 @@ if __name__ == "__main__":
         os.makedirs(Config.DOWNLOAD_LOCATION, exist_ok=True)
         os.makedirs(Config.THUMB_LOCATION, exist_ok=True)
         LOGGER.info(Messages.STARTING_BOT)
-        unzipbot.start()
+        unzipbot_client.start()
         starttime = time.strftime("%Y/%m/%d - %H:%M:%S")
-        unzipbot.send_message(
+        unzipbot_client.send_message(
             chat_id=Config.LOGS_CHANNEL, text=Messages.START_TXT.format(starttime)
         )
         set_boot_time()
@@ -76,7 +76,7 @@ if __name__ == "__main__":
             idle()
         else:
             try:
-                unzipbot.send_message(
+                unzipbot_client.send_message(
                     chat_id=Config.BOT_OWNER,
                     text=Messages.WRONG_LOG.format(Config.LOGS_CHANNEL),
                 )

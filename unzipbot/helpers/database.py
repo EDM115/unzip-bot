@@ -6,8 +6,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from pyrogram.errors import FloodWait
 
 from config import Config
-from unzip import unzipbot
-from unzip.modules.bot_data import Messages
+from unzipbot import unzipbot_client
+from unzipbot.modules.bot_data import Messages
 
 mongodb = AsyncIOMotorClient(Config.MONGODB_URL)
 unzip_db = mongodb[Config.MONGODB_DBNAME]
@@ -115,14 +115,14 @@ async def check_user(message):
         if firstname == " " and lastname == " " and username == " ":
             uname = message.from_user.mention
             try:
-                await unzipbot.send_message(
+                await unzipbot_client.send_message(
                     chat_id=Config.LOGS_CHANNEL,
                     text=Messages.NEW_USER_BAD.format(uname),
                     disable_web_page_preview=False,
                 )
             except FloodWait as f:
                 await sleep(f.value)
-                await unzipbot.send_message(
+                await unzipbot_client.send_message(
                     chat_id=Config.LOGS_CHANNEL,
                     text=Messages.NEW_USER_BAD.format(uname),
                     disable_web_page_preview=False,
@@ -137,7 +137,7 @@ async def check_user(message):
             uname = firstname + " " + lastname
             umention = " | @" + username
             try:
-                await unzipbot.send_message(
+                await unzipbot_client.send_message(
                     chat_id=Config.LOGS_CHANNEL,
                     text=Messages.NEW_USER.format(
                         uname,
@@ -150,7 +150,7 @@ async def check_user(message):
                 )
             except FloodWait as f:
                 await sleep(f.value)
-                await unzipbot.send_message(
+                await unzipbot_client.send_message(
                     chat_id=Config.LOGS_CHANNEL,
                     text=Messages.NEW_USER.format(
                         uname,

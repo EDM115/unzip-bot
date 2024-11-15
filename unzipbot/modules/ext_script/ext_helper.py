@@ -8,8 +8,8 @@ from functools import partial
 from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
 
-from unzip import LOGGER
-from unzip.modules.bot_data import Messages
+from unzipbot import LOGGER
+from unzipbot.modules.bot_data import Messages
 
 
 # Get files in directory as a list
@@ -68,6 +68,21 @@ async def _test_with_7z_helper(archive_path):
     return "Everything is Ok" in await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
 
 
+async def _extract_with_unrar_helper(path, archive_path, password=None):
+    LOGGER.info("unrar : " + archive_path + " : " + path)
+    if password:
+        command = f'unrar x "{archive_path}" "{path}" -p"{password}"'
+    else:
+        command = f'unrar x "{archive_path}" "{path}"'
+    return await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
+
+
+async def _test_with_unrar_helper(archive_path):
+    password = "dont care + didnt ask + cry about it + stay mad + get real + L"  # skipcq: PTC-W1006, SCT-A000
+    command = f'unrar t "{archive_path}" -p"{password}"'
+    return "All OK" in await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
+
+
 # Extract with zstd (for .tar.zst files)
 async def _extract_with_zstd(path, archive_path):
     command = f'zstd -f --output-dir-flat "{path}" -d "{archive_path}"'
@@ -117,6 +132,12 @@ async def extr_files(path, archive_path, password=None):
         LOGGER.info("zstd")
         os.mkdir(path)
         result = await _extract_with_zstd(path, archive_path)
+    elif archive_path.endswith(".rar"):
+        LOGGER.info("rar")
+        if password:
+            result = await _extract_with_unrar_helper(path, archive_path, password)
+        else:
+            result = await _extract_with_unrar_helper(path, archive_path)
     else:
         LOGGER.info("normal archive")
         result = await _extract_with_7z_helper(path, archive_path, password)

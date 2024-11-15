@@ -13,4 +13,4 @@ else
   source .env
 fi
 export TZ="Europe/Paris"
-python3 -m unzip
+python3 -m unzipbot

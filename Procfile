@@ -1,1 +1,1 @@
-unzip: bash start.sh
+unzipbot: bash start.sh

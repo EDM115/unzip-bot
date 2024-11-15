@@ -18,8 +18,8 @@ from pyrogram.errors import ReplyMarkupTooLong
 from pyrogram.types import CallbackQuery
 
 from config import Config
-from unzip import LOGGER, unzipbot
-from unzip.helpers.database import (
+from unzipbot import LOGGER, unzipbot_client
+from unzipbot.helpers.database import (
     add_cancel_task,
     add_ongoing_task,
     count_ongoing_tasks,
@@ -35,7 +35,7 @@ from unzip.helpers.database import (
     update_thumb,
     update_uploaded,
 )
-from unzip.helpers.unzip_help import (
+from unzipbot.helpers.unzip_help import (
     TimeFormatter,
     extentions_list,
     humanbytes,
@@ -47,6 +47,7 @@ from .commands import get_stats, https_url_regex, sufficient_disk_space
 from .ext_script.custom_thumbnail import silent_del
 from .ext_script.ext_helper import (
     _test_with_7z_helper,
+    _test_with_unrar_helper,
     extr_files,
     get_files,
     make_keyboard,
@@ -119,7 +120,7 @@ async def async_generator(iterable):
 
 
 # Callbacks
-@unzipbot.on_callback_query()
+@unzipbot_client.on_callback_query()
 async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
     uid = query.from_user.id
     if uid != Config.BOT_OWNER:  # skipcq: PTC-W0048
@@ -822,7 +823,10 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                 await archive_msg.reply(Messages.PASS_TXT.format(password.text))
             else:
                 ext_s_time = time()
-                tested = await _test_with_7z_helper(archive)
+                if fext == "rar":
+                    tested = await _test_with_unrar_helper(archive)
+                else:
+                    tested = await _test_with_7z_helper(archive)
                 ext_t_time = time()
                 testtime = TimeFormatter(round(ext_t_time - ext_s_time) * 1000)
                 if testtime == "":

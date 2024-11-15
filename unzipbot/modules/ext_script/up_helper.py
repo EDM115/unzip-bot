@@ -11,16 +11,16 @@ from time import time
 from pyrogram.errors import FloodWait, PhotoExtInvalid, PhotoSaveFileInvalid
 
 from config import Config
-from unzip import LOGGER, unzipbot
-from unzip.helpers.database import get_upload_mode
-from unzip.helpers.unzip_help import (
+from unzipbot import LOGGER, unzipbot_client
+from unzipbot.helpers.database import get_upload_mode
+from unzipbot.helpers.unzip_help import (
     extentions_list,
     progress_for_pyrogram,
     progress_urls,
 )
-from unzip.modules.bot_data import Messages
-from unzip.modules.ext_script.custom_thumbnail import thumb_exists
-from unzip.modules.ext_script.metadata_helper import get_audio_metadata
+from unzipbot.modules.bot_data import Messages
+from unzipbot.modules.ext_script.custom_thumbnail import thumb_exists
+from unzipbot.modules.ext_script.metadata_helper import get_audio_metadata
 
 
 # To get video duration and thumbnail
@@ -53,7 +53,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
     fsize = await get_size(doc_f)
     if fsize in (-1, 0):  # File not found or empty
         try:
-            await unzipbot.send_message(
+            await unzipbot_client.send_message(
                 c_id, Messages.EMPTY_FILE.format(os.path.basename(doc_f))
             )
         except:
@@ -64,7 +64,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         fname = os.sep.join(os.path.abspath(doc_f).split(os.sep)[5:])
         fext = (pathlib.Path(os.path.abspath(doc_f)).suffix).casefold().replace(".", "")
         thumbornot = await thumb_exists(c_id)
-        upmsg = await unzipbot.send_message(
+        upmsg = await unzipbot_client.send_message(
             c_id, Messages.PROCESSING2, disable_notification=True
         )
         if ul_mode == "media" and fext in extentions_list["audio"]:
@@ -326,7 +326,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         return await send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split)
     except FileNotFoundError:
         try:
-            await unzipbot.send_message(
+            await unzipbot_client.send_message(
                 c_id, Messages.CANT_FIND.format(os.path.basename(doc_f))
             )
         except:
@@ -339,7 +339,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
 
 async def forward_file(message, cid):
     try:
-        await unzipbot.copy_message(
+        await unzipbot_client.copy_message(
             chat_id=cid,
             from_chat_id=message.chat.id,
             message_id=message.id,
@@ -409,7 +409,7 @@ async def answer_query(
                     reply_markup=buttons,
                 )
             else:
-                await unzipbot.send_message(
+                await unzipbot_client.send_message(
                     chat_id=query.message.chat.id,
                     text=message_text,
                     reply_markup=buttons,

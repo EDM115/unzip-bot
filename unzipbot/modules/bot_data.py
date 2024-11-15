@@ -49,6 +49,11 @@ class Messages:
 
     DOWNLOADED_THUMBS = "Downloaded {} of {} thumbs"
 
+    MISSING_THUMB = """
+Due to Telegram issues, your thumbnail couldn't be downloaded.
+Please save it again.
+    """
+
     BOT_RESTARTED = """
 Bot restarted !
 
