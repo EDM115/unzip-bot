@@ -11,6 +11,8 @@ RUN apk update && \
         musl-dev && \
     python -m venv /venv
 
+SHELL ["/bin/bash", "-c"]
+
 ENV PATH="/venv/bin:$PATH"
 
 WORKDIR /tmp
@@ -38,6 +40,8 @@ RUN apk update && \
     ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
     mkdir /app
 
+SHELL ["/bin/bash", "-c"]
+
 ENV PATH="/venv/bin:$PATH"
 ENV TZ=Europe/Paris
 
@@ -52,4 +56,4 @@ RUN git clone -b v7 --single-branch https://github.com/EDM115/unzip-bot.git /app
 
 COPY .env /app/.env
 
-CMD ["/bin/bash", "start.sh"]
+ENTRYPOINT ["/bin/bash", "/app/start.sh"]

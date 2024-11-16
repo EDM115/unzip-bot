@@ -1,4 +1,5 @@
 # Copyright (c) 2022 - 2024 EDM115
+import asyncio
 import os
 import signal
 import time
@@ -31,17 +32,16 @@ def handler_stop_signals(signum, frame):
 signal.signal(signal.SIGINT, handler_stop_signals)
 signal.signal(signal.SIGTERM, handler_stop_signals)
 
-
-def shutdown_bot():
+async def async_shutdown_bot():
     stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
     LOGGER.info(Messages.STOP_TXT.format(stoptime))
     try:
-        unzipbot_client.send_message(
+        await unzipbot_client.send_message(
             chat_id=Config.LOGS_CHANNEL, text=Messages.STOP_TXT.format(stoptime)
         )
         with open("unzip-bot.log", "rb") as doc_f:
             try:
-                unzipbot_client.send_document(
+                await unzipbot_client.send_document(
                     chat_id=Config.LOGS_CHANNEL,
                     document=doc_f,
                     file_name=doc_f.name,
@@ -52,7 +52,11 @@ def shutdown_bot():
         LOGGER.error("Error sending shutdown message : %s", e)
     finally:
         LOGGER.info("Bot stopped 😪")
-        unzipbot_client.stop(block=False)
+        await unzipbot_client.stop(block=False)
+
+
+def shutdown_bot():
+    asyncio.get_event_loop().run_until_complete(async_shutdown_bot())
 
 
 if __name__ == "__main__":
