@@ -14,6 +14,16 @@
 ### v7.0.0a **[LATEST ALPHA RELEASE]**
 - First iteration of the massive refactor/rewrite
 - Applied isort and black code style
+- Fixed the AUTHORS file
+- Correctly name the project everywhere (`unzip-bot`) and renamed the module name to `unzipbot`
+- The logs file name changed from `unzip-log.txt` to `unzip-bot.log`
+- Switched from Arch Linux to Alpine Linux for the Docker image
+  - The image size is now weighted at 294 MB instead of 1.87 GB
+  - We use `7-zip` instead of `p7zip`, and we build `unrar` from source
+  - Extra dependencies (like `g++`, `gcc` and `make`) are in a separate layer so they're not bundled in the end
+  - Special handling for rar files
+- Temporarily fixes FILE_REFERENCE_EXPIRED errors when retrieving thumbnails
+- Actually handle SIGTERM
 
 ---
 
