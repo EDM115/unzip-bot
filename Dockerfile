@@ -1,3 +1,27 @@
+FROM python:3.12-alpine AS build
+
+RUN apk update && \
+    apk add --no-cache \
+        bash \
+        curl \
+        g++ \
+        gcc \
+        libffi-dev \
+        make \
+        musl-dev && \
+    python -m venv /venv
+
+ENV PATH="/venv/bin:$PATH"
+
+WORKDIR /tmp
+
+COPY requirements.txt /tmp/requirements.txt
+COPY install_unrar.sh /tmp/install_unrar.sh
+
+RUN pip install -U pip setuptools wheel && \
+    pip install -r /tmp/requirements.txt && \
+    /tmp/install_unrar.sh
+
 FROM python:3.12-alpine
 
 RUN apk update && \
@@ -6,29 +30,25 @@ RUN apk update && \
         bash \
         curl \
         ffmpeg \
-        g++ \
-        gcc \
         git \
-        libffi-dev \
-        make \
-        musl-dev \
         tar \
         tzdata \
         zstd && \
-    python3 -m venv /venv && \
-    ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
+    python -m venv /venv && \
+    ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
+    mkdir /app
 
 ENV PATH="/venv/bin:$PATH"
 ENV TZ=Europe/Paris
 
-RUN pip install -U pip setuptools wheel && \
-    mkdir /app
-
 WORKDIR /app
 
+COPY --from=build /venv /venv
+COPY --from=build /usr/local/bin/unrar /tmp/unrar
+
 RUN git clone -b v7 --single-branch https://github.com/EDM115/unzip-bot.git /app && \
-    pip install -U -r requirements.txt && \
-    ./install_unrar.sh
+    install -m 755 /tmp/unrar /usr/local/bin && \
+    rm -rf /tmp/unrar
 
 COPY .env /app/.env
 

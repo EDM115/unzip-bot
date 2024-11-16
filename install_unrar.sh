@@ -16,4 +16,3 @@ cd /tmp/unrar || exit
 make
 install -v -m755 unrar /usr/local/bin
 echo "unrar version: $(unrar v) installed successfully"
-rm -rf /tmp/unrar*
