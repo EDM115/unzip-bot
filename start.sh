@@ -23,7 +23,4 @@ fi
 
 export TZ="Europe/Paris"
 
-echo "Debug environment variables : "
-printenv
-
 exec python -m unzipbot
