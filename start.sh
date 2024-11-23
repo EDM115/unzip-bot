@@ -15,7 +15,7 @@ if [ -f .env ] && [[ ! "$DYNO" =~ ^worker.* ]]; then
   else
     while IFS='=' read -r key value; do
       if [[ ! $key =~ ^# && -n $key ]]; then
-        export "$key"="${value%\"}"
+        export "$key=$value"
       fi
     done < .env
   fi
