@@ -66,7 +66,7 @@ Deploying is easy :smiling_face_with_three_hearts: You can deploy this bot in He
 > **EDIT** : We might switch to Alpine Linux in the future, I still have to compare the commits done on the p7zip package
 
 #### The lazy way
-[![Deploy me :pleading_face:](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot)  
+[![Deploy me :pleading_face:](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/v7)  
 (if you're in a fork, make sure to replace the template URL with your repo's one, also replace the URL in the Dockerfile)
 
 #### The easy way
