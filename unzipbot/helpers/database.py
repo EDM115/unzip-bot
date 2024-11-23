@@ -248,7 +248,13 @@ async def update_thumb(user_id):
 
 
 async def get_thumb_users():
-    return [thumb_list async for thumb_list in thumb_db.find({})]
+    thumb_users = []
+    async for thumb_list in thumb_db.find({}):
+        if ("file_id" in thumb_list and thumb_list["file_id"] is None and "url" not in thumb_list) or ("temp" in thumb_list and "file_id" not in thumb_list and "url" not in thumb_list):
+            await thumb_db.delete_one({"_id": thumb_list["_id"]})
+        else:
+            thumb_users.append(thumb_list)
+    return thumb_users
 
 
 async def count_thumb_users():
