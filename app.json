@@ -39,14 +39,7 @@
         }
     },
     "addons": [],
-    "buildpacks": [
-        {
-            "url": "heroku/python"
-        },
-        {
-            "url": "https://github.com/HasibulKabir/heroku-buildpack-ffmpeg-ffprobe.git"
-        }
-    ],
+    "buildpacks": [],
     "formation": {
         "worker": {
             "quantity": 1,

@@ -1,1 +1,0 @@
-unzipbot: bash start.sh
