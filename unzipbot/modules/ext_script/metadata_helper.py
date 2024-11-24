@@ -1,4 +1,3 @@
-# Copyright (c) 2022 - 2024 EDM115
 import os
 
 import mutagen.id3 as id3

@@ -1,10 +1,10 @@
-# Copyright (c) 2022 - 2024 EDM115
 import os
 
 
 class Config:
     APP_ID = int(os.environ.get("APP_ID"))
     API_HASH = os.environ.get("API_HASH")
+    BASE_LANGUAGE = os.environ.get("BASE_LANGUAGE", "en")
     BOT_TOKEN = os.environ.get("BOT_TOKEN")
     BOT_THUMB = f"{os.path.dirname(__file__)}/bot_thumb.jpg"
     BOT_OWNER = int(os.environ.get("BOT_OWNER"))

@@ -59,9 +59,10 @@ WORKDIR /app
 
 COPY --from=build /venv /venv
 COPY --from=build /usr/local/bin/unrar /tmp/unrar
+COPY . /app/
 
-RUN git clone -b v7 --single-branch https://github.com/EDM115/unzip-bot.git /app && \
-    install -m 755 /tmp/unrar /usr/local/bin && \
+# RUN git clone -b v7 --single-branch https://github.com/EDM115/unzip-bot.git /app && \
+RUN install -m 755 /tmp/unrar /usr/local/bin && \
     rm -rf /tmp/unrar
 
 COPY .env /app/.env

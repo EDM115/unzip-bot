@@ -1,4 +1,3 @@
-# Copyright (c) 2022 - 2024 EDM115
 from asyncio import sleep
 
 import base58check
@@ -7,10 +6,17 @@ from pyrogram.errors import FloodWait
 
 from config import Config
 from unzipbot import unzipbot_client
-from unzipbot.modules.bot_data import Messages
+from unzipbot.i18n.messages import Messages
 
 mongodb = AsyncIOMotorClient(Config.MONGODB_URL)
 unzip_db = mongodb[Config.MONGODB_DBNAME]
+
+
+def get_lang(user_id):
+    return "en"
+
+
+messages = Messages(lang_fetcher=get_lang)
 
 
 # Users Database
@@ -91,15 +97,16 @@ async def get_banned_users_list():
 
 async def check_user(message):
     # Checking if user is banned
-    is_banned = await is_user_in_bdb(message.from_user.id)
+    uid = message.from_user.id
+    is_banned = await is_user_in_bdb(uid)
     if is_banned:
-        await message.reply(Messages.BANNED)
+        await message.reply(messages.get("database", "BANNED"))
         await message.stop_propagation()
         return
     # Checking if user already in db
-    is_in_db = await is_user_in_db(message.from_user.id)
+    is_in_db = await is_user_in_db(uid)
     if not is_in_db:
-        await add_user(message.from_user.id)
+        await add_user(uid)
         try:
             firstname = message.from_user.first_name
         except:
@@ -117,14 +124,14 @@ async def check_user(message):
             try:
                 await unzipbot_client.send_message(
                     chat_id=Config.LOGS_CHANNEL,
-                    text=Messages.NEW_USER_BAD.format(uname),
+                    text=messages.get("database", "NEW_USER_BAD", uid, uname),
                     disable_web_page_preview=False,
                 )
             except FloodWait as f:
                 await sleep(f.value)
                 await unzipbot_client.send_message(
                     chat_id=Config.LOGS_CHANNEL,
-                    text=Messages.NEW_USER_BAD.format(uname),
+                    text=messages.get("database", "NEW_USER_BAD", uid, uname),
                     disable_web_page_preview=False,
                 )
         else:
@@ -139,12 +146,15 @@ async def check_user(message):
             try:
                 await unzipbot_client.send_message(
                     chat_id=Config.LOGS_CHANNEL,
-                    text=Messages.NEW_USER.format(
+                    text=messages.get(
+                        "database",
+                        "NEW_USER",
+                        uid,
                         uname,
                         umention,
-                        message.from_user.id,
-                        message.from_user.id,
-                        message.from_user.id,
+                        uid,
+                        uid,
+                        uid,
                     ),
                     disable_web_page_preview=False,
                 )
@@ -152,12 +162,15 @@ async def check_user(message):
                 await sleep(f.value)
                 await unzipbot_client.send_message(
                     chat_id=Config.LOGS_CHANNEL,
-                    text=Messages.NEW_USER.format(
+                    text=messages.get(
+                        "database",
+                        "NEW_USER",
+                        uid,
                         uname,
                         umention,
-                        message.from_user.id,
-                        message.from_user.id,
-                        message.from_user.id,
+                        uid,
+                        uid,
+                        uid,
                     ),
                     disable_web_page_preview=False,
                 )
@@ -250,7 +263,15 @@ async def update_thumb(user_id):
 async def get_thumb_users():
     thumb_users = []
     async for thumb_list in thumb_db.find({}):
-        if ("file_id" in thumb_list and thumb_list["file_id"] is None and "url" not in thumb_list) or ("temp" in thumb_list and "file_id" not in thumb_list and "url" not in thumb_list):
+        if (
+            "file_id" in thumb_list
+            and thumb_list["file_id"] is None
+            and "url" not in thumb_list
+        ) or (
+            "temp" in thumb_list
+            and "file_id" not in thumb_list
+            and "url" not in thumb_list
+        ):
             await thumb_db.delete_one({"_id": thumb_list["_id"]})
         else:
             thumb_users.append(thumb_list)

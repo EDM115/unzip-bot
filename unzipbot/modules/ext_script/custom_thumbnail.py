@@ -1,4 +1,3 @@
-# Copyright (c) 2022 - 2024 EDM115
 import os
 import shutil
 from asyncio import sleep
@@ -8,8 +7,12 @@ from pyrogram.errors import FloodWait
 
 from config import Config
 from unzipbot import LOGGER
-from unzipbot.helpers.database import update_temp_thumb
-from unzipbot.modules.bot_data import Buttons, Messages
+from unzipbot.helpers.database import get_lang, update_temp_thumb
+from unzipbot.i18n.buttons import Buttons
+from unzipbot.i18n.messages import Messages
+
+
+messages = Messages(lang_fetcher=get_lang)
 
 
 async def silent_del(user_id):
@@ -22,17 +25,18 @@ async def silent_del(user_id):
 
 async def add_thumb(_, message):
     try:
-        user_id = str(message.from_user.id)
+        uid = message.from_user.id
+        user_id = str(uid)
         if message.reply_to_message is not None:
             reply_message = message.reply_to_message
             if reply_message.media_group_id is not None:  # album sent
-                LOGGER.info(Messages.ALBUM.format(user_id))
-                await message.reply(Messages.ALBUM_NOPE)
+                LOGGER.info(messages.get("custom_thumbnail", "ALBUM", None, user_id))
+                await message.reply(messages.get("custom_thumbnail", "ALBUM_NOPE", uid))
                 return
             thumb_location = Config.THUMB_LOCATION + "/" + user_id + ".jpg"
             pre_thumb = Config.THUMB_LOCATION + "/not_resized_" + user_id + ".jpg"
             final_thumb = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
-            LOGGER.info(Messages.DL_THUMB.format(user_id))
+            LOGGER.info(messages.get("custom_thumbnail", "DL_THUMB", None, user_id))
             file = await _.download_media(message=reply_message)
             shutil.move(file, pre_thumb)
             size = (320, 320)
@@ -40,11 +44,11 @@ async def add_thumb(_, message):
                 with Image.open(pre_thumb) as previous:
                     previous.thumbnail(size, Image.Resampling.LANCZOS)
                     previous.save(final_thumb, "JPEG")
-                    LOGGER.info(Messages.THUMB_SAVED)
+                    LOGGER.info(messages.get("custom_thumbnail", "THUMB_SAVED"))
                 savedpic = await _.send_photo(
                     chat_id=Config.LOGS_CHANNEL,
                     photo=final_thumb,
-                    caption=Messages.THUMB_CAPTION.format(user_id, user_id),
+                    caption=messages.get("custom_thumbnail", "THUMB_CAPTION", uid, user_id, user_id),
                 )
                 try:
                     os.remove(pre_thumb)
@@ -53,24 +57,24 @@ async def add_thumb(_, message):
                 await update_temp_thumb(message.from_user.id, savedpic.photo.file_id)
                 if os.path.exists(thumb_location) and os.path.isfile(thumb_location):
                     await message.reply(
-                        text=Messages.EXISTING_THUMB,
+                        text=messages.get("custom_thumbnail", "EXISTING_THUMB", uid),
                         reply_markup=Buttons.THUMB_REPLACEMENT,
                     )
                 else:
                     await message.reply(
-                        text=Messages.SAVING_THUMB, reply_markup=Buttons.THUMB_SAVE
+                        text=messages.get("custom_thumbnail", "SAVING_THUMB", uid), reply_markup=Buttons.THUMB_SAVE
                     )
             except:
-                LOGGER.info(Messages.THUMB_FAILED)
+                LOGGER.info(messages.get("custom_thumbnail", "THUMB_FAILED"))
                 try:
                     os.remove(final_thumb)
                 except:
                     pass
-                await message.reply(Messages.THUMB_ERROR)
+                await message.reply(messages.get("custom_thumbnail", "THUMB_ERROR", uid))
         else:
             await _.send_message(
                 chat_id=message.chat.id,
-                text=Messages.PLS_REPLY,
+                text=messages.get("custom_thumbnail", "PLS_REPLY", uid),
                 reply_to_message_id=message.id,
             )
     except FloodWait as f:
@@ -83,10 +87,10 @@ async def del_thumb(message):
         uid = message.from_user.id
         thumb_location = Config.THUMB_LOCATION + "/" + str(uid) + ".jpg"
         if not os.path.exists(thumb_location):
-            await message.reply(text=Messages.NO_THUMB)
+            await message.reply(text=messages.get("custom_thumbnail", "NO_THUMB", uid))
         else:
             await message.reply(
-                text=Messages.DEL_CONFIRM_THUMB, reply_markup=Buttons.THUMB_DEL
+                text=messages.get("custom_thumbnail", "DEL_CONFIRM_THUMB", uid), reply_markup=Buttons.THUMB_DEL
             )
     except FloodWait as f:
         await sleep(f.value)

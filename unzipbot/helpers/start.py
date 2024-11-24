@@ -1,4 +1,3 @@
-# Copyright (c) 2022 - 2024 EDM115
 import asyncio
 import os
 import shutil
@@ -11,7 +10,7 @@ from pyrogram.errors import FloodWait
 
 from config import Config
 from unzipbot import LOGGER, boottime, unzipbot_client
-from unzipbot.modules.bot_data import Messages
+from unzipbot.i18n.messages import Messages
 from unzipbot.modules.callbacks import download
 
 from .database import (
@@ -21,6 +20,7 @@ from .database import (
     count_ongoing_tasks,
     del_ongoing_task,
     get_boot,
+    get_lang,
     get_old_boot,
     get_ongoing_tasks,
     get_thumb_users,
@@ -28,6 +28,7 @@ from .database import (
     set_boot,
     set_old_boot,
 )
+
 
 def get_size(doc_f):
     try:
@@ -37,18 +38,21 @@ def get_size(doc_f):
         return -1
 
 
+messages = Messages(lang_fetcher=get_lang)
+
+
 def check_logs():
     try:
         if Config.LOGS_CHANNEL:
             c_info = unzipbot_client.get_chat(chat_id=Config.LOGS_CHANNEL)
             if c_info.type in (enums.ChatType.PRIVATE, enums.ChatType.BOT):
-                LOGGER.error(Messages.PRIVATE_CHAT)
+                LOGGER.error(messages.get("start", "PRIVATE_CHAT"))
                 return False
             return True
-        LOGGER.error(Messages.NO_LOG_ID)
+        LOGGER.error(messages.get("start", "NO_LOG_ID"))
         return False
     except:
-        LOGGER.error(Messages.ERROR_LOG_CHECK)
+        LOGGER.error(messages.get("start", "ERROR_LOG_CHECK"))
         return False
 
 
@@ -58,7 +62,7 @@ def dl_thumbs():
     thumbs = loop.run_until_complete(coroutine)
     i = 0
     maxthumbs = len(thumbs)
-    LOGGER.info(Messages.DL_THUMBS.format(maxthumbs))
+    LOGGER.info(messages.get("start", "DL_THUMBS", None, maxthumbs))
     for thumb in thumbs:
         file_path = Config.THUMB_LOCATION + "/" + str(thumb.get("_id")) + ".jpg"
         if thumb.get("url") is None and thumb.get("file_id") is not None:
@@ -72,7 +76,7 @@ def dl_thumbs():
                 # A possible fix is to retrieve the message again with chat ID + message ID to get a refreshed file reference
                 unzipbot_client.send_message(
                     thumb.get("_id"),
-                    Messages.MISSING_THUMB,
+                    messages.get("start", "MISSING_THUMB", thumb.get("_id")),
                 )
                 # we would also need to call del_thumb_db
         elif thumb.get("url") is not None and thumb.get("file_id") is None:
@@ -83,7 +87,7 @@ def dl_thumbs():
             os.remove(file_path)
         i += 1
         if i % 10 == 0 or i == maxthumbs:
-            LOGGER.info(Messages.DOWNLOADED_THUMBS.format(i, maxthumbs))
+            LOGGER.info(messages.get("start", "DOWNLOADED_THUMBS", None, i, maxthumbs))
 
 
 def set_boot_time():
@@ -103,7 +107,10 @@ async def check_boot():
         try:
             await unzipbot_client.send_message(
                 Config.BOT_OWNER,
-                Messages.BOT_RESTARTED.format(
+                messages.get(
+                    "start",
+                    "BOT_RESTARTED",
+                    Config.BOT_OWNER,
                     datetime.fromtimestamp(old_boot).strftime(r"%d/%m/%Y - %H:%M:%S"),
                     datetime.fromtimestamp(boot).strftime(r"%d/%m/%Y - %H:%M:%S"),
                 ),
@@ -121,12 +128,14 @@ async def warn_users():
         for task in tasks:
             try:
                 await unzipbot_client.send_message(
-                    task.get("user_id"), Messages.RESEND_TASK
+                    task.get("user_id"),
+                    messages.get("start", "RESEND_TASK", task.get("user_id")),
                 )
             except FloodWait as f:
                 await asyncio.sleep(f.value)
                 await unzipbot_client.send_message(
-                    task.get("user_id"), Messages.RESEND_TASK
+                    task.get("user_id"),
+                    messages.get("start", "RESEND_TASK", task.get("user_id")),
                 )
             except:
                 pass  # user deleted chat
@@ -165,8 +174,11 @@ async def remove_expired_tasks(firststart=False):
                             pass
                         await unzipbot_client.send_message(
                             user_id,
-                            Messages.TASK_EXPIRED.format(
-                                Config.MAX_TASK_DURATION_EXTRACT // 60
+                            messages.get(
+                                "start",
+                                "TASK_EXPIRED",
+                                user_id,
+                                Config.MAX_TASK_DURATION_EXTRACT // 60,
                             ),
                         )
                 elif task_type == "merge":
@@ -178,8 +190,11 @@ async def remove_expired_tasks(firststart=False):
                             pass
                         await unzipbot_client.send_message(
                             user_id,
-                            Messages.TASK_EXPIRED.format(
-                                Config.MAX_TASK_DURATION_MERGE // 60
+                            messages.get(
+                                "start",
+                                "TASK_EXPIRED",
+                                user_id,
+                                Config.MAX_TASK_DURATION_MERGE // 60,
                             ),
                         )
 

@@ -1,33 +1,37 @@
-# Copyright (c) 2022 - 2024 EDM115
 import math
 import time
 from asyncio import sleep
 
 from pyrogram.errors import FloodWait
 
-from unzipbot.helpers.database import del_cancel_task, get_cancel_task
-from unzipbot.modules.bot_data import Buttons, Messages
+from unzipbot.helpers.database import del_cancel_task, get_cancel_task, get_lang
+from unzipbot.i18n.buttons import Buttons
+from unzipbot.i18n.messages import Messages
+
+
+messages = Messages(lang_fetcher=get_lang)
 
 
 async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_bot):
     if message.from_user is not None and await get_cancel_task(message.from_user.id):
         unzip_bot.stop_transmission()
-        await message.edit(text=Messages.DL_STOPPED)
+        await message.edit(text=messages.get("unzip_help", "DL_STOPPED", message.from_user.id))
         await del_cancel_task(message.from_user.id)
     else:
+        uid = message.from_user.id
         now = time.time()
         diff = now - start
         if total == 0:
-            tmp = Messages.UNKNOWN_SIZE
+            tmp = messages.get("unzip_help", "UNKNOWN_SIZE", uid)
             try:
                 await message.edit(
-                    text=Messages.PROGRESS_MSG.format(ud_type, tmp),
+                    text=messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp),
                     reply_markup=Buttons.I_PREFER_STOP,
                 )
             except FloodWait as f:
                 await sleep(f.value)
                 await message.edit(
-                    text=Messages.PROGRESS_MSG.format(ud_type, tmp),
+                    text=messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp),
                     reply_markup=Buttons.I_PREFER_STOP,
                 )
             except:
@@ -38,20 +42,20 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
             time_to_completion = round((total - current) / speed) * 1000
             estimated_total_time = time_to_completion
             estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
-            progress = f'[{"".join(["⬢" for i in range(math.floor(percentage / 5))])}{"".join(["⬡" for i in range(20 - math.floor(percentage / 5))])}] \n{Messages.PROCESSING} : `{round(percentage, 2)}%`\n'
+            progress = f'[{"".join(["⬢" for i in range(math.floor(percentage / 5))])}{"".join(["⬡" for i in range(20 - math.floor(percentage / 5))])}] \n{messages.get("unzip_help", "PROCESSING", uid)} : `{round(percentage, 2)}%`\n'
             tmp = (
                 progress
-                + f'`{humanbytes(current)} of {humanbytes(total)}`\n{Messages.SPEED} `{humanbytes(speed)}/s`\n{Messages.ETA} `{estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"}`\n'
+                + f'`{humanbytes(current)} of {humanbytes(total)}`\n{messages.get("unzip_help", "SPEED", uid)} `{humanbytes(speed)}/s`\n{messages.get("unzip_help", "ETA", uid)} `{estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"}`\n'
             )
             try:
                 await message.edit(
-                    text=Messages.PROGRESS_MSG.format(ud_type, tmp),
+                    text=messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp),
                     reply_markup=Buttons.I_PREFER_STOP,
                 )
             except FloodWait as f:
                 await sleep(f.value)
                 await message.edit(
-                    text=Messages.PROGRESS_MSG.format(ud_type, tmp),
+                    text=messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp),
                     reply_markup=Buttons.I_PREFER_STOP,
                 )
             except:
@@ -61,22 +65,23 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
 async def progress_urls(current, total, ud_type, message, start):
     now = time.time()
     diff = now - start
+    uid = message.from_user.id
     if round(diff % 10.00) == 0 or current == total:
         percentage = current * 100 / total
         speed = current / diff
         time_to_completion = round((total - current) / speed) * 1000
         estimated_total_time = time_to_completion
         estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
-        progress = f'[{"".join(["⬢" for i in range(math.floor(percentage / 5))])}{"".join(["⬡" for i in range(20 - math.floor(percentage / 5))])}] \n{Messages.PROCESSING} : `{round(percentage, 2)}%`\n'
+        progress = f'[{"".join(["⬢" for i in range(math.floor(percentage / 5))])}{"".join(["⬡" for i in range(20 - math.floor(percentage / 5))])}] \n{messages.get("unzip_help", "PROCESSING", uid)} : `{round(percentage, 2)}%`\n'
         tmp = (
             progress
-            + f'{Messages.ETA} `{estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"}`\n'
+            + f'{messages.get("unzip_help", "ETA", uid)} `{estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"}`\n'
         )
         try:
-            await message.edit(Messages.PROGRESS_MSG.format(ud_type, tmp))
+            await message.edit(messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp))
         except FloodWait as f:
             await sleep(f.value)
-            await message.edit(Messages.PROGRESS_MSG.format(ud_type, tmp))
+            await message.edit(messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp))
         except:
             pass
 
