@@ -56,7 +56,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
     if fsize in (-1, 0):  # File not found or empty
         try:
             await unzipbot_client.send_message(
-                c_id, messages.get("up_helper", "EMPTY_FILE", c_id, os.path.basename(doc_f))
+                c_id,
+                messages.get("up_helper", "EMPTY_FILE", c_id, os.path.basename(doc_f)),
             )
         except:
             pass
@@ -67,7 +68,9 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         fext = (pathlib.Path(os.path.abspath(doc_f)).suffix).casefold().replace(".", "")
         thumbornot = await thumb_exists(c_id)
         upmsg = await unzipbot_client.send_message(
-            c_id, messages.get("up_helper", "PROCESSING2", c_id), disable_notification=True
+            c_id,
+            messages.get("up_helper", "PROCESSING2", c_id),
+            disable_notification=True,
         )
         if ul_mode == "media" and fext in extentions_list["audio"]:
             metadata = await get_audio_metadata(doc_f)
@@ -261,7 +264,9 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         await unzip_bot.send_video(
                             chat_id=c_id,
                             video=doc_f,
-                            caption=messages.get("up_helper", "EXT_CAPTION", c_id, fname),
+                            caption=messages.get(
+                                "up_helper", "EXT_CAPTION", c_id, fname
+                            ),
                             duration=0,
                             thumb=str(Config.BOT_THUMB),
                             disable_notification=True,
@@ -277,7 +282,9 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         await unzip_bot.send_document(
                             chat_id=c_id,
                             document=doc_f,
-                            caption=messages.get("up_helper", "EXT_CAPTION", c_id, fname),
+                            caption=messages.get(
+                                "up_helper", "EXT_CAPTION", c_id, fname
+                            ),
                             force_document=True,
                             disable_notification=True,
                             progress=progress_for_pyrogram,
@@ -329,7 +336,8 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
     except FileNotFoundError:
         try:
             await unzipbot_client.send_message(
-                c_id, messages.get("up_helper", "CANT_FIND", c_id, os.path.basename(doc_f))
+                c_id,
+                messages.get("up_helper", "CANT_FIND", c_id, os.path.basename(doc_f)),
             )
         except:
             pass
@@ -356,7 +364,9 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source, message):
     try:
         u_file_size = os.stat(doc_f).st_size
         if Config.TG_MAX_SIZE < int(u_file_size):
-            await unzip_bot.send_message(chat_id=c_id, text=messages.get("up_helper", "TOO_LARGE", c_id))
+            await unzip_bot.send_message(
+                chat_id=c_id, text=messages.get("up_helper", "TOO_LARGE", c_id)
+            )
             return
         fname = os.path.basename(doc_f)
         await unzip_bot.send_document(

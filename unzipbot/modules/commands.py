@@ -242,7 +242,8 @@ async def set_mode_for_user(_, message: Message):
         upload_mode = await get_upload_mode(message.from_user.id)
         await message.reply(
             text=messages.get(
-                "commands", "SELECT_UPLOAD_MODE_TXT", message.from_user.id, upload_mode),
+                "commands", "SELECT_UPLOAD_MODE_TXT", message.from_user.id, upload_mode
+            ),
             reply_markup=Buttons.SET_UPLOAD_MODE_BUTTONS,
         )
     except FloodWait as f:

@@ -15,7 +15,9 @@ messages = Messages(lang_fetcher=get_lang)
 async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_bot):
     if message.from_user is not None and await get_cancel_task(message.from_user.id):
         unzip_bot.stop_transmission()
-        await message.edit(text=messages.get("unzip_help", "DL_STOPPED", message.from_user.id))
+        await message.edit(
+            text=messages.get("unzip_help", "DL_STOPPED", message.from_user.id)
+        )
         await del_cancel_task(message.from_user.id)
     else:
         uid = message.from_user.id
@@ -78,10 +80,14 @@ async def progress_urls(current, total, ud_type, message, start):
             + f'{messages.get("unzip_help", "ETA", uid)} `{estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"}`\n'
         )
         try:
-            await message.edit(messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp))
+            await message.edit(
+                messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp)
+            )
         except FloodWait as f:
             await sleep(f.value)
-            await message.edit(messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp))
+            await message.edit(
+                messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp)
+            )
         except:
             pass
 

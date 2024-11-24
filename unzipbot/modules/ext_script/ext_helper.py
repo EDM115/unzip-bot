@@ -186,7 +186,9 @@ async def make_keyboard(paths, user_id, chat_id, unziphttp, rzfile=None):
             )
         )
     data.append(
-        InlineKeyboardButton(messages.get("ext_helper", "CANCEL_IT", user_id), "cancel_dis")
+        InlineKeyboardButton(
+            messages.get("ext_helper", "CANCEL_IT", user_id), "cancel_dis"
+        )
     )
     for file in paths:
         if num > 96:
@@ -228,7 +230,9 @@ async def make_keyboard_empty(user_id, chat_id, unziphttp, rzfile=None):
             )
         )
     data.append(
-        InlineKeyboardButton(messages.get("ext_helper", "CANCEL_IT", user_id), "cancel_dis")
+        InlineKeyboardButton(
+            messages.get("ext_helper", "CANCEL_IT", user_id), "cancel_dis"
+        )
     )
     i_kbd.add(*data)
     return i_kbd

@@ -4,7 +4,12 @@ from config import Config
 
 
 class Messages:
-    def __init__(self, lang_fetcher=None, default_lang=Config.BASE_LANGUAGE, base_path="unzipbot/i18n/lang"):
+    def __init__(
+        self,
+        lang_fetcher=None,
+        default_lang=Config.BASE_LANGUAGE,
+        base_path="unzipbot/i18n/lang",
+    ):
         """
         Initialize the Messages class.
 
@@ -15,7 +20,6 @@ class Messages:
         self.lang_fetcher = lang_fetcher or (lambda _: default_lang)
         self.default_lang = default_lang
         self.base_path = base_path
-
 
     def _load_language_file(self, lang):
         """
@@ -29,9 +33,10 @@ class Messages:
             with open(file_path, "r", encoding="utf-8") as f:
                 return json.load(f)
         except FileNotFoundError:
-            with open(f"{self.base_path}/{self.default_lang}.json", "r", encoding="utf-8") as f:
+            with open(
+                f"{self.base_path}/{self.default_lang}.json", "r", encoding="utf-8"
+            ) as f:
                 return json.load(f)
-
 
     def get(self, file, key, user_id=None, *args, **kwargs):
         """

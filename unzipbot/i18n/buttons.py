@@ -6,6 +6,7 @@ from unzipbot.helpers.database import get_lang
 
 messages = Messages(lang_fetcher=get_lang)
 
+
 # Inline buttons
 class Buttons:
     START_BUTTON = InlineKeyboardMarkup(
@@ -160,7 +161,8 @@ class Buttons:
                     messages.get("buttons", "CHECK"), callback_data="check_thumb"
                 ),
                 InlineKeyboardButton(
-                    messages.get("buttons", "REPLACE"), callback_data="save_thumb|replace"
+                    messages.get("buttons", "REPLACE"),
+                    callback_data="save_thumb|replace",
                 ),
             ],
             [
@@ -175,7 +177,8 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "REPLACE"), callback_data="save_thumb|replace"
+                    messages.get("buttons", "REPLACE"),
+                    callback_data="save_thumb|replace",
                 ),
                 InlineKeyboardButton(
                     messages.get("buttons", "CANCEL_IT"), callback_data="nope_thumb"

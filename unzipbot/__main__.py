@@ -24,10 +24,14 @@ messages = Messages(lang_fetcher=get_lang)
 
 def handler_stop_signals(signum, frame):
     LOGGER.info(
-        messages.get("main", "RECEIVED_STOP_SIGNAL", None,
-        signal.Signals(signum).name,
-        signum,
-        frame)
+        messages.get(
+            "main",
+            "RECEIVED_STOP_SIGNAL",
+            None,
+            signal.Signals(signum).name,
+            signum,
+            frame,
+        )
     )
     shutdown_bot()
 

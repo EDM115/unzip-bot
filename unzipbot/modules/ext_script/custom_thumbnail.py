@@ -48,7 +48,9 @@ async def add_thumb(_, message):
                 savedpic = await _.send_photo(
                     chat_id=Config.LOGS_CHANNEL,
                     photo=final_thumb,
-                    caption=messages.get("custom_thumbnail", "THUMB_CAPTION", uid, user_id, user_id),
+                    caption=messages.get(
+                        "custom_thumbnail", "THUMB_CAPTION", uid, user_id, user_id
+                    ),
                 )
                 try:
                     os.remove(pre_thumb)
@@ -62,7 +64,8 @@ async def add_thumb(_, message):
                     )
                 else:
                     await message.reply(
-                        text=messages.get("custom_thumbnail", "SAVING_THUMB", uid), reply_markup=Buttons.THUMB_SAVE
+                        text=messages.get("custom_thumbnail", "SAVING_THUMB", uid),
+                        reply_markup=Buttons.THUMB_SAVE,
                     )
             except:
                 LOGGER.info(messages.get("custom_thumbnail", "THUMB_FAILED"))
@@ -70,7 +73,9 @@ async def add_thumb(_, message):
                     os.remove(final_thumb)
                 except:
                     pass
-                await message.reply(messages.get("custom_thumbnail", "THUMB_ERROR", uid))
+                await message.reply(
+                    messages.get("custom_thumbnail", "THUMB_ERROR", uid)
+                )
         else:
             await _.send_message(
                 chat_id=message.chat.id,
@@ -90,7 +95,8 @@ async def del_thumb(message):
             await message.reply(text=messages.get("custom_thumbnail", "NO_THUMB", uid))
         else:
             await message.reply(
-                text=messages.get("custom_thumbnail", "DEL_CONFIRM_THUMB", uid), reply_markup=Buttons.THUMB_DEL
+                text=messages.get("custom_thumbnail", "DEL_CONFIRM_THUMB", uid),
+                reply_markup=Buttons.THUMB_DEL,
             )
     except FloodWait as f:
         await sleep(f.value)
