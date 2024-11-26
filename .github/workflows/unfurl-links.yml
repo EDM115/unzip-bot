@@ -1,12 +1,13 @@
 name: Unfurl Links
 
 on:
-  issues:
-    types: [opened, edited]
-  issue_comment:
-    types: [created, edited]
-  pull_request:
-    types: [opened, edited]
+  #issues:
+    #types: [opened, edited]
+  #issue_comment:
+    #types: [created, edited]
+  #pull_request:
+    #types: [opened, edited]
+  workflow_dispatch:
 
 jobs:
   run:
