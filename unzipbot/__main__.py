@@ -65,7 +65,13 @@ async def async_shutdown_bot():
 
 
 def shutdown_bot():
-    asyncio.get_event_loop().run_until_complete(async_shutdown_bot())
+    try:
+        loop = asyncio.get_running_loop()
+        loop.create_task(async_shutdown_bot())
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(async_shutdown_bot())
 
 
 if __name__ == "__main__":
