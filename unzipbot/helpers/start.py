@@ -150,6 +150,7 @@ def removal(firststart=False):
 
 async def remove_expired_tasks(firststart=False):
     ongoing_tasks = await get_ongoing_tasks()
+    await clear_cancel_tasks()
     if firststart:
         await clear_ongoing_tasks()
         try:

@@ -2,6 +2,7 @@ import math
 import time
 from asyncio import sleep
 
+from pyrogram import enums
 from pyrogram.errors import FloodWait
 
 from unzipbot.helpers.database import del_cancel_task, get_cancel_task, get_lang
@@ -13,14 +14,14 @@ messages = Messages(lang_fetcher=get_lang)
 
 
 async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_bot):
-    if message.from_user is not None and await get_cancel_task(message.from_user.id):
-        unzip_bot.stop_transmission()
+    uid = message.chat.id
+    if message.chat.type == enums.ChatType.PRIVATE and await get_cancel_task(uid):
+        await del_cancel_task(uid)
         await message.edit(
-            text=messages.get("unzip_help", "DL_STOPPED", message.from_user.id)
+            text=messages.get("unzip_help", "DL_STOPPED", uid)
         )
-        await del_cancel_task(message.from_user.id)
+        unzip_bot.stop_transmission()
     else:
-        uid = message.from_user.id
         now = time.time()
         diff = now - start
         if total == 0:
@@ -67,7 +68,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
 async def progress_urls(current, total, ud_type, message, start):
     now = time.time()
     diff = now - start
-    uid = message.from_user.id
+    uid = message.chat.id
     if round(diff % 10.00) == 0 or current == total:
         percentage = current * 100 / total
         speed = current / diff
