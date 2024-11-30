@@ -9,6 +9,7 @@ from pyrogram.types import InlineKeyboardButton
 
 from unzipbot import LOGGER
 from unzipbot.helpers.database import get_lang
+from unzipbot.helpers.unzip_help import set_memory_limit
 from unzipbot.i18n.messages import Messages
 
 
@@ -37,7 +38,11 @@ async def cleanup_macos_artifacts(extraction_path):
 
 def __run_cmds_unzip(command):
     ext_cmd = subprocess.Popen(
-        command["cmd"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
+        command["cmd"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        shell=True,
+        preexec_fn=set_memory_limit,
     )
     ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8").rstrip("\n")
     ext_err = ext_cmd.stderr.read()[:-1].decode("utf-8").rstrip("\n")

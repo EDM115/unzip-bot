@@ -16,6 +16,7 @@ from unzipbot.helpers.unzip_help import (
     extentions_list,
     progress_for_pyrogram,
     progress_urls,
+    set_memory_limit,
 )
 from unzipbot.i18n.messages import Messages
 from unzipbot.modules.ext_script.custom_thumbnail import thumb_exists
@@ -28,7 +29,11 @@ messages = Messages(lang_fetcher=get_lang)
 # To get video duration and thumbnail
 async def run_shell_cmds(command):
     run = subprocess.Popen(
-        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
+        command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        shell=True,
+        preexec_fn=set_memory_limit,
     )
     shell_output = run.stdout.read()[:-1].decode("utf-8").rstrip(
         "\n"

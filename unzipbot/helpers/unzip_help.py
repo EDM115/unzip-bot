@@ -1,10 +1,13 @@
 import math
+import psutil
+import resource
 import time
 from asyncio import sleep
 
 from pyrogram import enums
 from pyrogram.errors import FloodWait
 
+from config import Config
 from unzipbot.helpers.database import del_cancel_task, get_cancel_task, get_lang
 from unzipbot.i18n.buttons import Buttons
 from unzipbot.i18n.messages import Messages
@@ -17,9 +20,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
     uid = message.chat.id
     if message.chat.type == enums.ChatType.PRIVATE and await get_cancel_task(uid):
         await del_cancel_task(uid)
-        await message.edit(
-            text=messages.get("unzip_help", "DL_STOPPED", uid)
-        )
+        await message.edit(text=messages.get("unzip_help", "DL_STOPPED", uid))
         unzip_bot.stop_transmission()
     else:
         now = time.time()
@@ -131,6 +132,15 @@ def timeformat_sec(seconds: int) -> str:
         + ((str(seconds) + "s, ") if seconds else "")
     )
     return tmp[:-2]
+
+
+def set_memory_limit():
+    _, hard = resource.getrlimit(resource.RLIMIT_AS)
+    # we may need to use virtual_memory().available instead of total
+    resource.setrlimit(
+        resource.RLIMIT_AS,
+        (int(psutil.virtual_memory().total * Config.MAX_RAM_USAGE / 100), hard),
+    )
 
 
 # List of common extentions

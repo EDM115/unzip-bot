@@ -36,7 +36,7 @@ from unzipbot.helpers.database import (
     get_users_list,
     set_maintenance,
 )
-from unzipbot.helpers.unzip_help import humanbytes, timeformat_sec
+from unzipbot.helpers.unzip_help import humanbytes, timeformat_sec, set_memory_limit
 from unzipbot.i18n.buttons import Buttons
 from unzipbot.i18n.messages import Messages
 from unzipbot.modules.ext_script.custom_thumbnail import add_thumb, del_thumb
@@ -790,7 +790,7 @@ async def eval_command(_, message):
 async def exec_command(_, message):
     cmd = message.text.split(" ", maxsplit=1)[1]
     process = await create_subprocess_shell(
-        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, preexec_fn=set_memory_limit
     )
     stdout, stderr = await process.communicate()
     e = stderr.decode()

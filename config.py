@@ -11,6 +11,7 @@ class Config:
     # Default chunk size (0.005 MB → 1024*6) Increase if you need faster downloads
     CHUNK_SIZE = 1024 * 1024 * 10  # 10 MB
     DOWNLOAD_LOCATION = f"{os.path.dirname(__file__)}/Downloaded"
+    IS_HEROKU = os.environ.get("DYNO", "").startswith("worker.")
     LOGS_CHANNEL = (
         int(os.environ.get("LOGS_CHANNEL"))
         if os.environ.get("LOGS_CHANNEL").strip("-").isdigit()
@@ -18,6 +19,7 @@ class Config:
     )
     MAX_CONCURRENT_TASKS = 75
     MAX_MESSAGE_LENGTH = 4096
+    MAX_RAM_USAGE = 100 if IS_HEROKU else 80
     MAX_TASK_DURATION_EXTRACT = 120 * 60  # 2 hours (in seconds)
     MAX_TASK_DURATION_MERGE = 240 * 60  # 4 hours (in seconds)
     MONGODB_URL = os.environ.get("MONGODB_URL")
