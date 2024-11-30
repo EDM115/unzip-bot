@@ -13,10 +13,10 @@ from config import Config
 from unzipbot import LOGGER, unzipbot_client
 from unzipbot.helpers.database import get_lang, get_upload_mode
 from unzipbot.helpers.unzip_help import (
+    calculate_memory_limit,
     extentions_list,
     progress_for_pyrogram,
     progress_urls,
-    set_memory_limit,
 )
 from unzipbot.i18n.messages import Messages
 from unzipbot.modules.ext_script.custom_thumbnail import thumb_exists
@@ -28,12 +28,13 @@ messages = Messages(lang_fetcher=get_lang)
 
 # To get video duration and thumbnail
 async def run_shell_cmds(command):
+    ulimit_command = f"ulimit -v {calculate_memory_limit()} && {command}"
     run = subprocess.Popen(
-        command,
+        ulimit_command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         shell=True,
-        preexec_fn=set_memory_limit,
+        executable="/bin/bash",
     )
     shell_output = run.stdout.read()[:-1].decode("utf-8").rstrip(
         "\n"

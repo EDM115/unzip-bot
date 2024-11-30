@@ -1,6 +1,5 @@
 import math
 import psutil
-import resource
 import time
 from asyncio import sleep
 
@@ -134,13 +133,11 @@ def timeformat_sec(seconds: int) -> str:
     return tmp[:-2]
 
 
-def set_memory_limit():
-    _, hard = resource.getrlimit(resource.RLIMIT_AS)
+def calculate_memory_limit():
     # we may need to use virtual_memory().available instead of total
-    resource.setrlimit(
-        resource.RLIMIT_AS,
-        (int(psutil.virtual_memory().total * Config.MAX_RAM_USAGE / 100), hard),
-    )
+    total_memory = psutil.virtual_memory().total
+    memory_limit_kb = int(total_memory * Config.MAX_RAM_USAGE / 100 / 1024)
+    return memory_limit_kb
 
 
 # List of common extentions

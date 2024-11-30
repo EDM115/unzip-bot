@@ -44,8 +44,10 @@ RUN apk update && \
         git \
         tar \
         tzdata \
+        util-linux \
         zstd && \
     apk add 7zip --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main && \
+    # apk add cgroup-tools --repository=https://dl-cdn.alpinelinux.org/alpine/3.20/community && \
     python -m venv /venv && \
     ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
     mkdir /app
