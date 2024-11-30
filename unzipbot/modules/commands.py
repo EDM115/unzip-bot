@@ -627,8 +627,9 @@ async def del_tasks(_, message: Message):
 
 async def send_logs(user_id):
     with open("unzip-bot.log", "rb") as doc_f:
+        message = None
         try:
-            await unzipbot_client.send_document(
+            message = await unzipbot_client.send_document(
                 chat_id=user_id,
                 document=doc_f,
                 file_name=doc_f.name,
@@ -636,13 +637,16 @@ async def send_logs(user_id):
             LOGGER.info(messages.get("commands", "LOG_SENT", None, user_id))
         except FloodWait as f:
             await sleep(f.value)
-            await unzipbot_client.send_document(
+            message = await unzipbot_client.send_document(
                 chat_id=user_id,
                 document=doc_f,
                 file_name=doc_f.name,
             )
         except RPCError as e:
             await unzipbot_client.send_message(chat_id=user_id, text=e)
+        finally:
+            doc_f.close()
+            return message
 
 
 def clear_logs():
@@ -668,7 +672,9 @@ async def restart(_, message: Message):
         messages.get("commands", "RESTARTED_AT", message.from_user.id, restarttime),
         quote=True,
     )
-    await send_logs(message.from_user.id)
+    log_message = await send_logs(message.from_user.id)
+    if log_message:
+        log_message.forward(chat_id=Config.LOGS_CHANNEL)
     LOGGER.info(messages.get("commands", "RESTARTING", None, message.from_user.id))
     clear_logs()
     os.execl(executable, executable, "-m", "unzipbot")
