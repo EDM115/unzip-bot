@@ -142,6 +142,10 @@ def calculate_memory_limit():
     return memory_limit_kb
 
 
+# List of error messages from 7zip
+ERROR_MSGS = ["Error", "Can't open as archive"]
+
+
 # List of common extentions
 extentions_list = {
     "archive": [

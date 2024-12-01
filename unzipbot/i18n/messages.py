@@ -21,7 +21,7 @@ class Messages:
         self.default_lang = default_lang
         self.base_path = base_path
 
-    def _load_language_file(self, lang):
+    def __load_language_file(self, lang):
         """
         Load the JSON file for the given language.
 
@@ -50,14 +50,10 @@ class Messages:
         :return: The formatted message string.
         """
         lang = self.lang_fetcher(user_id) if user_id else self.default_lang
-        messages = self._load_language_file(lang)
+        messages = self.__load_language_file(lang)
         try:
             message = messages[file][key.lower()]
         except KeyError:
-            message = self._load_language_file(self.default_lang)[file][key.lower()]
+            message = self.__load_language_file(self.default_lang)[file][key.lower()]
 
         return message.format(*args, **kwargs)
-
-
-# List of error messages from p7zip
-ERROR_MSGS = ["Error", "Can't open as archive"]

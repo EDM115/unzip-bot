@@ -3,9 +3,9 @@ import os
 import pathlib
 import re
 import shutil
-import subprocess
 from datetime import timedelta
 from time import time
+from shlex import join, quote
 
 from pyrogram.errors import FloodWait, PhotoExtInvalid, PhotoSaveFileInvalid
 
@@ -13,38 +13,17 @@ from config import Config
 from unzipbot import LOGGER, unzipbot_client
 from unzipbot.helpers.database import get_lang, get_upload_mode
 from unzipbot.helpers.unzip_help import (
-    calculate_memory_limit,
     extentions_list,
     progress_for_pyrogram,
     progress_urls,
 )
 from unzipbot.i18n.messages import Messages
 from unzipbot.modules.ext_script.custom_thumbnail import thumb_exists
+from unzipbot.modules.ext_script.ext_helper import run_shell_cmds
 from unzipbot.modules.ext_script.metadata_helper import get_audio_metadata
 
 
 messages = Messages(lang_fetcher=get_lang)
-
-
-# To get video duration and thumbnail
-async def run_shell_cmds(command):
-    ulimit_command = f"ulimit -v {calculate_memory_limit()} && {command}"
-    run = subprocess.Popen(
-        ulimit_command,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        shell=True,
-        executable="/bin/bash",
-    )
-    shell_output = run.stdout.read()[:-1].decode("utf-8").rstrip(
-        "\n"
-    ) + run.stderr.read()[:-1].decode("utf-8").rstrip("\n")
-    LOGGER.info("shell_output : " + shell_output)
-    if run.stderr:
-        run.stderr.close()
-    if run.stdout:
-        run.stdout.close()
-    return shell_output
 
 
 # Get file size
@@ -199,9 +178,17 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         ),
                     )
         elif ul_mode == "media" and fext in extentions_list["video"]:
-            vid_duration = await run_shell_cmds(
-                f'ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "{doc_f}"'
-            )
+            cmd = [
+                "ffprobe",
+                "-v",
+                "error",
+                "-show_entries",
+                "format=duration",
+                "-of",
+                "default=noprint_wrappers=1:nokey=1",
+                quote(doc_f),
+            ]
+            vid_duration = await run_shell_cmds(join(cmd))
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
                 await unzip_bot.send_video(
@@ -239,9 +226,19 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                             + midpoint_str.split(".")[1][:2]
                         )
 
-                    await run_shell_cmds(
-                        f'ffmpeg -ss {midpoint_str} -i "{doc_f}" -vf "scale=320:320:force_original_aspect_ratio=decrease" -vframes 1 "{thmb_pth}"'
-                    )
+                    cmd = [
+                        "ffmpeg",
+                        "-ss",
+                        midpoint_str,
+                        "-i",
+                        quote(doc_f),
+                        "-vf",
+                        "scale=320:320:force_original_aspect_ratio=decrease",
+                        "-vframes",
+                        "1",
+                        quote(thmb_pth),
+                    ]
+                    await run_shell_cmds(join(cmd))
                 except Exception as e:
                     LOGGER.warning(e)
                     shutil.copy(Config.BOT_THUMB, thmb_pth)

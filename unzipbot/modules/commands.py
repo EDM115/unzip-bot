@@ -6,6 +6,7 @@ import shutil
 import time
 from asyncio import create_subprocess_shell, sleep, subprocess
 from contextlib import redirect_stderr, redirect_stdout
+from shlex import join
 from sys import executable
 
 import git
@@ -319,13 +320,13 @@ async def send_stats(_, message: Message):
         await send_stats(_, message)
 
 
-async def _do_broadcast(message, user):
+async def __do_broadcast(message, user):
     try:
         await message.copy(chat_id=int(user))
         return 200
     except FloodWait as f:
         await sleep(f.value)
-        return _do_broadcast(message, user)
+        return __do_broadcast(message, user)
     except Exception:
         await del_user(user)
         return 400
@@ -348,7 +349,7 @@ async def broadcast_this(_, message: Message):
     total_users = await count_users()
     await bc_msg.edit(messages.get("commands", "BC_START", uid, done_no, total_users))
     for user in users_list:
-        b_cast = await _do_broadcast(message=r_msg, user=user.get("user_id"))
+        b_cast = await __do_broadcast(message=r_msg, user=user.get("user_id"))
         if b_cast == 200:
             success_no += 1
         else:
@@ -400,7 +401,7 @@ async def send_this(_, message: Message):
         await sd_msg.edit(messages.get("commands", "PROVIDE_UID", uid))
         return
     await sd_msg.edit(messages.get("commands", "SENDING", uid))
-    send = await _do_broadcast(message=r_msg, user=user_id)
+    send = await __do_broadcast(message=r_msg, user=user_id)
     if send == 200:
         await sd_msg.edit(messages.get("commands", "SEND_SUCCESS", uid, user_id))
     else:
@@ -799,7 +800,9 @@ async def eval_command(_, message):
 @unzipbot_client.on_message(filters.command("exec") & filters.user(Config.BOT_OWNER))
 async def exec_command(_, message):
     cmd = message.text.split(" ", maxsplit=1)[1]
-    ulimit_command = f"ulimit -v {calculate_memory_limit()} && {cmd}"
+    memlimit = calculate_memory_limit()
+    ulimit_cmd = ["ulimit", "-v", str(memlimit), "&&", cmd]
+    ulimit_command = join(ulimit_cmd)
     process = await create_subprocess_shell(
         ulimit_command,
         stdout=subprocess.PIPE,

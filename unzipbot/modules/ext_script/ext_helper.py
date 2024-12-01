@@ -1,8 +1,8 @@
 import os
 import shutil
 import subprocess
-from asyncio import get_running_loop
-from functools import partial
+from asyncio import create_subprocess_shell, subprocess
+from shlex import join, quote
 
 from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
@@ -36,66 +36,74 @@ async def cleanup_macos_artifacts(extraction_path):
                 shutil.rmtree(os.path.join(root, name))
 
 
-def __run_cmds_unzip(command):
-    ulimit_command = f'ulimit -v {calculate_memory_limit()} && {command["cmd"]}'
-    ext_cmd = subprocess.Popen(
+async def run_shell_cmds(command):
+    memlimit = calculate_memory_limit()
+    ulimit_cmd = ["ulimit", "-v", str(memlimit), "&&", command]
+    ulimit_command = join(ulimit_cmd)
+    process = await create_subprocess_shell(
         ulimit_command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        shell=True,
         executable="/bin/bash",
     )
-    ext_out = ext_cmd.stdout.read()[:-1].decode("utf-8").rstrip("\n")
-    ext_err = ext_cmd.stderr.read()[:-1].decode("utf-8").rstrip("\n")
-    LOGGER.info("ext_out : " + ext_out)
-    LOGGER.info("ext_err : " + ext_err)
-    if ext_cmd.stderr:
-        ext_cmd.stderr.close()
-    if ext_cmd.stdout:
-        ext_cmd.stdout.close()
-    return ext_out + ext_err
+    stdout, stderr = await process.communicate()
 
+    e = stderr.decode()
+    o = stdout.decode()
+    LOGGER.info(f"command : {command}")
+    LOGGER.info(f"stdout : {o}")
+    LOGGER.info(f"stderr : {e}")
 
-async def run_cmds_on_cr(func, **kwargs):
-    loop = get_running_loop()
-    return await loop.run_in_executor(None, partial(func, kwargs))
+    return o + "\n" + e
 
 
 # Extract with 7z
-async def _extract_with_7z_helper(path, archive_path, password=None):
+async def __extract_with_7z_helper(path, archive_path, password=None):
     LOGGER.info("7z : " + archive_path + " : " + path)
     if password:
-        command = f'7z x -o"{path}" -p"{password}" "{archive_path}" -y'
+        cmd = [
+            "7z",
+            "x",
+            f"-o{quote(path)}",
+            f"-p{quote(password)}",
+            quote(archive_path),
+            "-y",
+        ]
     else:
-        command = f'7z x -o"{path}" "{archive_path}" -y'
-    return await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
+        cmd = ["7z", "x", f"-o{quote(path)}", quote(archive_path), "-y"]
+    result = await run_shell_cmds(join(cmd))
+    return result
 
 
-async def _test_with_7z_helper(archive_path):
+async def test_with_7z_helper(archive_path):
     password = "dont care + didnt ask + cry about it + stay mad + get real + L"  # skipcq: PTC-W1006, SCT-A000
-    command = f'7z t "{archive_path}" -p"{password}" -y'
-    return "Everything is Ok" in await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
+    cmd = ["7z", "t", f"-p{quote(password)}", quote(archive_path), "-y"]
+    result = await run_shell_cmds(join(cmd))
+    return "Everything is Ok" in result
 
 
-async def _extract_with_unrar_helper(path, archive_path, password=None):
+async def __extract_with_unrar_helper(path, archive_path, password=None):
     LOGGER.info("unrar : " + archive_path + " : " + path)
     if password:
-        command = f'unrar x "{archive_path}" "{path}" -p"{password}"'
+        cmd = ["unrar", "x", quote(archive_path), quote(path), f"-p{quote(password)}"]
     else:
-        command = f'unrar x "{archive_path}" "{path}"'
-    return await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
+        cmd = ["unrar", "x", quote(archive_path), quote(path)]
+    result = await run_shell_cmds(join(cmd))
+    return result
 
 
-async def _test_with_unrar_helper(archive_path):
+async def test_with_unrar_helper(archive_path):
     password = "dont care + didnt ask + cry about it + stay mad + get real + L"  # skipcq: PTC-W1006, SCT-A000
-    command = f'unrar t "{archive_path}" -p"{password}"'
-    return "All OK" in await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
+    cmd = ["unrar", "t", quote(archive_path), f"-p{quote(password)}"]
+    result = await run_shell_cmds(join(cmd))
+    return "All OK" in result
 
 
 # Extract with zstd (for .tar.zst files)
-async def _extract_with_zstd(path, archive_path):
-    command = f'zstd -f --output-dir-flat "{path}" -d "{archive_path}"'
-    return await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
+async def __extract_with_zstd(path, archive_path):
+    cmd = ["zstd", "-f", "--output-dir-flat", quote(path), "-d", quote(archive_path)]
+    result = await run_shell_cmds(join(cmd))
+    return result
 
 
 # Main function to extract files
@@ -131,25 +139,26 @@ async def extr_files(path, archive_path, password=None):
         LOGGER.info("tar")
         temp_path = path.rsplit("/", 1)[0] + "/tar_temp"
         os.makedirs(temp_path, exist_ok=True)
-        result = await _extract_with_7z_helper(temp_path, archive_path)
+        result = await __extract_with_7z_helper(temp_path, archive_path)
         filename = await get_files(temp_path)
         filename = filename[0]
-        command = f'tar -xvf "{filename}" -C "{path}"'
-        result += await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
+        cmd = ["tar", "-xvf", quote(filename), "-C", quote(path)]
+        result2 = await run_shell_cmds(join(cmd))
+        result += result2
         shutil.rmtree(temp_path)
     elif archive_path.endswith((".tar.zst", ".zst", ".tzst")):
         LOGGER.info("zstd")
         os.mkdir(path)
-        result = await _extract_with_zstd(path, archive_path)
+        result = await __extract_with_zstd(path, archive_path)
     elif archive_path.endswith(".rar"):
         LOGGER.info("rar")
         if password:
-            result = await _extract_with_unrar_helper(path, archive_path, password)
+            result = await __extract_with_unrar_helper(path, archive_path, password)
         else:
-            result = await _extract_with_unrar_helper(path, archive_path)
+            result = await __extract_with_unrar_helper(path, archive_path)
     else:
         LOGGER.info("normal archive")
-        result = await _extract_with_7z_helper(path, archive_path, password)
+        result = await __extract_with_7z_helper(path, archive_path, password)
     LOGGER.info(await get_files(path))
     await cleanup_macos_artifacts(path)
     return result
@@ -159,8 +168,16 @@ async def extr_files(path, archive_path, password=None):
 async def split_files(iinput, ooutput, size):
     temp_location = iinput + "_temp"
     shutil.move(iinput, temp_location)
-    command = f'7z a -tzip -mx=0 "{ooutput}" "{temp_location}" -v{size}b'
-    await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
+    cmd = [
+        "7z",
+        "a",
+        "-tzip",
+        "-mx=0",
+        quote(ooutput),
+        quote(temp_location),
+        f"-v{size}b",
+    ]
+    await run_shell_cmds(join(cmd))
     spdir = ooutput.replace("/" + ooutput.split("/")[-1], "")
     return await get_files(spdir)
 
@@ -168,10 +185,18 @@ async def split_files(iinput, ooutput, size):
 # Merge files
 async def merge_files(iinput, ooutput, password=None):
     if password:
-        command = f'7z x -o"{ooutput}" -p"{password}" "{iinput}" -y'
+        cmd = [
+            "7z",
+            "x",
+            f"-o{quote(ooutput)}",
+            f"-p{quote(password)}",
+            quote(iinput),
+            "-y",
+        ]
     else:
-        command = f'7z x -o"{ooutput}" "{iinput}" -y'
-    return await run_cmds_on_cr(__run_cmds_unzip, cmd=command)
+        cmd = ["7z", "x", f"-o{quote(ooutput)}", quote(iinput), "-y"]
+    result = await run_shell_cmds(join(cmd))
+    return result
 
 
 # Make keyboard

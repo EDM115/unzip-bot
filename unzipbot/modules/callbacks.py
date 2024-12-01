@@ -36,19 +36,20 @@ from unzipbot.helpers.database import (
     update_uploaded,
 )
 from unzipbot.helpers.unzip_help import (
+    ERROR_MSGS,
     TimeFormatter,
     extentions_list,
     humanbytes,
     progress_for_pyrogram,
 )
 from unzipbot.i18n.buttons import Buttons
-from unzipbot.i18n.messages import ERROR_MSGS, Messages
+from unzipbot.i18n.messages import Messages
 
 from .commands import get_stats, https_url_regex, sufficient_disk_space
 from .ext_script.custom_thumbnail import silent_del
 from .ext_script.ext_helper import (
-    _test_with_7z_helper,
-    _test_with_unrar_helper,
+    test_with_7z_helper,
+    test_with_unrar_helper,
     extr_files,
     get_files,
     make_keyboard,
@@ -948,9 +949,9 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             else:
                 ext_s_time = time()
                 if fext == "rar":
-                    tested = await _test_with_unrar_helper(archive)
+                    tested = await test_with_unrar_helper(archive)
                 else:
-                    tested = await _test_with_7z_helper(archive)
+                    tested = await test_with_7z_helper(archive)
                 ext_t_time = time()
                 testtime = TimeFormatter(round(ext_t_time - ext_s_time) * 1000)
                 if testtime == "":
