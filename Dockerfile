@@ -26,7 +26,7 @@ RUN pip install -U pip setuptools wheel && \
 
 FROM python:3.12-alpine
 
-ARG VERSION="7.0.1a"
+ARG VERSION="7.0.2a"
 
 LABEL org.opencontainers.image.authors="EDM115 <unzip@edm115.dev>"
 LABEL org.opencontainers.image.base.name="python:3.12-alpine"
@@ -39,6 +39,7 @@ LABEL org.opencontainers.image.version=${VERSION}
 RUN apk update && \
     apk add --no-cache \
         bash \
+        cgroup-tools \
         curl \
         ffmpeg \
         git \
@@ -46,8 +47,7 @@ RUN apk update && \
         tzdata \
         util-linux \
         zstd && \
-    apk add 7zip --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main && \
-    # apk add cgroup-tools --repository=https://dl-cdn.alpinelinux.org/alpine/3.20/community && \
+    apk add --no-cache 7zip --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main && \
     python -m venv /venv && \
     ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
     mkdir /app
