@@ -21,7 +21,7 @@ class Config:
     MAX_MESSAGE_LENGTH = 4096
     # 512 MB by default for Heroku, unlimited otherwise
     MAX_RAM_AMOUNT_KB = 1024 * 512 if IS_HEROKU else -1
-    MAX_RAM_USAGE = 100 if IS_HEROKU else 80
+    MAX_RAM_USAGE = 80
     MAX_TASK_DURATION_EXTRACT = 120 * 60  # 2 hours (in seconds)
     MAX_TASK_DURATION_MERGE = 240 * 60  # 4 hours (in seconds)
     MONGODB_URL = os.environ.get("MONGODB_URL")

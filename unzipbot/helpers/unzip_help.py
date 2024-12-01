@@ -146,7 +146,7 @@ def timeformat_sec(seconds: int) -> str:
 
 def calculate_memory_limit():
     if Config.MAX_RAM_AMOUNT_KB != -1:
-        return Config.MAX_RAM_AMOUNT_KB
+        return int(Config.MAX_RAM_AMOUNT_KB * Config.MAX_RAM_USAGE / 100)
 
     # we may need to use virtual_memory().available instead of total
     total_memory = psutil.virtual_memory().total
