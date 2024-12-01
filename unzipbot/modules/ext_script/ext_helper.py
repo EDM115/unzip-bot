@@ -2,7 +2,7 @@ import os
 import shutil
 import subprocess
 from asyncio import create_subprocess_shell, subprocess
-from shlex import join, quote
+from shlex import quote
 
 from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
@@ -40,7 +40,7 @@ async def cleanup_macos_artifacts(extraction_path):
 async def run_shell_cmds(command):
     memlimit = calculate_memory_limit()
     ulimit_cmd = ["ulimit", "-v", str(memlimit), "&&", command]
-    ulimit_command = join(ulimit_cmd)
+    ulimit_command = " ".join(ulimit_cmd)
     process = await create_subprocess_shell(
         ulimit_command,
         stdout=subprocess.PIPE,
@@ -74,7 +74,7 @@ async def __extract_with_7z_helper(path, archive_path, password=None):
     else:
         cmd = ["7z", "x", f"-o{quote(path)}", quote(archive_path), "-y"]
 
-    result = await run_shell_cmds(join(cmd))
+    result = await run_shell_cmds(" ".join(cmd))
 
     return result
 
@@ -82,7 +82,7 @@ async def __extract_with_7z_helper(path, archive_path, password=None):
 async def test_with_7z_helper(archive_path):
     password = "dont care + didnt ask + cry about it + stay mad + get real + L"  # skipcq: PTC-W1006, SCT-A000
     cmd = ["7z", "t", f"-p{quote(password)}", quote(archive_path), "-y"]
-    result = await run_shell_cmds(join(cmd))
+    result = await run_shell_cmds(" ".join(cmd))
 
     return "Everything is Ok" in result
 
@@ -95,7 +95,7 @@ async def __extract_with_unrar_helper(path, archive_path, password=None):
     else:
         cmd = ["unrar", "x", quote(archive_path), quote(path)]
 
-    result = await run_shell_cmds(join(cmd))
+    result = await run_shell_cmds(" ".join(cmd))
 
     return result
 
@@ -103,7 +103,7 @@ async def __extract_with_unrar_helper(path, archive_path, password=None):
 async def test_with_unrar_helper(archive_path):
     password = "dont care + didnt ask + cry about it + stay mad + get real + L"  # skipcq: PTC-W1006, SCT-A000
     cmd = ["unrar", "t", quote(archive_path), f"-p{quote(password)}"]
-    result = await run_shell_cmds(join(cmd))
+    result = await run_shell_cmds(" ".join(cmd))
 
     return "All OK" in result
 
@@ -111,7 +111,7 @@ async def test_with_unrar_helper(archive_path):
 # Extract with zstd (for .tar.zst files)
 async def __extract_with_zstd(path, archive_path):
     cmd = ["zstd", "-f", "--output-dir-flat", quote(path), "-d", quote(archive_path)]
-    result = await run_shell_cmds(join(cmd))
+    result = await run_shell_cmds(" ".join(cmd))
 
     return result
 
@@ -128,7 +128,7 @@ async def extr_files(path, archive_path, password=None):
         filename = await get_files(temp_path)
         filename = filename[0]
         cmd = ["tar", "-xvf", quote(filename), "-C", quote(path)]
-        result2 = await run_shell_cmds(join(cmd))
+        result2 = await run_shell_cmds(" ".join(cmd))
         result += result2
         shutil.rmtree(temp_path)
     elif archive_path.endswith((".tar.zst", ".zst", ".tzst")):
@@ -165,7 +165,7 @@ async def split_files(iinput, ooutput, size):
         quote(temp_location),
         f"-v{size}b",
     ]
-    await run_shell_cmds(join(cmd))
+    await run_shell_cmds(" ".join(cmd))
     spdir = ooutput.replace("/" + ooutput.split("/")[-1], "")
     files = await get_files(spdir)
 
@@ -186,7 +186,7 @@ async def merge_files(iinput, ooutput, password=None):
     else:
         cmd = ["7z", "x", f"-o{quote(ooutput)}", quote(iinput), "-y"]
 
-    result = await run_shell_cmds(join(cmd))
+    result = await run_shell_cmds(" ".join(cmd))
 
     return result
 

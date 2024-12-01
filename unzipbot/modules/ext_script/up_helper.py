@@ -5,7 +5,7 @@ import re
 import shutil
 from datetime import timedelta
 from time import time
-from shlex import join, quote
+from shlex import quote
 
 from pyrogram.errors import FloodWait, PhotoExtInvalid, PhotoSaveFileInvalid
 
@@ -194,7 +194,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                 "default=noprint_wrappers=1:nokey=1",
                 quote(doc_f),
             ]
-            vid_duration = await run_shell_cmds(join(cmd))
+            vid_duration = await run_shell_cmds(" ".join(cmd))
 
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
@@ -247,7 +247,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         "1",
                         quote(thmb_pth),
                     ]
-                    await run_shell_cmds(join(cmd))
+                    await run_shell_cmds(" ".join(cmd))
                 except Exception as e:
                     LOGGER.warning(e)
                     shutil.copy(Config.BOT_THUMB, thmb_pth)
