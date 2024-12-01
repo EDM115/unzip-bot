@@ -45,14 +45,20 @@ def check_logs():
     try:
         if Config.LOGS_CHANNEL:
             c_info = unzipbot_client.get_chat(chat_id=Config.LOGS_CHANNEL)
+
             if c_info.type in (enums.ChatType.PRIVATE, enums.ChatType.BOT):
                 LOGGER.error(messages.get("start", "PRIVATE_CHAT"))
+
                 return False
+
             return True
+
         LOGGER.error(messages.get("start", "NO_LOG_ID"))
+
         return False
     except:
         LOGGER.error(messages.get("start", "ERROR_LOG_CHECK"))
+
         return False
 
 
@@ -63,8 +69,10 @@ def dl_thumbs():
     i = 0
     maxthumbs = len(thumbs)
     LOGGER.info(messages.get("start", "DL_THUMBS", None, maxthumbs))
+
     for thumb in thumbs:
         file_path = Config.THUMB_LOCATION + "/" + str(thumb.get("_id")) + ".jpg"
+
         if thumb.get("url") is None and thumb.get("file_id") is not None:
             try:
                 unzipbot_client.download_media(
@@ -78,14 +86,16 @@ def dl_thumbs():
                     thumb.get("_id"),
                     messages.get("start", "MISSING_THUMB", thumb.get("_id")),
                 )
-                # we would also need to call del_thumb_db
         elif thumb.get("url") is not None and thumb.get("file_id") is None:
             loop2 = asyncio.get_event_loop()
             coroutine2 = download(thumb.get("url"), file_path)
             loop2.run_until_complete(coroutine2)
+
         if get_size(file_path) in (0, -1):
             os.remove(file_path)
+
         i += 1
+
         if i % 10 == 0 or i == maxthumbs:
             LOGGER.info(messages.get("start", "DOWNLOADED_THUMBS", None, i, maxthumbs))
 
@@ -103,6 +113,7 @@ async def check_boot():
     boot = await get_boot()
     old_boot = await get_old_boot()
     different = await is_boot_different()
+
     if different:
         try:
             await unzipbot_client.send_message(
@@ -117,14 +128,17 @@ async def check_boot():
             )
         except:
             pass  # first start obviously
+
         await warn_users()
 
 
 async def warn_users():
     await clear_cancel_tasks()
     await clear_merge_tasks()
+
     if await count_ongoing_tasks() > 0:
         tasks = await get_ongoing_tasks()
+
         for task in tasks:
             try:
                 await unzipbot_client.send_message(
@@ -139,6 +153,7 @@ async def warn_users():
                 )
             except:
                 pass  # user deleted chat
+
         await clear_ongoing_tasks()
 
 
@@ -151,8 +166,10 @@ def removal(firststart=False):
 async def remove_expired_tasks(firststart=False):
     ongoing_tasks = await get_ongoing_tasks()
     await clear_cancel_tasks()
+
     if firststart:
         await clear_ongoing_tasks()
+
         try:
             shutil.rmtree(Config.DOWNLOAD_LOCATION)
         except:
@@ -160,6 +177,7 @@ async def remove_expired_tasks(firststart=False):
     else:
         for task in ongoing_tasks:
             user_id = task.get("user_id")
+
             if not user_id == Config.BOT_OWNER:
                 current_time = time()
                 start_time = task.get("start_time")

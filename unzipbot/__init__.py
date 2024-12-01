@@ -6,6 +6,7 @@ from pyromod import listen  # skipcq: PY-W2000
 
 from config import Config
 
+
 boottime = time.time()
 plugins = dict(root="modules")
 

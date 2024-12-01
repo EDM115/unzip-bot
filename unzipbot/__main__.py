@@ -43,11 +43,13 @@ signal.signal(signal.SIGTERM, handler_stop_signals)
 async def async_shutdown_bot():
     stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
     LOGGER.info(messages.get("main", "STOP_TXT", None, stoptime))
+
     try:
         await unzipbot_client.send_message(
             chat_id=Config.LOGS_CHANNEL,
             text=messages.get("main", "STOP_TXT", None, stoptime),
         )
+
         with open("unzip-bot.log", "rb") as doc_f:
             try:
                 await unzipbot_client.send_document(
@@ -87,6 +89,7 @@ if __name__ == "__main__":
         )
         set_boot_time()
         LOGGER.info(messages.get("main", "CHECK_LOG"))
+
         if check_logs():
             LOGGER.info(messages.get("main", "LOG_CHECKED"))
             removal(True)
@@ -102,6 +105,7 @@ if __name__ == "__main__":
                 )
             except:
                 pass
+
             shutdown_bot()
     except Exception as e:
         LOGGER.error(messages.get("main", "ERROR_MAIN_LOOP", None, e))

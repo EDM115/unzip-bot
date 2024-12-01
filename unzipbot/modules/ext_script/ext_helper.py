@@ -9,7 +9,7 @@ from pyrogram.types import InlineKeyboardButton
 
 from unzipbot import LOGGER
 from unzipbot.helpers.database import get_lang
-from unzipbot.helpers.unzip_help import calculate_memory_limit
+from unzipbot.helpers.unzip_help import calculate_memory_limit, tarball_extensions
 from unzipbot.i18n.messages import Messages
 
 
@@ -23,6 +23,7 @@ async def get_files(path):
         for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(path)]
         for val in sublist
     ]  # skipcq: FLK-E501
+
     return sorted(path_list)
 
 
@@ -60,6 +61,7 @@ async def run_shell_cmds(command):
 # Extract with 7z
 async def __extract_with_7z_helper(path, archive_path, password=None):
     LOGGER.info("7z : " + archive_path + " : " + path)
+
     if password:
         cmd = [
             "7z",
@@ -71,7 +73,9 @@ async def __extract_with_7z_helper(path, archive_path, password=None):
         ]
     else:
         cmd = ["7z", "x", f"-o{quote(path)}", quote(archive_path), "-y"]
+
     result = await run_shell_cmds(join(cmd))
+
     return result
 
 
@@ -79,16 +83,20 @@ async def test_with_7z_helper(archive_path):
     password = "dont care + didnt ask + cry about it + stay mad + get real + L"  # skipcq: PTC-W1006, SCT-A000
     cmd = ["7z", "t", f"-p{quote(password)}", quote(archive_path), "-y"]
     result = await run_shell_cmds(join(cmd))
+
     return "Everything is Ok" in result
 
 
 async def __extract_with_unrar_helper(path, archive_path, password=None):
     LOGGER.info("unrar : " + archive_path + " : " + path)
+
     if password:
         cmd = ["unrar", "x", quote(archive_path), quote(path), f"-p{quote(password)}"]
     else:
         cmd = ["unrar", "x", quote(archive_path), quote(path)]
+
     result = await run_shell_cmds(join(cmd))
+
     return result
 
 
@@ -96,6 +104,7 @@ async def test_with_unrar_helper(archive_path):
     password = "dont care + didnt ask + cry about it + stay mad + get real + L"  # skipcq: PTC-W1006, SCT-A000
     cmd = ["unrar", "t", quote(archive_path), f"-p{quote(password)}"]
     result = await run_shell_cmds(join(cmd))
+
     return "All OK" in result
 
 
@@ -103,38 +112,14 @@ async def test_with_unrar_helper(archive_path):
 async def __extract_with_zstd(path, archive_path):
     cmd = ["zstd", "-f", "--output-dir-flat", quote(path), "-d", quote(archive_path)]
     result = await run_shell_cmds(join(cmd))
+
     return result
 
 
 # Main function to extract files
 async def extr_files(path, archive_path, password=None):
     os.makedirs(path, exist_ok=True)
-    tarball_extensions = (
-        ".tar.gz",
-        ".gz",
-        ".tgz",
-        ".taz",
-        ".tar.bz2",
-        ".bz2",
-        ".tb2",
-        ".tbz",
-        ".tbz2",
-        ".tz2",
-        ".tar.lz",
-        ".lz",
-        ".tar.lzma",
-        ".lzma",
-        ".tlz",
-        ".tar.lzo",
-        ".lzo",
-        ".tar.xz",
-        ".xz",
-        ".txz",
-        ".tar.z",
-        ".z",
-        ".tz",
-        ".taz",
-    )
+
     if archive_path.endswith(tarball_extensions):
         LOGGER.info("tar")
         temp_path = path.rsplit("/", 1)[0] + "/tar_temp"
@@ -152,6 +137,7 @@ async def extr_files(path, archive_path, password=None):
         result = await __extract_with_zstd(path, archive_path)
     elif archive_path.endswith(".rar"):
         LOGGER.info("rar")
+
         if password:
             result = await __extract_with_unrar_helper(path, archive_path, password)
         else:
@@ -159,8 +145,10 @@ async def extr_files(path, archive_path, password=None):
     else:
         LOGGER.info("normal archive")
         result = await __extract_with_7z_helper(path, archive_path, password)
+
     LOGGER.info(await get_files(path))
     await cleanup_macos_artifacts(path)
+
     return result
 
 
@@ -180,6 +168,7 @@ async def split_files(iinput, ooutput, size):
     await run_shell_cmds(join(cmd))
     spdir = ooutput.replace("/" + ooutput.split("/")[-1], "")
     files = await get_files(spdir)
+
     return files
 
 
@@ -196,7 +185,9 @@ async def merge_files(iinput, ooutput, password=None):
         ]
     else:
         cmd = ["7z", "x", f"-o{quote(ooutput)}", quote(iinput), "-y"]
+
     result = await run_shell_cmds(join(cmd))
+
     return result
 
 
@@ -205,6 +196,7 @@ async def make_keyboard(paths, user_id, chat_id, unziphttp, rzfile=None):
     num = 0
     i_kbd = InlineKeyboard(row_width=1)
     data = []
+
     if unziphttp:
         data.append(
             InlineKeyboardButton(
@@ -219,14 +211,17 @@ async def make_keyboard(paths, user_id, chat_id, unziphttp, rzfile=None):
                 f"ext_a|{user_id}|{chat_id}|{unziphttp}",
             )
         )
+
     data.append(
         InlineKeyboardButton(
             messages.get("ext_helper", "CANCEL_IT", user_id), "cancel_dis"
         )
     )
+
     for file in paths:
         if num > 96:
             break
+
         if unziphttp:
             data.append(
                 InlineKeyboardButton(
@@ -241,14 +236,18 @@ async def make_keyboard(paths, user_id, chat_id, unziphttp, rzfile=None):
                     f"ext_f|{user_id}|{chat_id}|{num}|{unziphttp}",
                 )
             )
+
         num += 1
+
     i_kbd.add(*data)
+
     return i_kbd
 
 
 async def make_keyboard_empty(user_id, chat_id, unziphttp, rzfile=None):
     i_kbd = InlineKeyboard(row_width=2)
     data = []
+
     if unziphttp:
         data.append(
             InlineKeyboardButton(
@@ -263,10 +262,13 @@ async def make_keyboard_empty(user_id, chat_id, unziphttp, rzfile=None):
                 f"ext_a|{user_id}|{chat_id}|{unziphttp}",
             )
         )
+
     data.append(
         InlineKeyboardButton(
             messages.get("ext_helper", "CANCEL_IT", user_id), "cancel_dis"
         )
     )
+
     i_kbd.add(*data)
+
     return i_kbd

@@ -8,6 +8,7 @@ from config import Config
 from unzipbot import unzipbot_client
 from unzipbot.i18n.messages import Messages
 
+
 mongodb = AsyncIOMotorClient(Config.MONGODB_URL)
 unzip_db = mongodb[Config.MONGODB_DBNAME]
 
@@ -18,7 +19,6 @@ def get_lang(user_id):
 
 messages = Messages(lang_fetcher=get_lang)
 
-
 # Users Database
 user_db = unzip_db["users_db"]
 
@@ -26,16 +26,20 @@ user_db = unzip_db["users_db"]
 async def add_user(user_id):
     new_user_id = int(user_id)
     is_exist = await user_db.find_one({"user_id": new_user_id})
+
     if is_exist is not None and is_exist:
         return -1
+
     await user_db.insert_one({"user_id": new_user_id})
 
 
 async def del_user(user_id):
     del_user_id = int(user_id)
     is_exist = await user_db.find_one({"user_id": del_user_id})
+
     if is_exist is not None and is_exist:
         await user_db.delete_one({"user_id": del_user_id})
+
     else:
         return -1
 
@@ -43,13 +47,16 @@ async def del_user(user_id):
 async def is_user_in_db(user_id):
     u_id = int(user_id)
     is_exist = await user_db.find_one({"user_id": u_id})
+
     if is_exist is not None and is_exist:
         return True
+
     return False
 
 
 async def count_users():
     users = await user_db.count_documents({})
+
     return users
 
 
@@ -64,14 +71,17 @@ b_user_db = unzip_db["banned_users_db"]
 async def add_banned_user(user_id):
     new_user_id = int(user_id)
     is_exist = await b_user_db.find_one({"banned_user_id": new_user_id})
+
     if is_exist is not None and is_exist:
         return -1
+
     await b_user_db.insert_one({"banned_user_id": new_user_id})
 
 
 async def del_banned_user(user_id):
     del_user_id = int(user_id)
     is_exist = await b_user_db.find_one({"banned_user_id": del_user_id})
+
     if is_exist is not None and is_exist:
         await b_user_db.delete_one({"banned_user_id": del_user_id})
     else:
@@ -81,13 +91,16 @@ async def del_banned_user(user_id):
 async def is_user_in_bdb(user_id):
     u_id = int(user_id)
     is_exist = await b_user_db.find_one({"banned_user_id": u_id})
+
     if is_exist is not None and is_exist:
         return True
+
     return False
 
 
 async def count_banned_users():
     users = await b_user_db.count_documents({})
+
     return users
 
 
@@ -99,28 +112,37 @@ async def check_user(message):
     # Checking if user is banned
     uid = message.from_user.id
     is_banned = await is_user_in_bdb(uid)
+
     if is_banned:
         await message.reply(messages.get("database", "BANNED"))
         await message.stop_propagation()
+
         return
+
     # Checking if user already in db
     is_in_db = await is_user_in_db(uid)
+
     if not is_in_db:
         await add_user(uid)
+
         try:
             firstname = message.from_user.first_name
         except:
             firstname = " "
+
         try:
             lastname = message.from_user.last_name
         except:
             lastname = " "
+
         try:
             username = message.from_user.username
         except:
             username = " "
+
         if firstname == " " and lastname == " " and username == " ":
             uname = message.from_user.mention
+
             try:
                 await unzipbot_client.send_message(
                     chat_id=Config.LOGS_CHANNEL,
@@ -137,12 +159,16 @@ async def check_user(message):
         else:
             if firstname is None:
                 firstname = " "
+
             if lastname is None:
                 lastname = " "
+
             if username is None:
                 username = " "
+
             uname = firstname + " " + lastname
             umention = " | @" + username
+
             try:
                 await unzipbot_client.send_message(
                     chat_id=Config.LOGS_CHANNEL,
@@ -174,16 +200,20 @@ async def check_user(message):
                     ),
                     disable_web_page_preview=False,
                 )
+
     await message.continue_propagation()
 
 
 async def get_all_users():
     users = []
     banned = []
+
     for i in range(await count_users()):
         users.append((await get_users_list())[i]["user_id"])
+
     for j in range(await count_banned_users()):
         banned.append((await get_banned_users_list())[j]["banned_user_id"])
+
     return users, banned
 
 
@@ -193,6 +223,7 @@ mode_db = unzip_db["ulmode_db"]
 
 async def set_upload_mode(user_id, mode):
     is_exist = await mode_db.find_one({"_id": user_id})
+
     if is_exist is not None and is_exist:
         await mode_db.update_one({"_id": user_id}, {"$set": {"mode": mode}})
     else:
@@ -201,8 +232,10 @@ async def set_upload_mode(user_id, mode):
 
 async def get_upload_mode(user_id):
     umode = await mode_db.find_one({"_id": user_id})
+
     if umode is not None and umode:
         return umode.get("mode")
+
     return "media"
 
 
@@ -212,13 +245,16 @@ uploaded_db = unzip_db["uploaded_count_db"]
 
 async def get_uploaded(user_id):
     up_count = await uploaded_db.find_one({"_id": user_id})
+
     if up_count is not None and up_count:
         return up_count.get("uploaded_files")
+
     return 0
 
 
 async def update_uploaded(user_id, upload_count):
     is_exist = await uploaded_db.find_one({"_id": user_id})
+
     if is_exist is not None and is_exist:
         new_count = await get_uploaded(user_id) + upload_count
         await uploaded_db.update_one(
@@ -234,13 +270,16 @@ thumb_db = unzip_db["thumb_db"]
 
 async def get_thumb(user_id):
     existing = await thumb_db.find_one({"_id": user_id})
+
     if existing is not None and existing:
         return existing
+
     return None
 
 
 async def update_temp_thumb(user_id, thumb_id):
     existing = await thumb_db.find_one({"_id": user_id})
+
     if existing is not None and existing:
         await thumb_db.update_one({"_id": user_id}, {"$set": {"temp": thumb_id}})
     else:
@@ -249,11 +288,13 @@ async def update_temp_thumb(user_id, thumb_id):
 
 async def update_thumb(user_id):
     existing = await thumb_db.find_one({"_id": user_id})
+
     if existing is not None and existing:
         await thumb_db.update_one(
             {"_id": user_id}, {"$set": {"file_id": existing.get("temp")}}
         )
         await thumb_db.update_one({"_id": user_id}, {"$unset": {"temp": ""}})
+
         if existing.get("url") is not None:
             await thumb_db.update_one({"_id": user_id}, {"$unset": {"url": ""}})
     else:
@@ -262,6 +303,7 @@ async def update_thumb(user_id):
 
 async def get_thumb_users():
     thumb_users = []
+
     async for thumb_list in thumb_db.find({}):
         if (
             "file_id" in thumb_list
@@ -275,17 +317,20 @@ async def get_thumb_users():
             await thumb_db.delete_one({"_id": thumb_list["_id"]})
         else:
             thumb_users.append(thumb_list)
+
     return thumb_users
 
 
 async def count_thumb_users():
     users = await thumb_db.count_documents({})
+
     return users
 
 
 async def del_thumb_db(user_id):
     del_thumb_id = int(user_id)
     is_exist = await thumb_db.find_one({"_id": del_thumb_id})
+
     if is_exist is not None and is_exist:
         await thumb_db.delete_one({"_id": del_thumb_id})
     else:
@@ -298,13 +343,16 @@ bot_data = unzip_db["bot_data"]
 
 async def get_boot():
     boot = await bot_data.find_one({"boot": True})
+
     if boot is not None and boot:
         return boot.get("time")
+
     return None
 
 
 async def set_boot(boottime):
     is_exist = await bot_data.find_one({"boot": True})
+
     if is_exist is not None and is_exist:
         await bot_data.update_one({"boot": True}, {"$set": {"time": boottime}})
     else:
@@ -313,6 +361,7 @@ async def set_boot(boottime):
 
 async def set_old_boot(boottime):
     is_exist = await bot_data.find_one({"old_boot": True})
+
     if is_exist is not None and is_exist:
         await bot_data.update_one({"old_boot": True}, {"$set": {"time": boottime}})
     else:
@@ -321,8 +370,10 @@ async def set_old_boot(boottime):
 
 async def get_old_boot():
     old_boot = await bot_data.find_one({"old_boot": True})
+
     if old_boot is not None and old_boot:
         return old_boot.get("time")
+
     return None
 
 
@@ -330,8 +381,10 @@ async def is_boot_different():
     different = True
     is_exist = await bot_data.find_one({"boot": True})
     is_exist_old = await bot_data.find_one({"old_boot": True})
+
     if is_exist and is_exist_old and is_exist.get("time") == is_exist_old.get("time"):
         different = False
+
     return different
 
 
@@ -345,6 +398,7 @@ async def get_ongoing_tasks():
 
 async def count_ongoing_tasks():
     tasks = await ongoing_tasks.count_documents({})
+
     return tasks
 
 
@@ -356,6 +410,7 @@ async def add_ongoing_task(user_id, start_time, task_type):
 
 async def del_ongoing_task(user_id):
     is_exist = await ongoing_tasks.find_one({"user_id": user_id})
+
     if is_exist is not None and is_exist:
         await ongoing_tasks.delete_one({"user_id": user_id})
     else:
@@ -376,6 +431,7 @@ async def get_cancel_tasks():
 
 async def count_cancel_tasks():
     tasks = await cancel_tasks.count_documents({})
+
     return tasks
 
 
@@ -386,6 +442,7 @@ async def add_cancel_task(user_id):
 
 async def del_cancel_task(user_id):
     is_exist = await cancel_tasks.find_one({"user_id": user_id})
+
     if is_exist is not None and is_exist:
         await cancel_tasks.delete_one({"user_id": user_id})
     else:
@@ -394,6 +451,7 @@ async def del_cancel_task(user_id):
 
 async def get_cancel_task(user_id):
     is_exist = await cancel_tasks.find_one({"user_id": user_id})
+
     return bool(is_exist is not None and is_exist)
 
 
@@ -402,7 +460,6 @@ async def clear_cancel_tasks():
 
 
 # DB for merge tasks
-
 merge_tasks = unzip_db["merge_tasks"]
 
 
@@ -412,6 +469,7 @@ async def get_merge_tasks():
 
 async def count_merge_tasks():
     tasks = await merge_tasks.count_documents({})
+
     return tasks
 
 
@@ -426,6 +484,7 @@ async def add_merge_task(user_id, message_id):
 
 async def del_merge_task(user_id):
     is_exist = await merge_tasks.find_one({"user_id": user_id})
+
     if is_exist is not None and is_exist:
         await merge_tasks.delete_one({"user_id": user_id})
     else:
@@ -434,13 +493,16 @@ async def del_merge_task(user_id):
 
 async def get_merge_task(user_id):
     is_exist = await merge_tasks.find_one({"user_id": user_id})
+
     return bool(is_exist is not None and is_exist)
 
 
 async def get_merge_task_message_id(user_id):
     is_exist = await merge_tasks.find_one({"user_id": user_id})
+
     if is_exist is not None and is_exist:
         return is_exist.get("message_id")
+
     return False
 
 
@@ -449,19 +511,21 @@ async def clear_merge_tasks():
 
 
 # DB for maintenance mode
-
 maintenance_mode = unzip_db["maintenance_mode"]
 
 
 async def get_maintenance():
     maintenance = await maintenance_mode.find_one({"maintenance": True})
+
     if maintenance is not None and maintenance:
         return maintenance.get("val")
+
     return False
 
 
 async def set_maintenance(val):
     is_exist = await maintenance_mode.find_one({"maintenance": True})
+
     if is_exist is not None and is_exist:
         await maintenance_mode.update_one({"maintenance": True}, {"$set": {"val": val}})
     else:
@@ -469,7 +533,6 @@ async def set_maintenance(val):
 
 
 # DB for VIP users
-
 vip_users = unzip_db["vip_users"]
 
 
@@ -489,6 +552,7 @@ async def add_vip_user(
     lifetime,
 ):
     is_exist = await vip_users.find_one({"_id": uid})
+
     if is_exist is not None and is_exist:
         await vip_users.update_one(
             {"_id": uid},
@@ -531,6 +595,7 @@ async def add_vip_user(
 
 async def remove_vip_user(uid):
     is_exist = await vip_users.find_one({"_id": uid})
+
     if is_exist is not None and is_exist:
         await vip_users.delete_one({"_id": uid})
     else:
@@ -539,6 +604,7 @@ async def remove_vip_user(uid):
 
 async def is_vip(uid):
     is_exist = await vip_users.find_one({"_id": uid})
+
     return bool(is_exist is not None and is_exist)
 
 
@@ -548,23 +614,26 @@ async def get_vip_users():
 
 async def count_vip_users():
     users = await vip_users.count_documents({})
+
     return users
 
 
 async def get_vip_user(uid):
     is_exist = await vip_users.find_one({"_id": uid})
+
     if is_exist is not None and is_exist:
         return is_exist
+
     return None
 
 
 # DB for referrals
-
 referrals = unzip_db["referrals"]
 
 
 async def add_referee(uid, referral_code):
     is_exist = await referrals.find_one({"_id": uid})
+
     if is_exist is not None and is_exist:
         await referrals.update_one(
             {"_id": uid}, {"$set": {"type": "referee", "referral_code": referral_code}}
@@ -577,6 +646,7 @@ async def add_referee(uid, referral_code):
 
 async def add_referrer(uid, referees):
     is_exist = await referrals.find_one({"_id": uid})
+
     if is_exist is not None and is_exist:
         await referrals.update_one(
             {"_id": uid}, {"$set": {"type": "referrer", "referees": referees}}
@@ -589,15 +659,19 @@ async def add_referrer(uid, referees):
 
 async def get_referee(uid):
     is_exist = await referrals.find_one({"_id": uid})
+
     if is_exist is not None and is_exist:
         return is_exist
+
     return None
 
 
 async def get_referrer(uid):
     is_exist = await referrals.find_one({"_id": uid})
+
     if is_exist is not None and is_exist:
         return is_exist
+
     return None
 
 

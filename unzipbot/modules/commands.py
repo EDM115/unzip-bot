@@ -62,6 +62,7 @@ def sufficient_disk_space(required_space):
 
     if free_space >= required_space and free_space >= five_percent_total:
         return True
+
     return False
 
 
@@ -69,13 +70,18 @@ def sufficient_disk_space(required_space):
 async def _(_, message: Message):
     await check_user(message)
     uid = message.from_user.id
+
     if uid != Config.BOT_OWNER and await get_maintenance():
         await message.reply(messages.get("commands", "MAINTENANCE_ON", uid))
+
         return
+
     if uid == Config.BOT_OWNER:
         return
+
     if await count_ongoing_tasks() >= Config.MAX_CONCURRENT_TASKS:
         ogtasks = await get_ongoing_tasks()
+
         if not any(uid == task.get("user_id") for task in ogtasks):
             try:
                 await message.reply(
@@ -90,6 +96,7 @@ async def _(_, message: Message):
                         "commands", "MAX_TASKS", uid, Config.MAX_CONCURRENT_TASKS
                     ),
                 )
+
             return
 
 
@@ -171,18 +178,24 @@ async def extract_archive(_, message: Message):
     try:
         if message.chat.type != enums.ChatType.PRIVATE:
             return
+
         user_id = message.from_user.id
         unzip_msg = await message.reply(
             messages.get("commands", "PROCESSING2", user_id),
             reply_to_message_id=message.id,
         )
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
+
         if os.path.isdir(download_path):
             await unzip_msg.edit(messages.get("commands", "PROCESS_RUNNING", user_id))
+
             return
+
         if await get_merge_task(user_id):
             await unzip_msg.delete()
+
             return
+
         if message.text and (re.match(https_url_regex, message.text)):
             await unzip_msg.edit(
                 text=messages.get("commands", "CHOOSE_EXT_MODE", user_id, "URL", "🔗"),
@@ -208,12 +221,14 @@ async def extract_archive(_, message: Message):
 @unzipbot_client.on_message(filters.private & filters.command("cancel"))
 async def cancel_task_by_user(_, message):
     idtodel = message.id - 1
+
     try:
         await unzipbot_client.delete_messages(
             chat_id=message.from_user.id, message_ids=idtodel
         )
     except:
         pass
+
     await message.reply(messages.get("commands", "CANCELLED", message.from_user.id))
 
 
@@ -323,12 +338,15 @@ async def send_stats(_, message: Message):
 async def __do_broadcast(message, user):
     try:
         await message.copy(chat_id=int(user))
+
         return 200
     except FloodWait as f:
         await sleep(f.value)
+
         return __do_broadcast(message, user)
     except Exception:
         await del_user(user)
+
         return 400
 
 
@@ -339,22 +357,29 @@ async def broadcast_this(_, message: Message):
     uid = message.from_user.id
     bc_msg = await message.reply(messages.get("commands", "PROCESSING2", uid))
     r_msg = message.reply_to_message
+
     if not r_msg:
         await bc_msg.edit(messages.get("commands", "BC_REPLY", uid))
+
         return
+
     users_list = await get_users_list()
     success_no = 0
     failed_no = 0
     done_no = 0
     total_users = await count_users()
     await bc_msg.edit(messages.get("commands", "BC_START", uid, done_no, total_users))
+
     for user in users_list:
         b_cast = await __do_broadcast(message=r_msg, user=user.get("user_id"))
+
         if b_cast == 200:
             success_no += 1
         else:
             failed_no += 1
+
         done_no += 1
+
         if done_no % 10 == 0 or done_no == total_users:
             try:
                 await bc_msg.edit(
@@ -392,16 +417,22 @@ async def send_this(_, message: Message):
     uid = message.from_user.id
     sd_msg = await message.reply(messages.get("commands", "PROCESSING2", uid))
     r_msg = message.reply_to_message
+
     if not r_msg:
         await sd_msg.edit(messages.get("commands", "SEND_REPLY", uid))
+
         return
+
     try:
         user_id = message.text.split(None, 1)[1]
     except:
         await sd_msg.edit(messages.get("commands", "PROVIDE_UID", uid))
+
         return
+
     await sd_msg.edit(messages.get("commands", "SENDING", uid))
     send = await __do_broadcast(message=r_msg, user=user_id)
+
     if send == 200:
         await sd_msg.edit(messages.get("commands", "SEND_SUCCESS", uid, user_id))
     else:
@@ -413,9 +444,12 @@ async def report_this(_, message: Message):
     uid = message.from_user.id
     sd_msg = await message.reply(messages.get("commands", "PROCESSING2", uid))
     r_msg = message.reply_to_message
+
     if not r_msg:
         await sd_msg.edit(messages.get("commands", "REPORT_REPLY", uid))
+
         return
+
     await sd_msg.edit(messages.get("commands", "SENDING", uid))
     await unzipbot_client.send_message(
         chat_id=Config.LOGS_CHANNEL,
@@ -428,18 +462,24 @@ async def report_this(_, message: Message):
 async def ban_user(_, message: Message):
     uid = message.from_user.id
     ban_msg = await message.reply(messages.get("commands", "PROCESSING2", uid))
+
     try:
         user_id = message.text.split(None, 1)[1]
     except:
         await ban_msg.edit(messages.get("commands", "BAN_ID", uid))
+
         return
+
     bdb = await add_banned_user(user_id)
     db = await del_user(user_id)
     text = ""
+
     if bdb == -1:
         text += messages.get("commands", "ALREADY_BANNED", uid, user_id)
+
     if db == -1:
         text += messages.get("commands", "ALREADY_REMOVED", uid, user_id)
+
     if text != "":
         await ban_msg.edit(text)
     else:
@@ -450,18 +490,24 @@ async def ban_user(_, message: Message):
 async def unban_user(_, message: Message):
     uid = message.from_user.id
     unban_msg = await message.reply(messages.get("commands", "PROCESSING2", uid))
+
     try:
         user_id = message.text.split(None, 1)[1]
     except:
         await unban_msg.edit(messages.get("commands", "UNBAN_ID", uid))
+
         return
+
     db = await add_user(user_id)
     bdb = await del_banned_user(user_id)
     text = ""
+
     if db == -1:
         text += messages.get("commands", "ALREADY_ADDED", uid, user_id)
+
     if bdb == -1:
         text += messages.get("commands", "ALREADY_UNBANNED", uid, user_id)
+
     if text != "":
         await unban_msg.edit(text)
     else:
@@ -482,14 +528,19 @@ async def info_user(_, message: Message):
     uid = message.from_user.id
     await message.reply(messages.get("commands", "USER", uid))
     info_user_msg = await message.reply(messages.get("commands", "PROCESSING2", uid))
+
     try:
         user_id = message.text.split(None, 1)[1]
     except:
         await info_user_msg.edit(messages.get("commands", "PROVIDE_UID", uid))
+
         return
+
     up_count = get_uploaded(user_id)
+
     if up_count == "":
         up_count = messages.get("commands", "UNABLE_FETCH", uid)
+
     await info_user_msg.edit(
         messages.get("commands", "USER_INFO", uid, user_id, up_count)
     )
@@ -499,21 +550,27 @@ async def info_user(_, message: Message):
 async def info_user2(_, message: Message):
     uid = message.from_user.id
     user2_msg = await message.reply(messages.get("commands", "PROCESSING2", uid))
+
     try:
         user_id = message.text.split(None, 1)[1]
     except:
         await user2_msg.edit(messages.get("commands", "PROVIDE_UID2", uid))
+
         return
+
     try:
         infos = await unzipbot_client.get_users(user_id)
     except:
         await user2_msg.edit(messages.get("commands", "UID_UNAME_INVALID", uid))
+
         return
+
     if not isinstance(user_id, int):
         try:
             user_id = infos.id
         except:
             pass
+
     await user2_msg.edit(messages.get("commands", "USER2_INFO", uid, infos, user_id))
 
 
@@ -529,8 +586,10 @@ async def info_self(_, message: Message):
 async def get_all_thumbs(_, message: Message):
     uid = message.from_user.id
     paths = await get_files(path=Config.THUMB_LOCATION)
+
     if not paths:
         await message.reply(messages.get("commands", "NO_THUMBS", uid))
+
     for doc_f in paths:
         try:
             await unzipbot_client.send_document(
@@ -574,14 +633,19 @@ async def maintenance_mode(_, message: Message):
         + messages.get("commands", "MAINTENANCE_ASK", uid)
     )
     mess = await message.reply(text)
+
     try:
         newstate = message.text.split(None, 1)[1]
     except:
         await mess.edit(messages.get("commands", "MAINTENANCE_FAIL", uid))
+
         return
+
     if newstate not in ["True", "False"]:
         await mess.edit(messages.get("commands", "MAINTENANCE_FAIL", uid))
+
         return
+
     await set_maintenance(newstate == "True")
     await message.reply(messages.get("commands", "MAINTENANCE_DONE", uid, newstate))
 
@@ -602,6 +666,7 @@ async def thumb_del(_, message: Message):
 async def del_everything(_, message: Message):
     uid = message.from_user.id
     cleaner = await message.reply(messages.get("commands", "ERASE_ALL", uid))
+
     try:
         shutil.rmtree(Config.DOWNLOAD_LOCATION)
         await cleaner.edit(messages.get("commands", "CLEANED", uid))
@@ -622,6 +687,7 @@ async def del_tasks(_, message: Message):
     for task in ongoing_tasks:
         user_id = task.get("user_id")
         await del_ongoing_task(user_id)
+
         try:
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
         except:
@@ -633,6 +699,7 @@ async def del_tasks(_, message: Message):
 async def send_logs(user_id):
     with open("unzip-bot.log", "rb") as doc_f:
         message = None
+
         try:
             message = await unzipbot_client.send_document(
                 chat_id=user_id,
@@ -651,6 +718,7 @@ async def send_logs(user_id):
             await unzipbot_client.send_message(chat_id=user_id, text=e)
         finally:
             doc_f.close()
+
             return message
 
 
@@ -672,14 +740,17 @@ async def restart(_, message: Message):
         LOGGER.info(messages.get("commands", "DELETED_FOLDER", None, folder_to_del))
     except:
         pass
+
     restarttime = time.strftime("%Y/%m/%d - %H:%M:%S")
     await message.reply_text(
         messages.get("commands", "RESTARTED_AT", message.from_user.id, restarttime),
         quote=True,
     )
     log_message = await send_logs(message.from_user.id)
+
     if log_message:
         log_message.forward(chat_id=Config.LOGS_CHANNEL)
+
     LOGGER.info(messages.get("commands", "RESTARTING", None, message.from_user.id))
     clear_logs()
     os.execl(executable, executable, "-m", "unzipbot")
@@ -692,6 +763,7 @@ async def pull_updates(_, message: Message):
     repo = git.Repo("/app")
     current = repo.head.commit
     repo.remotes.origin.pull()
+
     if current != repo.head.commit:
         await git_reply.edit(messages.get("commands", "PULLED", uid))
         await restart(_, message)
@@ -739,6 +811,7 @@ async def aexec(code, client, message):
     stdout = io.StringIO()
     stderr = io.StringIO()
     result = None
+
     with redirect_stdout(stdout), redirect_stderr(stderr):
         try:
             try:
@@ -759,6 +832,7 @@ async def aexec(code, client, message):
                 stderr.write(f"RecursionError : {str(e)}\n")
         except Exception as e:
             stderr.write(f"{type(e).__name__}: {str(e)}\n")
+
     return stdout.getvalue(), stderr.getvalue(), result
 
 
@@ -784,8 +858,10 @@ async def eval_command(_, message):
 
     if len(final_output) > Config.MAX_MESSAGE_LENGTH:
         trimmed_output = f"EVAL : {cmd}\n\nOUTPUT :\n{evaluation}"
+
         with open("eval.txt", "w+", encoding="utf8") as out_file:
             out_file.write(str(trimmed_output))
+
         await message.reply_document(
             document="eval.txt",
             caption=cmd,
@@ -819,6 +895,7 @@ async def exec_command(_, message):
 
     if len(OUTPUT) > Config.MAX_MESSAGE_LENGTH:
         T_OUTPUT = f"COMMAND :\n{cmd}\n\nOUTPUT :\n{o}\n\nERROR :\n{e}"
+
         with io.BytesIO(str.encode(T_OUTPUT)) as out_file:
             out_file.name = "exec.txt"
             await message.reply_document(

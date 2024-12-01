@@ -30,6 +30,7 @@ messages = Messages(lang_fetcher=get_lang)
 async def get_size(doc_f):
     try:
         fsize = os.stat(doc_f).st_size
+
         return fsize
     except:
         return -1
@@ -38,6 +39,7 @@ async def get_size(doc_f):
 # Send file to a user
 async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
     fsize = await get_size(doc_f)
+
     if fsize in (-1, 0):  # File not found or empty
         try:
             await unzipbot_client.send_message(
@@ -46,7 +48,9 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
             )
         except:
             pass
+
         return
+
     try:
         ul_mode = await get_upload_mode(c_id)
         fname = os.sep.join(os.path.abspath(doc_f).split(os.sep)[5:])
@@ -57,8 +61,10 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
             messages.get("up_helper", "PROCESSING2", c_id),
             disable_notification=True,
         )
+
         if ul_mode == "media" and fext in extentions_list["audio"]:
             metadata = await get_audio_metadata(doc_f)
+
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
                 await unzip_bot.send_audio(
@@ -189,6 +195,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                 quote(doc_f),
             ]
             vid_duration = await run_shell_cmds(join(cmd))
+
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
                 await unzip_bot.send_video(
@@ -210,8 +217,10 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                 thmb_pth = (
                     f"{Config.THUMB_LOCATION}/thumbnail_{os.path.basename(doc_f)}.jpg"
                 )
+
                 if os.path.exists(thmb_pth):
                     os.remove(thmb_pth)
+
                 try:
                     midpoint_seconds = int(float(vid_duration) / 2)
                     midpoint_timedelta = timedelta(seconds=midpoint_seconds)
@@ -258,6 +267,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                             unzip_bot,
                         ),
                     )
+
                     try:
                         os.remove(thmb_pth)
                     except:
@@ -331,6 +341,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         unzip_bot,
                     ),
                 )
+
         await upmsg.delete()
         os.remove(doc_f)
     except FloodWait as f:
@@ -344,6 +355,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
             )
         except:
             pass
+
         return
     except BaseException as e:
         LOGGER.error(e)
@@ -366,11 +378,14 @@ async def forward_file(message, cid):
 async def send_url_logs(unzip_bot, c_id, doc_f, source, message):
     try:
         u_file_size = os.stat(doc_f).st_size
+
         if Config.TG_MAX_SIZE < int(u_file_size):
             await unzip_bot.send_message(
                 chat_id=c_id, text=messages.get("up_helper", "TOO_LARGE", c_id)
             )
+
             return
+
         fname = os.path.basename(doc_f)
         await unzip_bot.send_document(
             chat_id=c_id,
@@ -386,6 +401,7 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source, message):
         )
     except FloodWait as f:
         await asyncio.sleep(f.value)
+
         return send_url_logs(unzip_bot, c_id, doc_f, source, message)
     except FileNotFoundError:
         await unzip_bot.send_message(

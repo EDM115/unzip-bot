@@ -27,12 +27,16 @@ async def add_thumb(_, message):
     try:
         uid = message.from_user.id
         user_id = str(uid)
+
         if message.reply_to_message is not None:
             reply_message = message.reply_to_message
+
             if reply_message.media_group_id is not None:  # album sent
                 LOGGER.info(messages.get("custom_thumbnail", "ALBUM", None, user_id))
                 await message.reply(messages.get("custom_thumbnail", "ALBUM_NOPE", uid))
+
                 return
+
             thumb_location = Config.THUMB_LOCATION + "/" + user_id + ".jpg"
             pre_thumb = Config.THUMB_LOCATION + "/not_resized_" + user_id + ".jpg"
             final_thumb = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
@@ -40,6 +44,7 @@ async def add_thumb(_, message):
             file = await _.download_media(message=reply_message)
             shutil.move(file, pre_thumb)
             size = (320, 320)
+
             try:
                 with Image.open(pre_thumb) as previous:
                     previous.thumbnail(size, Image.Resampling.LANCZOS)
@@ -52,11 +57,14 @@ async def add_thumb(_, message):
                         "custom_thumbnail", "THUMB_CAPTION", uid, user_id, user_id
                     ),
                 )
+
                 try:
                     os.remove(pre_thumb)
                 except:
                     pass
+
                 await update_temp_thumb(message.from_user.id, savedpic.photo.file_id)
+
                 if os.path.exists(thumb_location) and os.path.isfile(thumb_location):
                     await message.reply(
                         text=messages.get("custom_thumbnail", "EXISTING_THUMB", uid),
@@ -69,10 +77,12 @@ async def add_thumb(_, message):
                     )
             except:
                 LOGGER.info(messages.get("custom_thumbnail", "THUMB_FAILED"))
+
                 try:
                     os.remove(final_thumb)
                 except:
                     pass
+
                 await message.reply(
                     messages.get("custom_thumbnail", "THUMB_ERROR", uid)
                 )
@@ -91,6 +101,7 @@ async def del_thumb(message):
     try:
         uid = message.from_user.id
         thumb_location = Config.THUMB_LOCATION + "/" + str(uid) + ".jpg"
+
         if not os.path.exists(thumb_location):
             await message.reply(text=messages.get("custom_thumbnail", "NO_THUMB", uid))
         else:
@@ -105,4 +116,5 @@ async def del_thumb(message):
 
 async def thumb_exists(chat_id):
     thumb_location = Config.THUMB_LOCATION + "/" + str(chat_id) + ".jpg"
+
     return os.path.exists(thumb_location)

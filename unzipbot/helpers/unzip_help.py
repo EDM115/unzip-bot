@@ -17,6 +17,7 @@ messages = Messages(lang_fetcher=get_lang)
 
 async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_bot):
     uid = message.chat.id
+
     if message.chat.type == enums.ChatType.PRIVATE and await get_cancel_task(uid):
         await del_cancel_task(uid)
         await message.edit(text=messages.get("unzip_help", "DL_STOPPED", uid))
@@ -24,8 +25,10 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
     else:
         now = time.time()
         diff = now - start
+
         if total == 0:
             tmp = messages.get("unzip_help", "UNKNOWN_SIZE", uid)
+
             try:
                 await message.edit(
                     text=messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp),
@@ -50,6 +53,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
                 progress
                 + f'`{humanbytes(current)} of {humanbytes(total)}`\n{messages.get("unzip_help", "SPEED", uid)} `{humanbytes(speed)}/s`\n{messages.get("unzip_help", "ETA", uid)} `{estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"}`\n'
             )
+
             try:
                 await message.edit(
                     text=messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp),
@@ -69,6 +73,7 @@ async def progress_urls(current, total, ud_type, message, start):
     now = time.time()
     diff = now - start
     uid = message.chat.id
+
     if round(diff % 10.00) == 0 or current == total:
         percentage = current * 100 / total
         speed = current / diff
@@ -80,6 +85,7 @@ async def progress_urls(current, total, ud_type, message, start):
             progress
             + f'{messages.get("unzip_help", "ETA", uid)} `{estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"}`\n'
         )
+
         try:
             await message.edit(
                 messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp)
@@ -96,12 +102,15 @@ async def progress_urls(current, total, ud_type, message, start):
 def humanbytes(size):
     if not size:
         return ""
+
     power = 2**10
     n = 0
     Dic_powerN = {0: " ", 1: "Ki", 2: "Mi", 3: "Gi", 4: "Ti"}
+
     while size > power:
         size /= power
         n += 1
+
     return str(round(size, 2)) + " " + Dic_powerN.get(n) + "B"
 
 
@@ -117,6 +126,7 @@ def TimeFormatter(milliseconds: int) -> str:
         + ((str(seconds) + "s, ") if seconds else "")
         + ((str(milliseconds) + "ms, ") if milliseconds else "")
     )
+
     return tmp[:-2]
 
 
@@ -130,21 +140,23 @@ def timeformat_sec(seconds: int) -> str:
         + ((str(minutes) + "m, ") if minutes else "")
         + ((str(seconds) + "s, ") if seconds else "")
     )
+
     return tmp[:-2]
 
 
 def calculate_memory_limit():
     if Config.MAX_RAM_AMOUNT_KB != -1:
         return Config.MAX_RAM_AMOUNT_KB
+
     # we may need to use virtual_memory().available instead of total
     total_memory = psutil.virtual_memory().total
     memory_limit_kb = int(total_memory * Config.MAX_RAM_USAGE / 100 / 1024)
+
     return memory_limit_kb
 
 
 # List of error messages from 7zip
 ERROR_MSGS = ["Error", "Can't open as archive"]
-
 
 # List of common extentions
 extentions_list = {
@@ -191,3 +203,30 @@ extentions_list = {
     "split": ["0*", "001", "002", "003", "004", "005", "006", "007", "008", "009"],
     "video": ["3gp", "avi", "flv", "mp4", "mkv", "mov", "mpeg", "mpg", "webm"],
 }
+
+tarball_extensions = (
+    ".tar.gz",
+    ".gz",
+    ".tgz",
+    ".taz",
+    ".tar.bz2",
+    ".bz2",
+    ".tb2",
+    ".tbz",
+    ".tbz2",
+    ".tz2",
+    ".tar.lz",
+    ".lz",
+    ".tar.lzma",
+    ".lzma",
+    ".tlz",
+    ".tar.lzo",
+    ".lzo",
+    ".tar.xz",
+    ".xz",
+    ".txz",
+    ".tar.z",
+    ".z",
+    ".tz",
+    ".taz",
+)

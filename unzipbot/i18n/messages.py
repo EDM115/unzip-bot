@@ -29,6 +29,7 @@ class Messages:
         :return: Dictionary of messages.
         """
         file_path = f"{self.base_path}/{lang}.json"
+
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 return json.load(f)
@@ -51,6 +52,7 @@ class Messages:
         """
         lang = self.lang_fetcher(user_id) if user_id else self.default_lang
         messages = self.__load_language_file(lang)
+
         try:
             message = messages[file][key.lower()]
         except KeyError:
