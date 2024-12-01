@@ -4,7 +4,6 @@
 # origin : https://github.com/linuxserver/docker-sabnzbd/blob/444da02e31823289c4d4ca6ab407442bf6719e94/Dockerfile#L28-L38
 # source : https://www.reddit.com/r/AlpineLinux/comments/13p4p5k/comment/jmrdr24/
 # get unrar version : https://www.rarlab.com/rar_add.htm
-
 UNRAR_VERSION="7.1.1"
 
 echo "Installing unrar version: ${UNRAR_VERSION}"

@@ -1455,8 +1455,8 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
             if urled:
                 file = spl_data[4].open(file)
-                fsize = Config.TG_MAX_SIZE + 1
                 # security as we can't always retrieve the file size from URL
+                fsize = Config.TG_MAX_SIZE + 1
             else:
                 fsize = await get_size(file)
 
