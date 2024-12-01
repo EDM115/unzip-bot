@@ -1,4 +1,5 @@
 import os
+from shlex import join
 
 import mutagen.id3 as id3
 from mutagen.aac import AAC
@@ -12,7 +13,7 @@ from mutagen.oggopus import OggOpus
 from mutagen.oggvorbis import OggVorbis
 from mutagen.wave import WAVE
 
-from unzipbot.modules.ext_script.ext_helper import __run_cmds_unzip, run_cmds_on_cr
+from unzipbot.modules.ext_script.ext_helper import run_shell_cmds
 
 
 async def get_audio_metadata(file_path):
@@ -91,7 +92,7 @@ async def convert_and_save(file_path, target_format, metadata):
     new_file = os.path.join(directory, f"{basename}.{target_format}")
 
     cmd = ["ffmpeg", "-i", file_path, "-vn", new_file]
-    await run_cmds_on_cr(__run_cmds_unzip, cmd=cmd)
+    await run_shell_cmds(join(cmd))
 
     if target_format == "mp3":
         audio = MP3(new_file, ID3=EasyID3)
