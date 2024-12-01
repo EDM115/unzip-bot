@@ -179,7 +179,8 @@ async def split_files(iinput, ooutput, size):
     ]
     await run_shell_cmds(join(cmd))
     spdir = ooutput.replace("/" + ooutput.split("/")[-1], "")
-    return await get_files(spdir)
+    files = await get_files(spdir)
+    return files
 
 
 # Merge files

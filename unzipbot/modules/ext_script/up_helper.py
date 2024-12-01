@@ -335,7 +335,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         os.remove(doc_f)
     except FloodWait as f:
         await asyncio.sleep(f.value)
-        return await send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split)
+        await send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split)
     except FileNotFoundError:
         try:
             await unzipbot_client.send_message(
@@ -360,7 +360,7 @@ async def forward_file(message, cid):
         )
     except FloodWait as f:
         await asyncio.sleep(f.value)
-        return await forward_file(message, cid)
+        await forward_file(message, cid)
 
 
 async def send_url_logs(unzip_bot, c_id, doc_f, source, message):

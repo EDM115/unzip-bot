@@ -84,7 +84,7 @@ async def add_thumb(_, message):
             )
     except FloodWait as f:
         await sleep(f.value)
-        return await add_thumb(_, message)
+        await add_thumb(_, message)
 
 
 async def del_thumb(message):
@@ -100,7 +100,7 @@ async def del_thumb(message):
             )
     except FloodWait as f:
         await sleep(f.value)
-        return await del_thumb(message)
+        await del_thumb(message)
 
 
 async def thumb_exists(chat_id):
