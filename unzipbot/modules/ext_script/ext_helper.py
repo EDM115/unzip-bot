@@ -1,6 +1,5 @@
 import os
 import shutil
-import subprocess
 from asyncio import create_subprocess_shell, subprocess
 from shlex import quote
 
