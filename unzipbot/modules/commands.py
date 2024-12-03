@@ -6,7 +6,6 @@ import shutil
 import time
 from asyncio import create_subprocess_shell, sleep, subprocess
 from contextlib import redirect_stderr, redirect_stdout
-from shlex import join
 from sys import executable
 
 import git
@@ -878,7 +877,7 @@ async def exec_command(_, message):
     cmd = message.text.split(" ", maxsplit=1)[1]
     memlimit = calculate_memory_limit()
     ulimit_cmd = ["ulimit", "-v", str(memlimit), "&&", cmd]
-    ulimit_command = join(ulimit_cmd)
+    ulimit_command = " ".join(ulimit_cmd)
     process = await create_subprocess_shell(
         ulimit_command,
         stdout=subprocess.PIPE,
