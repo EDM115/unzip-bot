@@ -748,7 +748,7 @@ async def restart(_, message: Message):
     log_message = await send_logs(message.from_user.id)
 
     if log_message:
-        log_message.forward(chat_id=Config.LOGS_CHANNEL)
+        await log_message.forward(chat_id=Config.LOGS_CHANNEL)
 
     LOGGER.info(messages.get("commands", "RESTARTING", None, message.from_user.id))
     clear_logs()
