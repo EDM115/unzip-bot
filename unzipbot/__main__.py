@@ -79,7 +79,6 @@ def shutdown_bot():
 
 if __name__ == "__main__":
     try:
-        shutil.rmtree(Config.DOWNLOAD_LOCATION)
         os.makedirs(Config.DOWNLOAD_LOCATION, exist_ok=True)
         os.makedirs(Config.THUMB_LOCATION, exist_ok=True)
 
@@ -104,6 +103,9 @@ if __name__ == "__main__":
             removal(True)
             dl_thumbs()
             start_cron_jobs()
+            # clean previous downloads on volumes
+            shutil.rmtree(Config.DOWNLOAD_LOCATION)
+            os.makedirs(Config.DOWNLOAD_LOCATION, exist_ok=True)
             os.remove(Config.LOCKFILE)
             LOGGER.info(messages.get("main", "BOT_RUNNING"))
             idle()
@@ -121,5 +123,6 @@ if __name__ == "__main__":
     except Exception as e:
         LOGGER.error(messages.get("main", "ERROR_MAIN_LOOP", None, e))
     finally:
-        os.remove(Config.LOCKFILE)
+        if os.path.exists(Config.LOCKFILE):
+            os.remove(Config.LOCKFILE)
         shutdown_bot()
