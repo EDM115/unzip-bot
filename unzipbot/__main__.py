@@ -78,11 +78,12 @@ def shutdown_bot():
 
 
 if __name__ == "__main__":
+    lockfile = Config.DOWNLOAD_LOCATION + "/start.lock"
+
     try:
         shutil.rmtree(Config.DOWNLOAD_LOCATION)
         os.makedirs(Config.DOWNLOAD_LOCATION, exist_ok=True)
         os.makedirs(Config.THUMB_LOCATION, exist_ok=True)
-        lockfile = Config.DOWNLOAD_LOCATION + "/start.lock"
 
         if os.path.exists(lockfile):
             os.remove(lockfile)
