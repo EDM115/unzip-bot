@@ -1,5 +1,7 @@
 import os
 
+import psutil
+
 
 class Config:
     APP_ID = int(os.environ.get("APP_ID"))
@@ -19,6 +21,8 @@ class Config:
     )
     MAX_CONCURRENT_TASKS = 75
     MAX_MESSAGE_LENGTH = 4096
+    MAX_CPU_CORES_COUNT = psutil.cpu_count(logical=False)
+    MAX_CPU_USAGE = 80
     # 512 MB by default for Heroku, unlimited otherwise
     MAX_RAM_AMOUNT_KB = 1024 * 512 if IS_HEROKU else -1
     MAX_RAM_USAGE = 80
@@ -28,4 +32,4 @@ class Config:
     MONGODB_DBNAME = os.environ.get("MONGODB_DBNAME", "Unzipper_Bot")
     TG_MAX_SIZE = 2097152000
     THUMB_LOCATION = f"{os.path.dirname(__file__)}/Thumbnails"
-    VERSION = os.environ.get("UNZIPBOT_VERSION", "7.1.0a")
+    VERSION = os.environ.get("UNZIPBOT_VERSION", "7.1.1a")

@@ -876,7 +876,8 @@ async def eval_command(_, message):
 async def exec_command(_, message):
     cmd = message.text.split(" ", maxsplit=1)[1]
     memlimit = calculate_memory_limit()
-    ulimit_cmd = ["ulimit", "-v", str(memlimit), "&&", cmd]
+    cpulimit = Config.MAX_CPU_CORES_COUNT * Config.MAX_CPU_USAGE
+    ulimit_cmd = ["ulimit", "-v", str(memlimit), "&&", "cpulimit", "-l", str(cpulimit), "--", cmd]
     ulimit_command = " ".join(ulimit_cmd)
     process = await create_subprocess_shell(
         ulimit_command,

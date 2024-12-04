@@ -38,7 +38,8 @@ async def cleanup_macos_artifacts(extraction_path):
 
 async def run_shell_cmds(command):
     memlimit = calculate_memory_limit()
-    ulimit_cmd = ["ulimit", "-v", str(memlimit), "&&", command]
+    cpulimit = Config.MAX_CPU_CORES_COUNT * Config.MAX_CPU_USAGE
+    ulimit_cmd = ["ulimit", "-v", str(memlimit), "&&", "cpulimit", "-l", str(cpulimit), "--", command]
     ulimit_command = " ".join(ulimit_cmd)
     process = await create_subprocess_shell(
         ulimit_command,
