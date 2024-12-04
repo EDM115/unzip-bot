@@ -14,6 +14,7 @@ class Config:
     CHUNK_SIZE = 1024 * 1024 * 10  # 10 MB
     DOWNLOAD_LOCATION = f"{os.path.dirname(__file__)}/Downloaded"
     IS_HEROKU = os.environ.get("DYNO", "").startswith("worker.")
+    LOCKFILE = "/tmp/unzipbot.lock"
     LOGS_CHANNEL = (
         int(os.environ.get("LOGS_CHANNEL"))
         if os.environ.get("LOGS_CHANNEL").strip("-").isdigit()

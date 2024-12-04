@@ -180,7 +180,7 @@ async def extract_archive(_, message: Message):
 
         user_id = message.from_user.id
 
-        if os.path.exists(Config.DOWNLOAD_LOCATION + "/start.lock"):
+        if os.path.exists(Config.LOCKFILE):
             await message.reply(messages.get("commands", "STILL_STARTING", user_id))
             return
 

@@ -78,17 +78,15 @@ def shutdown_bot():
 
 
 if __name__ == "__main__":
-    lockfile = Config.DOWNLOAD_LOCATION + "/start.lock"
-
     try:
         shutil.rmtree(Config.DOWNLOAD_LOCATION)
         os.makedirs(Config.DOWNLOAD_LOCATION, exist_ok=True)
         os.makedirs(Config.THUMB_LOCATION, exist_ok=True)
 
-        if os.path.exists(lockfile):
-            os.remove(lockfile)
+        if os.path.exists(Config.LOCKFILE):
+            os.remove(Config.LOCKFILE)
 
-        with open(lockfile, "w") as lock_f:
+        with open(Config.LOCKFILE, "w") as lock_f:
             pass  # create the lock file
 
         LOGGER.info(messages.get("main", "STARTING_BOT"))
@@ -106,7 +104,7 @@ if __name__ == "__main__":
             removal(True)
             dl_thumbs()
             start_cron_jobs()
-            os.remove(lockfile)
+            os.remove(Config.LOCKFILE)
             LOGGER.info(messages.get("main", "BOT_RUNNING"))
             idle()
         else:
@@ -118,10 +116,10 @@ if __name__ == "__main__":
             except:
                 pass
 
-            os.remove(lockfile)
+            os.remove(Config.LOCKFILE)
             shutdown_bot()
     except Exception as e:
         LOGGER.error(messages.get("main", "ERROR_MAIN_LOOP", None, e))
     finally:
-        os.remove(lockfile)
+        os.remove(Config.LOCKFILE)
         shutdown_bot()
