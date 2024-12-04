@@ -179,6 +179,11 @@ async def extract_archive(_, message: Message):
             return
 
         user_id = message.from_user.id
+
+        if os.path.exists(Config.DOWNLOAD_LOCATION + "/start.lock"):
+            await message.reply(messages.get("commands", "STILL_STARTING", user_id))
+            return
+
         unzip_msg = await message.reply(
             messages.get("commands", "PROCESSING2", user_id),
             reply_to_message_id=message.id,

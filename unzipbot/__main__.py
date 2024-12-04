@@ -80,6 +80,14 @@ if __name__ == "__main__":
     try:
         os.makedirs(Config.DOWNLOAD_LOCATION, exist_ok=True)
         os.makedirs(Config.THUMB_LOCATION, exist_ok=True)
+        lockfile = Config.DOWNLOAD_LOCATION + "/start.lock"
+
+        if os.path.exists(lockfile):
+            os.remove(lockfile)
+
+        with open(lockfile, "w") as lock_f:
+            pass  # create the lock file
+
         LOGGER.info(messages.get("main", "STARTING_BOT"))
         unzipbot_client.start()
         starttime = time.strftime("%Y/%m/%d - %H:%M:%S")
@@ -95,6 +103,7 @@ if __name__ == "__main__":
             removal(True)
             dl_thumbs()
             start_cron_jobs()
+            os.remove(lockfile)
             LOGGER.info(messages.get("main", "BOT_RUNNING"))
             idle()
         else:
@@ -106,8 +115,10 @@ if __name__ == "__main__":
             except:
                 pass
 
+            os.remove(lockfile)
             shutdown_bot()
     except Exception as e:
         LOGGER.error(messages.get("main", "ERROR_MAIN_LOOP", None, e))
     finally:
+        os.remove(lockfile)
         shutdown_bot()

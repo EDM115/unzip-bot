@@ -144,6 +144,7 @@
     "start_text": "Hi **{}** 👋, I'm the **unzip-bot** 🥰\n\nI can extract any archive, with password or not, splitted, …\nSend **/commands** to learn more\n\n**Made with ❤️ by @EDM115bots**\n**/donate** if you can 🥺",
     "stats": "**💫 Current bot stats 💫**\n\n**💾 Disk usage :**\n ↳ **Total disk space :** `{}`\n ↳ **Used :** `{} - {}%`\n ↳ **Free :** `{}`\n ↳ **Ongoing tasks :** `{}`\n\n**🎛 Hardware usage :**\n ↳ **CPU usage :** `{}%`\n ↳ **RAM usage :** `{}%`\n ↳ **Uptime :** `{}`",
     "stats_owner": "**💫 Current bot stats 💫**\n\n**👥 Users :**\n ↳ **Users in database :** `{}`\n ↳ **Total banned users :** `{}`\n\n**💾 Disk usage :**\n ↳ **Total disk space :** `{}`\n ↳ **Used :** `{} - {}%`\n ↳ **Free :** `{}`\n ↳ **Ongoing tasks :** `{}`\n\n**🌐 Network usage :**\n ↳ **Uploaded :** `{}`\n ↳ **Downloaded :** `{}`\n\n**🎛 Hardware usage :**\n ↳ **CPU usage :** `{}%`\n ↳ **RAM usage :** `{}%`\n ↳ **Uptime :** `{}`",
+    "still_starting": "The bot is still starting, please wait… 😪",
     "uid_uname_invalid": "Error happened, The user ID/username is probably invalid",
     "unable_fetch": "Unable to fetch",
     "unban_id": "Give an user id to unban 😇",
