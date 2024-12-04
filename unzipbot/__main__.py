@@ -1,5 +1,6 @@
 import asyncio
 import os
+import shutil
 import signal
 import time
 
@@ -78,6 +79,7 @@ def shutdown_bot():
 
 if __name__ == "__main__":
     try:
+        shutil.rmtree(Config.DOWNLOAD_LOCATION)
         os.makedirs(Config.DOWNLOAD_LOCATION, exist_ok=True)
         os.makedirs(Config.THUMB_LOCATION, exist_ok=True)
         lockfile = Config.DOWNLOAD_LOCATION + "/start.lock"
