@@ -225,4 +225,3 @@ async def scheduled_remove_expired_tasks():
 
 def start_cron_jobs():
     scheduled_remove_expired_tasks.start()
-    asyncio.get_event_loop().run_forever()

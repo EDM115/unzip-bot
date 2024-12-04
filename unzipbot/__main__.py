@@ -110,12 +110,12 @@ if __name__ == "__main__":
             LOGGER.info(messages.get("main", "LOG_CHECKED"))
             removal(True)
             dl_thumbs()
+            start_cron_jobs()
             # clean previous downloads on volumes
             recurse_delete(Config.DOWNLOAD_LOCATION)
             os.makedirs(Config.DOWNLOAD_LOCATION, exist_ok=True)
             os.remove(Config.LOCKFILE)
             LOGGER.info(messages.get("main", "BOT_RUNNING"))
-            start_cron_jobs()
             idle()
         else:
             try:
