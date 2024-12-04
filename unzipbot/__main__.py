@@ -94,7 +94,7 @@ if __name__ == "__main__":
             os.remove(Config.LOCKFILE)
 
         with open(Config.LOCKFILE, "w") as lock_f:
-            pass  # create the lock file
+            lock_f.close()
 
         LOGGER.info(messages.get("main", "STARTING_BOT"))
         unzipbot_client.start()
@@ -112,8 +112,8 @@ if __name__ == "__main__":
             dl_thumbs()
             start_cron_jobs()
             # clean previous downloads on volumes
-            recurse_delete(Config.DOWNLOAD_LOCATION)
-            os.makedirs(Config.DOWNLOAD_LOCATION, exist_ok=True)
+            # recurse_delete(Config.DOWNLOAD_LOCATION)
+            # os.makedirs(Config.DOWNLOAD_LOCATION, exist_ok=True)
             os.remove(Config.LOCKFILE)
             LOGGER.info(messages.get("main", "BOT_RUNNING"))
             idle()
