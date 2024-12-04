@@ -23,6 +23,14 @@ from .i18n.messages import Messages
 messages = Messages(lang_fetcher=get_lang)
 
 
+def recurse_delete(dir):
+    for items in os.listdir(dir):
+        if os.path.isdir(os.path.join(dir, items)):
+            shutil.rmtree(os.path.join(dir, items), ignore_errors=True)
+        else:
+            os.remove(os.path.join(dir, items))
+
+
 def handler_stop_signals(signum, frame):
     LOGGER.info(
         messages.get(
@@ -104,7 +112,7 @@ if __name__ == "__main__":
             dl_thumbs()
             start_cron_jobs()
             # clean previous downloads on volumes
-            shutil.rmtree(Config.DOWNLOAD_LOCATION)
+            recurse_delete(Config.DOWNLOAD_LOCATION)
             os.makedirs(Config.DOWNLOAD_LOCATION, exist_ok=True)
             os.remove(Config.LOCKFILE)
             LOGGER.info(messages.get("main", "BOT_RUNNING"))

@@ -6,6 +6,7 @@ from shlex import quote
 from pykeyboard import InlineKeyboard
 from pyrogram.types import InlineKeyboardButton
 
+from config import Config
 from unzipbot import LOGGER
 from unzipbot.helpers.database import get_lang
 from unzipbot.helpers.unzip_help import calculate_memory_limit, tarball_extensions
