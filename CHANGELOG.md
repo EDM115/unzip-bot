@@ -11,7 +11,85 @@
 
 ---
 
-### v7.0.0a **[LATEST ALPHA RELEASE]**
+### v7.1.4a **[LATEST ALPHA RELEASE]**
+- Try the KurimuzonAkuma fork of `pyrogram`
+- Bump `unrar` and `python` versions
+- Correctly display the unrar version on the build script
+- Already present thumbnails aren't downloaded on a start (useful when they are stored in a volume)
+
+### v7.1.3a
+- Cleans the download dir on startup (especially helps when the bot is running with a volume attached)
+- Fixed issues with the lockfile that prevented the bot from starting
+- Removed an infinite loop that caused the bot to never go idle
+
+### v7.1.2a
+- Creates a lock file on start
+- Deletes it in case of errors/shutting down
+- Restricts users from processing archives when the bot haven't started yet
+
+### v7.1.1a
+- Fixed `/exec` not being able to run properly
+- `/restart` now sends correctly the logs
+- Revert switch to `pyroblack`
+- Limit CPU usage too using `cpulimit`
+  - Gets maxed at 80% of the current amount of cores for shell tasks
+  - Ensures enough room is left to the bot process
+
+### v7.1.0a
+- Stop using `return await` in async functions
+- apply my very own code style on top of black
+  - manually done yet
+  - inspired by my heavily modified ESLint Stylistic config (https://github.com/EDM115/website/blob/master/eslint.config.js)
+  - simply spaces out return, try, if, with, ... blocks to determine easier the branches that the program may take
+- Fixed a crash in the previous version
+- Use 80% of the available RAM on Heroku too instead of 100%
+- Shell commands are no longer using `shlex.join` to avoid several issues with path interpretation
+- Removal of duplicate logic
+- Video duration is properly parsed now, and the logic to catch non generated thumbnail is simplified
+- Migrate from `pyrogram` to `pyroblack`
+
+### v7.0.3a
+- Moved `ERROR_MSGS` strings to a better place
+- Private functions have a more coherent naming
+- Uses `asyncio.create_subprocess_shell()` instead of the hackish way that was present before
+- Uses `shlex` to sanitize user input for shell commands (file paths and archive passwords)
+- Fixed an oversight where `ffmpeg` commands were thread blocking
+
+### v7.0.2a
+- Bumped `aiohttp`
+- The bot now stops properly when sent SIGKILL
+- Fixed an issue with formatting of strings
+- Implemented a momory limit on ran commands to avoid R14 and R15 errors on Heroku (first using `resource` then `ulimit`)
+- `/restart` and `/gitpull` now sends logs to the logs channel
+- Shell commands now uses `bash` instead of `sh`
+- Set a manual limit of RAM in Heroku (512 MB, can be manually changed) to avoid getting the limit being pulled from system info (wrong data as it gets it from the entire host)
+
+### v7.0.1a
+- Strings processing is entirely redone
+  - ALL strings are in JSON files, which will help with future translation
+  - Only english supported for now
+  - Deleted unused strings, moved plain text to the JSON, fixed grammar mistakes
+  - Splitted buttons and messages processing
+  - Added a default language that gets used for non-user tied strings and logs
+  - Untranslated strings falls back to english (or default language)
+  - Strings keys aren't definitives, hence why I haven't already started a translation
+- Removed copyright mentions in files, added MIT notice in the start script
+- More commands that were restricted to the Bot Owner can now be ran outside of DM, ex in the logs group (if he's not anonymous)
+- `7zip` is now installed from the `edge` repository to fix an issue with volumes creation
+- During the split of a file, it is now moved to a temp location to avoid filename clash
+- Users can finally cancel a task (see [#28](https://github.com/EDM115/unzip-bot/issues/28)), however it doesn't work perfectly for splitted archives download for example
+- The canceled task list is cleared at each restart and every 5 min
+
+### v7.0.0a-herokufix
+- Added labels to the Docker image
+- Removed useless files and buildpacks for Heroku
+- Added `MONGODB_DBNAME` as an option for Heroku deployment
+- Fixed env vars issue in Heroku
+- Remove null and temp values for the thumbs db
+- Download the thumbs only after removing any previous tasks
+- Removed quotes from the `.env`
+
+### v7.0.0a
 - First iteration of the massive refactor/rewrite
 - Applied isort and black code style
 - Fixed the AUTHORS file
