@@ -92,9 +92,9 @@ async def __extract_with_unrar_helper(path, archive_path, password=None):
     LOGGER.info("unrar : " + archive_path + " : " + path)
 
     if password:
-        cmd = ["unrar", "x", quote(archive_path), quote(path), f"-p{quote(password)}"]
+        cmd = ["unrar", "x", quote(archive_path), quote(path), f"-p{quote(password)}", "-y"]
     else:
-        cmd = ["unrar", "x", quote(archive_path), quote(path)]
+        cmd = ["unrar", "x", quote(archive_path), quote(path), "-y"]
 
     result = await run_shell_cmds(" ".join(cmd))
 
@@ -103,7 +103,7 @@ async def __extract_with_unrar_helper(path, archive_path, password=None):
 
 async def test_with_unrar_helper(archive_path):
     password = "dont care + didnt ask + cry about it + stay mad + get real + L"  # skipcq: PTC-W1006, SCT-A000
-    cmd = ["unrar", "t", quote(archive_path), f"-p{quote(password)}"]
+    cmd = ["unrar", "t", quote(archive_path), f"-p{quote(password)}", "-y"]
     result = await run_shell_cmds(" ".join(cmd))
 
     return "All OK" in result
