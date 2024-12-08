@@ -11,10 +11,7 @@
 
 ---
 
-### v7.1.5a **[LATEST ALPHA RELEASE]**
-- Switch to `pyroblack` again
-
-### v7.1.4a
+### v7.1.4a **[LATEST ALPHA RELEASE]**
 - Try the KurimuzonAkuma fork of `pyrogram`
 - Bump `unrar` and `python` versions
 - Correctly display the unrar version on the build script
