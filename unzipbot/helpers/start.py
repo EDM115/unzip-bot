@@ -73,23 +73,24 @@ def dl_thumbs():
     for thumb in thumbs:
         file_path = Config.THUMB_LOCATION + "/" + str(thumb.get("_id")) + ".jpg"
 
-        if thumb.get("url") is None and thumb.get("file_id") is not None:
-            try:
-                unzipbot_client.download_media(
-                    message=thumb.get("file_id"),
-                    file_name=file_path,
-                )
-            except:
-                # Here we could encounter 400 FILE_REFERENCE_EXPIRED
-                # A possible fix is to retrieve the message again with chat ID + message ID to get a refreshed file reference
-                unzipbot_client.send_message(
-                    thumb.get("_id"),
-                    messages.get("start", "MISSING_THUMB", thumb.get("_id")),
-                )
-        elif thumb.get("url") is not None and thumb.get("file_id") is None:
-            loop2 = asyncio.get_event_loop()
-            coroutine2 = download(thumb.get("url"), file_path)
-            loop2.run_until_complete(coroutine2)
+        if not os.path.exists(file_path):
+            if thumb.get("url") is None and thumb.get("file_id") is not None:
+                try:
+                    unzipbot_client.download_media(
+                        message=thumb.get("file_id"),
+                        file_name=file_path,
+                    )
+                except:
+                    # Here we could encounter 400 FILE_REFERENCE_EXPIRED
+                    # A possible fix is to retrieve the message again with chat ID + message ID to get a refreshed file reference
+                    unzipbot_client.send_message(
+                        thumb.get("_id"),
+                        messages.get("start", "MISSING_THUMB", thumb.get("_id")),
+                    )
+            elif thumb.get("url") is not None and thumb.get("file_id") is None:
+                loop2 = asyncio.get_event_loop()
+                coroutine2 = download(thumb.get("url"), file_path)
+                loop2.run_until_complete(coroutine2)
 
         if get_size(file_path) in (0, -1):
             os.remove(file_path)
