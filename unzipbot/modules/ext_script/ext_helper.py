@@ -40,7 +40,17 @@ async def cleanup_macos_artifacts(extraction_path):
 async def run_shell_cmds(command):
     memlimit = calculate_memory_limit()
     cpulimit = Config.MAX_CPU_CORES_COUNT * Config.MAX_CPU_USAGE
-    ulimit_cmd = ["ulimit", "-v", str(memlimit), "&&", "cpulimit", "-l", str(cpulimit), "--", command]
+    ulimit_cmd = [
+        "ulimit",
+        "-v",
+        str(memlimit),
+        "&&",
+        "cpulimit",
+        "-l",
+        str(cpulimit),
+        "--",
+        command,
+    ]
     ulimit_command = " ".join(ulimit_cmd)
     process = await create_subprocess_shell(
         ulimit_command,
@@ -50,8 +60,8 @@ async def run_shell_cmds(command):
     )
     stdout, stderr = await process.communicate()
 
-    e = stderr.decode()
-    o = stdout.decode()
+    e = stderr.decode("utf-8", errors="replace")
+    o = stdout.decode("utf-8", errors="replace")
     LOGGER.info(f"command : {command}")
     LOGGER.info(f"stdout : {o}")
     LOGGER.info(f"stderr : {e}")
@@ -92,7 +102,14 @@ async def __extract_with_unrar_helper(path, archive_path, password=None):
     LOGGER.info("unrar : " + archive_path + " : " + path)
 
     if password:
-        cmd = ["unrar", "x", quote(archive_path), quote(path), f"-p{quote(password)}", "-y"]
+        cmd = [
+            "unrar",
+            "x",
+            quote(archive_path),
+            quote(path),
+            f"-p{quote(password)}",
+            "-y",
+        ]
     else:
         cmd = ["unrar", "x", quote(archive_path), quote(path), "-y"]
 
@@ -226,14 +243,18 @@ async def make_keyboard(paths, user_id, chat_id, unziphttp, rzfile=None):
         if unziphttp:
             data.append(
                 InlineKeyboardButton(
-                    f"{num} - {os.path.basename(file)}".encode("utf-8").decode("utf-8"),
+                    f"{num} - {os.path.basename(file)}".encode(
+                        "utf-8", errors="surrogateescape"
+                    ).decode("utf-8", errors="surrogateescape"),
                     f"ext_f|{user_id}|{chat_id}|{num}|{unziphttp}|{rzfile}",
                 )
             )
         else:
             data.append(
                 InlineKeyboardButton(
-                    f"{num} - {os.path.basename(file)}".encode("utf-8").decode("utf-8"),
+                    f"{num} - {os.path.basename(file)}".encode(
+                        "utf-8", errors="surrogateescape"
+                    ).decode("utf-8", errors="surrogateescape"),
                     f"ext_f|{user_id}|{chat_id}|{num}|{unziphttp}",
                 )
             )
