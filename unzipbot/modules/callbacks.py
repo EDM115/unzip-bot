@@ -73,10 +73,10 @@ def get_sequence_number(filename, pattern):
 
     if match:
         # Extract the numeric part from the matched pattern
-        num_match = re.search(r"\d+", match.group())
+        num_match = re.findall(r"\d+", match.group())
 
         if num_match:
-            return int(num_match.group())
+            return int(num_match[-1])
 
     # Use infinity if no number is found (ensures this file is always last)
     return float("inf")
