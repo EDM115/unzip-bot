@@ -177,28 +177,28 @@ async def extract_archive(_, message: Message):
     try:
         if message.chat.type != enums.ChatType.PRIVATE:
             return
-
+        
         user_id = message.from_user.id
+
+        if await get_merge_task(user_id):
+            return
 
         if os.path.exists(Config.LOCKFILE):
             await message.reply(messages.get("commands", "STILL_STARTING", user_id))
+
+            return
+        
+        download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
+
+        if os.path.isdir(download_path):
+            await message.reply(messages.get("commands", "PROCESS_RUNNING", user_id))
+
             return
 
         unzip_msg = await message.reply(
             messages.get("commands", "PROCESSING2", user_id),
             reply_to_message_id=message.id,
         )
-        download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
-
-        if os.path.isdir(download_path):
-            await unzip_msg.edit(messages.get("commands", "PROCESS_RUNNING", user_id))
-
-            return
-
-        if await get_merge_task(user_id):
-            await unzip_msg.delete()
-
-            return
 
         if message.text and (re.match(https_url_regex, message.text)):
             await unzip_msg.edit(

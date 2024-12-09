@@ -29,6 +29,8 @@ class Config:
     MAX_RAM_USAGE = 80
     MAX_TASK_DURATION_EXTRACT = 120 * 60  # 2 hours (in seconds)
     MAX_TASK_DURATION_MERGE = 240 * 60  # 4 hours (in seconds)
+    # Files under that size will not display a progress bar while uploading
+    MIN_SIZE_PROGRESS = 1024 * 1024 * 50  # 50 MB
     MONGODB_URL = os.environ.get("MONGODB_URL")
     MONGODB_DBNAME = os.environ.get("MONGODB_DBNAME", "Unzipper_Bot")
     TG_MAX_SIZE = 2097152000

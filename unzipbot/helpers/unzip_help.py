@@ -16,6 +16,9 @@ messages = Messages(lang_fetcher=get_lang)
 
 
 async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_bot):
+    if not message:
+        return
+
     uid = message.chat.id
 
     if message.chat.type == enums.ChatType.PRIVATE and await get_cancel_task(uid):

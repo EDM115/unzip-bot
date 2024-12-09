@@ -75,7 +75,6 @@
     "select_files": "Select files to upload 👇",
     "send_all_parts": "Sending all parts of {} to you… Please wait",
     "sending_all_files": "Sending all files to you… Please wait",
-    "sending_file": "Sending that file to you… Please wait",
     "spl_rz": "Splitted RAR/ZIP files in .rxx or .zxx format can't be processed yet",
     "splitting": "**Splitting {}… Please wait**",
     "start_text": "Hi **{}** 👋, I'm the **unzip-bot** 🥰\n\nI can extract any archive, with password or not, splitted, …\nSend **/commands** to learn more\n\n**Made with ❤️ by @EDM115bots**\n**/donate** if you can 🥺",

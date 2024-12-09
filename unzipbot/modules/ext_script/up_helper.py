@@ -56,11 +56,15 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         fname = os.sep.join(os.path.abspath(doc_f).split(os.sep)[5:])
         fext = (pathlib.Path(os.path.abspath(doc_f)).suffix).casefold().replace(".", "")
         thumbornot = await thumb_exists(c_id)
-        upmsg = await unzipbot_client.send_message(
-            c_id,
-            messages.get("up_helper", "PROCESSING2", c_id),
-            disable_notification=True,
-        )
+
+        if fsize > Config.MIN_SIZE_PROGRESS:
+            upmsg = await unzipbot_client.send_message(
+                c_id,
+                messages.get("up_helper", "PROCESSING2", c_id),
+                disable_notification=True,
+            )
+        else:
+            upmsg = None
 
         if ul_mode == "media" and fext in extentions_list["audio"]:
             metadata = await get_audio_metadata(doc_f)
@@ -276,7 +280,9 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     ),
                 )
 
-        await upmsg.delete()
+        if upmsg:
+            await upmsg.delete()
+
         os.remove(doc_f)
     except FloodWait as f:
         await asyncio.sleep(f.value)
@@ -353,7 +359,7 @@ async def merge_splitted_archives(user_id, path):
 
 # Function to remove basic markdown characters from a string
 async def rm_mark_chars(text: str):
-    return re.sub("[*`_-]", "", text)
+    return re.sub("[*`_]", "", text)
 
 
 # Function to answer queries

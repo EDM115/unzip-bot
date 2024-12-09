@@ -1269,7 +1269,6 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         LOGGER.info("ext_f paths : " + str(paths))
 
         try:
-            await query.answer(messages.get("callbacks", "SENDING_FILE", uid))
             await query.message.edit(
                 text=messages.get("callbacks", "UPLOADING_THIS_FILE", uid)
             )
