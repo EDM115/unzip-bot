@@ -60,10 +60,56 @@ from .ext_script.ext_helper import (
 from .ext_script.up_helper import answer_query, get_size, send_file, send_url_logs
 
 
-split_file_pattern = r"\.(?:z\d+|r\d{2})$"
-rar_file_pattern = r"\.part\d+\.rar$"
+split_file_pattern = r"\.z\d+$"
+rar_file_pattern = r"\.(?:r\d+|part\d+\.rar)$"
+volume_file_pattern = r"\.\d+$"
 telegram_url_pattern = r"(?:http[s]?:\/\/)?(?:www\.)?t\.me\/([a-zA-Z0-9_]+)\/(\d+)"
 messages = Messages(lang_fetcher=get_lang)
+
+
+# Function to extract the sequence number from filenames
+def get_sequence_number(filename, pattern):
+    match = re.search(pattern, filename)
+
+    if match:
+        # Extract the numeric part from the matched pattern
+        num_match = re.search(r"\d+", match.group())
+
+        if num_match:
+            return int(num_match.group())
+
+    # Use infinity if no number is found (ensures this file is always last)
+    return float("inf")
+
+
+# Function to find the file with the lowest sequence
+def find_lowest_sequence_file(files):
+    if not files:
+        raise IndexError("No files to match")
+
+    # Match the files against the patterns
+    rar_matches = [f for f in files if re.search(rar_file_pattern, f)]
+    volume_matches = [f for f in files if re.search(volume_file_pattern, f)]
+
+    # Handle RAR pattern cases
+    if rar_matches:
+        # Separate .rX and .partX.rar cases
+        r_files = [
+            f for f in rar_matches if f.endswith(".rar") or re.search(r"\.r\d+$", f)
+        ]
+        part_files = [f for f in rar_matches if re.search(r"part\d+\.rar$", f)]
+
+        # Priority: .partX.rar -> .rX
+        if part_files:
+            return min(part_files, key=lambda x: get_sequence_number(x, r"part\d+")), "rar"
+        elif r_files:
+            return min(r_files, key=lambda x: get_sequence_number(x, r"\.r\d+$")), "rar"
+
+    # Handle other cases
+    if volume_matches:
+        return min(volume_matches, key=lambda x: get_sequence_number(x, r"\.\d+$")), "volume"
+
+    raise IndexError("No matching files found")
 
 
 async def download(url, path):
@@ -427,7 +473,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
         try:
             files = await get_files(download_path)
-            file = files[0]
+            file, file_type = find_lowest_sequence_file(files)
         except IndexError:
             await answer_query(query, messages.get("callbacks", "NO_MERGE_TASK", uid))
             await del_ongoing_task(user_id)
@@ -466,13 +512,14 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             extractor = await merge_files(
                 iinput=file,
                 ooutput=ext_files_dir,
+                file_type=file_type,
                 password=password.text,
             )
             ext_e_time = time()
         else:
             # Can't test the archive apparently
             ext_s_time = time()
-            extractor = await merge_files(iinput=file, ooutput=ext_files_dir)
+            extractor = await merge_files(iinput=file, ooutput=ext_files_dir, file_type=file_type)
             ext_e_time = time()
 
         # Checks if there is an error happened while extracting the archive

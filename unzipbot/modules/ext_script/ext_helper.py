@@ -191,20 +191,11 @@ async def split_files(iinput, ooutput, size):
 
 
 # Merge files
-async def merge_files(iinput, ooutput, password=None):
-    if password:
-        cmd = [
-            "7z",
-            "x",
-            f"-o{quote(ooutput)}",
-            f"-p{quote(password)}",
-            quote(iinput),
-            "-y",
-        ]
-    else:
-        cmd = ["7z", "x", f"-o{quote(ooutput)}", quote(iinput), "-y"]
-
-    result = await run_shell_cmds(" ".join(cmd))
+async def merge_files(iinput, ooutput, file_type, password=None):
+    if file_type == "volume":
+        result = await __extract_with_7z_helper(ooutput, iinput, password)
+    elif file_type == "rar":
+        result = await __extract_with_unrar_helper(ooutput, iinput, password)
 
     return result
 
