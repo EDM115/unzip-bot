@@ -41,10 +41,10 @@ def get_size(doc_f):
 messages = Messages(lang_fetcher=get_lang)
 
 
-def check_logs():
+async def check_logs():
     try:
         if Config.LOGS_CHANNEL:
-            c_info = unzipbot_client.get_chat(chat_id=Config.LOGS_CHANNEL)
+            c_info = await unzipbot_client.get_chat(chat_id=Config.LOGS_CHANNEL)
 
             if c_info.type in (enums.ChatType.PRIVATE, enums.ChatType.BOT):
                 LOGGER.error(messages.get("start", "PRIVATE_CHAT"))
@@ -62,10 +62,8 @@ def check_logs():
         return False
 
 
-def dl_thumbs():
-    loop = asyncio.get_event_loop()
-    coroutine = get_thumb_users()
-    thumbs = loop.run_until_complete(coroutine)
+async def dl_thumbs():
+    thumbs = await get_thumb_users()
     i = 0
     maxthumbs = len(thumbs)
     LOGGER.info(messages.get("start", "DL_THUMBS", None, maxthumbs))
@@ -76,21 +74,19 @@ def dl_thumbs():
         if not os.path.exists(file_path):
             if thumb.get("url") is None and thumb.get("file_id") is not None:
                 try:
-                    unzipbot_client.download_media(
+                    await unzipbot_client.download_media(
                         message=thumb.get("file_id"),
                         file_name=file_path,
                     )
                 except:
                     # Here we could encounter 400 FILE_REFERENCE_EXPIRED
                     # A possible fix is to retrieve the message again with chat ID + message ID to get a refreshed file reference
-                    unzipbot_client.send_message(
+                    await unzipbot_client.send_message(
                         thumb.get("_id"),
                         messages.get("start", "MISSING_THUMB", thumb.get("_id")),
                     )
             elif thumb.get("url") is not None and thumb.get("file_id") is None:
-                loop2 = asyncio.get_event_loop()
-                coroutine2 = download(thumb.get("url"), file_path)
-                loop2.run_until_complete(coroutine2)
+                await download(thumb.get("url"), file_path)
 
         if get_size(file_path) in (0, -1):
             os.remove(file_path)
@@ -101,13 +97,7 @@ def dl_thumbs():
             LOGGER.info(messages.get("start", "DOWNLOADED_THUMBS", None, i, maxthumbs))
 
 
-def set_boot_time():
-    loop = asyncio.get_event_loop()
-    coroutine = check_boot()
-    loop.run_until_complete(coroutine)
-
-
-async def check_boot():
+async def set_boot_time():
     boot = await get_boot()
     await set_old_boot(boot)
     await set_boot(boottime)
@@ -158,12 +148,6 @@ async def warn_users():
         await clear_ongoing_tasks()
 
 
-def removal(firststart=False):
-    loop = asyncio.get_event_loop()
-    loop.create_task(remove_expired_tasks(firststart))
-    loop.run_until_complete(asyncio.sleep(0))
-
-
 async def remove_expired_tasks(firststart=False):
     ongoing_tasks = await get_ongoing_tasks()
     await clear_cancel_tasks()
@@ -175,11 +159,13 @@ async def remove_expired_tasks(firststart=False):
             shutil.rmtree(Config.DOWNLOAD_LOCATION)
         except:
             pass
+
+        os.makedirs(Config.DOWNLOAD_LOCATION, exist_ok=True)
     else:
         for task in ongoing_tasks:
             user_id = task.get("user_id")
 
-            if not user_id == Config.BOT_OWNER:
+            if user_id != Config.BOT_OWNER:
                 current_time = time()
                 start_time = task.get("start_time")
                 task_type = task.get("type")
@@ -224,5 +210,5 @@ async def scheduled_remove_expired_tasks():
     await remove_expired_tasks()
 
 
-def start_cron_jobs():
+async def start_cron_jobs():
     scheduled_remove_expired_tasks.start()
