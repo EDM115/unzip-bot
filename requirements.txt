@@ -10,7 +10,7 @@ mutagen==1.47.0
 Pillow==11.0.0
 psutil==6.1.0
 pykeyboard==0.1.5
-pyrogram @ https://github.com/KurimuzonAkuma/pyrogram/archive/dev.zip
+Kurigram @ https://github.com/KurimuzonAkuma/pyrogram/archive/dev.zip
 pyromod==1.5
 requests==2.32.3
 TgCrypto==1.2.5
