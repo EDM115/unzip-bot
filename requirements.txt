@@ -4,7 +4,7 @@ aiohttp==3.11.11
 base58check==1.0.2
 dnspython==2.7.0
 gitdb==4.0.12
-GitPython==3.1.43
+GitPython==3.1.44
 motor==3.6.0
 mutagen==1.47.0
 Pillow==11.0.0
