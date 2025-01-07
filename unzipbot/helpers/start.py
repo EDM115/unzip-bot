@@ -6,7 +6,7 @@ from time import time
 
 import aiocron
 from pyrogram import enums
-from pyrogram.errors import FloodWait
+from pyrogram.errors import FloodWait, FloodPremiumWait
 
 from config import Config
 from unzipbot import LOGGER, boottime, unzipbot_client
@@ -136,7 +136,7 @@ async def warn_users():
                     task.get("user_id"),
                     messages.get("start", "RESEND_TASK", task.get("user_id")),
                 )
-            except FloodWait as f:
+            except (FloodWait, FloodPremiumWait) as f:
                 await asyncio.sleep(f.value)
                 await unzipbot_client.send_message(
                     task.get("user_id"),

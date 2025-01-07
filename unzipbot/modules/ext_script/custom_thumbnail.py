@@ -3,7 +3,7 @@ import shutil
 from asyncio import sleep
 
 from PIL import Image
-from pyrogram.errors import FloodWait
+from pyrogram.errors import FloodWait, FloodPremiumWait
 
 from config import Config
 from unzipbot import LOGGER
@@ -92,7 +92,7 @@ async def add_thumb(_, message):
                 text=messages.get("custom_thumbnail", "PLS_REPLY", uid),
                 reply_to_message_id=message.id,
             )
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
         await add_thumb(_, message)
 
@@ -109,7 +109,7 @@ async def del_thumb(message):
                 text=messages.get("custom_thumbnail", "DEL_CONFIRM_THUMB", uid),
                 reply_markup=Buttons.THUMB_DEL,
             )
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
         await del_thumb(message)
 

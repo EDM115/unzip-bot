@@ -4,7 +4,7 @@ import time
 from asyncio import sleep
 
 from pyrogram import enums
-from pyrogram.errors import FloodWait
+from pyrogram.errors import FloodWait, FloodPremiumWait
 
 from config import Config
 from unzipbot.helpers.database import del_cancel_task, get_cancel_task, get_lang
@@ -37,7 +37,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
                     text=messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp),
                     reply_markup=Buttons.I_PREFER_STOP,
                 )
-            except FloodWait as f:
+            except (FloodWait, FloodPremiumWait) as f:
                 await sleep(f.value)
                 await message.edit(
                     text=messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp),
@@ -62,7 +62,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
                     text=messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp),
                     reply_markup=Buttons.I_PREFER_STOP,
                 )
-            except FloodWait as f:
+            except (FloodWait, FloodPremiumWait) as f:
                 await sleep(f.value)
                 await message.edit(
                     text=messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp),
@@ -93,7 +93,7 @@ async def progress_urls(current, total, ud_type, message, start):
             await message.edit(
                 messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp)
             )
-        except FloodWait as f:
+        except (FloodWait, FloodPremiumWait) as f:
             await sleep(f.value)
             await message.edit(
                 messages.get("unzip_help", "PROGRESS_MSG", uid, ud_type, tmp)

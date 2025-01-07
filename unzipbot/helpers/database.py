@@ -2,7 +2,7 @@ from asyncio import sleep
 
 import base58check
 from motor.motor_asyncio import AsyncIOMotorClient
-from pyrogram.errors import FloodWait
+from pyrogram.errors import FloodWait, FloodPremiumWait
 
 from config import Config
 from unzipbot import unzipbot_client
@@ -149,7 +149,7 @@ async def check_user(message):
                     text=messages.get("database", "NEW_USER_BAD", uid, uname),
                     disable_web_page_preview=False,
                 )
-            except FloodWait as f:
+            except (FloodWait, FloodPremiumWait) as f:
                 await sleep(f.value)
                 await unzipbot_client.send_message(
                     chat_id=Config.LOGS_CHANNEL,
@@ -184,7 +184,7 @@ async def check_user(message):
                     ),
                     disable_web_page_preview=False,
                 )
-            except FloodWait as f:
+            except (FloodWait, FloodPremiumWait) as f:
                 await sleep(f.value)
                 await unzipbot_client.send_message(
                     chat_id=Config.LOGS_CHANNEL,

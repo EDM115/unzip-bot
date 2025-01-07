@@ -11,7 +11,7 @@ from sys import executable
 import git
 import psutil
 from pyrogram import enums, filters
-from pyrogram.errors import FloodWait, RPCError
+from pyrogram.errors import FloodWait, FloodPremiumWait, RPCError
 from pyrogram.types import Message
 
 from config import Config
@@ -112,7 +112,7 @@ async def start_bot(_, message: Message):
             reply_markup=Buttons.START_BUTTON,
             disable_web_page_preview=True,
         )
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
         await start_bot(_, message)
 
@@ -124,7 +124,7 @@ async def clean_my_files(_, message: Message):
             text=messages.get("commands", "CLEAN_TXT", message.from_user.id),
             reply_markup=Buttons.CLN_BTNS,
         )
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
         await clean_my_files(_, message)
 
@@ -136,7 +136,7 @@ async def help_me(_, message: Message):
             text=messages.get("commands", "HELP_TXT", message.from_user.id),
             reply_markup=Buttons.ME_GOIN_HOME,
         )
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
         await help_me(_, message)
 
@@ -151,7 +151,7 @@ async def about_me(_, message: Message):
             reply_markup=Buttons.ME_GOIN_HOME,
             disable_web_page_preview=True,
         )
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
         await about_me(_, message)
 
@@ -162,7 +162,7 @@ async def privacy_text(_, message: Message):
         await message.reply_text(
             text=messages.get("commands", "PRIVACY", message.from_user.id)
         )
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
         await privacy_text(_, message)
 
@@ -217,7 +217,7 @@ async def extract_archive(_, message: Message):
                 await unzip_msg.edit(messages.get("commands", "NO_SPACE", user_id))
         else:
             await unzip_msg.edit(messages.get("commands", "INVALID", user_id))
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
         await extract_archive(_, message)
 
@@ -243,7 +243,7 @@ async def merging(_, message: Message):
             messages.get("commands", "MERGE", message.from_user.id)
         )
         await add_merge_task(message.from_user.id, merge_msg.id)
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
         await merging(_, message)
 
@@ -255,7 +255,7 @@ async def done_merge(_, message: Message):
             messages.get("commands", "DONE", message.from_user.id),
             reply_markup=Buttons.MERGE_THEM_ALL,
         )
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
         await done_merge(_, message)
 
@@ -270,7 +270,7 @@ async def set_mode_for_user(_, message: Message):
             ),
             reply_markup=Buttons.SET_UPLOAD_MODE_BUTTONS,
         )
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
         await set_mode_for_user(_, message)
 
@@ -334,7 +334,7 @@ async def send_stats(_, message: Message):
         )
         stats_txt = await get_stats(message.from_user.id)
         await stats_msg.edit(text=stats_txt, reply_markup=Buttons.REFRESH_BUTTON)
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
         await send_stats(_, message)
 
@@ -344,7 +344,7 @@ async def __do_broadcast(message, user):
         await message.copy(chat_id=int(user))
 
         return 200
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
 
         return __do_broadcast(message, user)
@@ -389,7 +389,7 @@ async def broadcast_this(_, message: Message):
                 await bc_msg.edit(
                     messages.get("commands", "BC_START", uid, done_no, total_users)
                 )
-            except FloodWait:
+            except (FloodWait, FloodPremiumWait):
                 pass
     try:
         await bc_msg.edit(
@@ -402,7 +402,7 @@ async def broadcast_this(_, message: Message):
                 failed_no,
             )
         )
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
         await bc_msg.edit(
             messages.get(
@@ -603,7 +603,7 @@ async def get_all_thumbs(_, message: Message):
                 reply_to_message_id=message.id,
                 caption=messages.get("commands", "EXT_CAPTION", uid, doc_f),
             )
-        except FloodWait as f:
+        except (FloodWait, FloodPremiumWait) as f:
             await sleep(f.value)
             await unzipbot_client.send_document(
                 chat_id=message.chat.id,
@@ -711,7 +711,7 @@ async def send_logs(user_id):
                 file_name=doc_f.name,
             )
             LOGGER.info(messages.get("commands", "LOG_SENT", None, user_id))
-        except FloodWait as f:
+        except (FloodWait, FloodPremiumWait) as f:
             await sleep(f.value)
             message = await unzipbot_client.send_document(
                 chat_id=user_id,

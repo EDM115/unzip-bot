@@ -7,7 +7,7 @@ from datetime import timedelta
 from time import time
 from shlex import quote
 
-from pyrogram.errors import FloodWait, PhotoExtInvalid, PhotoSaveFileInvalid
+from pyrogram.errors import FloodWait, FloodPremiumWait, PhotoExtInvalid, PhotoSaveFileInvalid
 
 from config import Config
 from unzipbot import LOGGER, unzipbot_client
@@ -284,7 +284,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
             await upmsg.delete()
 
         os.remove(doc_f)
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await asyncio.sleep(f.value)
         await send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split)
     except FileNotFoundError:
@@ -310,7 +310,7 @@ async def forward_file(message, cid):
             message_id=message.id,
             disable_notification=True,
         )
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await asyncio.sleep(f.value)
         await forward_file(message, cid)
 
@@ -339,7 +339,7 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source, message):
                 time(),
             ),
         )
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         await asyncio.sleep(f.value)
 
         return send_url_logs(unzip_bot, c_id, doc_f, source, message)
