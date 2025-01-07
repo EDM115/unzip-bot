@@ -1,8 +1,7 @@
 import logging
 import time
 
-import pyrogram
-from pyromod import listen  # skipcq: PY-W2000
+from pyromod import Client
 
 from config import Config
 
@@ -10,18 +9,15 @@ from config import Config
 boottime = time.time()
 plugins = dict(root="modules")
 
-unzipbot_client = pyrogram.Client(
+unzipbot_client = Client(
     "unzip-bot",
     bot_token=Config.BOT_TOKEN,
     api_id=Config.APP_ID,
     api_hash=Config.API_HASH,
     plugins=plugins,
-    sleep_threshold=10,
+    sleep_threshold=7200,
     max_concurrent_transmissions=3,
 )
-
-pyrogram.utils.MIN_CHAT_ID = -999999999999
-pyrogram.utils.MIN_CHANNEL_ID = -100999999999999
 
 logging.basicConfig(
     level=logging.INFO,

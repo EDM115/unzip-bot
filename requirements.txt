@@ -11,7 +11,7 @@ Pillow==11.0.0
 psutil==6.1.0
 pykeyboard==0.1.5
 Kurigram @ https://github.com/KurimuzonAkuma/pyrogram/archive/dev.zip
-pyromod==1.5
+pyromod==3.1.6
 requests==2.32.3
 TgCrypto==1.2.5
 unzip-http==0.6
