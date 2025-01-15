@@ -5,7 +5,7 @@ base58check==1.0.2
 dnspython==2.7.0
 gitdb==4.0.12
 GitPython==3.1.44
-motor==3.6.0
+motor==3.6.1
 mutagen==1.47.0
 Pillow==11.1.0
 psutil==6.1.1
