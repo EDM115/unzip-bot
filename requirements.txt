@@ -8,7 +8,7 @@ GitPython==3.1.44
 motor==3.7.0
 mutagen==1.47.0
 Pillow==11.1.0
-psutil==6.1.1
+psutil==7.0.0
 pykeyboard==0.1.5
 pyrogram==2.0.106
 pyromod==1.5
