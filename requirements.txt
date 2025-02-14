@@ -1,4 +1,4 @@
-aiocron==1.8
+aiocron==2.1
 aiofiles==24.1.0
 aiohttp==3.11.12
 base58check==1.0.2
