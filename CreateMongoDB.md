@@ -1,6 +1,6 @@
 # How to create a MongoDB URL in 10min ?
   
-1. Go to [MongoDB website](https://mongodb.com/cloud/atlas/register)  
+0. Go to [MongoDB website](https://mongodb.com/cloud/atlas/register)  
   *(skip steps 2 and 3 if you already have an account, just create a new cluster)*
 1. On the account setup page, choose wisely your Organization name and Project name (you can't change that). Select Python as preferred language
 2. Choose `Create a cluster` on the `Shared Clusters` category (the free one)

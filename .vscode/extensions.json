@@ -9,5 +9,7 @@
     "ms-python.python",
     "ms-python.vscode-pylance",
     "nhoizey.gremlins",
+    "pflannery.vscode-versionlens",
+    "tamasfe.even-better-toml",
   ]
 }

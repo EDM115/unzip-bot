@@ -1,18 +1,18 @@
 [project]
 name = "unzip-bot"
-version = "7.3.0"
+version = "7.4.0"
 authors = [{ name = "EDM115", email = "unzip@edm115.dev" }]
 description = "A Telegram bot to extract various types of archives"
 dependencies = [
   "aiocron==2.1",
   "aiofiles==25.1.0",
-  "aiohttp==3.13.3",
+  "aiohttp==3.13.5",
   "aiosqlite==0.22.1",
   "base58check==1.0.2",
-  "GitPython==3.1.46",
-  "Pillow==12.1.1",
+  "GitPython==3.1.50",
+  "Pillow==12.2.0",
   "psutil==7.2.2",
-  "pymongo==4.16.0",
+  "pymongo==4.17.0",
   "pyrofork==2.3.69",
   "tgcrypto-pyrofork==1.2.8",
   "unzip-http==0.7",
