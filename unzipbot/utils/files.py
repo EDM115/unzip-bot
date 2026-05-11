@@ -5,7 +5,6 @@ from shutil import rmtree
 from typing import Any
 
 from psutil import disk_usage, virtual_memory
-from psutil._common import sdiskusage
 
 from unzipbot.config.config import Config
 from unzipbot.i18n.strings import rar_file_pattern, volume_file_pattern
@@ -54,7 +53,7 @@ async def cleanup_macos_artifacts(path: str) -> None:
 
 
 def sufficient_disk_space(required_space: int) -> bool:
-    disk_used: sdiskusage = disk_usage("/")
+    disk_used = disk_usage("/")
     free_space: int = disk_used.free
     total_space: int = disk_used.total
     five_percent_total: float = total_space * 0.05

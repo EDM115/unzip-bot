@@ -13,7 +13,6 @@ from pyrogram.errors import (
     PhotoExtInvalid,
     PhotoSaveFileInvalid,
 )
-from unzipbot.modules.ext_script.metadata_helper import get_audio_metadata
 
 from unzipbot import LOGGER, unzipbot_client
 from unzipbot.config.config import Config
@@ -77,7 +76,6 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
             upmsg = None
 
         if ul_mode == "media" and fext in extentions_list["audio"]:
-            metadata = await get_audio_metadata(doc_f)
 
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
@@ -90,9 +88,6 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         user_id=c_id,
                         extra_args=fname,
                     ),
-                    duration=metadata["duration"],
-                    performer=metadata["performer"],
-                    title=metadata["title"],
                     thumb=thumb_image,
                     disable_notification=True,
                     progress=progress_for_pyrogram,
@@ -118,9 +113,6 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         user_id=c_id,
                         extra_args=fname,
                     ),
-                    duration=metadata["duration"],
-                    performer=metadata["performer"],
-                    title=metadata["title"],
                     disable_notification=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
@@ -137,7 +129,6 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                 )
 
         elif ul_mode == "media" and fext in extentions_list["photo"]:
-            # impossible to use a thumb here :(
             try:
                 await unzip_bot.send_photo(
                     chat_id=c_id,

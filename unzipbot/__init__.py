@@ -12,7 +12,7 @@ if sys.platform.startswith("win32") or sys.platform.startswith("linux-cross"):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 else:
-    import uvloop
+    import uvloop  # pyright: ignore[reportMissingImports]
 
     uvloop.install()
     loop = uvloop.new_event_loop()

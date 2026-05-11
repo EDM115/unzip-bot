@@ -1,4 +1,5 @@
-from typing import Any, Iterable, LiteralString
+from collections.abc import Iterable
+from typing import Any, LiteralString
 
 from aiosqlite import Connection, Row, connect
 from base import DatabaseInterface, TableInterface

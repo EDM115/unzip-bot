@@ -1,5 +1,6 @@
+from collections.abc import AsyncGenerator, Iterable
 from re import sub
-from typing import AsyncGenerator, Iterable, TypeVar
+from typing import TypeVar
 
 T = TypeVar("T")
 

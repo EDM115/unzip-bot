@@ -6,6 +6,7 @@ from unzipbot.cli.run import run_sync_shell_cmds
 
 PACKAGE_ROOT: Path = Path(__file__).resolve().parents[1]
 pkg_name: str = PACKAGE_ROOT.name
+pyproject = PACKAGE_ROOT.parent / "pyproject.toml"
 
 
 class Env:
@@ -32,7 +33,7 @@ class Env:
         )
         UNZIPBOT: str = (
             run_sync_shell_cmds(
-                f"grep -oP '(?<=^version = \")[^\"]*' {PACKAGE_ROOT.parent / 'pyproject.toml'}"
+                f"grep -oP '(?<=^version = \")[^\"]*' {pyproject}"
             )
             .get("output", "7.3.0")
             .strip()
