@@ -13,16 +13,16 @@
 
 > [!IMPORTANT]  
 > The bot is undergoing an important rewrite.  
-> Please be patient and wait a few months to get the unzip-bot in its full glory !  
+> Please be patient and wait a few weeks to get the unzip-bot in its full glory !  
 > Check [[ROADMAP] The future of unzip-bot (v7) (#296)](https://github.com/EDM115/unzip-bot/issues/296) to know more about the current development.
 
 ---
 
-## Working bot :smiling_face_with_three_hearts:
+## :smiling_face_with_three_hearts: Working bot
 [@unzip_edm115bot](https://t.me/unzip_edm115bot)  
 More info : [edm115.dev/unzip](https://edm115.dev/unzip)
 
-## Features :eyes:
+## :eyes: Features
 ### User side
 - Extract all formats of archives like `rar`, `zip`, `7z`, `tar.gz`, …
 - Supports password protected archives
@@ -42,7 +42,7 @@ More info : [edm115.dev/unzip](https://edm115.dev/unzip)
 - Send logs in a custom channel/group + retrieve logs from the bot  
 And much more :fire: Dive into the code to find out :hand_over_mouth:
 
-## Config vars :book:
+## :book: Config vars
 - `APP_ID` - Your APP ID. Get it from [my.telegram.org](https://my.telegram.org)
 - `API_HASH` - Your API_HASH. Get it from [my.telegram.org](https://my.telegram.org)
 - `BOT_OWNER` - Your Telegram Account ID. Get it from [@MissRose_bot](https://t.me/MissRose_bot) (Start the bot and send `/info` command).
@@ -51,7 +51,7 @@ And much more :fire: Dive into the code to find out :hand_over_mouth:
 - `MONGODB_URL` - Your MongoDB URL ([**tutorial here**](CreateMongoDB.md))
 - `LOGS_CHANNEL` - Make a private channel and get its ID (search on Google if you don't know how to do). Using a group works as well, just add [`Rose`](https://t.me/MissRose_bot?startgroup=startbot), then send `/id` (In both cases, **make sure to add your bot to the channel/group as an admin !**)
 
-## Commands :writing_hand:
+## :writing_hand: Commands
 Copy-paste those to BotFather when he asks you for them
 ```text
 commands - Get commands list
@@ -63,7 +63,7 @@ clean - Cancel ongoing process
 help - In case you need 😭
 ```
 
-## Deploy :construction:
+## :construction: Deploy
 Deploying is easy :smiling_face_with_three_hearts: You can deploy this bot in Heroku or in a VPS :heart:  
 **Star :star2: Fork :fork_and_knife: and Deploy :outbox_tray:**
 
@@ -82,7 +82,7 @@ Run the following command in your terminal
 ```bash
 bash <(curl -sSL https://raw.githubusercontent.com/EDM115/unzip-bot/v7-rework-part-1/setup.sh)
 ```
-*(if `curl` isn't available on your system, use `wget`)*
+*if `curl` isn't available on your system, use `wget` :*
 ```bash
 bash <(wget -qO- https://raw.githubusercontent.com/EDM115/unzip-bot/v7-rework-part-1/setup.sh)
 ```
@@ -93,7 +93,7 @@ bash <(curl -sSL https://raw.githubusercontent.com/EDM115/unzip-bot/v7-rework-pa
 ```
 
 #### The easy way
-- Install [Docker](https://www.docker.com/) then restart your computer (if on Windows)
+- Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) then restart your computer (if on Windows)
 ```bash
 git clone https://github.com/EDM115/unzip-bot.git && cd unzip-bot
 nano .env
@@ -140,9 +140,6 @@ docker tag edm115/unzip-bot edm115/unzip-bot:latest
 *(replace `edm115` with your docker hub username, `unzip-bot` with the repo's name and `latest` whith whatever you want)*
 ```bash
 docker login
-```
-*login and don't mind the errors*
-```bash
 docker push edm115/unzip-bot:latest
 ```
 *(same, replace accordingly)*
@@ -153,15 +150,22 @@ docker push edm115/unzip-bot:latest
 - Lint and fix code : `ruff check --fix`
 - Format code : `ruff format`
 
-## Found a bug :bug:
+## :bug: Found a bug ?
 If you found a bug in this bot please open an [issue](https://github.com/EDM115/unzip-bot/issues) or report it on Telegram : [@EDM115](https://t.me/EDM115)  
 Same if you have any feature request :wink:
 
-## License & Copyright :cop:
-Copyright (c) 2022 - present EDM115  
-  
-This unzip-bot repository is licensed under the [MIT License](https://github.com/EDM115/unzip-bot/blob/master/LICENSE)  
-Enjoy copying and modifying, but always mention me  
-  
-• Inspired by Itz-fork/Nexa's work, but with additional features and bug fixes.  
-This is a maintained repo of the [original](https://github.com/Itz-fork/Unzipper-Bot), props to him for the OG code :saluting_face:
+## :money_with_wings: Donate
+I'm a young developer from France. If you want to support me, here's how you can do it :
+- Star this repository
+- Follow me on [GitHub](https://github.com/EDM115)
+- Donate :
+  - [PayPal](https://paypal.me/8EDM115)
+  - [GitHub Sponsors](https://github.com/sponsors/EDM115)
+  - [BuyMeACoffee](https://www.buymeacoffee.com/EDM115)
+  - [Donate on Telegram](https://t.me/EDM115bots/698)
+
+## :cop: License
+`unzip-bot` is licensed under the [MIT License](https://github.com/EDM115/unzip-bot/blob/master/LICENSE)  
+This repository originally began as a fork of [`partiallywritten/Unzipper-Bot`](https://github.com/partiallywritten/Unzipper-Bot) (which was licensed under [GPL-3.0](https://github.com/partiallywritten/Unzipper-Bot/blob/main/LICENSE)), with just some additional features and bug fixes. Since `v8`, the codebase has been substantially rewritten and no source code, architecture, unique structure, nontrivial algorithms as expressed, comments, docs, tests, assets, UI text, build scripts, examples, generated files, or other copyrightable material from the original project is intentionally included in the current version.  
+The current project is maintained as an independent implementation under the MIT License. Props to Hirusha Himath (`Itz-fork`/`Nexa`/`partiallywritten`) for the og code :saluting_face:  
+If you believe any GPL-licensed material from the original project remains, please open an issue with details so it can be reviewed and removed or properly attributed.
