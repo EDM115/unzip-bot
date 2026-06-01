@@ -18,7 +18,7 @@ dependencies = [
   "Pillow==11.2.1",
   "psutil==7.0.0",
   "pykeyboard==0.1.5",
-  "pyrofork==2.3.61",
+  "pyrofork==2.3.69",
   "PyTgCrypto==1.2.9.2",
   "requests==2.32.3",
   "setuptools==80.1.0",
