@@ -2,7 +2,7 @@ FROM python:3.12-alpine
 
 ENV UV_INSTALL_DIR="/uv"
 ENV TERM=xterm
-ARG VERSION="7.3.0"
+ARG VERSION="7.4.0"
 
 LABEL org.opencontainers.image.authors="EDM115 <unzip@edm115.dev>"
 LABEL org.opencontainers.image.base.name="python:3.12-alpine"
@@ -55,7 +55,5 @@ RUN git clone -b v7-rework-part-1 https://github.com/EDM115/unzip-bot.git /app &
     source /app/.venv/bin/activate && \
     dos2unix /app/start.sh && \
     chmod +x /app/start.sh
-
-COPY .env /app/.env
 
 ENTRYPOINT ["/bin/bash", "/app/start.sh"]

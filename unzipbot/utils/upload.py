@@ -11,11 +11,11 @@ from pyrogram.errors import FloodPremiumWait, FloodWait, PhotoExtInvalid, PhotoS
 
 from unzipbot import LOGGER, unzipbot_client
 from unzipbot.config.config import Config
-from unzipbot.helpers.database import get_lang, get_upload_mode
+from unzipbot.db.functions import get_lang, get_upload_mode
 from unzipbot.helpers.unzip_help import extentions_list, progress_for_pyrogram, progress_urls
 from unzipbot.i18n.messages import Messages
-from unzipbot.modules.ext_script.custom_thumbnail import thumb_exists
-from unzipbot.modules.ext_script.ext_helper import run_shell_cmds
+from unzipbot.utils.archive import run_shell_cmds
+from unzipbot.utils.thumbnail import thumb_exists
 
 messages = Messages(lang_fetcher=get_lang)
 

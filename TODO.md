@@ -5,15 +5,15 @@ This solves the following points :
 - Optimize the recurrent tasks (see https://github.com/EDM115/unzip-bot/issues/285, done but ensure it does work well)
 
 ## Steps
-- [ ] 1) Move all usage to the new built-in config (old one used a config.py file at project's root, now deleted)
-- [ ] 2) Finish the "orm-lite", make sure we have all operations we could need on both mongodb & sqlite. Ensure the "base" allows us to create an object that calls either mongodb or sqlite depending on what we need. Refer to https://github.com/EDM115/unzip-bot/issues/356
-- [ ] 3) Make sure we can have a proper way to "init" the sqlite db (create tables and relations). The sqlite db is only here to act as a local mirror of the mongodb one, and hold data that don't need to be stored in the cloud (ex the Task table). when the bot starts, it "dumps" the data from mongodb atlas into sqlite, all operations (read/write) happen on sqlite and write operations (create/update/delete) are mirrored to atlas
-- [ ] 4) Analyze current usage in helpers/database.py and map that current usage to db/functions.py with the "orm-lite". keep in mind that we should support both existing data and users who deploy the bot for the first time and have none
-- [ ] 5) Analyze current usage of cli tools and write appropriate functions in the cli/tools dir (ex for 7z.py, functions like extract, extract_password, test, ...)
-- [ ] 6) Analyze and move the current behavior (in modules dir) to the pre-made new structure (plugins & utils). Note that plugins have a special meaning in the Pyrogram client world, make sure to understand that
-- [ ] 7) Check that init and main files will still behave correctly (ex plugins dict init)
-- [ ] 8) Review against docs that the current async bot start and stop handling is correct
-- [ ] 9) Review cleanup (when a task finishes/is cancelled), proper cancellation, ...
+- [x] 1) Move all usage to the new built-in config (old one used a config.py file at project's root, now deleted)
+- [x] 2) Finish the "orm-lite", make sure we have all operations we could need on both mongodb & sqlite. Ensure the "base" allows us to create an object that calls either mongodb or sqlite depending on what we need. Refer to https://github.com/EDM115/unzip-bot/issues/356
+- [x] 3) Make sure we can have a proper way to "init" the sqlite db (create tables and relations). The sqlite db is only here to act as a local mirror of the mongodb one, and hold data that don't need to be stored in the cloud (ex the Task table). when the bot starts, it "dumps" the data from mongodb atlas into sqlite, all operations (read/write) happen on sqlite and write operations (create/update/delete) are mirrored to atlas
+- [x] 4) Analyze current usage in helpers/database.py and map that current usage to db/functions.py with the "orm-lite". keep in mind that we should support both existing data and users who deploy the bot for the first time and have none
+- [x] 5) Analyze current usage of cli tools and write appropriate functions in the cli/tools dir (ex for 7z.py, functions like extract, extract_password, test, ...)
+- [x] 6) Analyze and move the current behavior (in modules dir) to the pre-made new structure (plugins & utils). Note that plugins have a special meaning in the Pyrogram client world, make sure to understand that
+- [x] 7) Check that init and main files will still behave correctly (ex plugins dict init)
+- [x] 8) Review against docs that the current async bot start and stop handling is correct
+- [x] 9) Review cleanup (when a task finishes/is cancelled), proper cancellation, ...
 
 ---
 

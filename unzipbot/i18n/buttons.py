@@ -1,6 +1,6 @@
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from unzipbot.helpers.database import get_lang
+from unzipbot.db.functions import get_lang
 
 from .messages import Messages
 

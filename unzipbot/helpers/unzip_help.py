@@ -7,7 +7,7 @@ from pyrogram import enums
 from pyrogram.errors import FloodPremiumWait, FloodWait
 
 from unzipbot.config.config import Config
-from unzipbot.helpers.database import del_cancel_task, get_cancel_task, get_lang
+from unzipbot.db.functions import del_cancel_task, get_cancel_task, get_lang
 from unzipbot.i18n.buttons import Buttons
 from unzipbot.i18n.messages import Messages
 

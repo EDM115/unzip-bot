@@ -11,7 +11,7 @@ from pyrogram.errors import FloodPremiumWait, FloodWait
 from unzipbot import LOGGER, boottime, unzipbot_client
 from unzipbot.config.config import Config
 from unzipbot.i18n.messages import Messages
-from unzipbot.modules.callbacks import download
+from unzipbot.utils.network import download
 
 from .database import (
     clear_cancel_tasks,

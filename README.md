@@ -47,9 +47,15 @@ And much more :fire: Dive into the code to find out :hand_over_mouth:
 - `API_HASH` - Your API_HASH. Get it from [my.telegram.org](https://my.telegram.org)
 - `BOT_OWNER` - Your Telegram Account ID. Get it from [@MissRose_bot](https://t.me/MissRose_bot) (Start the bot and send `/info` command).
 - `BOT_TOKEN` - Bot Token of Your Telegram Bot. Get it from [@BotFather](https://t.me/BotFather)
-- `MONGODB_DBNAME` - *(optional)* A custom name for the MongoDB database, useful if you deploy multiple instances of the bot on the same account. Defaults to `Unzipper_Bot`
-- `MONGODB_URL` - Your MongoDB URL ([**tutorial here**](CreateMongoDB.md))
+- `MONGODB_DBNAME` - *(optional)* A custom name for the MongoDB database, useful if you deploy multiple instances of the bot on the same account. Defaults to `unzip-bot`
+- `MONGODB_URL` - Your MongoDB Atlas URL ([**tutorial here**](CreateMongoDB.md)). This has no default and must be provided in production.
+- `AUTO_MIGRATE_ATLAS_SCHEMA` - *(optional, default off)* Set to `true` only if you want the bot to run the Atlas legacy-to-v7 schema migration during startup. You can also run `python scripts/migrate_atlas_schema.py` manually before upgrading.
 - `LOGS_CHANNEL` - Make a private channel and get its ID (search on Google if you don't know how to do). Using a group works as well, just add [`Rose`](https://t.me/MissRose_bot?startgroup=startbot), then send `/id` (In both cases, **make sure to add your bot to the channel/group as an admin !**)
+
+SQLite schema changes are applied from ordered SQL files in `unzipbot/db/migrations`.
+Applied migrations are stored in the local `Schema_Migrations` table with checksum and
+description metadata, so future DB edits should add a new SQL file instead of changing an
+already-applied migration.
 
 ## :writing_hand: Commands
 Copy-paste those to BotFather when he asks you for them
@@ -107,7 +113,7 @@ docker build -t edm115/unzip-bot .
 git clone https://github.com/EDM115/unzip-bot.git && cd unzip-bot
 nano .env
 docker build -t edm115/unzip-bot .
-docker run -d -v downloaded-volume-prod:/app/Downloaded -v thumbnails-volume-prod:/app/Thumbnails --env-file ./.env --name unzipbot edm115/unzip-bot
+docker run -d -v downloaded-volume-prod:/app/Downloads -v thumbnails-volume-prod:/app/Thumbnails --env-file ./.env --name unzipbot edm115/unzip-bot
 ```
 
 **DONE :partying_face: enjoy the bot !** Be sure to follow me on [GitHub](https://github.com/EDM115) and Star :star2: this repo to show some support :pleading_face:
@@ -125,7 +131,7 @@ docker run -d -v downloaded-volume-prod:/app/Downloaded -v thumbnails-volume-pro
 - Go in the repo's folder
 ```bash
 docker build --no-cache -t edm115/unzip-bot .
-docker run -d -v downloaded-volume:/app/Downloaded -v thumbnails-volume:/app/Thumbnails --env-file ./.env --network host --name unzip-bot-container edm115/unzip-bot
+docker run -d -v downloaded-volume:/app/Downloads -v thumbnails-volume:/app/Thumbnails --env-file ./.env --network host --name unzip-bot-container edm115/unzip-bot
 docker start unzip-bot-container
 # if you want to check something
 docker exec -it unzip-bot-container sh

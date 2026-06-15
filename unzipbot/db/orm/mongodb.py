@@ -1,34 +1,47 @@
-from base import DatabaseInterface, TableInterface
+from collections.abc import Iterable
+
 from pymongo import AsyncMongoClient
 from pymongo.asynchronous.collection import AsyncCollection
 from pymongo.asynchronous.cursor import AsyncCursor
 from pymongo.asynchronous.database import AsyncDatabase
+
+from .base import DatabaseInterface, Document, TableInterface
 
 
 class MongoTable(TableInterface):
     def __init__(self, collection) -> None:
         self.collection: AsyncCollection = collection
 
-    async def count(self, filter: dict | None = None) -> int:
+    async def count(self, filter: Document | None = None) -> int:
         filter = filter or {}
 
         return await self.collection.count_documents(filter=filter)
 
-    async def find_one(self, query: dict) -> dict | None:
-        return await self.collection.find_one(filter=query)
-
-    async def get_all(self) -> list:
-        cursor: AsyncCursor = self.collection.find({})
-
+    async def find(self, query: Document | None = None) -> list[Document]:
+        cursor: AsyncCursor = self.collection.find(query or {})
         return [doc async for doc in cursor]
 
-    async def insert(self, document: dict) -> None:
+    async def find_one(self, query: Document) -> Document | None:
+        return await self.collection.find_one(filter=query)
+
+    async def get_all(self) -> list[Document]:
+        return await self.find()
+
+    async def insert(self, document: Document) -> None:
         await self.collection.insert_one(document=document)
 
-    async def update(self, query: dict, update: dict) -> None:
-        await self.collection.update_one(filter=query, update={"$set": update})
+    async def update(
+        self, query: Document, update: Document, unset: Iterable[str] | None = None
+    ) -> None:
+        payload: dict[str, Document] = {}
+        if update:
+            payload["$set"] = update
+        if unset:
+            payload["$unset"] = {key: "" for key in unset}
+        if payload:
+            await self.collection.update_many(filter=query, update=payload)
 
-    async def delete(self, query: dict) -> None:
+    async def delete(self, query: Document) -> None:
         await self.collection.delete_one(filter=query)
 
     async def delete_all(self) -> None:
@@ -52,8 +65,8 @@ class MongoDBDatabase(DatabaseInterface):
     def table(self, table_name: str) -> TableInterface:
         return MongoTable(collection=self.db[table_name])
 
-    async def get_all_database(self) -> dict:
-        data: dict = {}
+    async def get_all_database(self) -> dict[str, list[Document]]:
+        data: dict[str, list[Document]] = {}
         collections: list[str] = await self.db.list_collection_names()
 
         for coll in collections:

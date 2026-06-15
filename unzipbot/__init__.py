@@ -19,7 +19,10 @@ else:
     asyncio.set_event_loop(loop)
 
 boottime = time.time()
-plugins = dict(root="modules")
+plugins = dict(
+    root="plugins",
+    include=["commands.global", "commands.user", "commands.admin", "callbacks.global"],
+)
 
 unzipbot_client = Client(
     name="unzip-bot",
