@@ -7,21 +7,12 @@ from datetime import timedelta
 from shlex import quote
 from time import time
 
-from pyrogram.errors import (
-    FloodPremiumWait,
-    FloodWait,
-    PhotoExtInvalid,
-    PhotoSaveFileInvalid,
-)
+from pyrogram.errors import FloodPremiumWait, FloodWait, PhotoExtInvalid, PhotoSaveFileInvalid
 
 from unzipbot import LOGGER, unzipbot_client
 from unzipbot.config.config import Config
 from unzipbot.helpers.database import get_lang, get_upload_mode
-from unzipbot.helpers.unzip_help import (
-    extentions_list,
-    progress_for_pyrogram,
-    progress_urls,
-)
+from unzipbot.helpers.unzip_help import extentions_list, progress_for_pyrogram, progress_urls
 from unzipbot.i18n.messages import Messages
 from unzipbot.modules.ext_script.custom_thumbnail import thumb_exists
 from unzipbot.modules.ext_script.ext_helper import run_shell_cmds
@@ -76,27 +67,20 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
             upmsg = None
 
         if ul_mode == "media" and fext in extentions_list["audio"]:
-
             if thumbornot:
                 thumb_image = Config.THUMB_LOCATION + "/" + str(c_id) + ".jpg"
                 await unzip_bot.send_audio(
                     chat_id=c_id,
                     audio=doc_f,
                     caption=messages.get(
-                        file="up_helper",
-                        key="EXT_CAPTION",
-                        user_id=c_id,
-                        extra_args=fname,
+                        file="up_helper", key="EXT_CAPTION", user_id=c_id, extra_args=fname
                     ),
                     thumb=thumb_image,
                     disable_notification=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         messages.get(
-                            file="up_helper",
-                            key="TRY_UP",
-                            user_id=c_id,
-                            extra_args=fname,
+                            file="up_helper", key="TRY_UP", user_id=c_id, extra_args=fname
                         ),
                         upmsg,
                         time(),
@@ -108,19 +92,13 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     chat_id=c_id,
                     audio=doc_f,
                     caption=messages.get(
-                        file="up_helper",
-                        key="EXT_CAPTION",
-                        user_id=c_id,
-                        extra_args=fname,
+                        file="up_helper", key="EXT_CAPTION", user_id=c_id, extra_args=fname
                     ),
                     disable_notification=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         messages.get(
-                            file="up_helper",
-                            key="TRY_UP",
-                            user_id=c_id,
-                            extra_args=fname,
+                            file="up_helper", key="TRY_UP", user_id=c_id, extra_args=fname
                         ),
                         upmsg,
                         time(),
@@ -134,19 +112,13 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     chat_id=c_id,
                     photo=doc_f,
                     caption=messages.get(
-                        file="up_helper",
-                        key="EXT_CAPTION",
-                        user_id=c_id,
-                        extra_args=fname,
+                        file="up_helper", key="EXT_CAPTION", user_id=c_id, extra_args=fname
                     ),
                     disable_notification=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         messages.get(
-                            file="up_helper",
-                            key="TRY_UP",
-                            user_id=c_id,
-                            extra_args=fname,
+                            file="up_helper", key="TRY_UP", user_id=c_id, extra_args=fname
                         ),
                         upmsg,
                         time(),
@@ -161,20 +133,14 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         document=doc_f,
                         thumb=thumb_image,
                         caption=messages.get(
-                            file="up_helper",
-                            key="EXT_CAPTION",
-                            user_id=c_id,
-                            extra_args=fname,
+                            file="up_helper", key="EXT_CAPTION", user_id=c_id, extra_args=fname
                         ),
                         force_document=True,
                         disable_notification=True,
                         progress=progress_for_pyrogram,
                         progress_args=(
                             messages.get(
-                                file="up_helper",
-                                key="TRY_UP",
-                                user_id=c_id,
-                                extra_args=fname,
+                                file="up_helper", key="TRY_UP", user_id=c_id, extra_args=fname
                             ),
                             upmsg,
                             time(),
@@ -186,20 +152,14 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                         chat_id=c_id,
                         document=doc_f,
                         caption=messages.get(
-                            file="up_helper",
-                            key="EXT_CAPTION",
-                            user_id=c_id,
-                            extra_args=fname,
+                            file="up_helper", key="EXT_CAPTION", user_id=c_id, extra_args=fname
                         ),
                         force_document=True,
                         disable_notification=True,
                         progress=progress_for_pyrogram,
                         progress_args=(
                             messages.get(
-                                file="up_helper",
-                                key="TRY_UP",
-                                user_id=c_id,
-                                extra_args=fname,
+                                file="up_helper", key="TRY_UP", user_id=c_id, extra_args=fname
                             ),
                             upmsg,
                             time(),
@@ -227,10 +187,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     chat_id=c_id,
                     video=doc_f,
                     caption=messages.get(
-                        file="up_helper",
-                        key="EXT_CAPTION",
-                        user_id=c_id,
-                        extra_args=fname,
+                        file="up_helper", key="EXT_CAPTION", user_id=c_id, extra_args=fname
                     ),
                     duration=vid_duration,
                     thumb=thumb_image,
@@ -238,10 +195,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     progress=progress_for_pyrogram,
                     progress_args=(
                         messages.get(
-                            file="up_helper",
-                            key="TRY_UP",
-                            user_id=c_id,
-                            extra_args=fname,
+                            file="up_helper", key="TRY_UP", user_id=c_id, extra_args=fname
                         ),
                         upmsg,
                         time(),
@@ -249,9 +203,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     ),
                 )
             else:
-                thmb_pth = (
-                    f"{Config.THUMB_LOCATION}/thumbnail_{os.path.basename(doc_f)}.jpg"
-                )
+                thmb_pth = f"{Config.THUMB_LOCATION}/thumbnail_{os.path.basename(doc_f)}.jpg"
 
                 if os.path.exists(thmb_pth):
                     os.remove(path=thmb_pth)
@@ -264,9 +216,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     midpoint_str += ".00"
                 else:
                     midpoint_str = (
-                        midpoint_str.split(sep=".")[0]
-                        + "."
-                        + midpoint_str.split(sep=".")[1][:2]
+                        midpoint_str.split(sep=".")[0] + "." + midpoint_str.split(sep=".")[1][:2]
                     )
 
                 cmd = [
@@ -290,10 +240,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     chat_id=c_id,
                     video=doc_f,
                     caption=messages.get(
-                        file="up_helper",
-                        key="EXT_CAPTION",
-                        user_id=c_id,
-                        extra_args=fname,
+                        file="up_helper", key="EXT_CAPTION", user_id=c_id, extra_args=fname
                     ),
                     duration=vid_duration,
                     thumb=thmb_pth,
@@ -301,10 +248,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     progress=progress_for_pyrogram,
                     progress_args=(
                         messages.get(
-                            file="up_helper",
-                            key="TRY_UP",
-                            user_id=c_id,
-                            extra_args=fname,
+                            file="up_helper", key="TRY_UP", user_id=c_id, extra_args=fname
                         ),
                         upmsg,
                         time(),
@@ -325,20 +269,14 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     document=doc_f,
                     thumb=thumb_image,
                     caption=messages.get(
-                        file="up_helper",
-                        key="EXT_CAPTION",
-                        user_id=c_id,
-                        extra_args=fname,
+                        file="up_helper", key="EXT_CAPTION", user_id=c_id, extra_args=fname
                     ),
                     force_document=True,
                     disable_notification=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         messages.get(
-                            file="up_helper",
-                            key="TRY_UP",
-                            user_id=c_id,
-                            extra_args=fname,
+                            file="up_helper", key="TRY_UP", user_id=c_id, extra_args=fname
                         ),
                         upmsg,
                         time(),
@@ -350,20 +288,14 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
                     chat_id=c_id,
                     document=doc_f,
                     caption=messages.get(
-                        file="up_helper",
-                        key="EXT_CAPTION",
-                        user_id=c_id,
-                        extra_args=fname,
+                        file="up_helper", key="EXT_CAPTION", user_id=c_id, extra_args=fname
                     ),
                     force_document=True,
                     disable_notification=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         messages.get(
-                            file="up_helper",
-                            key="TRY_UP",
-                            user_id=c_id,
-                            extra_args=fname,
+                            file="up_helper", key="TRY_UP", user_id=c_id, extra_args=fname
                         ),
                         upmsg,
                         time(),
@@ -427,8 +359,7 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source, message):
 
         if Config.TG_MAX_SIZE < int(u_file_size):
             await unzip_bot.send_message(
-                chat_id=c_id,
-                text=messages.get(file="up_helper", key="TOO_LARGE", user_id=c_id),
+                chat_id=c_id, text=messages.get(file="up_helper", key="TOO_LARGE", user_id=c_id)
             )
 
             return
@@ -438,10 +369,7 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source, message):
             chat_id=c_id,
             document=doc_f,
             caption=messages.get(
-                file="up_helper",
-                key="LOG_CAPTION",
-                user_id=c_id,
-                extra_args=[fname, source],
+                file="up_helper", key="LOG_CAPTION", user_id=c_id, extra_args=[fname, source]
             ),
             disable_notification=True,
             progress=progress_urls,
@@ -491,15 +419,11 @@ async def answer_query(
         try:
             if unzip_client:
                 await unzip_client.send_message(
-                    chat_id=query.message.chat.id,
-                    text=message_text,
-                    reply_markup=buttons,
+                    chat_id=query.message.chat.id, text=message_text, reply_markup=buttons
                 )
             else:
                 await unzipbot_client.send_message(
-                    chat_id=query.message.chat.id,
-                    text=message_text,
-                    reply_markup=buttons,
+                    chat_id=query.message.chat.id, text=message_text, reply_markup=buttons
                 )
         except:
             pass

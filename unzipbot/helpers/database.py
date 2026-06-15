@@ -148,10 +148,7 @@ async def check_user(message):
                 await unzipbot_client.send_message(
                     chat_id=Config.LOGS_CHANNEL,
                     text=messages.get(
-                        file="database",
-                        key="NEW_USER_BAD",
-                        user_id=uid,
-                        extra_args=uname,
+                        file="database", key="NEW_USER_BAD", user_id=uid, extra_args=uname
                     ),
                     disable_web_page_preview=False,
                 )
@@ -160,10 +157,7 @@ async def check_user(message):
                 await unzipbot_client.send_message(
                     chat_id=Config.LOGS_CHANNEL,
                     text=messages.get(
-                        file="database",
-                        key="NEW_USER_BAD",
-                        user_id=uid,
-                        extra_args=uname,
+                        file="database", key="NEW_USER_BAD", user_id=uid, extra_args=uname
                     ),
                     disable_web_page_preview=False,
                 )
@@ -228,9 +222,7 @@ async def set_upload_mode(user_id, mode):
     is_exist = await mode_db.find_one(filter={"_id": user_id})
 
     if is_exist is not None and is_exist:
-        await mode_db.update_one(
-            filter={"_id": user_id}, update={"$set": {"mode": mode}}
-        )
+        await mode_db.update_one(filter={"_id": user_id}, update={"$set": {"mode": mode}})
     else:
         await mode_db.insert_one(document={"_id": user_id, "mode": mode})
 
@@ -266,9 +258,7 @@ async def update_uploaded(user_id, upload_count):
             filter={"_id": user_id}, update={"$set": {"uploaded_files": new_count}}
         )
     else:
-        await uploaded_db.insert_one(
-            document={"_id": user_id, "uploaded_files": upload_count}
-        )
+        await uploaded_db.insert_one(document={"_id": user_id, "uploaded_files": upload_count})
 
 
 # DB for thumbnails
@@ -288,9 +278,7 @@ async def update_temp_thumb(user_id, thumb_id):
     existing = await thumb_db.find_one(filter={"_id": user_id})
 
     if existing is not None and existing:
-        await thumb_db.update_one(
-            filter={"_id": user_id}, update={"$set": {"temp": thumb_id}}
-        )
+        await thumb_db.update_one(filter={"_id": user_id}, update={"$set": {"temp": thumb_id}})
     else:
         await thumb_db.insert_one(document={"_id": user_id, "temp": thumb_id})
 
@@ -302,14 +290,10 @@ async def update_thumb(user_id):
         await thumb_db.update_one(
             filter={"_id": user_id}, update={"$set": {"file_id": existing.get("temp")}}
         )
-        await thumb_db.update_one(
-            filter={"_id": user_id}, update={"$unset": {"temp": ""}}
-        )
+        await thumb_db.update_one(filter={"_id": user_id}, update={"$unset": {"temp": ""}})
 
         if existing.get("url") is not None:
-            await thumb_db.update_one(
-                filter={"_id": user_id}, update={"$unset": {"url": ""}}
-            )
+            await thumb_db.update_one(filter={"_id": user_id}, update={"$unset": {"url": ""}})
     else:
         return
 
@@ -319,14 +303,8 @@ async def get_thumb_users():
 
     async for thumb_list in thumb_db.find({}):
         if (
-            "file_id" in thumb_list
-            and thumb_list["file_id"] is None
-            and "url" not in thumb_list
-        ) or (
-            "temp" in thumb_list
-            and "file_id" not in thumb_list
-            and "url" not in thumb_list
-        ):
+            "file_id" in thumb_list and thumb_list["file_id"] is None and "url" not in thumb_list
+        ) or ("temp" in thumb_list and "file_id" not in thumb_list and "url" not in thumb_list):
             await thumb_db.delete_one(filter={"_id": thumb_list["_id"]})
         else:
             thumb_users.append(thumb_list)
@@ -367,9 +345,7 @@ async def set_boot(boottime):
     is_exist = await bot_data.find_one(filter={"boot": True})
 
     if is_exist is not None and is_exist:
-        await bot_data.update_one(
-            filter={"boot": True}, update={"$set": {"time": boottime}}
-        )
+        await bot_data.update_one(filter={"boot": True}, update={"$set": {"time": boottime}})
     else:
         await bot_data.insert_one(document={"boot": True, "time": boottime})
 
@@ -378,9 +354,7 @@ async def set_old_boot(boottime):
     is_exist = await bot_data.find_one(filter={"old_boot": True})
 
     if is_exist is not None and is_exist:
-        await bot_data.update_one(
-            filter={"old_boot": True}, update={"$set": {"time": boottime}}
-        )
+        await bot_data.update_one(filter={"old_boot": True}, update={"$set": {"time": boottime}})
     else:
         await bot_data.insert_one(document={"old_boot": True, "time": boottime})
 
@@ -492,9 +466,7 @@ async def count_merge_tasks():
 
 async def add_merge_task(user_id, message_id):
     if not await get_merge_task(user_id):
-        await merge_tasks.insert_one(
-            document={"user_id": user_id, "message_id": message_id}
-        )
+        await merge_tasks.insert_one(document={"user_id": user_id, "message_id": message_id})
     else:
         await merge_tasks.update_one(
             filter={"user_id": user_id}, update={"$set": {"message_id": message_id}}
@@ -671,13 +643,10 @@ async def add_referrer(uid, referees):
 
     if is_exist is not None and is_exist:
         await referrals.update_one(
-            filter={"_id": uid},
-            update={"$set": {"type": "referrer", "referees": referees}},
+            filter={"_id": uid}, update={"$set": {"type": "referrer", "referees": referees}}
         )
     else:
-        await referrals.insert_one(
-            document={"_id": uid, "type": "referrer", "referees": referees}
-        )
+        await referrals.insert_one(document={"_id": uid, "type": "referrer", "referees": referees})
 
 
 async def get_referee(uid):

@@ -26,15 +26,10 @@ class Env:
     class Versions:
         PYROFORK: str = version("pyrofork")
         PYTHON: str = (
-            run_sync_shell_cmds("python3 --version")
-            .get("output", "3.12.11")
-            .strip()
-            .split(" ")[-1]
+            run_sync_shell_cmds("python3 --version").get("output", "3.12.11").strip().split(" ")[-1]
         )
         UNZIPBOT: str = (
-            run_sync_shell_cmds(
-                f"grep -oP '(?<=^version = \")[^\"]*' {pyproject}"
-            )
+            run_sync_shell_cmds(f"grep -oP '(?<=^version = \")[^\"]*' {pyproject}")
             .get("output", "7.3.0")
             .strip()
         )

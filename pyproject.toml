@@ -6,7 +6,7 @@ description = "A Telegram bot to extract various types of archives"
 dependencies = [
   "aiocron==2.1",
   "aiofiles==25.1.0",
-  "aiohttp==3.13.5",
+  "aiohttp==3.14.1",
   "aiosqlite==0.22.1",
   "base58check==1.0.2",
   "GitPython==3.1.50",
@@ -22,12 +22,20 @@ requires-python = ">=3.12"
 readme = "README.md"
 license = { file = "LICENSE" }
 
+[project.optional-dependencies]
+dev = [
+  "ruff>=0.15.17",
+  "ty>=0.0.49",
+]
+
 [project.urls]
 "Homepage" = "https://github.com/EDM115/unzip-bot"
 "Bug Tracker" = "https://github.com/EDM115/unzip-bot/issues"
 "Funding" = "https://github.com/EDM115#support-me-"
 
 [tool.ruff]
+exclude = [".agents", ".vscode", ".venv"]
+line-length = 100
 target-version = "py312"
 
 [tool.ruff.format]
@@ -36,12 +44,18 @@ line-ending = "lf"
 skip-magic-trailing-comma = true
 
 [tool.ruff.lint]
-future-annotations = true
+# future-annotations = true
 logger-objects = ["unzipbot.LOGGER"]
-select = ["E", "F", "I", "W"]
+select = ["E", "F", "I", "B", "UP", "N", "S", "W"]
 
 [tool.ruff.lint.isort]
 split-on-trailing-comma = false
+
+[tool.ty.environment]
+python-version = "3.12"
+
+[tool.ty.src]
+exclude = [".agents", ".vscode", ".venv"]
 
 [tool.uv]
 compile-bytecode = true

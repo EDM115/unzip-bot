@@ -5,8 +5,7 @@ from env import Env
 from psutil import cpu_count
 
 FRAMEWORK_META_DICT = dict(
-    item.split(", ", 1)
-    for item in Env.FRAMEWORK_METADATA.get_all(name="Project-URL") or []
+    item.split(", ", 1) for item in Env.FRAMEWORK_METADATA.get_all(name="Project-URL") or []
 )
 
 
@@ -36,9 +35,7 @@ class Config:
         "Directly in Telegram": "https://t.me/EDM115bots/698",
     }
     FRAMEWORK_DOCS: str = FRAMEWORK_META_DICT.get("Documentation") or ""
-    FRAMEWORK_NAME: str = "/".join(
-        (FRAMEWORK_META_DICT.get("Source") or "").rsplit("/", 2)[-2:]
-    )
+    FRAMEWORK_NAME: str = "/".join((FRAMEWORK_META_DICT.get("Source") or "").rsplit("/", 2)[-2:])
     MAX_CONCURRENT_TASKS = 75
     MAX_MESSAGE_LENGTH = 4096
     MAX_TASK_DURATION_EXTRACT = 2 * 60 * 60  # 2 hours (in seconds)

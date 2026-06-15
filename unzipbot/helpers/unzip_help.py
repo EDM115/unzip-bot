@@ -23,9 +23,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
 
     if message.chat.type == enums.ChatType.PRIVATE and await get_cancel_task(uid):
         await del_cancel_task(uid)
-        await message.edit(
-            text=messages.get(file="unzip_help", key="DL_STOPPED", user_id=uid)
-        )
+        await message.edit(text=messages.get(file="unzip_help", key="DL_STOPPED", user_id=uid))
         unzip_bot.stop_transmission()
     else:
         now = time.time()
@@ -70,9 +68,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
                 f"`{round(number=percentage, ndigits=2)}%`\n"
             )
             eta = (
-                estimated_total_time
-                if estimated_total_time != "" or percentage != "100"
-                else "0 s"
+                estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"
             )
             tmp = (
                 progress
@@ -126,11 +122,7 @@ async def progress_urls(current, total, ud_type, message, start):
             f"{messages.get(file='unzip_help', key='PROCESSING', user_id=uid)} : "
             f"`{round(number=percentage, ndigits=2)}%`\n"
         )
-        eta = (
-            estimated_total_time
-            if estimated_total_time != "" or percentage != "100"
-            else "0 s"
-        )
+        eta = estimated_total_time if estimated_total_time != "" or percentage != "100" else "0 s"
         tmp = (
             progress
             + f"`{humanbytes(current)} of {humanbytes(total)}`\n"
@@ -143,20 +135,14 @@ async def progress_urls(current, total, ud_type, message, start):
         try:
             await message.edit(
                 messages.get(
-                    file="unzip_help",
-                    key="PROGRESS_MSG",
-                    user_id=uid,
-                    extra_args=[ud_type, tmp],
+                    file="unzip_help", key="PROGRESS_MSG", user_id=uid, extra_args=[ud_type, tmp]
                 )
             )
         except (FloodWait, FloodPremiumWait) as f:
             await sleep(f.value)
             await message.edit(
                 messages.get(
-                    file="unzip_help",
-                    key="PROGRESS_MSG",
-                    user_id=uid,
-                    extra_args=[ud_type, tmp],
+                    file="unzip_help", key="PROGRESS_MSG", user_id=uid, extra_args=[ud_type, tmp]
                 )
             )
         except:

@@ -34,9 +34,7 @@ async def add_thumb(_, message):
 
             if reply_message.media_group_id is not None:  # album sent
                 LOGGER.info(
-                    msg=messages.get(
-                        file="custom_thumbnail", key="ALBUM", extra_args=user_id
-                    )
+                    msg=messages.get(file="custom_thumbnail", key="ALBUM", extra_args=user_id)
                 )
                 await message.reply(
                     messages.get(file="custom_thumbnail", key="ALBUM_NOPE", user_id=uid)
@@ -48,9 +46,7 @@ async def add_thumb(_, message):
             pre_thumb = Config.THUMB_LOCATION + "/not_resized_" + user_id + ".jpg"
             final_thumb = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
             LOGGER.info(
-                msg=messages.get(
-                    file="custom_thumbnail", key="DL_THUMB", extra_args=user_id
-                )
+                msg=messages.get(file="custom_thumbnail", key="DL_THUMB", extra_args=user_id)
             )
             file = await _.download_media(message=reply_message)
             shutil.move(src=file, dst=pre_thumb)
@@ -60,9 +56,7 @@ async def add_thumb(_, message):
                 with Image.open(fp=pre_thumb) as previous:
                     previous.thumbnail(size=size, resample=Image.Resampling.LANCZOS)
                     previous.save(fp=final_thumb, format="JPEG")
-                    LOGGER.info(
-                        msg=messages.get(file="custom_thumbnail", key="THUMB_SAVED")
-                    )
+                    LOGGER.info(msg=messages.get(file="custom_thumbnail", key="THUMB_SAVED"))
                 savedpic = await _.send_photo(
                     chat_id=Config.LOGS_CHANNEL,
                     photo=final_thumb,
@@ -92,15 +86,11 @@ async def add_thumb(_, message):
                     )
                 else:
                     await message.reply(
-                        text=messages.get(
-                            file="custom_thumbnail", key="SAVING_THUMB", user_id=uid
-                        ),
+                        text=messages.get(file="custom_thumbnail", key="SAVING_THUMB", user_id=uid),
                         reply_markup=Buttons.THUMB_SAVE,
                     )
             except:
-                LOGGER.info(
-                    msg=messages.get(file="custom_thumbnail", key="THUMB_FAILED")
-                )
+                LOGGER.info(msg=messages.get(file="custom_thumbnail", key="THUMB_FAILED"))
 
                 try:
                     os.remove(path=final_thumb)
@@ -108,16 +98,12 @@ async def add_thumb(_, message):
                     pass
 
                 await message.reply(
-                    messages.get(
-                        file="custom_thumbnail", key="THUMB_ERROR", user_id=uid
-                    )
+                    messages.get(file="custom_thumbnail", key="THUMB_ERROR", user_id=uid)
                 )
         else:
             await _.send_message(
                 chat_id=message.chat.id,
-                text=messages.get(
-                    file="custom_thumbnail", key="PLS_REPLY", user_id=uid
-                ),
+                text=messages.get(file="custom_thumbnail", key="PLS_REPLY", user_id=uid),
                 reply_to_message_id=message.id,
             )
     except (FloodWait, FloodPremiumWait) as f:
@@ -136,9 +122,7 @@ async def del_thumb(message):
             )
         else:
             await message.reply(
-                text=messages.get(
-                    file="custom_thumbnail", key="DEL_CONFIRM_THUMB", user_id=uid
-                ),
+                text=messages.get(file="custom_thumbnail", key="DEL_CONFIRM_THUMB", user_id=uid),
                 reply_markup=Buttons.THUMB_DEL,
             )
     except (FloodWait, FloodPremiumWait) as f:

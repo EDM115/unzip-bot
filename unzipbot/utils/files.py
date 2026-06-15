@@ -85,20 +85,14 @@ def find_lowest_sequence_file(files: list[str]) -> tuple[str, str]:
         raise IndexError("No files to match")
 
     # Match the files against the patterns
-    rar_matches: list[str] = [
-        f for f in files if search(pattern=rar_file_pattern, string=f)
-    ]
-    volume_matches: list[str] = [
-        f for f in files if search(pattern=volume_file_pattern, string=f)
-    ]
+    rar_matches: list[str] = [f for f in files if search(pattern=rar_file_pattern, string=f)]
+    volume_matches: list[str] = [f for f in files if search(pattern=volume_file_pattern, string=f)]
 
     # Handle RAR pattern cases
     if rar_matches:
         # Separate .rX and .partX.rar cases
         r_files: list[str] = [
-            f
-            for f in rar_matches
-            if f.endswith(".rar") or search(pattern=r"\.r\d+$", string=f)
+            f for f in rar_matches if f.endswith(".rar") or search(pattern=r"\.r\d+$", string=f)
         ]
         part_files: list[str] = [
             f for f in rar_matches if search(pattern=r"part\d+\.rar$", string=f)
@@ -107,28 +101,19 @@ def find_lowest_sequence_file(files: list[str]) -> tuple[str, str]:
         # Priority: .partX.rar -> .rX
         if part_files:
             return (
-                min(
-                    part_files,
-                    key=lambda x: get_sequence_number(filename=x, pattern=r"part\d+"),
-                ),
+                min(part_files, key=lambda x: get_sequence_number(filename=x, pattern=r"part\d+")),
                 "rar",
             )
         elif r_files:
             return (
-                min(
-                    r_files,
-                    key=lambda x: get_sequence_number(filename=x, pattern=r"\.r\d+$"),
-                ),
+                min(r_files, key=lambda x: get_sequence_number(filename=x, pattern=r"\.r\d+$")),
                 "rar",
             )
 
     # Handle other cases
     if volume_matches:
         return (
-            min(
-                volume_matches,
-                key=lambda x: get_sequence_number(filename=x, pattern=r"\.\d+$"),
-            ),
+            min(volume_matches, key=lambda x: get_sequence_number(filename=x, pattern=r"\.\d+$")),
             "volume",
         )
 

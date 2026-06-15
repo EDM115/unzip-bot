@@ -120,9 +120,7 @@ class SQLiteDatabase(DatabaseInterface):
         Helper method for creating a table given a schema dict
         ex : {"id": "INTEGER PRIMARY KEY", "name": "TEXT"}.
         """
-        columns_def: str = ", ".join(
-            [f"{col} {dtype}" for col, dtype in schema.items()]
-        )
+        columns_def: str = ", ".join([f"{col} {dtype}" for col, dtype in schema.items()])
         sql: str = f"CREATE TABLE IF NOT EXISTS {table_name} ({columns_def})"
         await self.conn.execute(sql)
         await self.conn.commit()

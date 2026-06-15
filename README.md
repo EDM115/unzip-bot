@@ -145,10 +145,10 @@ docker push edm115/unzip-bot:latest
 *(same, replace accordingly)*
 
 ## Dev commands
-- Upgrade/install dependencies : `uv sync`
-- Lint code : `ruff check`
-- Lint and fix code : `ruff check --fix`
-- Format code : `ruff format`
+- Upgrade/install dependencies : `uv sync --extra dev`
+- Lint and fix code : `uv run ruff check --fix`
+- Format code : `uv run ruff format`
+- Type check : `uv run ty check`
 
 ## :bug: Found a bug ?
 If you found a bug in this bot please open an [issue](https://github.com/EDM115/unzip-bot/issues) or report it on Telegram : [@EDM115](https://t.me/EDM115)  

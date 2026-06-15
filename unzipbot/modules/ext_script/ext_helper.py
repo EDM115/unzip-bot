@@ -18,9 +18,7 @@ messages = Messages(lang_fetcher=get_lang)
 async def get_files(path):
     path_list = [
         val
-        for sublist in [
-            [os.path.join(i[0], j) for j in i[2]] for i in os.walk(top=path)
-        ]
+        for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(top=path)]
         for val in sublist
     ]
 
@@ -54,10 +52,7 @@ async def run_shell_cmds(command):
     ]
     ulimit_command = " ".join(ulimit_cmd)
     process = await create_subprocess_shell(
-        cmd=ulimit_command,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        executable="/bin/bash",
+        cmd=ulimit_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, executable="/bin/bash"
     )
     stdout, stderr = await process.communicate()
 
@@ -76,14 +71,7 @@ async def __extract_with_7z_helper(path, archive_path, password=None):
     LOGGER.info(msg="7z : " + archive_path + " : " + path)
 
     if password:
-        cmd = [
-            "7z",
-            "x",
-            f"-o{quote(path)}",
-            f"-p{quote(password)}",
-            quote(archive_path),
-            "-y",
-        ]
+        cmd = ["7z", "x", f"-o{quote(path)}", f"-p{quote(password)}", quote(archive_path), "-y"]
     else:
         cmd = ["7z", "x", f"-o{quote(path)}", quote(archive_path), "-y"]
 
@@ -107,14 +95,7 @@ async def __extract_with_unrar_helper(path, archive_path, password=None):
     LOGGER.info(msg="unrar : " + archive_path + " : " + path)
 
     if password:
-        cmd = [
-            "unrar",
-            "x",
-            quote(archive_path),
-            quote(path),
-            f"-p{quote(password)}",
-            "-y",
-        ]
+        cmd = ["unrar", "x", quote(archive_path), quote(path), f"-p{quote(password)}", "-y"]
     else:
         cmd = ["unrar", "x", quote(archive_path), quote(path), "-y"]
 
@@ -151,9 +132,7 @@ async def extr_files(path, archive_path, password=None):
         LOGGER.info(msg="tar")
         temp_path = path.rsplit("/", 1)[0] + "/tar_temp"
         os.makedirs(name=temp_path, exist_ok=True)
-        result = await __extract_with_7z_helper(
-            path=temp_path, archive_path=archive_path
-        )
+        result = await __extract_with_7z_helper(path=temp_path, archive_path=archive_path)
         filename = await get_files(temp_path)
         filename = filename[0]
         cmd = ["tar", "-xvf", quote(filename), "-C", quote(path)]
@@ -172,9 +151,7 @@ async def extr_files(path, archive_path, password=None):
                 path=path, archive_path=archive_path, password=password
             )
         else:
-            result = await __extract_with_unrar_helper(
-                path=path, archive_path=archive_path
-            )
+            result = await __extract_with_unrar_helper(path=path, archive_path=archive_path)
     else:
         LOGGER.info(msg="normal archive")
         result = await __extract_with_7z_helper(
@@ -192,15 +169,7 @@ async def extr_files(path, archive_path, password=None):
 async def split_files(iinput, ooutput, size):
     temp_location = iinput + "_temp"
     shutil.move(src=iinput, dst=temp_location)
-    cmd = [
-        "7z",
-        "a",
-        "-tzip",
-        "-mx=0",
-        quote(ooutput),
-        quote(temp_location),
-        f"-v{size}b",
-    ]
+    cmd = ["7z", "a", "-tzip", "-mx=0", quote(ooutput), quote(temp_location), f"-v{size}b"]
     await run_shell_cmds(" ".join(cmd))
     spdir = ooutput.replace("/" + ooutput.split("/")[-1], "")
     files = await get_files(spdir)
@@ -238,8 +207,7 @@ async def make_keyboard(paths, user_id, chat_id, unziphttp, rzfile=None):
 
     buttons.append(
         InlineKeyboardButton(
-            text=messages.get(file="ext_helper", key="UP_ALL", user_id=user_id),
-            callback_data=cb,
+            text=messages.get(file="ext_helper", key="UP_ALL", user_id=user_id), callback_data=cb
         )
     )
 
@@ -283,8 +251,7 @@ async def make_keyboard_empty(user_id, chat_id, unziphttp, rzfile=None):
 
     buttons.append(
         InlineKeyboardButton(
-            text=messages.get(file="ext_helper", key="UP_ALL", user_id=user_id),
-            callback_data=cb,
+            text=messages.get(file="ext_helper", key="UP_ALL", user_id=user_id), callback_data=cb
         )
     )
 

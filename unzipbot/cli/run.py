@@ -21,10 +21,7 @@ async def run_shell_cmds(command) -> dict[str, str]:
     ]
     ulimit_command = " ".join(ulimit_cmd)
     process = await create_subprocess_shell(
-        cmd=ulimit_command,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        executable="/bin/bash",
+        cmd=ulimit_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, executable="/bin/bash"
     )
     stdout, stderr = await process.communicate()
 

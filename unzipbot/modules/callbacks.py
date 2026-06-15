@@ -88,39 +88,30 @@ def find_lowest_sequence_file(files):
 
     # Match the files against the patterns
     rar_matches = [f for f in files if re.search(pattern=rar_file_pattern, string=f)]
-    volume_matches = [
-        f for f in files if re.search(pattern=volume_file_pattern, string=f)
-    ]
+    volume_matches = [f for f in files if re.search(pattern=volume_file_pattern, string=f)]
 
     # Handle RAR pattern cases
     if rar_matches:
         # Separate .rX and .partX.rar cases
         r_files = [
-            f
-            for f in rar_matches
-            if f.endswith(".rar") or re.search(pattern=r"\.r\d+$", string=f)
+            f for f in rar_matches if f.endswith(".rar") or re.search(pattern=r"\.r\d+$", string=f)
         ]
-        part_files = [
-            f for f in rar_matches if re.search(pattern=r"part\d+\.rar$", string=f)
-        ]
+        part_files = [f for f in rar_matches if re.search(pattern=r"part\d+\.rar$", string=f)]
 
         # Priority: .partX.rar -> .rX
         if part_files:
             return min(
-                part_files,
-                key=lambda x: get_sequence_number(filename=x, pattern=r"part\d+"),
+                part_files, key=lambda x: get_sequence_number(filename=x, pattern=r"part\d+")
             ), "rar"
         elif r_files:
             return min(
-                r_files,
-                key=lambda x: get_sequence_number(filename=x, pattern=r"\.r\d+$"),
+                r_files, key=lambda x: get_sequence_number(filename=x, pattern=r"\.r\d+$")
             ), "rar"
 
     # Handle other cases
     if volume_matches:
         return min(
-            volume_matches,
-            key=lambda x: get_sequence_number(filename=x, pattern=r"\.\d+$"),
+            volume_matches, key=lambda x: get_sequence_number(filename=x, pattern=r"\.\d+$")
         ), "volume"
 
     raise IndexError("No matching files found")
@@ -158,9 +149,7 @@ async def download_with_progress(url, path, message, unzip_bot):
                 async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
                     if message.from_user is not None and await get_cancel_task(uid):
                         await message.edit(
-                            text=messages.get(
-                                file="callbacks", key="DL_STOPPED", user_id=uid
-                            )
+                            text=messages.get(file="callbacks", key="DL_STOPPED", user_id=uid)
                         )
                         await del_cancel_task(uid)
 
@@ -239,9 +228,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
     ):
         await answer_query(
             query=query,
-            message_text=messages.get(
-                file="callbacks", key="MAINTENANCE_ON", user_id=uid
-            ),
+            message_text=messages.get(file="callbacks", key="MAINTENANCE_ON", user_id=uid),
         )
 
         return
@@ -252,10 +239,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
     if query.data == "megoinhome":
         await query.edit_message_text(
             text=messages.get(
-                file="callbacks",
-                key="START_TEXT",
-                user_id=uid,
-                extra_args=query.from_user.mention,
+                file="callbacks", key="START_TEXT", user_id=uid, extra_args=query.from_user.mention
             ),
             reply_markup=Buttons.START_BUTTON,
         )
@@ -269,10 +253,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
     elif query.data == "aboutcallback":
         await query.edit_message_text(
             text=messages.get(
-                file="callbacks",
-                key="ABOUT_TXT",
-                user_id=uid,
-                extra_args=Config.VERSION,
+                file="callbacks", key="ABOUT_TXT", user_id=uid, extra_args=Config.VERSION
             ),
             reply_markup=Buttons.ME_GOIN_HOME,
             disable_web_page_preview=True,
@@ -291,9 +272,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                 text=messages.get(file="callbacks", key="REFRESH_STATS", user_id=uid)
             )
         text_stats = await get_stats(query.from_user.id)
-        await query.edit_message_text(
-            text=text_stats, reply_markup=Buttons.REFRESH_BUTTON
-        )
+        await query.edit_message_text(text=text_stats, reply_markup=Buttons.REFRESH_BUTTON)
 
     elif query.data == "canceldownload":
         await add_cancel_task(query.from_user.id)
@@ -351,9 +330,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
         await answer_query(
             query=query,
-            message_text=messages.get(
-                file="callbacks", key="SAVED_THUMBNAIL", user_id=uid
-            ),
+            message_text=messages.get(file="callbacks", key="SAVED_THUMBNAIL", user_id=uid),
         )
 
     elif query.data == "del_thumb":
@@ -363,9 +340,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         try:
             await del_thumb_db(user_id)
         except Exception as e:
-            LOGGER.error(
-                msg=messages.get(file="callbacks", key="ERROR_THUMB_DEL", extra_args=e)
-            )
+            LOGGER.error(msg=messages.get(file="callbacks", key="ERROR_THUMB_DEL", extra_args=e))
 
         try:
             os.remove(path=thumb_location)
@@ -396,9 +371,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                 file="callbacks",
                 key="CANCELLED_TXT",
                 user_id=uid,
-                extra_args=messages.get(
-                    file="callbacks", key="PROCESS_CANCELLED", user_id=uid
-                ),
+                extra_args=messages.get(file="callbacks", key="PROCESS_CANCELLED", user_id=uid),
             )
         )
 
@@ -409,10 +382,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         await answer_query(
             query=query,
             message_text=messages.get(
-                file="callbacks",
-                key="CHANGED_UPLOAD_MODE_TXT",
-                user_id=uid,
-                extra_args=mode,
+                file="callbacks", key="CHANGED_UPLOAD_MODE_TXT", user_id=uid, extra_args=mode
             ),
         )
 
@@ -420,9 +390,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         user_id = query.from_user.id
         m_id = query.message.id
         start_time = time()
-        await add_ongoing_task(
-            user_id=user_id, start_time=start_time, task_type="merge"
-        )
+        await add_ongoing_task(user_id=user_id, start_time=start_time, task_type="merge")
         s_id = await get_merge_task_message_id(user_id)
         merge_msg = await query.message.edit(
             text=messages.get(file="callbacks", key="PROCESSING_TASK", user_id=uid)
@@ -437,11 +405,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     chat_id=user_id, message_ids=files_array
                 )
             except Exception as e:
-                LOGGER.error(
-                    msg=messages.get(
-                        file="callbacks", key="ERROR_GET_MSG", extra_args=e
-                    )
-                )
+                LOGGER.error(msg=messages.get(file="callbacks", key="ERROR_GET_MSG", extra_args=e))
                 await answer_query(
                     query=query,
                     message_text=messages.get(
@@ -480,9 +444,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             if length == 0:
                 await answer_query(
                     query=query,
-                    message_text=messages.get(
-                        file="callbacks", key="NO_MERGE_TASK", user_id=uid
-                    ),
+                    message_text=messages.get(file="callbacks", key="NO_MERGE_TASK", user_id=uid),
                 )
                 await del_ongoing_task(user_id)
                 await del_merge_task(user_id)
@@ -508,10 +470,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     progress=progress_for_pyrogram,
                     progress_args=(
                         messages.get(
-                            file="callbacks",
-                            key="DL_FILES",
-                            user_id=uid,
-                            extra_args=[i, length],
+                            file="callbacks", key="DL_FILES", user_id=uid, extra_args=[i, length]
                         ),
                         merge_msg,
                         s_time,
@@ -534,18 +493,14 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                 )
             )
             await merge_msg.edit(
-                text=messages.get(
-                    file="callbacks", key="CHOOSE_EXT_MODE_MERGE", user_id=uid
-                ),
+                text=messages.get(file="callbacks", key="CHOOSE_EXT_MODE_MERGE", user_id=uid),
                 reply_markup=Buttons.CHOOSE_E_F_M__BTNS,
             )
             await del_merge_task(user_id)
         else:
             await answer_query(
                 query=query,
-                message_text=messages.get(
-                    file="callbacks", key="NO_MERGE_TASK", user_id=uid
-                ),
+                message_text=messages.get(file="callbacks", key="NO_MERGE_TASK", user_id=uid),
             )
             await del_ongoing_task(user_id)
             await del_merge_task(user_id)
@@ -567,9 +522,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         except IndexError:
             await answer_query(
                 query=query,
-                message_text=messages.get(
-                    file="callbacks", key="NO_MERGE_TASK", user_id=uid
-                ),
+                message_text=messages.get(file="callbacks", key="NO_MERGE_TASK", user_id=uid),
             )
             await del_ongoing_task(user_id)
             await del_merge_task(user_id)
@@ -601,33 +554,24 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         if split_data[1] == "with_pass":
             password = await unzip_bot.ask(
                 chat_id=query.message.chat.id,
-                text=messages.get(
-                    file="callbacks", key="PLS_SEND_PASSWORD", user_id=uid
-                ),
+                text=messages.get(file="callbacks", key="PLS_SEND_PASSWORD", user_id=uid),
             )
             ext_s_time = time()
             extractor = await merge_files(
-                iinput=file,
-                ooutput=ext_files_dir,
-                file_type=file_type,
-                password=password.text,
+                iinput=file, ooutput=ext_files_dir, file_type=file_type, password=password.text
             )
             ext_e_time = time()
         else:
             # Can't test the archive apparently
             ext_s_time = time()
-            extractor = await merge_files(
-                iinput=file, ooutput=ext_files_dir, file_type=file_type
-            )
+            extractor = await merge_files(iinput=file, ooutput=ext_files_dir, file_type=file_type)
             ext_e_time = time()
 
         # Checks if there is an error happened while extracting the archive
         if any(err in extractor for err in ERROR_MSGS):
             try:
                 await query.message.edit(
-                    text=messages.get(
-                        file="callbacks", key="EXT_FAILED_TXT", user_id=uid
-                    )
+                    text=messages.get(file="callbacks", key="EXT_FAILED_TXT", user_id=uid)
                 )
                 shutil.rmtree(ext_files_dir)
                 shutil.rmtree(download_path)
@@ -640,9 +584,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
                 await unzip_bot.send_message(
                     chat_id=query.message.chat.id,
-                    text=messages.get(
-                        file="callbacks", key="EXT_FAILED_TXT", user_id=uid
-                    ),
+                    text=messages.get(file="callbacks", key="EXT_FAILED_TXT", user_id=uid),
                 )
                 shutil.rmtree(ext_files_dir)
                 await del_ongoing_task(user_id)
@@ -655,15 +597,11 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         if not paths:
             await unzip_bot.send_message(
                 chat_id=query.message.chat.id,
-                text=messages.get(
-                    file="callbacks", key="PASSWORD_PROTECTED", user_id=uid
-                ),
+                text=messages.get(file="callbacks", key="PASSWORD_PROTECTED", user_id=uid),
             )
             await answer_query(
                 query=query,
-                message_text=messages.get(
-                    file="callbacks", key="EXT_FAILED_TXT", user_id=uid
-                ),
+                message_text=messages.get(file="callbacks", key="EXT_FAILED_TXT", user_id=uid),
                 unzip_client=unzip_bot,
             )
             shutil.rmtree(ext_files_dir)
@@ -692,17 +630,12 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
         try:
             i_e_buttons = await make_keyboard(
-                paths=paths,
-                user_id=user_id,
-                chat_id=query.message.chat.id,
-                unziphttp=False,
+                paths=paths, user_id=user_id, chat_id=query.message.chat.id, unziphttp=False
             )
 
             try:
                 await query.message.edit(
-                    text=messages.get(
-                        file="callbacks", key="SELECT_FILES", user_id=uid
-                    ),
+                    text=messages.get(file="callbacks", key="SELECT_FILES", user_id=uid),
                     reply_markup=i_e_buttons,
                 )
             except ReplyMarkupTooLong:
@@ -710,25 +643,18 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     user_id=user_id, chat_id=query.message.chat.id, unziphttp=False
                 )
                 await query.message.edit(
-                    text=messages.get(
-                        file="callbacks", key="UNABLE_GATHER_FILES", user_id=uid
-                    ),
+                    text=messages.get(file="callbacks", key="UNABLE_GATHER_FILES", user_id=uid),
                     reply_markup=empty_buttons,
                 )
         except:
             try:
                 await query.message.delete()
                 i_e_buttons = await make_keyboard(
-                    paths=paths,
-                    user_id=user_id,
-                    chat_id=query.message.chat.id,
-                    unziphttp=False,
+                    paths=paths, user_id=user_id, chat_id=query.message.chat.id, unziphttp=False
                 )
                 await unzip_bot.send_message(
                     chat_id=query.message.chat.id,
-                    text=messages.get(
-                        file="callbacks", key="SELECT_FILES", user_id=uid
-                    ),
+                    text=messages.get(file="callbacks", key="SELECT_FILES", user_id=uid),
                     reply_markup=i_e_buttons,
                 )
             except:
@@ -739,9 +665,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     )
                     await unzip_bot.send_message(
                         chat_id=query.message.chat.id,
-                        text=messages.get(
-                            file="callbacks", key="UNABLE_GATHER_FILES", user_id=uid
-                        ),
+                        text=messages.get(file="callbacks", key="UNABLE_GATHER_FILES", user_id=uid),
                         reply_markup=empty_buttons,
                     )
                 except:
@@ -761,9 +685,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
     elif query.data.startswith("extract_file"):
         user_id = query.from_user.id
         start_time = time()
-        await add_ongoing_task(
-            user_id=user_id, start_time=start_time, task_type="extract"
-        )
+        await add_ongoing_task(user_id=user_id, start_time=start_time, task_type="extract")
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
         ext_files_dir = f"{download_path}/extracted"
         r_message = query.message.reply_to_message
@@ -791,17 +713,14 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                 if not re.match(pattern=https_url_regex, string=url):
                     await del_ongoing_task(user_id)
                     await query.message.edit(
-                        text=messages.get(
-                            file="callbacks", key="INVALID_URL", user_id=uid
-                        )
+                        text=messages.get(file="callbacks", key="INVALID_URL", user_id=uid)
                     )
 
                     return
 
                 if re.match(pattern=telegram_url_pattern, string=url):
                     r_message = await unzip_bot.get_messages(
-                        chat_id=url.split(sep="/")[-2],
-                        message_ids=int(url.split(sep="/")[-1]),
+                        chat_id=url.split(sep="/")[-2], message_ids=int(url.split(sep="/")[-1])
                     )
                     split_data[1] = "tg_file"
 
@@ -819,9 +738,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                         ):
                             await del_ongoing_task(user_id)
                             await query.message.edit(
-                                text=messages.get(
-                                    file="callbacks", key="NO_SPACE", user_id=uid
-                                )
+                                text=messages.get(file="callbacks", key="NO_SPACE", user_id=uid)
                             )
 
                             return
@@ -834,9 +751,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                             )
                         )
                         archive_msg = log_msg
-                        unzip_resp = await session.get(
-                            url=url, timeout=None, allow_redirects=True
-                        )
+                        unzip_resp = await session.get(url=url, timeout=None, allow_redirects=True)
 
                         if "application/" not in unzip_resp.headers.get("content-type"):
                             await del_ongoing_task(user_id)
@@ -848,9 +763,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
                             return
 
-                        content_disposition = unzip_head.headers.get(
-                            "content-disposition"
-                        )
+                        content_disposition = unzip_head.headers.get("content-disposition")
                         rfnamebro = ""
                         real_filename = ""
 
@@ -886,16 +799,12 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                                 await del_ongoing_task(user_id)
                                 await query.message.edit(
                                     text=messages.get(
-                                        file="callbacks",
-                                        key="DEF_NOT_AN_ARCHIVE",
-                                        user_id=uid,
+                                        file="callbacks", key="DEF_NOT_AN_ARCHIVE", user_id=uid
                                     )
                                 )
 
                                 try:
-                                    shutil.rmtree(
-                                        f"{Config.DOWNLOAD_LOCATION}/{user_id}"
-                                    )
+                                    shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{user_id}")
                                 except:
                                     pass
 
@@ -917,9 +826,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                                 try:
                                     loop = asyncio.get_event_loop()
 
-                                    with (
-                                        concurrent.futures.ThreadPoolExecutor() as pool
-                                    ):
+                                    with concurrent.futures.ThreadPoolExecutor() as pool:
                                         rzf, paths = await loop.run_in_executor(
                                             pool, get_zip_http, url
                                         )
@@ -979,13 +886,11 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                                         except:
                                             try:
                                                 await query.message.delete()
-                                                empty_buttons = (
-                                                    await make_keyboard_empty(
-                                                        user_id=user_id,
-                                                        chat_id=query.message.chat.id,
-                                                        unziphttp=True,
-                                                        rzfile=rzf,
-                                                    )
+                                                empty_buttons = await make_keyboard_empty(
+                                                    user_id=user_id,
+                                                    chat_id=query.message.chat.id,
+                                                    unziphttp=True,
+                                                    rzfile=rzf,
                                                 )
                                                 await unzip_bot.send_message(
                                                     chat_id=query.message.chat.id,
@@ -1001,9 +906,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                                 except Exception as e:
                                     LOGGER.error(
                                         msg=messages.get(
-                                            file="callbacks",
-                                            key="UNZIP_HTTP",
-                                            extra_args=[url, e],
+                                            file="callbacks", key="UNZIP_HTTP", extra_args=[url, e]
                                         )
                                     )
 
@@ -1017,9 +920,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                             except Exception as e:
                                 dled = False
                                 LOGGER.error(
-                                    msg=messages.get(
-                                        file="callbacks", key="ERR_DL", extra_args=e
-                                    )
+                                    msg=messages.get(file="callbacks", key="ERR_DL", extra_args=e)
                                 )
 
                             if isinstance(dled, bool) and not dled:
@@ -1036,9 +937,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                         else:
                             await del_ongoing_task(user_id)
                             await query.message.edit(
-                                text=messages.get(
-                                    file="callbacks", key="CANT_DL_URL", user_id=uid
-                                )
+                                text=messages.get(file="callbacks", key="CANT_DL_URL", user_id=uid)
                             )
 
                             try:
@@ -1052,9 +951,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                 if r_message.document is None:
                     await del_ongoing_task(user_id)
                     await query.message.edit(
-                        text=messages.get(
-                            file="callbacks", key="GIVE_ARCHIVE", user_id=uid
-                        )
+                        text=messages.get(file="callbacks", key="GIVE_ARCHIVE", user_id=uid)
                     )
 
                     return
@@ -1066,11 +963,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     text=messages.get(
                         file="callbacks",
                         key="LOG_TXT",
-                        extra_args=[
-                            user_id,
-                            fname,
-                            humanbytes(r_message.document.file_size),
-                        ],
+                        extra_args=[user_id, fname, humanbytes(r_message.document.file_size)],
                     )
                 )
 
@@ -1083,9 +976,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                         or bool(re.search(pattern=rar_file_pattern, string=fname))
                     ):
                         await query.message.edit(
-                            text=messages.get(
-                                file="callbacks", key="ITS_SPLITTED", user_id=uid
-                            )
+                            text=messages.get(file="callbacks", key="ITS_SPLITTED", user_id=uid)
                         )
 
                         return
@@ -1093,9 +984,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     if bool(re.search(pattern=split_file_pattern, string=fname)):
                         await del_ongoing_task(user_id)
                         await query.message.edit(
-                            text=messages.get(
-                                file="callbacks", key="SPL_RZ", user_id=uid
-                            )
+                            text=messages.get(file="callbacks", key="SPL_RZ", user_id=uid)
                         )
 
                         return
@@ -1129,9 +1018,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                 await del_ongoing_task(user_id)
                 await answer_query(
                     query=query,
-                    message_text=messages.get(
-                        file="callbacks", key="QUERY_PARSE_ERR", user_id=uid
-                    ),
+                    message_text=messages.get(file="callbacks", key="QUERY_PARSE_ERR", user_id=uid),
                     answer_only=True,
                     unzip_client=unzip_bot,
                 )
@@ -1148,10 +1035,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     newname = await unzip_bot.ask(
                         chat_id=user_id,
                         text=messages.get(
-                            file="callbacks",
-                            key="GIVE_NEW_NAME",
-                            user_id=uid,
-                            extra_args=rfnamebro,
+                            file="callbacks", key="GIVE_NEW_NAME", user_id=uid, extra_args=rfnamebro
                         ),
                     )
                     renamed = location.replace(archive_name, newname.text)
@@ -1186,10 +1070,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
                 await query.message.edit(
                     text=messages.get(
-                        file="callbacks",
-                        key="SPLITTING",
-                        user_id=uid,
-                        extra_args=newfname,
+                        file="callbacks", key="SPLITTING", user_id=uid, extra_args=newfname
                     )
                 )
                 splitdir = f"{Config.DOWNLOAD_LOCATION}/split/{user_id}"
@@ -1207,19 +1088,14 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
                     await del_ongoing_task(user_id)
                     await query.message.edit(
-                        text=messages.get(
-                            file="callbacks", key="ERR_SPLIT", user_id=uid
-                        )
+                        text=messages.get(file="callbacks", key="ERR_SPLIT", user_id=uid)
                     )
 
                     return
 
                 await query.message.edit(
                     text=messages.get(
-                        file="callbacks",
-                        key="SEND_ALL_PARTS",
-                        user_id=uid,
-                        extra_args=newfname,
+                        file="callbacks", key="SEND_ALL_PARTS", user_id=uid, extra_args=newfname
                     )
                 )
                 async_splitfiles = async_generator(splitfiles)
@@ -1247,15 +1123,11 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                 try:
                     await unzip_bot.send_message(
                         chat_id=user_id,
-                        text=messages.get(
-                            file="callbacks", key="UPLOADED", user_id=uid
-                        ),
+                        text=messages.get(file="callbacks", key="UPLOADED", user_id=uid),
                         reply_markup=Buttons.RATE_ME,
                     )
                     await query.message.edit(
-                        text=messages.get(
-                            file="callbacks", key="UPLOADED", user_id=uid
-                        ),
+                        text=messages.get(file="callbacks", key="UPLOADED", user_id=uid),
                         reply_markup=Buttons.RATE_ME,
                     )
                 except:
@@ -1271,10 +1143,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             await answer_query(
                 query=query,
                 message_text=messages.get(
-                    file="callbacks",
-                    key="AFTER_OK_DL_TXT",
-                    user_id=uid,
-                    extra_args=dltime,
+                    file="callbacks", key="AFTER_OK_DL_TXT", user_id=uid, extra_args=dltime
                 ),
                 unzip_client=unzip_bot,
             )
@@ -1283,9 +1152,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             if split_data[2] == "with_pass":
                 password = await unzip_bot.ask(
                     chat_id=query.message.chat.id,
-                    text=messages.get(
-                        file="callbacks", key="PLS_SEND_PASSWORD", user_id=uid
-                    ),
+                    text=messages.get(file="callbacks", key="PLS_SEND_PASSWORD", user_id=uid),
                 )
                 ext_s_time = time()
                 extractor = await extr_files(
@@ -1293,9 +1160,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                 )
                 ext_e_time = time()
                 await archive_msg.reply(
-                    messages.get(
-                        file="callbacks", key="PASS_TXT", extra_args=password.text
-                    )
+                    messages.get(file="callbacks", key="PASS_TXT", extra_args=password.text)
                 )
             else:
                 ext_s_time = time()
@@ -1314,18 +1179,13 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                 await answer_query(
                     query=query,
                     message_text=messages.get(
-                        file="callbacks",
-                        key="AFTER_OK_TEST_TXT",
-                        user_id=uid,
-                        extra_args=testtime,
+                        file="callbacks", key="AFTER_OK_TEST_TXT", user_id=uid, extra_args=testtime
                     ),
                     unzip_client=unzip_bot,
                 )
 
                 if tested:
-                    extractor = await extr_files(
-                        path=ext_files_dir, archive_path=archive
-                    )
+                    extractor = await extr_files(path=ext_files_dir, archive_path=archive)
                     ext_e_time = time()
                 else:
                     LOGGER.info(msg="Error on test")
@@ -1336,15 +1196,11 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             if any(err in extractor for err in ERROR_MSGS):
                 try:
                     await query.message.edit(
-                        text=messages.get(
-                            file="callbacks", key="EXT_FAILED_TXT", user_id=uid
-                        )
+                        text=messages.get(file="callbacks", key="EXT_FAILED_TXT", user_id=uid)
                     )
                     shutil.rmtree(ext_files_dir)
                     await del_ongoing_task(user_id)
-                    await log_msg.reply(
-                        text=messages.get(file="callbacks", key="EXT_FAILED_TXT")
-                    )
+                    await log_msg.reply(text=messages.get(file="callbacks", key="EXT_FAILED_TXT"))
 
                     return
                 except:
@@ -1355,15 +1211,11 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
                     await unzip_bot.send_message(
                         chat_id=query.message.chat.id,
-                        text=messages.get(
-                            file="callbacks", key="EXT_FAILED_TXT", user_id=uid
-                        ),
+                        text=messages.get(file="callbacks", key="EXT_FAILED_TXT", user_id=uid),
                     )
                     shutil.rmtree(ext_files_dir)
                     await del_ongoing_task(user_id)
-                    await archive_msg.reply(
-                        messages.get(file="callbacks", key="EXT_FAILED_TXT")
-                    )
+                    await archive_msg.reply(messages.get(file="callbacks", key="EXT_FAILED_TXT"))
 
                     return
 
@@ -1371,20 +1223,14 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             paths = await get_files(path=ext_files_dir)
 
             if not paths:
-                await archive_msg.reply(
-                    messages.get(file="callbacks", key="PASSWORD_PROTECTED")
-                )
+                await archive_msg.reply(messages.get(file="callbacks", key="PASSWORD_PROTECTED"))
                 await unzip_bot.send_message(
                     chat_id=query.message.chat.id,
-                    text=messages.get(
-                        file="callbacks", key="PASSWORD_PROTECTED", user_id=uid
-                    ),
+                    text=messages.get(file="callbacks", key="PASSWORD_PROTECTED", user_id=uid),
                 )
                 await answer_query(
                     query=query,
-                    message_text=messages.get(
-                        file="callbacks", key="EXT_FAILED_TXT", user_id=uid
-                    ),
+                    message_text=messages.get(file="callbacks", key="EXT_FAILED_TXT", user_id=uid),
                     unzip_client=unzip_bot,
                 )
                 shutil.rmtree(ext_files_dir)
@@ -1408,17 +1254,12 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
             try:
                 i_e_buttons = await make_keyboard(
-                    paths=paths,
-                    user_id=user_id,
-                    chat_id=query.message.chat.id,
-                    unziphttp=False,
+                    paths=paths, user_id=user_id, chat_id=query.message.chat.id, unziphttp=False
                 )
 
                 try:
                     await query.message.edit(
-                        text=messages.get(
-                            file="callbacks", key="SELECT_FILES", user_id=uid
-                        ),
+                        text=messages.get(file="callbacks", key="SELECT_FILES", user_id=uid),
                         reply_markup=i_e_buttons,
                     )
                 except ReplyMarkupTooLong:
@@ -1426,34 +1267,25 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                         user_id=user_id, chat_id=query.message.chat.id, unziphttp=False
                     )
                     await query.message.edit(
-                        text=messages.get(
-                            file="callbacks", key="UNABLE_GATHER_FILES", user_id=uid
-                        ),
+                        text=messages.get(file="callbacks", key="UNABLE_GATHER_FILES", user_id=uid),
                         reply_markup=empty_buttons,
                     )
             except:
                 try:
                     await query.message.delete()
                     i_e_buttons = await make_keyboard(
-                        paths=paths,
-                        user_id=user_id,
-                        chat_id=query.message.chat.id,
-                        unziphttp=False,
+                        paths=paths, user_id=user_id, chat_id=query.message.chat.id, unziphttp=False
                     )
                     await unzip_bot.send_message(
                         chat_id=query.message.chat.id,
-                        text=messages.get(
-                            file="callbacks", key="SELECT_FILES", user_id=uid
-                        ),
+                        text=messages.get(file="callbacks", key="SELECT_FILES", user_id=uid),
                         reply_markup=i_e_buttons,
                     )
                 except:
                     try:
                         await query.message.delete()
                         empty_buttons = await make_keyboard_empty(
-                            user_id=user_id,
-                            chat_id=query.message.chat.id,
-                            unziphttp=False,
+                            user_id=user_id, chat_id=query.message.chat.id, unziphttp=False
                         )
                         await unzip_bot.send_message(
                             chat_id=query.message.chat.id,
@@ -1471,14 +1303,10 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                             unzip_client=unzip_bot,
                         )
                         await archive_msg.reply(
-                            messages.get(
-                                file="callbacks", key="EXT_FAILED_TXT", user_id=uid
-                            )
+                            messages.get(file="callbacks", key="EXT_FAILED_TXT", user_id=uid)
                         )
                         shutil.rmtree(ext_files_dir)
-                        LOGGER.error(
-                            msg=messages.get(file="callbacks", key="FATAL_ERROR")
-                        )
+                        LOGGER.error(msg=messages.get(file="callbacks", key="FATAL_ERROR"))
                         await del_ongoing_task(user_id)
 
                         return
@@ -1548,9 +1376,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
         try:
             await query.message.edit(
-                text=messages.get(
-                    file="callbacks", key="UPLOADING_THIS_FILE", user_id=uid
-                )
+                text=messages.get(file="callbacks", key="UPLOADING_THIS_FILE", user_id=uid)
             )
         except:
             pass
@@ -1582,16 +1408,12 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             fname = file.split("/")[-1]
             smessage = await unzip_bot.send_message(
                 chat_id=user_id,
-                text=messages.get(
-                    file="callbacks", key="SPLITTING", user_id=uid, extra_args=fname
-                ),
+                text=messages.get(file="callbacks", key="SPLITTING", user_id=uid, extra_args=fname),
             )
             splitdir = f"{Config.DOWNLOAD_LOCATION}/split/{user_id}"
             os.makedirs(name=splitdir, exist_ok=True)
             ooutput = f"{splitdir}/{fname}"
-            splitfiles = await split_files(
-                iinput=file, ooutput=ooutput, size=Config.TG_MAX_SIZE
-            )
+            splitfiles = await split_files(iinput=file, ooutput=ooutput, size=Config.TG_MAX_SIZE)
             LOGGER.info(msg=splitfiles)
 
             if not splitfiles:
@@ -1609,10 +1431,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
             await smessage.edit(
                 text=messages.get(
-                    file="callbacks",
-                    key="SEND_ALL_PARTS",
-                    user_id=uid,
-                    extra_args=fname,
+                    file="callbacks", key="SEND_ALL_PARTS", user_id=uid, extra_args=fname
                 )
             )
             async_splitfiles = async_generator(splitfiles)
@@ -1640,9 +1459,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             except:
                 pass
 
-        await query.message.edit(
-            text=messages.get(file="callbacks", key="REFRESHING", user_id=uid)
-        )
+        await query.message.edit(text=messages.get(file="callbacks", key="REFRESHING", user_id=uid))
 
         if urled:
             rpaths = paths.remove(paths[int(spl_data[3])])
@@ -1673,9 +1490,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     rzfile=spl_data[5],
                 )
                 await query.message.edit(
-                    text=messages.get(
-                        file="callbacks", key="SELECT_FILES", user_id=uid
-                    ),
+                    text=messages.get(file="callbacks", key="SELECT_FILES", user_id=uid),
                     reply_markup=i_e_buttons,
                 )
             except ReplyMarkupTooLong:
@@ -1686,9 +1501,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     rzfile=spl_data[5],
                 )
                 await query.message.edit(
-                    text=messages.get(
-                        file="callbacks", key="UNABLE_GATHER_FILES", user_id=uid
-                    ),
+                    text=messages.get(file="callbacks", key="UNABLE_GATHER_FILES", user_id=uid),
                     reply_markup=empty_buttons,
                 )
         else:
@@ -1700,9 +1513,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     unziphttp=False,
                 )
                 await query.message.edit(
-                    text=messages.get(
-                        file="callbacks", key="SELECT_FILES", user_id=uid
-                    ),
+                    text=messages.get(file="callbacks", key="SELECT_FILES", user_id=uid),
                     reply_markup=i_e_buttons,
                 )
             except ReplyMarkupTooLong:
@@ -1710,9 +1521,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     user_id=user_id, chat_id=query.message.chat.id, unziphttp=False
                 )
                 await query.message.edit(
-                    text=messages.get(
-                        file="callbacks", key="UNABLE_GATHER_FILES", user_id=uid
-                    ),
+                    text=messages.get(file="callbacks", key="UNABLE_GATHER_FILES", user_id=uid),
                     reply_markup=empty_buttons,
                 )
 
@@ -1804,19 +1613,14 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
                     await del_ongoing_task(user_id)
                     await smessage.edit(
-                        text=messages.get(
-                            file="callbacks", key="ERR_SPLIT", user_id=uid
-                        )
+                        text=messages.get(file="callbacks", key="ERR_SPLIT", user_id=uid)
                     )
 
                     return
 
                 await smessage.edit(
                     text=messages.get(
-                        file="callbacks",
-                        key="SEND_ALL_PARTS",
-                        user_id=uid,
-                        extra_args=fname,
+                        file="callbacks", key="SEND_ALL_PARTS", user_id=uid, extra_args=fname
                     )
                 )
                 async_splitfiles = async_generator(splitfiles)
@@ -1857,9 +1661,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             pass
 
         await log_msg.reply(
-            messages.get(
-                file="callbacks", key="HOW_MANY_UPLOADED", extra_args=sent_files
-            )
+            messages.get(file="callbacks", key="HOW_MANY_UPLOADED", extra_args=sent_files)
         )
         await update_uploaded(user_id=user_id, upload_count=sent_files)
         await del_ongoing_task(user_id)
@@ -1868,13 +1670,9 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
         except Exception as e:
             await query.message.edit(
-                text=messages.get(
-                    file="callbacks", key="ERROR_TXT", user_id=uid, extra_args=e
-                )
+                text=messages.get(file="callbacks", key="ERROR_TXT", user_id=uid, extra_args=e)
             )
-            await archive_msg.reply(
-                messages.get(file="callbacks", key="ERROR_TXT", extra_args=e)
-            )
+            await archive_msg.reply(messages.get(file="callbacks", key="ERROR_TXT", extra_args=e))
 
     elif query.data == "cancel_dis":
         uid = query.from_user.id
@@ -1887,9 +1685,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     file="callbacks",
                     key="CANCELLED_TXT",
                     user_id=uid,
-                    extra_args=messages.get(
-                        file="callbacks", key="PROCESS_CANCELLED", user_id=uid
-                    ),
+                    extra_args=messages.get(file="callbacks", key="PROCESS_CANCELLED", user_id=uid),
                 )
             )
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{uid}")
@@ -1897,9 +1693,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
             try:
                 await log_msg.reply(
-                    messages.get(
-                        file="callbacks", key="HOW_MANY_UPLOADED", extra_args=sent_files
-                    )
+                    messages.get(file="callbacks", key="HOW_MANY_UPLOADED", extra_args=sent_files)
                 )
             except:
                 return
@@ -1910,15 +1704,11 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     file="callbacks",
                     key="CANCELLED_TXT",
                     user_id=uid,
-                    extra_args=messages.get(
-                        file="callbacks", key="PROCESS_CANCELLED", user_id=uid
-                    ),
+                    extra_args=messages.get(file="callbacks", key="PROCESS_CANCELLED", user_id=uid),
                 ),
             )
 
             return
 
     elif query.data == "nobully":
-        await query.message.edit(
-            text=messages.get(file="callbacks", key="CANCELLED", user_id=uid)
-        )
+        await query.message.edit(text=messages.get(file="callbacks", key="CANCELLED", user_id=uid))

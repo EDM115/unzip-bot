@@ -38,11 +38,7 @@ from unzipbot.helpers.database import (
     get_users_list,
     set_maintenance,
 )
-from unzipbot.helpers.unzip_help import (
-    calculate_memory_limit,
-    humanbytes,
-    timeformat_sec,
-)
+from unzipbot.helpers.unzip_help import calculate_memory_limit, humanbytes, timeformat_sec
 from unzipbot.i18n.buttons import Buttons
 from unzipbot.i18n.messages import Messages
 from unzipbot.modules.ext_script.custom_thumbnail import add_thumb, del_thumb
@@ -72,9 +68,7 @@ async def _(_, message: Message):
     uid = message.from_user.id
 
     if uid != Config.BOT_OWNER and await get_maintenance():
-        await message.reply(
-            text=messages.get(file="commands", key="MAINTENANCE_ON", user_id=uid)
-        )
+        await message.reply(text=messages.get(file="commands", key="MAINTENANCE_ON", user_id=uid))
 
         return
 
@@ -130,9 +124,7 @@ async def start_bot(_, message: Message):
 async def clean_my_files(_, message: Message):
     try:
         await message.reply_text(
-            text=messages.get(
-                file="commands", key="CLEAN_TXT", user_id=message.from_user.id
-            ),
+            text=messages.get(file="commands", key="CLEAN_TXT", user_id=message.from_user.id),
             reply_markup=Buttons.CLN_BTNS,
         )
     except (FloodWait, FloodPremiumWait) as f:
@@ -144,9 +136,7 @@ async def clean_my_files(_, message: Message):
 async def help_me(_, message: Message):
     try:
         await message.reply_text(
-            text=messages.get(
-                file="commands", key="HELP_TXT", user_id=message.from_user.id
-            ),
+            text=messages.get(file="commands", key="HELP_TXT", user_id=message.from_user.id),
             reply_markup=Buttons.ME_GOIN_HOME,
         )
     except (FloodWait, FloodPremiumWait) as f:
@@ -176,9 +166,7 @@ async def about_me(_, message: Message):
 async def privacy_text(_, message: Message):
     try:
         await message.reply_text(
-            text=messages.get(
-                file="commands", key="PRIVACY", user_id=message.from_user.id
-            )
+            text=messages.get(file="commands", key="PRIVACY", user_id=message.from_user.id)
         )
     except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
@@ -203,9 +191,7 @@ async def extract_archive(_, message: Message):
 
         if os.path.exists(Config.LOCKFILE):
             await message.reply(
-                text=messages.get(
-                    file="commands", key="STILL_STARTING", user_id=user_id
-                )
+                text=messages.get(file="commands", key="STILL_STARTING", user_id=user_id)
             )
 
             return
@@ -214,9 +200,7 @@ async def extract_archive(_, message: Message):
 
         if os.path.isdir(download_path):
             await message.reply(
-                text=messages.get(
-                    file="commands", key="PROCESS_RUNNING", user_id=user_id
-                )
+                text=messages.get(file="commands", key="PROCESS_RUNNING", user_id=user_id)
             )
 
             return
@@ -252,24 +236,18 @@ async def extract_archive(_, message: Message):
                     text=messages.get(file="commands", key="NO_SPACE", user_id=user_id)
                 )
         else:
-            await unzip_msg.edit(
-                text=messages.get(file="commands", key="INVALID", user_id=user_id)
-            )
+            await unzip_msg.edit(text=messages.get(file="commands", key="INVALID", user_id=user_id))
     except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
         await extract_archive(_=_, message=message)
 
 
-@unzipbot_client.on_message(
-    filters=filters.private & filters.command(commands="cancel")
-)
+@unzipbot_client.on_message(filters=filters.private & filters.command(commands="cancel"))
 async def cancel_task_by_user(_, message):
     idtodel = message.id - 1
 
     try:
-        await unzipbot_client.delete_messages(
-            chat_id=message.from_user.id, message_ids=idtodel
-        )
+        await unzipbot_client.delete_messages(chat_id=message.from_user.id, message_ids=idtodel)
     except:
         pass
 
@@ -282,9 +260,7 @@ async def cancel_task_by_user(_, message):
 async def merging(_, message: Message):
     try:
         merge_msg = await message.reply(
-            text=messages.get(
-                file="commands", key="MERGE", user_id=message.from_user.id
-            )
+            text=messages.get(file="commands", key="MERGE", user_id=message.from_user.id)
         )
         await add_merge_task(user_id=message.from_user.id, message_id=merge_msg.id)
     except (FloodWait, FloodPremiumWait) as f:
@@ -296,9 +272,7 @@ async def merging(_, message: Message):
 async def done_merge(_, message: Message):
     try:
         await message.reply(
-            text=messages.get(
-                file="commands", key="DONE", user_id=message.from_user.id
-            ),
+            text=messages.get(file="commands", key="DONE", user_id=message.from_user.id),
             reply_markup=Buttons.MERGE_THEM_ALL,
         )
     except (FloodWait, FloodPremiumWait) as f:
@@ -364,16 +338,7 @@ async def get_stats(id):
             file="commands",
             key="STATS",
             user_id=id,
-            extra_args=[
-                total,
-                used,
-                disk_usage,
-                free,
-                ongoing_tasks,
-                cpu_usage,
-                ram_usage,
-                uptime,
-            ],
+            extra_args=[total, used, disk_usage, free, ongoing_tasks, cpu_usage, ram_usage, uptime],
         )
 
     return stats_string
@@ -383,9 +348,7 @@ async def get_stats(id):
 async def send_stats(_, message: Message):
     try:
         stats_msg = await message.reply(
-            text=messages.get(
-                file="commands", key="PROCESSING2", user_id=message.from_user.id
-            )
+            text=messages.get(file="commands", key="PROCESSING2", user_id=message.from_user.id)
         )
         stats_txt = await get_stats(message.from_user.id)
         await stats_msg.edit(text=stats_txt, reply_markup=Buttons.REFRESH_BUTTON)
@@ -414,9 +377,7 @@ async def __do_broadcast(message, user):
 )
 async def broadcast_this(_, message: Message):
     uid = message.from_user.id
-    bc_msg = await message.reply(
-        text=messages.get(file="commands", key="PROCESSING2", user_id=uid)
-    )
+    bc_msg = await message.reply(text=messages.get(file="commands", key="PROCESSING2", user_id=uid))
     r_msg = message.reply_to_message
 
     if not r_msg:
@@ -431,10 +392,7 @@ async def broadcast_this(_, message: Message):
     total_users = await count_users()
     await bc_msg.edit(
         text=messages.get(
-            file="commands",
-            key="BC_START",
-            user_id=uid,
-            extra_args=[done_no, total_users],
+            file="commands", key="BC_START", user_id=uid, extra_args=[done_no, total_users]
         )
     )
 
@@ -486,24 +444,18 @@ async def broadcast_this(_, message: Message):
 )
 async def send_this(_, message: Message):
     uid = message.from_user.id
-    sd_msg = await message.reply(
-        text=messages.get(file="commands", key="PROCESSING2", user_id=uid)
-    )
+    sd_msg = await message.reply(text=messages.get(file="commands", key="PROCESSING2", user_id=uid))
     r_msg = message.reply_to_message
 
     if not r_msg:
-        await sd_msg.edit(
-            text=messages.get(file="commands", key="SEND_REPLY", user_id=uid)
-        )
+        await sd_msg.edit(text=messages.get(file="commands", key="SEND_REPLY", user_id=uid))
 
         return
 
     try:
         user_id = message.text.split(sep=None, maxsplit=1)[1]
     except:
-        await sd_msg.edit(
-            text=messages.get(file="commands", key="PROVIDE_UID", user_id=uid)
-        )
+        await sd_msg.edit(text=messages.get(file="commands", key="PROVIDE_UID", user_id=uid))
 
         return
 
@@ -512,30 +464,22 @@ async def send_this(_, message: Message):
 
     if send == 200:
         await sd_msg.edit(
-            text=messages.get(
-                file="commands", key="SEND_SUCCESS", user_id=uid, extra_args=user_id
-            )
+            text=messages.get(file="commands", key="SEND_SUCCESS", user_id=uid, extra_args=user_id)
         )
     else:
         await sd_msg.edit(
-            text=messages.get(
-                file="commands", key="SEND_FAILED", user_id=uid, extra_args=user_id
-            )
+            text=messages.get(file="commands", key="SEND_FAILED", user_id=uid, extra_args=user_id)
         )
 
 
 @unzipbot_client.on_message(filters=filters.command(commands="report"))
 async def report_this(_, message: Message):
     uid = message.from_user.id
-    sd_msg = await message.reply(
-        text=messages.get(file="commands", key="PROCESSING2", user_id=uid)
-    )
+    sd_msg = await message.reply(text=messages.get(file="commands", key="PROCESSING2", user_id=uid))
     r_msg = message.reply_to_message
 
     if not r_msg:
-        await sd_msg.edit(
-            text=messages.get(file="commands", key="REPORT_REPLY", user_id=uid)
-        )
+        await sd_msg.edit(text=messages.get(file="commands", key="REPORT_REPLY", user_id=uid))
 
         return
 
@@ -543,15 +487,10 @@ async def report_this(_, message: Message):
     await unzipbot_client.send_message(
         chat_id=Config.LOGS_CHANNEL,
         text=messages.get(
-            file="commands",
-            key="REPORT_TEXT",
-            user_id=uid,
-            extra_args=[uid, r_msg.text.markdown],
+            file="commands", key="REPORT_TEXT", user_id=uid, extra_args=[uid, r_msg.text.markdown]
         ),
     )
-    await sd_msg.edit(
-        text=messages.get(file="commands", key="REPORT_DONE", user_id=uid)
-    )
+    await sd_msg.edit(text=messages.get(file="commands", key="REPORT_DONE", user_id=uid))
 
 
 @unzipbot_client.on_message(
@@ -566,9 +505,7 @@ async def ban_user(_, message: Message):
     try:
         user_id = message.text.split(sep=None, maxsplit=1)[1]
     except:
-        await ban_msg.edit(
-            text=messages.get(file="commands", key="BAN_ID", user_id=uid)
-        )
+        await ban_msg.edit(text=messages.get(file="commands", key="BAN_ID", user_id=uid))
 
         return
 
@@ -577,9 +514,7 @@ async def ban_user(_, message: Message):
     text = ""
 
     if bdb == -1:
-        text += messages.get(
-            file="commands", key="ALREADY_BANNED", user_id=uid, extra_args=user_id
-        )
+        text += messages.get(file="commands", key="ALREADY_BANNED", user_id=uid, extra_args=user_id)
 
     if db == -1:
         text += messages.get(
@@ -590,9 +525,7 @@ async def ban_user(_, message: Message):
         await ban_msg.edit(text=text)
     else:
         await ban_msg.edit(
-            messages.get(
-                file="commands", key="USER_BANNED", user_id=uid, extra_args=user_id
-            )
+            messages.get(file="commands", key="USER_BANNED", user_id=uid, extra_args=user_id)
         )
 
 
@@ -608,9 +541,7 @@ async def unban_user(_, message: Message):
     try:
         user_id = message.text.split(sep=None, maxsplit=1)[1]
     except:
-        await unban_msg.edit(
-            text=messages.get(file="commands", key="UNBAN_ID", user_id=uid)
-        )
+        await unban_msg.edit(text=messages.get(file="commands", key="UNBAN_ID", user_id=uid))
 
         return
 
@@ -619,9 +550,7 @@ async def unban_user(_, message: Message):
     text = ""
 
     if db == -1:
-        text += messages.get(
-            file="commands", key="ALREADY_ADDED", user_id=uid, extra_args=user_id
-        )
+        text += messages.get(file="commands", key="ALREADY_ADDED", user_id=uid, extra_args=user_id)
 
     if bdb == -1:
         text += messages.get(
@@ -632,9 +561,7 @@ async def unban_user(_, message: Message):
         await unban_msg.edit(text=text)
     else:
         await unban_msg.edit(
-            text=messages.get(
-                file="commands", key="UNBANNED", user_id=uid, extra_args=user_id
-            )
+            text=messages.get(file="commands", key="UNBANNED", user_id=uid, extra_args=user_id)
         )
 
 
@@ -660,9 +587,7 @@ async def info_user(_, message: Message):
     try:
         user_id = message.text.split(sep=None, maxsplit=1)[1]
     except:
-        await info_user_msg.edit(
-            text=messages.get(file="commands", key="PROVIDE_UID", user_id=uid)
-        )
+        await info_user_msg.edit(text=messages.get(file="commands", key="PROVIDE_UID", user_id=uid))
 
         return
 
@@ -673,10 +598,7 @@ async def info_user(_, message: Message):
 
     await info_user_msg.edit(
         text=messages.get(
-            file="commands",
-            key="USER_INFO",
-            user_id=uid,
-            extra_args=[user_id, up_count],
+            file="commands", key="USER_INFO", user_id=uid, extra_args=[user_id, up_count]
         )
     )
 
@@ -693,9 +615,7 @@ async def info_user2(_, message: Message):
     try:
         user_id = message.text.split(sep=None, maxsplit=1)[1]
     except:
-        await user2_msg.edit(
-            text=messages.get(file="commands", key="PROVIDE_UID2", user_id=uid)
-        )
+        await user2_msg.edit(text=messages.get(file="commands", key="PROVIDE_UID2", user_id=uid))
 
         return
 
@@ -737,9 +657,7 @@ async def get_all_thumbs(_, message: Message):
     paths = await get_files(path=Config.THUMB_LOCATION)
 
     if not paths:
-        await message.reply(
-            text=messages.get(file="commands", key="NO_THUMBS", user_id=uid)
-        )
+        await message.reply(text=messages.get(file="commands", key="NO_THUMBS", user_id=uid))
 
     for doc_f in paths:
         try:
@@ -783,9 +701,7 @@ async def maintenance_mode(_, message: Message):
     mstatus = await get_maintenance()
     uid = message.from_user.id
     text = (
-        messages.get(
-            file="commands", key="MAINTENANCE", user_id=uid, extra_args=mstatus
-        )
+        messages.get(file="commands", key="MAINTENANCE", user_id=uid, extra_args=mstatus)
         + "\n\n"
         + messages.get(file="commands", key="MAINTENANCE_ASK", user_id=uid)
     )
@@ -794,37 +710,27 @@ async def maintenance_mode(_, message: Message):
     try:
         newstate = message.text.split(sep=None, maxsplit=1)[1]
     except:
-        await mess.edit(
-            text=messages.get(file="commands", key="MAINTENANCE_FAIL", user_id=uid)
-        )
+        await mess.edit(text=messages.get(file="commands", key="MAINTENANCE_FAIL", user_id=uid))
 
         return
 
     if newstate not in ["True", "False"]:
-        await mess.edit(
-            text=messages.get(file="commands", key="MAINTENANCE_FAIL", user_id=uid)
-        )
+        await mess.edit(text=messages.get(file="commands", key="MAINTENANCE_FAIL", user_id=uid))
 
         return
 
     await set_maintenance(newstate == "True")
     await message.reply(
-        text=messages.get(
-            file="commands", key="MAINTENANCE_DONE", user_id=uid, extra_args=newstate
-        )
+        text=messages.get(file="commands", key="MAINTENANCE_DONE", user_id=uid, extra_args=newstate)
     )
 
 
-@unzipbot_client.on_message(
-    filters=filters.private & filters.command(commands="addthumb")
-)
+@unzipbot_client.on_message(filters=filters.private & filters.command(commands="addthumb"))
 async def thumb_add(_, message: Message):
     await add_thumb(_=unzipbot_client, message=message)
 
 
-@unzipbot_client.on_message(
-    filters=filters.private & filters.command(commands="delthumb")
-)
+@unzipbot_client.on_message(filters=filters.private & filters.command(commands="delthumb"))
 async def thumb_del(_, message: Message):
     await del_thumb(message)
 
@@ -834,20 +740,14 @@ async def thumb_del(_, message: Message):
 )
 async def del_everything(_, message: Message):
     uid = message.from_user.id
-    cleaner = await message.reply(
-        text=messages.get(file="commands", key="ERASE_ALL", user_id=uid)
-    )
+    cleaner = await message.reply(text=messages.get(file="commands", key="ERASE_ALL", user_id=uid))
 
     try:
         shutil.rmtree(Config.DOWNLOAD_LOCATION)
-        await cleaner.edit(
-            text=messages.get(file="commands", key="CLEANED", user_id=uid)
-        )
+        await cleaner.edit(text=messages.get(file="commands", key="CLEANED", user_id=uid))
         os.mkdir(path=Config.DOWNLOAD_LOCATION)
     except:
-        await cleaner.edit(
-            text=messages.get(file="commands", key="NOT_CLEANED", user_id=uid)
-        )
+        await cleaner.edit(text=messages.get(file="commands", key="NOT_CLEANED", user_id=uid))
 
 
 @unzipbot_client.on_message(
@@ -858,9 +758,7 @@ async def del_tasks(_, message: Message):
     number = len(ongoing_tasks)
     uid = message.from_user.id
     cleaner = await message.reply(
-        text=messages.get(
-            file="commands", key="ERASE_TASKS", user_id=uid, extra_args=number
-        )
+        text=messages.get(file="commands", key="ERASE_TASKS", user_id=uid, extra_args=number)
     )
 
     for task in ongoing_tasks:
@@ -873,9 +771,7 @@ async def del_tasks(_, message: Message):
             pass
 
     await cleaner.edit(
-        messages.get(
-            file="commands", key="ERASE_TASKS_SUCCESS", user_id=uid, extra_args=number
-        )
+        messages.get(file="commands", key="ERASE_TASKS_SUCCESS", user_id=uid, extra_args=number)
     )
 
 
@@ -887,9 +783,7 @@ async def send_logs(user_id):
             message = await unzipbot_client.send_document(
                 chat_id=user_id, document=doc_f, file_name=doc_f.name
             )
-            LOGGER.info(
-                msg=messages.get(file="commands", key="LOG_SENT", extra_args=user_id)
-            )
+            LOGGER.info(msg=messages.get(file="commands", key="LOG_SENT", extra_args=user_id))
         except (FloodWait, FloodPremiumWait) as f:
             await sleep(f.value)
             message = await unzipbot_client.send_document(
@@ -923,9 +817,7 @@ async def restart(_, message: Message):
         folder_to_del = os.path.dirname(os.path.abspath(Config.DOWNLOAD_LOCATION))
         shutil.rmtree(Config.DOWNLOAD_LOCATION)
         LOGGER.info(
-            msg=messages.get(
-                file="commands", key="DELETED_FOLDER", extra_args=folder_to_del
-            )
+            msg=messages.get(file="commands", key="DELETED_FOLDER", extra_args=folder_to_del)
         )
     except:
         pass
@@ -946,9 +838,7 @@ async def restart(_, message: Message):
         await log_message.forward(chat_id=Config.LOGS_CHANNEL)
 
     LOGGER.info(
-        msg=messages.get(
-            file="commands", key="RESTARTING", extra_args=message.from_user.id
-        )
+        msg=messages.get(file="commands", key="RESTARTING", extra_args=message.from_user.id)
     )
     clear_logs()
     os.execl(executable, executable, "-m", "unzipbot")
@@ -959,30 +849,22 @@ async def restart(_, message: Message):
 )
 async def pull_updates(_, message: Message):
     uid = message.from_user.id
-    git_reply = await message.reply(
-        text=messages.get(file="commands", key="PULLING", user_id=uid)
-    )
+    git_reply = await message.reply(text=messages.get(file="commands", key="PULLING", user_id=uid))
     repo = git.Repo(path="/app")
     current = repo.head.commit
     repo.remotes.origin.pull()
 
     if current != repo.head.commit:
-        await git_reply.edit(
-            text=messages.get(file="commands", key="PULLED", user_id=uid)
-        )
+        await git_reply.edit(text=messages.get(file="commands", key="PULLED", user_id=uid))
         await restart(_=_, message=message)
     else:
-        await git_reply.edit(
-            text=messages.get(file="commands", key="NO_PULL", user_id=uid)
-        )
+        await git_reply.edit(text=messages.get(file="commands", key="NO_PULL", user_id=uid))
 
 
 @unzipbot_client.on_message(filters=filters.command(commands="donate"))
 async def donate_help(_, message: Message):
     await message.reply(
-        text=messages.get(
-            file="commands", key="DONATE_TEXT", user_id=message.from_user.id
-        )
+        text=messages.get(file="commands", key="DONATE_TEXT", user_id=message.from_user.id)
     )
 
 
@@ -1005,9 +887,7 @@ async def export_db(_, message):
 @unzipbot_client.on_message(filters=filters.command(commands="commands"))
 async def getall_cmds(_, message):
     await message.reply(
-        messages.get(
-            file="commands", key="COMMANDS_LIST", user_id=message.from_user.id
-        ),
+        messages.get(file="commands", key="COMMANDS_LIST", user_id=message.from_user.id),
         disable_web_page_preview=True,
     )
 
@@ -1072,8 +952,7 @@ async def eval_command(_, message):
         evaluation = "Success"
 
     final_output = (
-        f"<b>EVAL</b> : <code>{cmd}</code>\n\n"
-        f"<b>OUTPUT</b> :\n<code>{evaluation}</code> \n"
+        f"<b>EVAL</b> : <code>{cmd}</code>\n\n<b>OUTPUT</b> :\n<code>{evaluation}</code> \n"
     )
 
     if len(final_output) > Config.MAX_MESSAGE_LENGTH:
@@ -1098,23 +977,10 @@ async def exec_command(_, message):
     cmd = message.text.split(" ", maxsplit=1)[1]
     memlimit = calculate_memory_limit()
     cpulimit = Config.MAX_CPU_CORES_COUNT * Config.MAX_CPU_USAGE
-    ulimit_cmd = [
-        "ulimit",
-        "-v",
-        str(memlimit),
-        "&&",
-        "cpulimit",
-        "-l",
-        str(cpulimit),
-        "--",
-        cmd,
-    ]
+    ulimit_cmd = ["ulimit", "-v", str(memlimit), "&&", "cpulimit", "-l", str(cpulimit), "--", cmd]
     ulimit_command = " ".join(ulimit_cmd)
     process = await create_subprocess_shell(
-        cmd=ulimit_command,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        executable="/bin/bash",
+        cmd=ulimit_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, executable="/bin/bash"
     )
     stdout, stderr = await process.communicate()
     e = stderr.decode(encoding="utf-8", errors="replace")

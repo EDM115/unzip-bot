@@ -42,9 +42,7 @@ async def async_shutdown_bot():
             except:
                 pass
     except Exception as e:
-        LOGGER.error(
-            msg=messages.get(file="main", key="ERROR_SHUTDOWN_MSG", extra_args=e)
-        )
+        LOGGER.error(msg=messages.get(file="main", key="ERROR_SHUTDOWN_MSG", extra_args=e))
     finally:
         await unzipbot_client.stop()
         LOGGER.info(msg=messages.get(file="main", key="BOT_STOPPED"))
@@ -105,9 +103,7 @@ async def main():
             try:
                 await unzipbot_client.send_message(
                     chat_id=Config.BOT_OWNER,
-                    text=messages.get(
-                        file="main", key="WRONG_LOG", extra_args=Config.LOGS_CHANNEL
-                    ),
+                    text=messages.get(file="main", key="WRONG_LOG", extra_args=Config.LOGS_CHANNEL),
                 )
             except:
                 pass

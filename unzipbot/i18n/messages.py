@@ -6,10 +6,7 @@ from unzipbot.helpers.database import get_lang
 
 class Messages:
     def __init__(
-        self,
-        lang_fetcher=None,
-        default_lang=Config.BASE_LANGUAGE,
-        base_path="unzipbot/i18n/lang",
+        self, lang_fetcher=None, default_lang=Config.BASE_LANGUAGE, base_path="unzipbot/i18n/lang"
     ):
         """
         Initialize the Messages class
@@ -32,14 +29,10 @@ class Messages:
         file_path = f"{self.base_path}/{lang}.json"
 
         try:
-            with open(file=file_path, mode="r", encoding="utf-8") as f:
+            with open(file=file_path, encoding="utf-8") as f:
                 return json.load(fp=f)
         except FileNotFoundError:
-            with open(
-                file=f"{self.base_path}/{self.default_lang}.json",
-                mode="r",
-                encoding="utf-8",
-            ) as f:
+            with open(file=f"{self.base_path}/{self.default_lang}.json", encoding="utf-8") as f:
                 return json.load(fp=f)
 
     def get(self, file, key, user_id=None, extra_args=[]):

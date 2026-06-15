@@ -99,9 +99,7 @@ async def dl_thumbs():
 
         if i % 10 == 0 or i == maxthumbs:
             LOGGER.info(
-                msg=messages.get(
-                    file="start", key="DOWNLOADED_THUMBS", extra_args=[i, maxthumbs]
-                )
+                msg=messages.get(file="start", key="DOWNLOADED_THUMBS", extra_args=[i, maxthumbs])
             )
 
 
@@ -123,12 +121,8 @@ async def set_boot_time():
                     key="BOT_RESTARTED",
                     user_id=Config.BOT_OWNER,
                     extra_args=[
-                        datetime.fromtimestamp(timestamp=old_boot).strftime(
-                            r"%d/%m/%Y - %H:%M:%S"
-                        ),
-                        datetime.fromtimestamp(timestamp=boot).strftime(
-                            r"%d/%m/%Y - %H:%M:%S"
-                        ),
+                        datetime.fromtimestamp(timestamp=old_boot).strftime(r"%d/%m/%Y - %H:%M:%S"),
+                        datetime.fromtimestamp(timestamp=boot).strftime(r"%d/%m/%Y - %H:%M:%S"),
                     ],
                 ),
             )
@@ -150,17 +144,13 @@ async def warn_users():
             try:
                 await unzipbot_client.send_message(
                     chat_id=task.get("user_id"),
-                    text=messages.get(
-                        file="start", key="RESEND_TASK", user_id=task.get("user_id")
-                    ),
+                    text=messages.get(file="start", key="RESEND_TASK", user_id=task.get("user_id")),
                 )
             except (FloodWait, FloodPremiumWait) as f:
                 await asyncio.sleep(f.value)
                 await unzipbot_client.send_message(
                     chat_id=task.get("user_id"),
-                    text=messages.get(
-                        file="start", key="RESEND_TASK", user_id=task.get("user_id")
-                    ),
+                    text=messages.get(file="start", key="RESEND_TASK", user_id=task.get("user_id")),
                 )
             except:
                 pass  # user deleted chat
