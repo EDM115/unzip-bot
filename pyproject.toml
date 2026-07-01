@@ -14,7 +14,7 @@ dependencies = [
   "gitdb==4.0.12",
   "GitPython==3.1.44",
   "motor==3.7.0",
-  "mutagen==1.47.0",
+  "mutagen==1.48.1",
   "Pillow==11.2.1",
   "psutil==7.0.0",
   "pykeyboard==0.1.5",
