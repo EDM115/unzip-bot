@@ -1615,12 +1615,13 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             )
             async_splitfiles = async_generator(splitfiles)
 
-            async for file in async_splitfiles:
+            original_file = file
+            async for s_file in async_splitfiles:
                 sent_files += 1
                 await send_file(
                     unzip_bot=unzip_bot,
                     c_id=user_id,
-                    doc_f=file,
+                    doc_f=s_file,
                     query=query,
                     full_path=splitdir,
                     log_msg=log_msg,
@@ -1629,7 +1630,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
             try:
                 shutil.rmtree(splitdir)
-                os.remove(path=file)
+                os.remove(path=original_file + "_temp")
             except:
                 pass
 
@@ -1833,6 +1834,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
                 try:
                     shutil.rmtree(splitdir)
+                    os.remove(path=file + "_temp")
                 except:
                     pass
 
