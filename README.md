@@ -64,6 +64,7 @@ help - In case you need 😭
 
 ## Deploy :construction:
 Deploying is easy :smiling_face_with_three_hearts: You can deploy this bot in Heroku or in a VPS :heart:  
+The Docker image currently targets `linux/amd64`. On Apple Silicon and other ARM hosts, Docker Desktop builds and runs it through emulation, and `compose.yaml` selects that platform automatically  
 **Star :star2: Fork :fork_and_knife: and Deploy :outbox_tray:**
 
 #### The lazy way
@@ -75,7 +76,7 @@ Deploying is easy :smiling_face_with_three_hearts: You can deploy this bot in He
 ```bash
 git clone https://github.com/EDM115/unzip-bot.git && cd unzip-bot
 nano .env
-docker build -t edm115/unzip-bot .
+docker build --platform linux/amd64 -t edm115/unzip-bot .
 ```
 - Open Docker Desktop, go on the Images tab, click on the Run button
 - On Optional settings, fill the env variables
@@ -89,8 +90,8 @@ docker compose up -d
 ```bash
 git clone https://github.com/EDM115/unzip-bot.git && cd unzip-bot
 nano .env
-docker build -t edm115/unzip-bot .
-docker run -d -v downloaded-volume-prod:/app/Downloaded -v thumbnails-volume-prod:/app/Thumbnails --env-file ./.env --name unzipbot edm115/unzip-bot
+docker build --platform linux/amd64 -t edm115/unzip-bot .
+docker run -d --platform linux/amd64 -v downloaded-volume-prod:/app/Downloaded -v thumbnails-volume-prod:/app/Thumbnails --env-file ./.env --name unzipbot edm115/unzip-bot
 ```
 
 **DONE :partying_face: enjoy the bot !** Be sure to follow me on [GitHub](https://github.com/EDM115) and Star :star2: this repo to show some support :pleading_face:
@@ -107,9 +108,8 @@ docker run -d -v downloaded-volume-prod:/app/Downloaded -v thumbnails-volume-pro
 #### Do it manually
 - Go in the repo's folder
 ```bash
-docker build --no-cache -t edm115/unzip-bot .
-docker run -d -v downloaded-volume:/app/Downloaded -v thumbnails-volume:/app/Thumbnails --env-file ./.env --network host --name unzip-bot-container edm115/unzip-bot
-docker start unzip-bot-container
+docker build --platform linux/amd64 --no-cache -t edm115/unzip-bot .
+docker run -d --platform linux/amd64 -v downloaded-volume-prod:/app/Downloaded -v thumbnails-volume-prod:/app/Thumbnails --env-file ./.env --network host --name unzip-bot-container edm115/unzip-bot
 # if you want to check something
 docker exec -it unzip-bot-container bash
 docker logs unzip-bot-container
