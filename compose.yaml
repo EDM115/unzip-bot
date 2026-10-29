@@ -1,0 +1,16 @@
+services:
+  unzip-bot:
+    build: .
+    image: edm115/unzip-bot:local
+    platform: linux/amd64
+    env_file: .env
+    volumes:
+      - downloaded-volume-prod:/app/Downloaded
+      - thumbnails-volume-prod:/app/Thumbnails
+    restart: unless-stopped
+
+volumes:
+  downloaded-volume-prod:
+    name: downloaded-volume-prod
+  thumbnails-volume-prod:
+    name: thumbnails-volume-prod

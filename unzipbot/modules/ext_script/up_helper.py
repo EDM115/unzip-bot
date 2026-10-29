@@ -41,7 +41,7 @@ async def get_size(doc_f):
 
 
 # Send file to a user
-async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
+async def send_file(unzip_bot, c_id, doc_f, query, full_path, split):
     fsize = await get_size(doc_f)
 
     if fsize in (-1, 0):  # File not found or empty
@@ -391,7 +391,6 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
             doc_f=doc_f,
             query=query,
             full_path=full_path,
-            log_msg=log_msg,
             split=split,
         )
     except FileNotFoundError:
@@ -410,7 +409,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
 
         return
     except BaseException as e:
-        LOGGER.error(msg=e)
+        # LOGGER.error(msg=e)
         shutil.rmtree(full_path)
 
 

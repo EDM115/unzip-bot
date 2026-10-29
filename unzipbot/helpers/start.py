@@ -10,6 +10,7 @@ from pyrogram.errors import FloodPremiumWait, FloodWait
 
 from config import Config
 from unzipbot import LOGGER, boottime, unzipbot_client
+from unzipbot.helpers.unzip_help import clear_directory_contents
 from unzipbot.i18n.messages import Messages
 from unzipbot.modules.callbacks import download
 
@@ -172,11 +173,14 @@ async def remove_expired_tasks(firststart=False):
         await clear_ongoing_tasks()
 
         try:
-            shutil.rmtree(Config.DOWNLOAD_LOCATION)
-        except:
-            pass
-
-        os.makedirs(name=Config.DOWNLOAD_LOCATION, exist_ok=True)
+            clear_directory_contents(Config.DOWNLOAD_LOCATION)
+        except OSError:
+            LOGGER.exception("Failed to clear the download directory")
+        for entry in os.scandir(Config.THUMB_LOCATION):
+            temporary_user_thumb = entry.name.startswith(("not_resized_", "waiting_")) and entry.name.endswith(".jpg")
+            temporary_video_thumb = entry.name.startswith("thumbnail_") and entry.name.endswith(".jpg")
+            if (temporary_user_thumb or temporary_video_thumb) and (entry.is_file(follow_symlinks=False) or entry.is_symlink()):
+                os.unlink(entry.path)
     else:
         for task in ongoing_tasks:
             user_id = task.get("user_id")

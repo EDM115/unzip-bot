@@ -1,4 +1,6 @@
 import math
+import os
+import shutil
 import time
 from asyncio import sleep
 
@@ -12,6 +14,16 @@ from unzipbot.i18n.buttons import Buttons
 from unzipbot.i18n.messages import Messages
 
 messages = Messages(lang_fetcher=get_lang)
+
+
+def clear_directory_contents(path):
+    os.makedirs(path, exist_ok=True)
+    with os.scandir(path) as entries:
+        for entry in entries:
+            if entry.is_dir(follow_symlinks=False):
+                shutil.rmtree(entry.path)
+            else:
+                os.unlink(entry.path)
 
 
 async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_bot):
@@ -228,30 +240,60 @@ extentions_list = {
         "apkm",
         "apks",
         "appx",
+        "ar",
         "arc",
+        "arj",
         "bcm",
         "bin",
         "br",
         "bz2",
+        "cab",
+        "cb7",
+        "cbr",
+        "cbt",
+        "cbz",
+        "cpio",
+        "deb",
         "dmg",
+        "ear",
+        "epub",
+        "esd",
         "exe",
         "gz",
         "img",
         "ipsw",
         "iso",
         "jar",
+        "lha",
+        "lzh",
         "lz4",
+        "lzma",
+        "md5",
         "msi",
         "paf",
         "pak",
         "pea",
         "pkg",
         "rar",
+        "rpm",
+        "swm",
         "tar",
+        "taz",
+        "tb2",
+        "tbz",
+        "tbz2",
         "tgz",
+        "tlz",
+        "tpz",
+        "txz",
+        "tzst",
+        "war",
         "wim",
+        "wrc",
         "x7",
+        "xar",
         "xapk",
+        "xip",
         "xz",
         "z",
         "zip",
@@ -270,6 +312,7 @@ tarball_extensions = (
     ".tar.gz",
     ".gz",
     ".tgz",
+    ".tpz",
     ".taz",
     ".tar.bz2",
     ".bz2",
@@ -290,5 +333,7 @@ tarball_extensions = (
     ".tar.z",
     ".z",
     ".tz",
-    ".taz",
+    ".tar.zst",
+    ".tar.zstd",
+    ".tzst",
 )

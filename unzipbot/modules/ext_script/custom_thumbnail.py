@@ -31,11 +31,13 @@ async def add_thumb(_, message):
             reply_message = message.reply_to_message
 
             if reply_message.media_group_id is not None:  # album sent
+                """
                 LOGGER.info(
                     msg=messages.get(
                         file="custom_thumbnail", key="ALBUM", extra_args=user_id
                     )
                 )
+                """
                 await message.reply(
                     messages.get(file="custom_thumbnail", key="ALBUM_NOPE", user_id=uid)
                 )
@@ -45,11 +47,13 @@ async def add_thumb(_, message):
             thumb_location = Config.THUMB_LOCATION + "/" + user_id + ".jpg"
             pre_thumb = Config.THUMB_LOCATION + "/not_resized_" + user_id + ".jpg"
             final_thumb = Config.THUMB_LOCATION + "/waiting_" + user_id + ".jpg"
+            """
             LOGGER.info(
                 msg=messages.get(
                     file="custom_thumbnail", key="DL_THUMB", extra_args=user_id
                 )
             )
+            """
             file = await _.download_media(message=reply_message)
             shutil.move(src=file, dst=pre_thumb)
             size = (320, 320)
@@ -96,9 +100,11 @@ async def add_thumb(_, message):
                         reply_markup=Buttons.THUMB_SAVE,
                     )
             except:
+                """
                 LOGGER.info(
                     msg=messages.get(file="custom_thumbnail", key="THUMB_FAILED")
                 )
+                """
 
                 try:
                     os.remove(path=final_thumb)

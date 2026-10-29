@@ -7,8 +7,6 @@
 
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/ruff) [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff) [![DeepSource](https://app.deepsource.com/gh/EDM115/unzip-bot.svg/?label=active+issues&show_trend=true&token=17SfwVx77dbrFlixtGdQsQNh)](https://app.deepsource.com/gh/EDM115/unzip-bot/?ref=repository-badge)
 
-[![unzip-bot analytics](https://repobeats.axiom.co/api/embed/5c857b55b42dd8235388093858b74341f6c679ac.svg)](https://github.com/EDM115/unzip-bot/pulse)
-
 </div>
 
 > [!IMPORTANT]  
@@ -69,7 +67,7 @@ Deploying is easy :smiling_face_with_three_hearts: You can deploy this bot in He
 **Star :star2: Fork :fork_and_knife: and Deploy :outbox_tray:**
 
 #### The lazy way
-[![Deploy me :pleading_face:](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/v7)  
+[![Deploy me :pleading_face:](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot)  
 (if you're in a fork, make sure to replace the template URL with your repo's one, also replace the URL in the Dockerfile)
 
 #### The easy way
@@ -81,6 +79,11 @@ docker build -t edm115/unzip-bot .
 ```
 - Open Docker Desktop, go on the Images tab, click on the Run button
 - On Optional settings, fill the env variables
+
+If not using Docker Desktop :
+```bash
+docker compose up -d
+```
 
 #### The nerdy way
 ```bash
@@ -108,7 +111,7 @@ docker build --no-cache -t edm115/unzip-bot .
 docker run -d -v downloaded-volume:/app/Downloaded -v thumbnails-volume:/app/Thumbnails --env-file ./.env --network host --name unzip-bot-container edm115/unzip-bot
 docker start unzip-bot-container
 # if you want to check something
-docker exec -it unzip-bot-container sh
+docker exec -it unzip-bot-container bash
 docker logs unzip-bot-container
 # once you're done
 docker stop unzip-bot-container
@@ -132,7 +135,7 @@ If you found a bug in this bot please open an [issue](https://github.com/EDM115/
 Same if you have any feature request :wink:
 
 ## License & Copyright :cop:
-Copyright (c) 2022 - 2025 EDM115  
+Copyright (c) 2022 - 2026 EDM115  
   
 This unzip-bot repository is licensed under the [MIT License](https://github.com/EDM115/unzip-bot/blob/master/LICENSE)  
 Enjoy copying and modifying, but always mention me  

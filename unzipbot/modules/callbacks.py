@@ -3,11 +3,14 @@ import concurrent.futures
 import os
 import re
 import shutil
+import tarfile
+import unicodedata
 from email.parser import Parser
 from email.policy import default
 from fnmatch import fnmatch
 from time import time
-from urllib.parse import unquote
+from urllib.parse import unquote, urlsplit
+from uuid import uuid4
 
 import unzip_http
 from aiofiles import open as openfile
@@ -30,7 +33,9 @@ from unzipbot.helpers.database import (
     get_lang,
     get_maintenance,
     get_merge_task_message_id,
+    get_ongoing_task_log_message_id,
     get_ongoing_tasks,
+    set_ongoing_task_log_message_id,
     set_upload_mode,
     update_thumb,
     update_uploaded,
@@ -55,75 +60,138 @@ from .ext_script.ext_helper import (
     merge_files,
     split_files,
     test_with_7z_helper,
+    test_with_pea_helper,
+    test_with_unarc_helper,
     test_with_unrar_helper,
 )
 from .ext_script.up_helper import answer_query, get_size, send_file, send_url_logs
 
-split_file_pattern = r"\.z\d+$"
-rar_file_pattern = r"\.(?:r\d+|part\d+\.rar)$"
-volume_file_pattern = r"\.\d+$"
+split_file_pattern = r"\.z[0-9]+$"
+rar_file_pattern = r"\.(?:r[0-9]+|part[0-9]+\.rar)$"
+volume_file_pattern = r"\.[0-9]+$"
 telegram_url_pattern = r"(?:http[s]?:\/\/)?(?:www\.)?t\.me\/([a-zA-Z0-9_]+)\/(\d+)"
 messages = Messages(lang_fetcher=get_lang)
 
 
-# Function to extract the sequence number from filenames
-def get_sequence_number(filename, pattern):
-    match = re.search(pattern, filename)
+def resolve_extraction_paths(parts, action, user_id, chat_id, download_location):
+    minimum_fields = {"ext_f": 5, "ext_a": 4}
+    if (
+        action not in minimum_fields
+        or len(parts) < minimum_fields[action]
+        or parts[0] != action
+        or parts[1] != str(user_id)
+        or parts[2] != str(chat_id)
+    ):
+        return None
 
-    if match:
-        # Extract the numeric part from the matched pattern
-        num_match = re.findall(pattern=r"\d+", string=match.group())
+    download_root = os.path.realpath(download_location)
+    user_root = os.path.join(download_root, str(user_id))
+    extracted_root = os.path.join(user_root, "extracted")
 
-        if num_match:
-            return int(num_match[-1])
+    # Reject symlinks that could redirect a user's workspace into another directory
+    if (
+        os.path.realpath(user_root) != user_root
+        or os.path.realpath(extracted_root) != extracted_root
+    ):
+        return None
 
-    # Use infinity if no number is found (ensures this file is always last)
-    return float("inf")
+    return user_root, extracted_root
 
 
-# Function to find the file with the lowest sequence
-def find_lowest_sequence_file(files):
-    if not files:
-        raise IndexError("No files to match")
+def extracted_files_are_safe(paths, extracted_root):
+    extracted_root = os.path.realpath(extracted_root)
+    for path in paths:
+        resolved = os.path.realpath(path)
+        if (
+            resolved == extracted_root
+            or os.path.commonpath((extracted_root, resolved)) != extracted_root
+        ):
+            return False
+    return True
 
-    # Match the files against the patterns
-    rar_matches = [f for f in files if re.search(pattern=rar_file_pattern, string=f)]
-    volume_matches = [
-        f for f in files if re.search(pattern=volume_file_pattern, string=f)
-    ]
 
-    # Handle RAR pattern cases
-    if rar_matches:
-        # Separate .rX and .partX.rar cases
-        r_files = [
-            f
-            for f in rar_matches
-            if f.endswith(".rar") or re.search(pattern=r"\.r\d+$", string=f)
-        ]
-        part_files = [
-            f for f in rar_matches if re.search(pattern=r"part\d+\.rar$", string=f)
-        ]
+def split_archive_part(path):
+    name = unicodedata.normalize("NFC", os.path.basename(path))
+    name = "".join(char for char in name if unicodedata.category(char) != "Cf")
+    patterns = (
+        ("rar_new", r"^(.+)\.part([0-9]+)\.rar$"),
+        ("rar_old", r"^(.+)\.r([0-9]+)$"),
+        ("zip", r"^(.+)\.z([0-9]+)$"),
+        ("pea", r"^(.+)\.([0-9]{6})\.pea$"),
+        ("volume", r"^(.+)\.([0-9]{3,})$"),
+    )
+    for kind, pattern in patterns:
+        match = re.fullmatch(pattern, name, flags=re.IGNORECASE)
+        if match:
+            number = int(match.group(2))
+            if kind == "rar_old":
+                number += 1
+            return kind, match.group(1).casefold(), number, len(match.group(2))
+    if name.lower().endswith(".rar"):
+        return "rar_old", name[:-4].casefold(), 0, 2
+    if name.lower().endswith(".zip"):
+        return "zip", name[:-4].casefold(), 0, 2
+    return None
 
-        # Priority: .partX.rar -> .rX
-        if part_files:
-            return min(
-                part_files,
-                key=lambda x: get_sequence_number(filename=x, pattern=r"part\d+"),
-            ), "rar"
-        elif r_files:
-            return min(
-                r_files,
-                key=lambda x: get_sequence_number(filename=x, pattern=r"\.r\d+$"),
-            ), "rar"
 
-    # Handle other cases
-    if volume_matches:
-        return min(
-            volume_matches,
-            key=lambda x: get_sequence_number(filename=x, pattern=r"\.\d+$"),
-        ), "volume"
+def prepare_split_archive(files):
+    groups = {}
+    for path in files:
+        part = split_archive_part(path)
+        if part:
+            kind, base, number, width = part
+            groups.setdefault((kind, base), []).append((path, number, width))
 
-    raise IndexError("No matching files found")
+    candidates = []
+    for (kind, base), parts in groups.items():
+        numbers = [number for _, number, _ in parts]
+        first = 0 if kind in ("rar_old", "zip") else 1
+        if first not in numbers or (first == 0 and len(parts) < 2):
+            continue
+        if len(set(numbers)) != len(numbers) or sorted(numbers) != list(range(first, max(numbers) + 1)):
+            raise IndexError("Missing or duplicate archive volume")
+        candidates.append((kind, base, parts, first))
+
+    if len(candidates) != 1:
+        raise IndexError("Expected one complete archive volume set")
+
+    kind, base, parts, first = candidates[0]
+    width = max(width for _, _, width in parts)
+    prefix = f"unzipbot-{uuid4().hex}"
+    if kind == "volume":
+        suffix = os.path.splitext(base)[1]
+        if suffix in (".7z", ".zip", ".rar", ".arc", ".tar", ".gz", ".zst"):
+            prefix += suffix
+
+    starter = None
+    original_name = None
+    for path, number, _ in parts:
+        if kind == "rar_new":
+            part_suffix = f".part{number:0{width}d}.rar"
+        elif kind == "rar_old":
+            part_suffix = ".rar" if number == 0 else f".r{number - 1:0{width}d}"
+        elif kind == "zip":
+            part_suffix = ".zip" if number == 0 else f".z{number:0{width}d}"
+        elif kind == "pea":
+            part_suffix = f".{number:0{width}d}.pea"
+        else:
+            part_suffix = f".{number:0{width}d}"
+        target = os.path.join(os.path.dirname(path), prefix + part_suffix)
+        os.rename(path, target)
+        if number == first:
+            starter = target
+            original_name = os.path.basename(path)
+
+    extractor = "rar" if kind.startswith("rar") else "zip" if kind == "zip" else "pea" if kind == "pea" else "arc" if prefix.endswith(".arc") else "volume"
+    return starter, extractor, original_name
+
+
+def safe_download_name(name):
+    if not name:
+        return ""
+    name = unquote(name).replace("\\", "/").rsplit("/", 1)[-1]
+    name = "".join(char for char in name if unicodedata.category(char) != "Cc")
+    return name if name not in ("", ".", "..") else ""
 
 
 async def download(url, path):
@@ -136,9 +204,11 @@ async def download(url, path):
             async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
                 await file.write(chunk)
     except InvalidURL:
-        LOGGER.error(msg=messages.get(file="callbacks", key="INVALID_URL"))
+        # LOGGER.error(msg=messages.get(file="callbacks", key="INVALID_URL"))
+        pass
     except Exception:
-        LOGGER.error(msg=messages.get(file="callbacks", key="ERR_DL", extra_args=url))
+        # LOGGER.error(msg=messages.get(file="callbacks", key="ERR_DL", extra_args=url))
+        pass
 
 
 async def download_with_progress(url, path, message, unzip_bot):
@@ -178,7 +248,8 @@ async def download_with_progress(url, path, message, unzip_bot):
                         unzip_bot=unzip_bot,
                     )
     except Exception:
-        LOGGER.error(msg=messages.get(file="callbacks", key="ERR_DL", extra_args=url))
+        # LOGGER.error(msg=messages.get(file="callbacks", key="ERR_DL", extra_args=url))
+        pass
 
 
 def get_zip_http(url):
@@ -190,6 +261,16 @@ def get_zip_http(url):
 async def async_generator(iterable):
     for item in iterable:
         yield item
+
+
+async def get_task_log_message(unzip_bot, user_id):
+    message_id = await get_ongoing_task_log_message_id(user_id)
+    if message_id is None:
+        return None
+    try:
+        return await unzip_bot.get_messages(chat_id=Config.LOGS_CHANNEL, message_ids=message_id)
+    except Exception:
+        return None
 
 
 # Callbacks
@@ -245,8 +326,6 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         return
 
     sent_files = 0
-    global log_msg
-
     if query.data == "megoinhome":
         await query.edit_message_text(
             text=messages.get(
@@ -339,13 +418,15 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         try:
             shutil.move(final_thumb, thumb_location)
         except Exception as e:
-            LOGGER.warning(msg=messages.get(file="callbacks", key="ERROR_THUMB_RENAME"))
-            LOGGER.error(msg=e)
+            #LOGGER.warning(msg=messages.get(file="callbacks", key="ERROR_THUMB_RENAME"))
+            #LOGGER.error(msg=e)
+            pass
 
         try:
             await update_thumb(query.from_user.id)
         except:
-            LOGGER.error(msg=messages.get(file="callbacks", key="ERROR_THUMB_UPDATE"))
+            # LOGGER.error(msg=messages.get(file="callbacks", key="ERROR_THUMB_UPDATE"))
+            pass
 
         await answer_query(
             query=query,
@@ -361,9 +442,12 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         try:
             await del_thumb_db(user_id)
         except Exception as e:
+            """
             LOGGER.error(
                 msg=messages.get(file="callbacks", key="ERROR_THUMB_DEL", extra_args=e)
             )
+            """
+            pass
 
         try:
             os.remove(path=thumb_location)
@@ -435,11 +519,13 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     chat_id=user_id, message_ids=files_array
                 )
             except Exception as e:
+                """
                 LOGGER.error(
                     msg=messages.get(
                         file="callbacks", key="ERROR_GET_MSG", extra_args=e
                     )
                 )
+                """
                 await answer_query(
                     query=query,
                     message_text=messages.get(
@@ -497,9 +583,9 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
             async for message in async_newarray:
                 i += 1
-                fname = message.document.file_name
+                fname = safe_download_name(message.document.file_name) or f"document_{message.id}"
                 await message.forward(chat_id=Config.LOGS_CHANNEL)
-                location = f"{download_path}/{fname}"
+                location = os.path.join(download_path, fname)
                 s_time = time()
                 await message.download(
                     file_name=location,
@@ -561,7 +647,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
         try:
             files = await get_files(download_path)
-            file, file_type = find_lowest_sequence_file(files)
+            file, file_type, original_name = prepare_split_archive(files)
         except IndexError:
             await answer_query(
                 query=query,
@@ -585,9 +671,10 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             text=messages.get(
                 file="callbacks",
                 key="PROCESS_MERGE",
-                extra_args=[user_id, ".".join(file.split("/")[-1].split(".")[:-1])],
+                extra_args=[user_id, os.path.splitext(original_name)[0]],
             ),
         )
+        await set_ongoing_task_log_message_id(user_id, log_msg.id)
 
         try:
             await query.message.edit(
@@ -751,7 +838,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                         unzip_client=unzip_bot,
                     )
                     shutil.rmtree(ext_files_dir)
-                    LOGGER.error(msg=messages.get(file="callbacks", key="FATAL_ERROR"))
+                    # LOGGER.error(msg=messages.get(file="callbacks", key="FATAL_ERROR"))
                     await del_ongoing_task(user_id)
 
                     return
@@ -778,8 +865,8 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             chat_id=Config.LOGS_CHANNEL,
             text=messages.get(file="callbacks", key="USER_QUERY", extra_args=user_id),
         )
-
-        global archive_msg
+        await set_ongoing_task_log_message_id(user_id, log_msg.id)
+        archive_msg = log_msg
 
         try:
             if split_data[1] == "url":
@@ -849,33 +936,20 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                         content_disposition = unzip_head.headers.get(
                             "content-disposition"
                         )
-                        rfnamebro = ""
                         real_filename = ""
-
                         if content_disposition:
                             headers = Parser(policy=default).parsestr(
                                 text=f"Content-Disposition: {content_disposition}"
                             )
                             real_filename = headers.get_filename()
-
-                            if real_filename != "":
-                                rfnamebro = unquote(string=real_filename)
-
-                        if rfnamebro == "":
-                            rfnamebro = unquote(string=url.split(sep="/")[-1])
+                        rfnamebro = safe_download_name(real_filename) or safe_download_name(urlsplit(url).path)
 
                         if unzip_resp.status == 200:
                             os.makedirs(name=download_path, exist_ok=True)
                             s_time = time()
 
-                            if real_filename:
-                                archive = os.path.join(download_path, real_filename)
-                                fext = real_filename.split(sep=".")[-1].casefold()
-                            else:
-                                fname = unquote(string=os.path.splitext(url)[1])
-                                fname = fname.split(sep="?")[0]
-                                fext = fname.split(sep=".")[-1].casefold()
-                                archive = f"{download_path}/{fname}"
+                            archive = os.path.join(download_path, rfnamebro or "download")
+                            fext = rfnamebro.rsplit(sep=".", maxsplit=1)[-1].casefold() if "." in rfnamebro else ""
 
                             if (
                                 split_data[2] not in ["thumb", "thumbrename"]
@@ -997,6 +1071,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                                             except:
                                                 pass
                                 except Exception as e:
+                                    """
                                     LOGGER.error(
                                         msg=messages.get(
                                             file="callbacks",
@@ -1004,6 +1079,8 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                                             extra_args=[url, e],
                                         )
                                     )
+                                    """
+                                    pass
 
                             try:
                                 dled = await download_with_progress(
@@ -1014,11 +1091,13 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                                 )
                             except Exception as e:
                                 dled = False
+                                """
                                 LOGGER.error(
                                     msg=messages.get(
                                         file="callbacks", key="ERR_DL", extra_args=e
                                     )
                                 )
+                                """
 
                             if isinstance(dled, bool) and not dled:
                                 return
@@ -1057,7 +1136,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
                     return
 
-                fname = r_message.document.file_name
+                fname = safe_download_name(r_message.document.file_name) or "download"
                 rfnamebro = fname
                 archive_msg = await r_message.forward(chat_id=Config.LOGS_CHANNEL)
                 await log_msg.edit(
@@ -1110,8 +1189,8 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
                 os.makedirs(name=download_path, exist_ok=True)
                 s_time = time()
-                location = f"{download_path}/{fname}"
-                LOGGER.info("location: %s", location)
+                location = os.path.join(download_path, fname)
+                # LOGGER.info("location: %s", location)
                 archive = await r_message.download(
                     file_name=location,
                     progress=progress_for_pyrogram,
@@ -1160,7 +1239,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     shutil.move(src=location, dst=renamed)
                 except OSError as e:
                     await del_ongoing_task(user_id)
-                    LOGGER.error(msg=e)
+                    # LOGGER.error(msg=e)
 
                     return
 
@@ -1174,7 +1253,6 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                         doc_f=renamed,
                         query=query,
                         full_path=renamed,
-                        log_msg=log_msg,
                         split=False,
                     )
                     await query.message.delete()
@@ -1230,7 +1308,6 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                         doc_f=file,
                         query=query,
                         full_path=splitdir,
-                        log_msg=log_msg,
                         split=True,
                     )
 
@@ -1298,8 +1375,14 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             else:
                 ext_s_time = time()
 
-                if fext == "rar":
+                if fext in ("rar", "cbr"):
                     tested = await test_with_unrar_helper(archive)
+                elif fext in ("arc", "wrc"):
+                    tested = await test_with_unarc_helper(archive)
+                elif fext == "pea":
+                    tested = await test_with_pea_helper(archive)
+                elif fext == "md5":
+                    tested = tarfile.is_tarfile(archive) and await test_with_7z_helper(archive)
                 else:
                     tested = await test_with_7z_helper(archive)
 
@@ -1326,7 +1409,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     )
                     ext_e_time = time()
                 else:
-                    LOGGER.info(msg="Error on test")
+                    # LOGGER.info(msg="Error on test")
                     extractor = "Error"
                     ext_e_time = time()
 
@@ -1474,9 +1557,11 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                             )
                         )
                         shutil.rmtree(ext_files_dir)
+                        """
                         LOGGER.error(
                             msg=messages.get(file="callbacks", key="FATAL_ERROR")
                         )
+                        """
                         await del_ongoing_task(user_id)
 
                         return
@@ -1509,16 +1594,24 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                 except:
                     pass
 
-                LOGGER.error(msg=e)
+                # LOGGER.error(msg=e)
             except Exception as err:
-                LOGGER.error(msg=err)
+                # LOGGER.error(msg=err)
                 await archive_msg.reply(err)
 
     elif query.data.startswith("ext_f"):
-        LOGGER.info(msg=query.data)
+        # LOGGER.info(msg=query.data)
         user_id = query.from_user.id
         spl_data = query.data.split("|")
-        file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
+        paths_for_user = resolve_extraction_paths(
+            spl_data, "ext_f", user_id, query.message.chat.id, Config.DOWNLOAD_LOCATION
+        )
+        if paths_for_user is None:
+            await answer_query(
+                query=query, message_text="Invalid request.", answer_only=True
+            )
+            return
+        user_root, file_path = paths_for_user
 
         try:
             urled = spl_data[4] if isinstance(spl_data[4], bool) else False
@@ -1530,9 +1623,15 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         else:
             paths = await get_files(path=file_path)
 
+        if not urled and not extracted_files_are_safe(paths, file_path):
+            await answer_query(
+                query=query, message_text="Invalid request.", answer_only=True
+            )
+            return
+
         if not paths and not urled:
-            if os.path.isdir(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}"):
-                shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
+            if os.path.isdir(user_root):
+                shutil.rmtree(user_root)
 
             await del_ongoing_task(user_id)
             await query.message.edit(
@@ -1542,7 +1641,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
             return
 
-        LOGGER.info(msg="ext_f paths : " + str(paths))
+        # LOGGER.info(msg="ext_f paths : " + str(paths))
 
         try:
             await query.message.edit(
@@ -1569,8 +1668,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                 c_id=spl_data[2],
                 doc_f=file,
                 query=query,
-                full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
-                log_msg=log_msg,
+                full_path=user_root,
                 split=False,
             )
         else:
@@ -1590,7 +1688,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             splitfiles = await split_files(
                 iinput=file, ooutput=ooutput, size=Config.TG_MAX_SIZE
             )
-            LOGGER.info(msg=splitfiles)
+            # LOGGER.info(msg=splitfiles)
 
             if not splitfiles:
                 try:
@@ -1624,7 +1722,6 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     doc_f=s_file,
                     query=query,
                     full_path=splitdir,
-                    log_msg=log_msg,
                     split=True,
                 )
 
@@ -1650,7 +1747,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
         if not rpaths:
             try:
-                shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
+                shutil.rmtree(user_root)
             except:
                 pass
 
@@ -1718,10 +1815,19 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         await update_uploaded(user_id=user_id, upload_count=sent_files)
 
     elif query.data.startswith("ext_a"):
-        LOGGER.info(msg=query.data)
+        # LOGGER.info(msg=query.data)
         user_id = query.from_user.id
         spl_data = query.data.split("|")
-        file_path = f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}/extracted"
+        paths_for_user = resolve_extraction_paths(
+            spl_data, "ext_a", user_id, query.message.chat.id, Config.DOWNLOAD_LOCATION
+        )
+        if paths_for_user is None:
+            await answer_query(
+                query=query, message_text="Invalid request.", answer_only=True
+            )
+            return
+        user_root, file_path = paths_for_user
+        log_msg = await get_task_log_message(unzip_bot, user_id)
 
         try:
             urled = spl_data[4] if isinstance(spl_data[3], bool) else False
@@ -1733,11 +1839,17 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         else:
             paths = await get_files(path=file_path)
 
-        LOGGER.info("ext_a paths : " + str(paths))
+        if not urled and not extracted_files_are_safe(paths, file_path):
+            await answer_query(
+                query=query, message_text="Invalid request.", answer_only=True
+            )
+            return
+
+        # LOGGER.info("ext_a paths : " + str(paths))
 
         if not paths and not urled:
             try:
-                shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
+                shutil.rmtree(user_root)
             except:
                 pass
 
@@ -1772,8 +1884,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     c_id=spl_data[2],
                     doc_f=file,
                     query=query,
-                    full_path=f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}",
-                    log_msg=log_msg,
+                    full_path=user_root,
                     split=False,
                 )
             else:
@@ -1793,7 +1904,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                 splitfiles = await split_files(
                     iinput=file, ooutput=ooutput, size=Config.TG_MAX_SIZE
                 )
-                LOGGER.info(msg=splitfiles)
+                # LOGGER.info(msg=splitfiles)
 
                 if not splitfiles:
                     try:
@@ -1828,7 +1939,6 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                         doc_f=s_file,
                         query=query,
                         full_path=splitdir,
-                        log_msg=log_msg,
                         split=True,
                     )
 
@@ -1856,28 +1966,31 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         except:
             pass
 
-        await log_msg.reply(
-            messages.get(
-                file="callbacks", key="HOW_MANY_UPLOADED", extra_args=sent_files
+        if log_msg:
+            await log_msg.reply(
+                messages.get(
+                    file="callbacks", key="HOW_MANY_UPLOADED", extra_args=sent_files
+                )
             )
-        )
         await update_uploaded(user_id=user_id, upload_count=sent_files)
         await del_ongoing_task(user_id)
 
         try:
-            shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{spl_data[1]}")
+            shutil.rmtree(user_root)
         except Exception as e:
             await query.message.edit(
                 text=messages.get(
                     file="callbacks", key="ERROR_TXT", user_id=uid, extra_args=e
                 )
             )
-            await archive_msg.reply(
-                messages.get(file="callbacks", key="ERROR_TXT", extra_args=e)
-            )
+            if log_msg:
+                await log_msg.reply(
+                    messages.get(file="callbacks", key="ERROR_TXT", extra_args=e)
+                )
 
     elif query.data == "cancel_dis":
         uid = query.from_user.id
+        log_msg = await get_task_log_message(unzip_bot, uid)
         await del_ongoing_task(uid)
         await del_merge_task(uid)
 
@@ -1895,14 +2008,15 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             shutil.rmtree(f"{Config.DOWNLOAD_LOCATION}/{uid}")
             await update_uploaded(user_id=uid, upload_count=sent_files)
 
-            try:
-                await log_msg.reply(
-                    messages.get(
-                        file="callbacks", key="HOW_MANY_UPLOADED", extra_args=sent_files
+            if log_msg:
+                try:
+                    await log_msg.reply(
+                        messages.get(
+                            file="callbacks", key="HOW_MANY_UPLOADED", extra_args=sent_files
+                        )
                     )
-                )
-            except:
-                return
+                except:
+                    return
         except:
             await unzip_bot.send_message(
                 chat_id=uid,

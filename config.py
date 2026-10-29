@@ -35,4 +35,4 @@ class Config:
     MONGODB_DBNAME = os.environ.get("MONGODB_DBNAME", default="Unzipper_Bot")
     TG_MAX_SIZE = 2097152000
     THUMB_LOCATION = f"{os.path.dirname(__file__)}/Thumbnails"
-    VERSION = os.environ.get("UNZIPBOT_VERSION", default="7.3.0")
+    VERSION = os.environ.get("UNZIPBOT_VERSION", default="7.4.0")

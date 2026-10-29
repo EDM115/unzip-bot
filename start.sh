@@ -3,7 +3,7 @@
 echo "
 🔥 unzip-bot 🔥
 
-Copyright (c) 2022 - 2025 EDM115
+Copyright (c) 2022 - 2026 EDM115
 MIT License
 
 --> Join @EDM115bots on Telegram

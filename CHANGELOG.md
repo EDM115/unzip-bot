@@ -16,7 +16,25 @@ You will find here all the changes made with each version, in antichronological 
 <details>
 <summary>Click to expand</summary>
 
-### v7.3.0 *(indev)*
+### v8.0.0
+*indev*
+
+---
+
+### v7.4.0
+- :warning: **Security fix** : The bot is no longer vulnerable to user attacks (part 2), see [GHSA-pqqc-x349-q6f2 / CVE-2026-XXXXX](https://github.com/EDM115/unzip-bot/security/advisories/GHSA-pqqc-x349-q6f2) for more info
+  - Button callbacks could use user-submitted data that wasn't validated by the bot, making it upload directories it wasn't supposed to
+  - The image ran as `root` so it was able to access every file on the container, mounted volumes and (potentially if a vuln was present) on the host
+- Correct replies in the log
+- Add support for more archive formats, as reported by users
+- Fix handling of split archives containing both RTL & LTR chars
+- Cleanup the thumb volume too on restart
+- Add a docker compose file
+- Rework the VS Code config, delete some actions
+- Use [`unrar-alpine`](https://github.com/EDM115/unrar-alpine) instead of rebuilding it ourselves
+- Bump deps
+
+### v7.3.0
 - Added VS Code settings
 - Use [uv](https://docs.astral.sh/uv/)
 - Use [Ruff](https://docs.astral.sh/ruff/) instead of Black

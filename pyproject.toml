@@ -1,31 +1,31 @@
 [project]
 name = "unzip-bot"
-version = "7.2.0"
+version = "7.4.0"
 authors = [
   { name="EDM115", email="unzip@edm115.dev" },
 ]
 description = "A Telegram bot to extract various types of archives"
 dependencies = [
   "aiocron==2.1",
-  "aiofiles==24.1.0",
-  "aiohttp==3.11.18",
+  "aiofiles==25.1.0",
+  "aiohttp==3.14.5",
   "base58check==1.0.2",
-  "dnspython==2.7.0",
+  "dnspython==2.9.1",
   "gitdb==4.0.12",
-  "GitPython==3.1.44",
-  "motor==3.7.0",
-  "mutagen==1.47.0",
-  "Pillow==11.2.1",
-  "psutil==7.0.0",
+  "GitPython==3.2.1",
+  "motor==3.7.1",
+  "mutagen==1.48.1",
+  "Pillow==13.0.0",
+  "psutil==7.2.2",
   "pykeyboard==0.1.5",
-  "pyrofork==2.3.61",
-  "PyTgCrypto==1.2.9.2",
-  "requests==2.32.3",
-  "setuptools==80.1.0",
-  "unzip-http==0.6",
-  "wheel==0.46.1",
+  "pyrofork==2.3.69",
+  "PyTgCrypto==1.2.12",
+  "requests==2.34.2",
+  "setuptools==84.2.1",
+  "unzip-http==0.9",
+  "wheel==0.48.0",
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 readme = "README.md"
 license = {file = "LICENSE"}
 
@@ -44,7 +44,7 @@ venv = "python -m venv .venv"
 "Funding" = "https://github.com/EDM115#support-me-"
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py312"
 
 [tool.ruff.format]
 docstring-code-format = true
@@ -60,9 +60,7 @@ split-on-trailing-comma = false
 
 [tool.uv]
 compile-bytecode = true
-link-mode = "copy"
 
 [tool.uv.pip]
 compile-bytecode = true
 generate-hashes = true
-link-mode = "copy"

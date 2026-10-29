@@ -423,6 +423,19 @@ async def add_ongoing_task(user_id, start_time, task_type):
     )
 
 
+async def set_ongoing_task_log_message_id(user_id, message_id):
+    await ongoing_tasks.update_many(
+        filter={"user_id": user_id}, update={"$set": {"log_message_id": message_id}}
+    )
+
+
+async def get_ongoing_task_log_message_id(user_id):
+    task = await ongoing_tasks.find_one(
+        filter={"user_id": user_id}, sort=[("start_time", -1)]
+    )
+    return task.get("log_message_id") if task else None
+
+
 async def del_ongoing_task(user_id):
     is_exist = await ongoing_tasks.find_one(filter={"user_id": user_id})
 

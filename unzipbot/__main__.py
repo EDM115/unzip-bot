@@ -52,13 +52,13 @@ async def async_shutdown_bot():
 
 
 def handle_stop_signals(signum, frame):
-    LOGGER.info(
+    """ LOGGER.info(
         msg=messages.get(
             file="main",
             key="RECEIVED_STOP_SIGNAL",
             extra_args=[signal.Signals(signum).name, signum, frame],
         )
-    )
+    ) """
     loop = asyncio.get_event_loop()
     loop.create_task(coro=async_shutdown_bot())
 

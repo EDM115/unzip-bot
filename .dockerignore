@@ -1,4 +1,8 @@
 .git
+.env
+.venv/
+venv/
+.ruff_cache/
 **/__pycache__
 *.session
 *.session-journal
