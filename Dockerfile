@@ -90,10 +90,10 @@ COPY --chown=unzipbot:unzipbot . /app
 
 USER unzipbot:unzipbot
 
-RUN git init -b v7 && \
+RUN git init -b master && \
     git remote add origin https://github.com/EDM115/unzip-bot.git && \
-    git fetch --depth=1 origin v7 && \
-    git reset --mixed origin/v7 && \
-    git branch --set-upstream-to=origin/v7 v7
+    git fetch --depth=1 origin master && \
+    git reset --mixed origin/master && \
+    git branch --set-upstream-to=origin/master master
 
 ENTRYPOINT ["/bin/bash", "/app/start.sh"]
