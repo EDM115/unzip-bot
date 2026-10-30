@@ -8,9 +8,7 @@ __pycache__/
 .venv
 env/
 venv/
-
-# VS Code
-.vscode/
+.ruff_cache
 
 # SonarQube
 .scannerwork/
@@ -24,4 +22,4 @@ downloads/
 Downloaded/
 Thumbnails/
 unknown_errors.txt
-unzip-log.txt
+unzip-bot.log

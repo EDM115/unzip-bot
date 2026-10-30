@@ -17,7 +17,7 @@
   "python": {
     "installVirtualenv": true,
     "invokePipAsModule": true,
-    "path": "python3.11"
+    "path": "python3.12"
   },
   "scanSettings": {
     "baseBranches": [

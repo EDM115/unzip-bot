@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "britesnow.vscode-toggle-quotes",
+    "charliermarsh.ruff",
+    "edwinhuish.better-comments-next",
+    "foxundermoon.shell-format",
+    "mikestead.dotenv",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "nhoizey.gremlins",
+    "oliversturm.fix-json",
+    "tamasfe.even-better-toml",
+    "timonwong.shellcheck",
+    "visualstudioexptteam.vscodeintellicode",
+    "yzhang.markdown-all-in-one",
+  ]
+}

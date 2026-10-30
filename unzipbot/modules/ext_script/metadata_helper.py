@@ -1,7 +1,7 @@
 import os
+from shlex import join
 
 import mutagen.id3 as id3
-
 from mutagen.aac import AAC
 from mutagen.aiff import AIFF
 from mutagen.asf import ASF
@@ -13,7 +13,7 @@ from mutagen.oggopus import OggOpus
 from mutagen.oggvorbis import OggVorbis
 from mutagen.wave import WAVE
 
-from unzipper.modules.ext_script.ext_helper import __run_cmds_unzipper, run_cmds_on_cr
+from unzipbot.modules.ext_script.ext_helper import run_shell_cmds
 
 
 async def get_audio_metadata(file_path):
@@ -45,36 +45,36 @@ async def get_audio_metadata(file_path):
         audio_meta["duration"] = int(audio.info.length)
 
         if file_ext == "mp3":
-            audio_meta["performer"] = audio.get("artist", [None])[0]
-            audio_meta["title"] = audio.get("title", [None])[0]
+            audio_meta["performer"] = audio.get(key="artist", default=[None])[0]
+            audio_meta["title"] = audio.get(key="title", default=[None])[0]
 
         elif file_ext in ["m4a", "alac"]:
-            audio_meta["performer"] = audio.tags.get("\xa9ART", [None])[0]
-            audio_meta["title"] = audio.tags.get("\xa9nam", [None])[0]
+            audio_meta["performer"] = audio.tags.get(key="\xa9ART", default=[None])[0]
+            audio_meta["title"] = audio.tags.get(key="\xa9nam", default=[None])[0]
 
         elif file_ext == "flac":
-            audio_meta["performer"] = audio.get("artist", [None])[0]
-            audio_meta["title"] = audio.get("title", [None])[0]
+            audio_meta["performer"] = audio.get(key="artist", default=[None])[0]
+            audio_meta["title"] = audio.get(key="title", default=[None])[0]
 
         elif file_ext in ["aif", "aiff"]:
-            audio_meta["performer"] = audio.get("artist", [None])[0]
-            audio_meta["title"] = audio.get("title", [None])[0]
+            audio_meta["performer"] = audio.get(key="artist", default=[None])[0]
+            audio_meta["title"] = audio.get(key="title", default=[None])[0]
 
         elif file_ext == "ogg":
-            audio_meta["performer"] = audio.get("artist", [None])[0]
-            audio_meta["title"] = audio.get("title", [None])[0]
+            audio_meta["performer"] = audio.get(key="artist", default=[None])[0]
+            audio_meta["title"] = audio.get(key="title", default=[None])[0]
 
         elif file_ext == "opus":
-            audio_meta["performer"] = audio.get("artist", [None])[0]
-            audio_meta["title"] = audio.get("title", [None])[0]
+            audio_meta["performer"] = audio.get(key="artist", default=[None])[0]
+            audio_meta["title"] = audio.get(key="title", default=[None])[0]
 
         elif file_ext == "wav":
             # WAV doesn't have a standard tagging system, handling might vary
             pass
 
         elif file_ext == "wma":
-            audio_meta["performer"] = audio.tags.get("Author", [None])[0]
-            audio_meta["title"] = audio.tags.get("WM/AlbumTitle", [None])[0]
+            audio_meta["performer"] = audio.tags.get(key="Author", default=[None])[0]
+            audio_meta["title"] = audio.tags.get(key="WM/AlbumTitle", default=[None])[0]
 
         elif file_ext == "aac":
             # AAC tagging is not standardized, handling might vary
@@ -92,7 +92,7 @@ async def convert_and_save(file_path, target_format, metadata):
     new_file = os.path.join(directory, f"{basename}.{target_format}")
 
     cmd = ["ffmpeg", "-i", file_path, "-vn", new_file]
-    await run_cmds_on_cr(__run_cmds_unzipper, cmd=cmd)
+    await run_shell_cmds(join(cmd))
 
     if target_format == "mp3":
         audio = MP3(new_file, ID3=EasyID3)

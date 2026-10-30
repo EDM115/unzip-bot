@@ -1,57 +1,53 @@
 {
-    "name": "Unzipper Bot",
     "description": "A Telegram bot to extract various types of archives",
-    "logo": "https://telegra.ph/file/d4ba24682e030fc58613f.jpg",
-    "keywords": [
-        "7z",
-        "zip",
-        "rar",
-        "Telegram Bot",
-        "unzipper bot"
-    ],
-    "website": "https://edm115.dev/unzip",
-    "repository": "https://github.com/EDM115/unzip-bot",
-    "success_url": "https://t.me/EDM115bots",
     "env": {
-        "APP_ID": {
-            "description": "Your APP_ID from my.telegram.org",
-            "required": true
-        },
         "API_HASH": {
             "description": "Your API_HASH from my.telegram.org",
             "required": true
         },
+        "APP_ID": {
+            "description": "Your APP_ID from my.telegram.org",
+            "required": true
+        },
         "BOT_OWNER": {
-            "description": "Telegram Id of your account",
+            "description": "Telegram ID of your account",
             "required": true
         },
         "BOT_TOKEN": {
-            "description": "Your Bot Token From @BotFather",
-            "required": true
-        },
-        "MONGODB_URL": {
-            "description": "Your MongoDB url, Get it from https://www.mongodb.com/",
+            "description": "Your bot token from @BotFather",
             "required": true
         },
         "LOGS_CHANNEL": {
             "description": "ID of a channel, can also be a group",
             "required": true
+        },
+        "MONGODB_DBNAME": {
+            "description": "Your MongoDB database name. Leave it as default unless you make multiple deployments",
+            "required": true,
+            "value": "Unzipper_Bot"
+        },
+        "MONGODB_URL": {
+            "description": "Your MongoDB url, get it from https://www.mongodb.com/",
+            "required": true
         }
     },
-    "addons": [],
-    "buildpacks": [
-        {
-            "url": "heroku/python"
-        },
-        {
-            "url": "https://github.com/HasibulKabir/heroku-buildpack-ffmpeg-ffprobe.git"
-        }
-    ],
     "formation": {
         "worker": {
             "quantity": 1,
             "size": "eco"
         }
     },
-    "stack": "container"
+    "keywords": [
+        "7z",
+        "zip",
+        "rar",
+        "Telegram Bot",
+        "unzip bot"
+    ],
+    "logo": "https://telegra.ph/file/d4ba24682e030fc58613f.jpg",
+    "name": "unzip-bot",
+    "repository": "https://github.com/EDM115/unzip-bot",
+    "stack": "container",
+    "success_url": "https://t.me/EDM115bots",
+    "website": "https://edm115.dev/unzip"
 }

@@ -1,4 +1,8 @@
 .git
+.env
+.venv/
+venv/
+.ruff_cache/
 **/__pycache__
 *.session
 *.session-journal
@@ -6,4 +10,4 @@ downloads/
 Downloaded/
 Thumbnails/
 unknown_errors.txt
-unzip-log.txt
+unzip-bot.log

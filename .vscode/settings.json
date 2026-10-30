@@ -1,0 +1,58 @@
+{
+  "[dockerfile]": {
+    "editor.defaultFormatter": "docker.docker"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "editor.tabSize": 2,
+  "evenBetterToml.schema.associations": {
+    "pyproject.toml": "https://json.schemastore.org/pyproject.json"
+  },
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    ".env": ".python-version, config.py",
+    ".gitignore": ".deepsource.toml, .whitesource, AUTHORS, CONTRIBUTORS.svg, renovate.json",
+    "Dockerfile": ".dockerignore, compose.yaml, pyproject.toml, uv.lock",
+    "heroku.yml": "app.json, Procfile",
+    "package.json": "package-lock.json, pnpm*",
+    "README.md": "LICENSE, CHANGELOG.md, CreateMongoDB.md, bot_thumb.jpg"
+  },
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "gremlins.showInProblemPane": true,
+  "python.analysis.aiCodeActions": {
+    "convertFormatString": true,
+    "convertLambdaToNamedFunction": true,
+    "generateDocstring": true,
+    "generateSymbol": true,
+    "implementAbstractClasses": true
+  },
+  "python.analysis.autoFormatStrings": true,
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.completeFunctionParens": true,
+  "python.analysis.importFormat": "relative",
+  "python.analysis.inlayHints.callArgumentNames": "all",
+  "python.analysis.inlayHints.functionReturnTypes": true,
+  "python.analysis.inlayHints.pytestParameters": true,
+  "python.analysis.inlayHints.variableTypes": true,
+  "python.analysis.languageServerMode": "full",
+  "python.analysis.supportDocstringTemplate": true,
+  "python.analysis.supportRestructuredText": true,
+  "python.analysis.typeCheckingMode": "standard",
+  "python.createEnvironment.trigger": "off",
+  "python.missingPackage.severity": "Warning",
+  "python.terminal.focusAfterLaunch": true,
+  "python.terminal.shellIntegration.enabled": true,
+  "togglequotes.chars": [
+    "'",
+    "\"",
+    "`"
+  ]
+}

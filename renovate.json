@@ -12,16 +12,19 @@
   "dependencyDashboard": true,
   "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
   "draftPR": true,
-  "enabled": true,
+  "enabled": false,
   "extends": [
     "config:recommended"
+  ],
+  "ignoreDeps": [
+    "python"
   ],
   "labels": [
     "Mend: Renovate"
   ],
   "osvVulnerabilityAlerts": true,
-  "prConcurrentLimit": 0,
-  "prHourlyLimit": 0,
+  "prConcurrentLimit": 2,
+  "prHourlyLimit": 1,
   "reviewers": [
     "EDM115"
   ],
